@@ -1,0 +1,146 @@
+%\VignetteIndexEntry{GGtools overview}
+%\VignetteDepends{}
+%\VignetteKeywords{Genetical genomics,SNP,expression}
+%\VignettePackage{GGtools}
+
+%
+% NOTE -- ONLY EDIT THE .Rnw FILE!!!  The .tex file is
+% likely to be overwritten.
+%
+\documentclass[12pt]{article}
+
+\usepackage{amsmath,pstricks}
+\usepackage[authoryear,round]{natbib}
+\usepackage{hyperref}
+
+
+\textwidth=6.2in
+\textheight=8.5in
+%\parskip=.3cm
+\oddsidemargin=.1in
+\evensidemargin=.1in
+\headheight=-.3in
+
+\newcommand{\scscst}{\scriptscriptstyle}
+\newcommand{\scst}{\scriptstyle}
+
+
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textit{#1}}}
+\newcommand{\Rmethod}[1]{{\texttt{#1}}}
+\newcommand{\Rfunarg}[1]{{\texttt{#1}}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+
+\textwidth=6.2in
+
+\bibliographystyle{plainnat} 
+ 
+\begin{document}
+%\setkeys{Gin}{width=0.55\textwidth}
+
+\title{Overview of \Rpackage{GGtools} for genetical genomics}
+\author{VJ Carey \texttt{<stvjc@channing.harvard.edu>}}
+\maketitle
+
+\section{Introduction}
+
+We use the term \textit{genetical genomics} to refer to
+data analysis activities that link genotypic information
+such as SNP configurations to gene expression phenotype.
+The \Rpackage{GGtools} package includes various
+demonstration resources and analysis tools for these
+activities.
+@
+We will attach the library and have a look at a basic
+demonstration resource.
+<<init>>=
+library(GGtools)
+data(c20GGceu)
+class(c20GGceu)
+c20GGceu
+@
+The \Sexpr{class(c20GGceu)} class is an extension of the
+\Rclass{exprSet} class.  It represents expression
+data from the hgfocus chip on 48 individuals in the CEU
+CEPH group, and SNP data obtained from their HapMap genotyping
+results.
+
+The data are organized into an \Sexpr{nrow(exprs(c20GGceu))}
+by \Sexpr{ncol(exprs(c20GGceu))} matrix of expression values
+accessible with the \texttt{exprs} method, and
+an \Sexpr{nrow(snps(c20GGceu))} by \Sexpr{ncol(snps(c20GGceu))}
+of rare allele counts:
+<<lkc20>>=
+dim(exprs(c20GGceu))
+dim(snps(c20GGceu))
+snps(c20GGceu)[1:5,1:5]
+@
+
+We need some genetic metadata about SNPs; these are
+culled from SNP genotyping panels released on a 
+chromosome-by-chromosome basis for CEPH participants
+by HapMap project:
+<<lksmeta>>=
+data(chr20meta)
+chr20meta[1:4,]
+@
+
+A basic task is to compute a screen (over the genome, or,
+more practically, over a chromosome) of genotypic determination
+of expression.  The \Rfunction{detScreen} function help
+with this; defaults are supplied for an example related to
+results in Cheung and Spielman 2005:
+
+\begin{center}
+<<dosc,fig=TRUE,results=hide>>=
+ds1 = detScreen()
+@
+\end{center}
+
+The \Rfunction{detScreen} function returns a list:
+<<lkds>>=
+names(ds1)
+ds1[[1]]
+length(ds1[[2]])
+names(ds1[[2]])
+ds1[[2]][[1]][[1]]
+@
+
+\section{Appendix: Package documentation for \Rpackage{GGtools}}
+<<getplop,echo=FALSE>>=
+plop = function(x)
+{
+    if (!inherits(x, "packageInfo")) 
+        stop("wrong class")
+    #outConn <- file(outFile, open = "w")
+    vignetteMsg <- gettextf("Further information is available in the following vignettes in directory '%s':", 
+        file.path(x$path, "doc"))
+    headers <- c(gettext("Description:\n\n"), gettext("Index:\n\n"), 
+        paste(paste(strwrap(vignetteMsg), collapse = "\n"), "\n\n", 
+            sep = ""))
+    footers <- c("\n", "\n", "")
+    formatDocEntry <- function(entry) {
+        if (is.list(entry) || is.matrix(entry)) 
+            formatDL(entry, style = "list")
+        else entry
+    }
+    writeLines(gettextf("\n\t\tInformation on package '%s'\n", 
+        x$name))#, outConn)
+    for (i in which(!sapply(x$info, is.null))) {
+        writeLines(headers[i])#, outConn, sep = "")
+        writeLines(formatDocEntry(x$info[[i]]))#, outConn)
+        writeLines(footers[i])#, outConn, sep = "")
+    }
+#    close(outConn)
+}
+<<gag,echo=FALSE>>=
+plop(help(package="GGtools"))
+@
+
+Session information for this vignette build:
+<<dos>>=
+sessionInfo()
+@
+
+\end{document}

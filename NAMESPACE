@@ -1,0 +1,18 @@
+#useDynLib(Biobase)
+#
+#import(tools)
+#
+#exportClasses(aggregator, container, eSet, phenoData,
+#
+#exportMethods("[", "[[", "$", abstract, addVarMetadataEntry, aggenv, aggfun,
+#
+#export("Aggregate", 
+#
+import(Biobase)
+
+exportClass(ggExprSet, gtexSet)
+
+exportMethods("snps")
+
+export("ggreg", "HM2rac", "ggrplot", "detScreen", "regseq",
+   "make_gtexSet", "countRare", "getRare")

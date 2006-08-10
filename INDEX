@@ -1,0 +1,17 @@
+HM2rac                  compute rare allele count from a hapmap file
+c20GGceu                representations of HapMap snp data + expression
+                        data
+chr20meta               representations of HapMap snp metadata
+detScreen               perform a screen for SNP determination of
+                        expression using a ggExprSet instance, and
+                        produce a plot
+geneLocs                gene metadata from NCBI
+ggExprSet-class         Class "ggExprSet", representation of genetical
+                        genomics (expression + SNP) data
+ggreg                   regression analysis for additive effect of
+                        genotype on expression
+ggrplot                 plot a regression model for additive effect of
+                        genotype on expression
+regseq                  compute a sequence of regression models
+                        relating genotype to expression
+snps                    accessor for genotype data in a ggExprSet
