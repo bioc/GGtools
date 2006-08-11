@@ -31,7 +31,7 @@ data(litsn)
 data(litex)
 data(pdd)
 dem = make_racExSet( exprs=litex, racs=t(litsn), pd=pdd, mi=new("MIAME"),
-  anno="demo")
+  anno="hgfocus")
 dem
 }
 \keyword{ models }

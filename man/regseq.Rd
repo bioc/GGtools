@@ -15,7 +15,7 @@ regseq(gge, psid, snpinds, snpmeta, ...)
   \item{snpinds}{ numerical indices of snps to be used (relative
 to order in the snps component of \code{gge}}
   \item{snpmeta}{ a data.frame with position information
-(see \code{\link{chr20meta}} for example)}
+(see \code{\link[GGdata]{chr20meta}} for example)}
   \item{\dots}{additional arguments (such as \code{model="general"}
     to be passed to \code{\link{ggreg}}.}
 }

@@ -10,9 +10,10 @@
 #
 import(Biobase)
 
-exportClass(ggExprSet, racExSet)
+exportClass(ggExprSet, racExSet, genesym)
 
 exportMethods("snps", "snpNames", "racAssays")
 
 export("ggreg", "HM2rac", "ggrplot", "detScreen", "regseq",
-   "make_racExSet", "countRare", "getRare")
+   "make_racExSet", "countRare", "getRare", "genesym", "getpsid",
+   "oneFit")
