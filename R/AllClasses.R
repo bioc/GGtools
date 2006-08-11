@@ -1,4 +1,5 @@
 
+require(Biobase)
 setClass("ggExprSet", contains="exprSet")
 
  setMethod("show", "ggExprSet",
@@ -41,16 +42,83 @@ setMethod("snps", "ggExprSet", function(x) pData(phenoData(x)))
 #Known Subclasses: "list", "environment"
 #
 
-setClass("gtexSet", contains="eSet")
-make_gtexSet = function(exprs, snps, pd, mi, anno) {
+
+#setValidity("ggAssayData", function(object) {
+# msg <- NULL
+# nn <- names(object)
+# if (!all.equal(c("exprs", "snps"), nn)) msg <-
+#     "ggAssayData needs exprs and snps only"
+# if (is.null(msg)) return(TRUE)
+# else return(msg)
+#})
+
+setClass("racExSet", representation(
+    racAssays="AssayData"), contains="eSet",
+    prototype = prototype(racAssays=assayDataNew()))
+
+
+setMethod("initialize", "racExSet",
+          function(.Object,
+                   phenoData = new("AnnotatedDataFrame"),
+                   experimentData = new("MIAME"),
+                   annotation = character(),
+                   exprs = new("matrix"),
+		   racs = new("matrix"),
+                   ... ) {
+            .Object = callNextMethod(.Object,
+                           assayData = assayDataNew(
+                             exprs=exprs,
+                             ...),
+                           phenoData = phenoData,
+                           experimentData = experimentData,
+                           annotation = annotation)
+	    .Object@racAssays = assayDataNew(racs =racs)
+            .Object
+          })
+
+
+setMethod("snps", "racExSet", function(x) get("racs",x@racAssays))
+setMethod("exprs", "racExSet", function(object) get("exprs",object@assayData))
+setGeneric("racAssays", function(x) standardGeneric("racAssays"))
+setMethod("racAssays", "racExSet", function(x) x@racAssays)
+setGeneric("snpNames", function(x) standardGeneric("snpNames"))
+setMethod("snpNames", "racExSet", function(x) featureNames(x@racAssays))
+
+setMethod("show", "racExSet", function(object) {
+    cat("racExSet instance (SNP rare allele count + expression)\n")
+    cat("rare allele count assayData:\n")
+  cat("  Storage mode:", storageMode(racAssays(object)), "\n")
+  nms <- selectSome(snpNames(object))
+  cat("  featureNames:", paste(nms, collapse=", "))
+  if ((len <- length(snpNames(object))) > length(nms))
+    cat(" (", len, " total)", sep="")
+  cat("\n  Dimensions:\n")
+  print(Biobase:::assayDataDims(racAssays(object)))
+  cat("\nexpression assayData\n")
+  cat("  Storage mode:", storageMode(object), "\n")
+  nms <- selectSome(featureNames(object))
+  cat("  featureNames:", paste(nms, collapse=", "))
+  if ((len <- length(featureNames(object))) > length(nms))
+    cat(" (", len, " total)", sep="")
+  cat("\n  Dimensions:\n")
+  print(dims(object))
+  cat("\nphenoData\n")
+  show(phenoData(object)) 
+  cat("\n")
+  show(experimentData(object))
+  cat("\nAnnotation ")
+  show(annotation(object))
+    })
+
+make_racExSet = function(exprs, racs, pd, mi, anno) {
     if (!is(exprs, "matrix")) 
         stop("exprs must be of class matrix")
-    if (!is(snps, "matrix")) 
-        stop("snps must be of class matrix")
+    if (!is(racs, "matrix")) 
+        stop("racs must be of class matrix")
     if (!is(pd, "phenoData")) 
         stop("pd must be of class phenoData")
-    aa = assayDataNew("lockedEnvironment", exprs=exprs, snps=snps)
-    new("gtexSet", assayData = aa, phenoData = pd, experimentData = mi, 
+    new("racExSet", exprs=exprs, racs=racs, 
+        phenoData = pd, experimentData = mi, 
         annotation = anno)
 }
 
