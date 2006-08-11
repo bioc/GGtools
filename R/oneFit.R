@@ -82,7 +82,7 @@ setMethod("oneFit", c("racExSet", "list", "formula", "function"),
     if (!is.numeric(exvals)) stop("geneid list content must be numeric")
     geneid = geneName
 ## as before below
-    if (length(exvals) != length(snpvals)) stop("lengths of numeric expression data and snp allele counts do not agree")
+#    if (length(exvals) != length(snpvals)) stop("lengths of numeric expression data and snp allele counts do not agree")
     ndf = data.frame(exvals,snpvals)
     names(ndf) = c(geneid, snpvars)
 # now build the formula required by fitfun out of the formula fragment and depvar name

@@ -99,5 +99,8 @@ featureNames(dem)[1:4]
 oneFit(dem, genesym("DDR1"), "rs4814683", lm)
 ddr1 = list(DDR1=exprs(dem)["1007_s_at",])
 oneFit(dem, ddr1, "rs4814683", aov)
+data(chr20GGceu)
+ddr1 = list(DDR1=exprs(chr20GGceu)["1007_s_at",])
+summary(oneFit(chr20GGceu, ddr1, ~rs4814683+factor(rs6060535), lm))
 }
 \keyword{classes}
