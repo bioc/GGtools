@@ -57,13 +57,6 @@ demonstration resource.
 \begin{Schunk}
 \begin{Sinput}
 > library(GGtools)
-\end{Sinput}
-\begin{Soutput}
-Loading required package: Biobase
-Loading required package: tools
-Loading required package: hgfocus
-\end{Soutput}
-\begin{Sinput}
 > data(c20GGceu)
 > class(c20GGceu)
 \end{Sinput}
@@ -130,11 +123,11 @@ by HapMap project:
 > chr20meta[1:4, ]
 \end{Sinput}
 \begin{Soutput}
-      rsnum chrom   pos strand
-1 rs4814683 chr20  9795      +
-2 rs6076506 chr20 11231      +
-3 rs6139074 chr20 11244      +
-4 rs1418258 chr20 11799      +
+            pos strand
+rs4814683  9795      +
+rs6076506 11231      +
+rs6139074 11244      +
+rs1418258 11799      +
 \end{Soutput}
 \end{Schunk}
 
@@ -147,120 +140,6 @@ results in Cheung and Spielman 2005:
 \begin{center}
 \begin{Schunk}
 \begin{Sinput}
+> tmp = as(chr20meta, "data.frame")
+> chr20meta = data.frame(rsnum = tmp, tmp)
 > ds1 = detScreen()
-\end{Sinput}
-\end{Schunk}
-\includegraphics{GGOverview-dosc}
-\end{center}
-
-The \Rfunction{detScreen} function returns a list:
-\begin{Schunk}
-\begin{Sinput}
-> names(ds1)
-\end{Sinput}
-\begin{Soutput}
-[1] "bot" "cpn"
-\end{Soutput}
-\begin{Sinput}
-> ds1[[1]]
-\end{Sinput}
-\begin{Soutput}
-rs2425131 
-      793 
-\end{Soutput}
-\begin{Sinput}
-> length(ds1[[2]])
-\end{Sinput}
-\begin{Soutput}
-[1] 3
-\end{Soutput}
-\begin{Sinput}
-> names(ds1[[2]])
-\end{Sinput}
-\begin{Soutput}
-[1] "regs"  "pvals" "locs" 
-\end{Soutput}
-\begin{Sinput}
-> ds1[[2]][[1]][[1]]
-\end{Sinput}
-\begin{Soutput}
-Call:
-lm(formula = exprs(gge)[psid, ] ~ pData(gge)[[i]])
-
-Coefficients:
-    (Intercept)  pData(gge)[[i]]  
-        7.51304          0.03847  
-\end{Soutput}
-\end{Schunk}
-
-\section{Appendix: Package documentation for \Rpackage{GGtools}}
-\begin{Schunk}
-\begin{Soutput}
-		Information on package 'GGtools'
-
-Description:
-
-
-Package:       GGtools
-Title:         software and data for genetical genomics
-Version:       0.0-6
-Author:        stvjc <stvjc@channing.harvard.edu>
-Description:   dealing with hapmap SNP reports, GWAS, etc.
-Depends:       R (>= 2.2.0), Biobase, hgfocus
-Maintainer:    stvjc <stvjc@channing.harvard.edu>
-License:       LGPL
-Built:         R 2.4.0; ; 2006-08-07 08:00:25; unix
-
-
-Index:
-
-
-c20GGceu                representations of HapMap snp data + expression
-                        data
-chr20meta               representations of HapMap snp metadata
-detScreen               perform a screen for SNP determination of
-                        expression using a ggExprSet instance, and
-                        produce a plot
-geneLocs                gene metadata from NCBI
-ggExprSet-class         Class "ggExprSet", representation of genetical
-                        genomics (expression + SNP) data
-ggreg                   regression analysis for additive effect of
-                        genotype on expression
-ggrplot                 plot a regression model for additive effect of
-                        genotype on expression
-regseq                  compute a sequence of regression models
-                        relating genotype to expression
-snps                    accessor for genotype data in a ggExprSet
-
-
-Further information is available in the following vignettes in
-directory '/Users/stvjc/WOrk/ExternalSoft/R-devel/library/GGtools/doc':
-
-
-GGoverview: GGtools overview (source)
-\end{Soutput}
-\end{Schunk}
-
-Session information for this vignette build:
-\begin{Schunk}
-\begin{Sinput}
-> sessionInfo()
-\end{Sinput}
-\begin{Soutput}
-R version 2.4.0 Under development (unstable) (2006-07-16 r38625) 
-powerpc-apple-darwin8.7.0 
-
-locale:
-C
-
-attached base packages:
-[1] "tools"     "methods"   "stats"     "graphics"  "grDevices" "utils"    
-[7] "datasets"  "base"     
-
-other attached packages:
-  GGtools   hgfocus   Biobase 
-  "0.0-6"  "1.12.0" "1.11.20" 
-\end{Soutput}
-\end{Schunk}
-
-\end{document}

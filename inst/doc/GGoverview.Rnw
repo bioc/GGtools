@@ -56,25 +56,25 @@ We will attach the library and have a look at a basic
 demonstration resource.
 <<init>>=
 library(GGtools)
-data(c20GGceu)
-class(c20GGceu)
+data(chr20GGceu)
+class(chr20GGceu)
 c20GGceu
 @
 The \Sexpr{class(c20GGceu)} class is an extension of the
-\Rclass{exprSet} class.  It represents expression
+\Rclass{eSet} class.  It represents expression
 data from the hgfocus chip on 48 individuals in the CEU
 CEPH group, and SNP data obtained from their HapMap genotyping
 results.
 
-The data are organized into an \Sexpr{nrow(exprs(c20GGceu))}
-by \Sexpr{ncol(exprs(c20GGceu))} matrix of expression values
+The data are organized into an \Sexpr{nrow(exprs(chr20GGceu))}
+by \Sexpr{ncol(exprs(chr20GGceu))} matrix of expression values
 accessible with the \texttt{exprs} method, and
-an \Sexpr{nrow(snps(c20GGceu))} by \Sexpr{ncol(snps(c20GGceu))}
+an \Sexpr{nrow(snps(chr20GGceu))} by \Sexpr{ncol(snps(chr20GGceu))}
 of rare allele counts:
 <<lkc20>>=
-dim(exprs(c20GGceu))
-dim(snps(c20GGceu))
-snps(c20GGceu)[1:5,1:5]
+dim(exprs(chr20GGceu))
+dim(snps(chr20GGceu))
+snps(chr20GGceu)[1:5,1:5]
 @
 
 We need some genetic metadata about SNPs; these are
@@ -88,17 +88,17 @@ chr20meta[1:4,]
 
 A basic task is to compute a screen (over the genome, or,
 more practically, over a chromosome) of genotypic determination
-of expression.  The \Rfunction{detScreen} function help
-with this; defaults are supplied for an example related to
+of expression.  The \Rfunction{snpScreen} method helps
+with this; we illustrate an example related to
 results in Cheung and Spielman 2005:
 
-\begin{center}
-<<dosc,fig=TRUE,results=hide>>=
-ds1 = detScreen()
+%\begin{center}
+%<<dosc,fig=TRUE,results=hide>>=
+%ss1 = snpScreen(chr20GGceu, 
 @
 \end{center}
 
-The \Rfunction{detScreen} function returns a list:
+The \Rfunction{detScreen} function returns a list of fit results:
 <<lkds>>=
 names(ds1)
 ds1[[1]]

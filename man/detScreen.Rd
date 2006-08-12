@@ -47,6 +47,9 @@ data(c20GGceu)
 data(chr20meta)
 args(detScreen)
 # for defaults, need to see counting message go to 2200 (granularity 50)
+# rebuild compliant metadata structure
+tmp = as(chr20meta,"data.frame")
+chr20meta = data.frame(rsnum=rownames(tmp), tmp)
 detScreen()
 }
 \keyword{ models }
