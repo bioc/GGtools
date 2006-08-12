@@ -1,5 +1,4 @@
 
-require(Biobase)
 setClass("ggExprSet", contains="exprSet")
 
  setMethod("show", "ggExprSet",
