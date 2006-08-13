@@ -4,6 +4,14 @@ setGeneric("oneFit", function(racExSet, geneid, snpid, fitfun, ...)
 
 getpsid = function( geneid, annostring, one.only=TRUE ) {
   require(annostring, character.only=TRUE)
+  lkmemo = paste(annostring, "SYMMEMO", sep="")
+  if (exists(lkmemo)) {
+     memo = get(lkmemo)
+     kp = which(geneid == names(memo))
+     if (length(kp) == 0) stop(paste("could not find", geneid, "in memo structure."))
+     if (length(kp) > 1) warning(paste(geneid, "has multiple probesets, using first."))
+     return( memo[kp[1]] )
+     }
   gnlist = as.list(get(paste(annostring,"SYMBOL",sep="")))
   fonly = sapply(gnlist, function(x)x[1]) # sometimes there are multiple symbols for aprobeset
   find = which(fonly == geneid)

@@ -57,27 +57,54 @@ demonstration resource.
 \begin{Schunk}
 \begin{Sinput}
 > library(GGtools)
-> data(c20GGceu)
-> class(c20GGceu)
+> data(chr20GGceu)
+> class(chr20GGceu)
 \end{Sinput}
 \begin{Soutput}
-[1] "ggExprSet"
+[1] "racExSet"
 attr(,"package")
-[1] ".GlobalEnv"
+[1] "GGtools"
 \end{Soutput}
 \begin{Sinput}
-> c20GGceu
+> chr20GGceu
 \end{Sinput}
 \begin{Soutput}
-GG Expression Set (exprSet catering for many SNP attributes) with 
-	8793 genes
-	48 samples
-There are  114666  attributes; names include:
-rs4814683 rs6076506 rs6139074 rs1418258 rs7274499 
+racExSet instance (SNP rare allele count + expression)
+rare allele count assayData:
+  Storage mode: environment 
+  featureNames: rs4814683, rs6076506, rs6139074, ..., rs6062370, rs6090120 (114666 total)
+  Dimensions:
+          racs
+Rows    114666
+Samples     48
+
+expression assayData
+  Storage mode: environment 
+  featureNames: 1007_s_at, 1053_at, 117_at, ..., AFFX-r2-P1-cre-3_at, AFFX-r2-P1-cre-5_at (8793 total)
+  Dimensions:
+        exprs
+Rows     8793
+Samples    48
+
+phenoData
+  sampleNames: NA11829, NA11830, NA11831, ..., NA12891, NA12892 (48 total)
+  varLabels and descriptions:
+    rs4814683: snp
+
+Experiment data
+  Experimenter name:  
+  Laboratory:  
+  Contact information:  
+  Title:  
+  URL:  
+  PMIDs:  
+  No abstract available.
+
+Annotation [1] "hgfocus"
 \end{Soutput}
 \end{Schunk}
-The ggExprSet class is an extension of the
-\Rclass{exprSet} class.  It represents expression
+The racExSet class is an extension of the
+\Rclass{eSet} class.  It represents expression
 data from the hgfocus chip on 48 individuals in the CEU
 CEPH group, and SNP data obtained from their HapMap genotyping
 results.
@@ -85,31 +112,31 @@ results.
 The data are organized into an 8793
 by 48 matrix of expression values
 accessible with the \texttt{exprs} method, and
-an 48 by 114666
+an 114666 by 48
 of rare allele counts:
 \begin{Schunk}
 \begin{Sinput}
-> dim(exprs(c20GGceu))
+> dim(exprs(chr20GGceu))
 \end{Sinput}
 \begin{Soutput}
 [1] 8793   48
 \end{Soutput}
 \begin{Sinput}
-> dim(snps(c20GGceu))
+> dim(snps(chr20GGceu))
 \end{Sinput}
 \begin{Soutput}
-[1]     48 114666
+[1] 114666     48
 \end{Soutput}
 \begin{Sinput}
-> snps(c20GGceu)[1:5, 1:5]
+> snps(chr20GGceu)[1:5, 1:5]
 \end{Sinput}
 \begin{Soutput}
-        rs4814683 rs6076506 rs6139074 rs1418258 rs7274499
-NA11829         0         2         0         0         2
-NA11830         1         2         1         1         1
-NA11831         0         2         0         0         2
-NA11832         1         2         1         1         2
-NA11839         0         2         0         0         2
+          NA11829 NA11830 NA11831 NA11832 NA11839
+rs4814683       0       1       0       1       0
+rs6076506       2       2       2       2       2
+rs6139074       0       1       0       1       0
+rs1418258       0       1       0       1       0
+rs7274499       2       1       2       2       2
 \end{Soutput}
 \end{Schunk}
 
@@ -133,13 +160,119 @@ rs1418258 11799      +
 
 A basic task is to compute a screen (over the genome, or,
 more practically, over a chromosome) of genotypic determination
-of expression.  The \Rfunction{detScreen} function help
-with this; defaults are supplied for an example related to
+of expression.  The \Rfunction{snpScreen} method helps
+with this; we illustrate an example related to
 results in Cheung and Spielman 2005:
 
-\begin{center}
 \begin{Schunk}
 \begin{Sinput}
-> tmp = as(chr20meta, "data.frame")
-> chr20meta = data.frame(rsnum = tmp, tmp)
-> ds1 = detScreen()
+> S100 = snpScreen(chr20GGceu, chr20meta, genesym("CPNE1"), ~., 
++     lm, 100)
+> S100
+\end{Sinput}
+\begin{Soutput}
+GGtools snpScreenResult for call:
+snpScreen(racExSet = chr20GGceu, snpMeta = chr20meta, gene = genesym("CPNE1"), 
+    formTemplate = ~., fitter = lm, gran = 100)
+There were 1145 attempted fits,
+and 1145 were successful.
+\end{Soutput}
+\end{Schunk}
+A primitive display is obtained as follows.  We know that \texttt{lm}
+was used, so the relevant p-values are in the coefficient component
+of the summarized fit objects.
+\begin{Schunk}
+\begin{Sinput}
+> ps = as.numeric(sapply(S100, function(x) try(summary(x)$coef[2, 
++     4])))
+> plot(S100@locs, -log10(ps), xlab = "chromosomal location")
+\end{Sinput}
+\end{Schunk}
+\includegraphics{GGoverview-dofig}
+
+%\begin{center}
+%<<dosc,fig=TRUE,results=hide>>=
+%ss1 = snpScreen(chr20GGceu, 
+
+%The \Rfunction{detScreen} function returns a list of fit results:
+%<<lkds>>=
+%names(ds1)
+%ds1[[1]]
+%length(ds1[[2]])
+%names(ds1[[2]])
+%ds1[[2]][[1]][[1]]
+
+\section{Appendix: Package documentation for \Rpackage{GGtools}}
+\begin{Schunk}
+\begin{Soutput}
+		Information on package 'GGtools'
+
+Description:
+
+
+Package:       GGtools
+Title:         software and data for genetical genomics (c) 2006 VJ
+               Carey
+Version:       0.2-4
+Author:        stvjc <stvjc@channing.harvard.edu>
+Description:   dealing with hapmap SNP reports, GWAS, etc.
+Depends:       R (>= 2.2.0), Biobase (>= 1.11.26), hgfocus, GGdata
+Maintainer:    stvjc <stvjc@channing.harvard.edu>
+License:       Artistic (see COPYING)
+Packaged:      Thu Aug 10 11:02:04 2006; stvjc
+Built:         R 2.4.0; ; 2006-08-12 23:16:47; unix
+
+
+Index:
+
+
+HM2rac                  compute rare allele count from a hapmap file
+c20GGceu                representations of HapMap snp data + expression
+                        data
+chr20meta               representations of HapMap snp metadata
+detScreen               perform a screen for SNP determination of
+                        expression using a ggExprSet instance, and
+                        produce a plot
+geneLocs                gene metadata from NCBI
+ggExprSet-class         Class "ggExprSet", representation of genetical
+                        genomics (expression + SNP) data
+ggreg                   regression analysis for additive effect of
+                        genotype on expression
+ggrplot                 plot a regression model for additive effect of
+                        genotype on expression
+regseq                  compute a sequence of regression models
+                        relating genotype to expression
+snps                    accessor for genotype data in a ggExprSet
+
+
+Further information is available in the following vignettes in
+directory '/Users/stvjc/WOrk/ExternalSoft/R-devel/library/GGtools/doc':
+
+
+GGOverview: GGtools overview (source)
+\end{Soutput}
+\end{Schunk}
+
+Session information for this vignette build:
+\begin{Schunk}
+\begin{Sinput}
+> sessionInfo()
+\end{Sinput}
+\begin{Soutput}
+R version 2.4.0 Under development (unstable) (2006-07-16 r38625) 
+powerpc-apple-darwin8.7.0 
+
+locale:
+C
+
+attached base packages:
+[1] "tools"     "methods"   "stats"     "graphics"  "grDevices" "utils"    
+[7] "datasets"  "base"     
+
+other attached packages:
+  GGtools    GGdata   hgfocus   Biobase 
+  "0.2-4"   "0.0-1"  "1.12.0" "1.11.26" 
+\end{Soutput}
+\end{Schunk}
+
+\end{document}

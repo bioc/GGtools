@@ -58,9 +58,9 @@ demonstration resource.
 library(GGtools)
 data(chr20GGceu)
 class(chr20GGceu)
-c20GGceu
+chr20GGceu
 @
-The \Sexpr{class(c20GGceu)} class is an extension of the
+The \Sexpr{class(chr20GGceu)} class is an extension of the
 \Rclass{eSet} class.  It represents expression
 data from the hgfocus chip on 48 individuals in the CEU
 CEPH group, and SNP data obtained from their HapMap genotyping
@@ -92,11 +92,22 @@ of expression.  The \Rfunction{snpScreen} method helps
 with this; we illustrate an example related to
 results in Cheung and Spielman 2005:
 
+<<do20>>=
+S100 = snpScreen(chr20GGceu, chr20meta, genesym("CPNE1"), ~., lm, 100) 
+S100
+@
+A primitive display is obtained as follows.  We know that \texttt{lm}
+was used, so the relevant p-values are in the coefficient component
+of the summarized fit objects.
+<<dofig,fig=TRUE>>=
+ps = as.numeric(sapply(S100, function(x) try(summary(x)$coef[2,4])))
+plot(S100@locs, -log10(ps), xlab="chromosomal location")
+@
+
 %\begin{center}
 %<<dosc,fig=TRUE,results=hide>>=
 %ss1 = snpScreen(chr20GGceu, 
 @
-\end{center}
 
 %The \Rfunction{detScreen} function returns a list of fit results:
 %<<lkds>>=
