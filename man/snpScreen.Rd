@@ -1,4 +1,7 @@
 \name{snpScreen}
+\alias{snpScreenResult-class}
+\alias{show,snpScreenResult-method}
+\alias{snpScreen,racExSet,snpMeta,genesym,formula,function,numeric-method}
 \alias{snpScreen}
 \title{compute model fits over a sequence of SNPs  }
 \description{
@@ -25,6 +28,9 @@ linear sequence in the racExSet racAssay structure }
 \details{
 If \code{options()$verbose == TRUE} then every 100th index in the
 vector of snps is printed to stdout to show rate of progress.
+
+\code{snpScreenResult} is a container for relevant information
+about a screen, including a list of fit objects.
 }
 \value{
 creates a list of model fit results; \code{\link{try}} is used to

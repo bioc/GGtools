@@ -3,6 +3,8 @@
 \docType{class}
 \alias{racExSet-class}
 \alias{genesym-class}
+\alias{genesym}
+\alias{getpsid}
 \alias{snps,racExSet-method}
 \alias{snpNames,racExSet-method}
 \alias{racAssays,racExSet-method}
@@ -16,6 +18,8 @@
 \alias{oneFit,racExSet,genesym,character,function-method}
 \alias{oneFit,racExSet,character,character,function-method}
 \alias{oneFit,racExSet,list,character,function-method}
+\alias{oneFit,racExSet,list,formula,function-method}
+\alias{show,racExSet-method}
 
 \title{Class "racExSet" for combining RareAlleleCount representations
 of SNPs, gene expression data, and other phenotype data }
@@ -68,6 +72,13 @@ Some backtick coding is needed to get this to work generally. }
 be a named list of length one with content a numeric vector of
 expression values conforming to the snp values.  Avoids lookup
 of gene name and of expression values.}
+   \item{oneFit}{\code{signature(racExSet = "racExSet", geneid = "list" , snpid="formula", fitfun="function")}: the \code{geneid} parameter must be bound to a named list of length 1
+with content a numeric vector
+with one element per sample; the name of the list element is the gene symbol on
+which the numeric vector is a vector of expression values; the
+\code{snpid} parameter is bound to a formula template, either
+\code{~.} or \code{~factor(.)} expressing choice between an additive
+genetic model and a general model.}
 	 }
 }
 %\references{ ~put references to the literature/web site here ~ }

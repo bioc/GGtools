@@ -98,13 +98,13 @@ results in Cheung and Spielman 2005:
 @
 \end{center}
 
-The \Rfunction{detScreen} function returns a list of fit results:
-<<lkds>>=
-names(ds1)
-ds1[[1]]
-length(ds1[[2]])
-names(ds1[[2]])
-ds1[[2]][[1]][[1]]
+%The \Rfunction{detScreen} function returns a list of fit results:
+%<<lkds>>=
+%names(ds1)
+%ds1[[1]]
+%length(ds1[[2]])
+%names(ds1[[2]])
+%ds1[[2]][[1]][[1]]
 @
 
 \section{Appendix: Package documentation for \Rpackage{GGtools}}
