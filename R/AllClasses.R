@@ -52,7 +52,8 @@ setMethod("snps", "ggExprSet", function(x) pData(phenoData(x)))
 #})
 
 setClass("racExSet", representation(
-    racAssays="AssayData"), contains="eSet",
+    racAssays="AssayData",
+    rarebase="character", SNPalleles="character"), contains="eSet",
     prototype = prototype(racAssays=assayDataNew()))
 
 
@@ -63,6 +64,8 @@ setMethod("initialize", "racExSet",
                    annotation = character(),
                    exprs = new("matrix"),
 		   racs = new("matrix"),
+		   rarebase = character(),
+                   SNPalleles = character(),
                    ... ) {
             .Object = callNextMethod(.Object,
                            assayData = assayDataNew(
@@ -72,6 +75,8 @@ setMethod("initialize", "racExSet",
                            experimentData = experimentData,
                            annotation = annotation)
 	    .Object@racAssays = assayDataNew(racs =racs)
+            .Object@SNPalleles = SNPalleles
+	    .Object@rarebase = rarebase
             .Object
           })
 
@@ -82,6 +87,10 @@ setGeneric("racAssays", function(x) standardGeneric("racAssays"))
 setMethod("racAssays", "racExSet", function(x) x@racAssays)
 setGeneric("snpNames", function(x) standardGeneric("snpNames"))
 setMethod("snpNames", "racExSet", function(x) featureNames(x@racAssays))
+setGeneric("rarebase", function(x) standardGeneric("rarebase"))
+setMethod("rarebase", "racExSet", function(x) x@rarebase)
+setGeneric("SNPalleles", function(x) standardGeneric("SNPalleles"))
+setMethod("SNPalleles", "racExSet", function(x) x@SNPalleles)
 
 setMethod("show", "racExSet", function(object) {
     cat("racExSet instance (SNP rare allele count + expression)\n")
@@ -109,14 +118,17 @@ setMethod("show", "racExSet", function(object) {
   show(annotation(object))
     })
 
-make_racExSet = function(exprs, racs, pd, mi, anno) {
+make_racExSet = function(exprs, racs, rarebase, SNPalleles, pd, mi, anno) {
     if (!is(exprs, "matrix")) 
         stop("exprs must be of class matrix")
     if (!is(racs, "matrix")) 
         stop("racs must be of class matrix")
     if (!is(pd, "phenoData")) 
         stop("pd must be of class phenoData")
-    new("racExSet", exprs=exprs, racs=racs, 
+    names(SNPalleles) = rownames(racs)
+    names(rarebase) = rownames(racs)
+    new("racExSet", exprs=exprs, racs=racs, rarebase=rarebase, 
+        SNPalleles = SNPalleles,
         phenoData = pd, experimentData = mi, 
         annotation = anno)
 }

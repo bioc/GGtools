@@ -12,7 +12,8 @@ import(Biobase)
 
 exportClass(ggExprSet, racExSet, genesym, snpScreenResult)
 
-exportMethods("snps", "snpNames", "racAssays", "snpScreen", "show")
+exportMethods("snps", "snpNames", "racAssays", "snpScreen", "show",
+	"rarebase", "SNPalleles")
 
 export("ggreg", "HM2rac", "ggrplot", "detScreen", "regseq",
    "make_racExSet", "countRare", "getRare", "genesym", "getpsid",

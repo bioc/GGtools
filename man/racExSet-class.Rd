@@ -15,6 +15,8 @@
 \alias{pdd}
 \alias{racAssays}
 \alias{snpNames}
+\alias{SNPalleles}
+\alias{rarebase}
 \alias{oneFit,racExSet,genesym,character,function-method}
 \alias{oneFit,racExSet,character,character,function-method}
 \alias{oneFit,racExSet,list,character,function-method}
@@ -35,6 +37,10 @@ of 0, 1, 2, or NA, rownames are RS numbers from dbSNP, column names
 are sampleNames }
     \item{\code{assayData}:}{Object of class \code{"AssayData"} GxN matrix
 of expression values }
+    \item{\code{rarebase}:}{character vector of length G stating the
+rare base of the SNP}
+    \item{\code{SNPalleles}:}{character vector of length G stating the
+alleles in the form "A/B"}
     \item{\code{phenoData}:}{Object of class \code{"AnnotatedDataFrame"} standard
 phenoData instance }
     \item{\code{experimentData}:}{Object of class \code{"MIAME"} experiment
@@ -91,6 +97,9 @@ carries out the translation; the \code{genesym} class/wrapper
 just tells us that a string will be serving the role of
 a HUGO symbol and allows us to dispatch accordingly.}
 
+\section{Notes}{Helper functions \code{SNPalleles}
+and \code{rarebase} are accessors}
+
 % ~Make other sections like Warning with \section{Warning }{....} ~
 %
 \seealso{
@@ -98,12 +107,7 @@ a HUGO symbol and allows us to dispatch accordingly.}
 class
 }
 \examples{
-# as in make_racExSet
-data(litsn)
-data(litex)
-data(pdd)
-dem = make_racExSet( exprs=litex, racs=t(litsn), pd=pdd, mi=new("MIAME"),
-  anno="hgfocus")
+example(make_racExSet)
 dem
 snpNames(dem)[1:4]
 featureNames(dem)[1:4]

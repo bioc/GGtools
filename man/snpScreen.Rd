@@ -45,12 +45,7 @@ model matrix is computed
 %\seealso{  }
 
 \examples{
-# as in make_racExSet
-data(litsn)
-data(litex)
-data(pdd)
-dem = make_racExSet( exprs=litex, racs=t(litsn), pd=pdd, mi=new("MIAME"),
-  anno="hgfocus")
+example(make_racExSet)
 dem
 snpNames(dem)[1:4]
 featureNames(dem)[1:4]

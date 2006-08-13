@@ -30,8 +30,10 @@ are snp ids (rs numbers)}
 data(litsn)
 data(litex)
 data(pdd)
+data(rb20M)
+data(Sa20M)
 dem = make_racExSet( exprs=litex, racs=t(litsn), pd=pdd, mi=new("MIAME"),
-  anno="hgfocus")
+  rarebase=rb20M, SNPalleles=Sa20M, anno="hgfocus")
 dem
 }
 \keyword{ models }
