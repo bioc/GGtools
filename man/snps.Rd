@@ -23,8 +23,8 @@ instance of data.frame
 %\seealso{  }
 
 \examples{
-data(c20GGceu)
-dim(snps(c20GGceu))
-snps(c20GGceu)[1:4,1:4]
+data(chr20GGceu)
+dim(snps(chr20GGceu))
+snps(chr20GGceu)[1:4,1:4]
 }
 \keyword{ models }

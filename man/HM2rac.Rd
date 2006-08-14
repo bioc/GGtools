@@ -1,11 +1,13 @@
 \name{HM2rac}
 \alias{HM2rac}
+\alias{thinHM2rac}
 \alias{getRare}
 \alias{countRare}
 \title{compute rare allele count from a hapmap file}
 \description{compute rare allele count from a hapmap file}
 \usage{
 HM2rac(fn, comment.char="", kppref="NA")
+thinHM2rac(gzfn, comment.char="", kppref="NA")
 countRare(x)
 getRare(x)
 }
@@ -40,10 +42,11 @@ countRare and getRare are simple string processing functions
 %\seealso{  }
 
 \examples{
-fi = system.file("fileDemos/geno20demo.txt", package="GGtools")
-racstr =  HM2rac(fi)
+fi = system.file("fileDemos/geno20demo.txt.gz", package="GGtools")
+racstr =  thinHM2rac(fi)
 names(racstr)
-racstr$raremat[1:5,1:7]
+racstr$rarecount[1:5,1:7]
+racstr$rarebase[1:6]
 racstr$alleles[1:6]
 getRare(c("AA", "AG", "GG", "GG"))
 countRare(c("AA", "AG", "GG", "GG"))

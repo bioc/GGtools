@@ -30,8 +30,8 @@ the regression
 %\seealso{  }
 
 \examples{
-data(c20GGceu)
-library(hgfocus)
-ggrplot(c20GGceu, "CPNE1", "rs6060535")
+#data(c20GGceu)
+#library(hgfocus)
+#ggrplot(c20GGceu, "CPNE1", "rs6060535")
 }
 \keyword{ models }

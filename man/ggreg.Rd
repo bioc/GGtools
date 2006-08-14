@@ -32,9 +32,9 @@ rare and heterozygous)}
 %\seealso{  }
 
 \examples{
-data(c20GGceu)
-ggcpne1 = ggreg(c20GGceu, "206918_s_at", which(names(snps(c20GGceu)) ==
-  "rs6060535"))
-summary(ggcpne1[[1]])
+#data(c20GGceu)
+#ggcpne1 = ggreg(c20GGceu, "206918_s_at", which(names(snps(c20GGceu)) ==
+#  "rs6060535"))
+#summary(ggcpne1[[1]])
 }
 \keyword{ models }

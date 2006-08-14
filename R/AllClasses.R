@@ -1,20 +1,20 @@
 
-setClass("ggExprSet", contains="exprSet")
-
- setMethod("show", "ggExprSet",
-   function(object ) {
-      dm <-dim(exprs(object))
-      ngenes <- dm[1]
-      nsamples <- dm[2]
-      cat("GG Expression Set (exprSet catering for many SNP attributes) with \n\t", ngenes, " genes\n\t", sep="")
-      cat(nsamples, "samples\n")
-      cat("There are ", np <- ncol(pData(object)), " attributes; names include:\n")
-      cat(colnames(pData(object))[1:min(c(5,np))],"\n")
-   }
-)
+#setClass("ggExprSet", contains="exprSet")
+#
+# setMethod("show", "ggExprSet",
+#   function(object ) {
+#      dm <-dim(exprs(object))
+#      ngenes <- dm[1]
+#      nsamples <- dm[2]
+#      cat("GG Expression Set (exprSet catering for many SNP attributes) with \n\t", ngenes, " genes\n\t", sep="")
+#      cat(nsamples, "samples\n")
+#      cat("There are ", np <- ncol(pData(object)), " attributes; names include:\n")
+#      cat(colnames(pData(object))[1:min(c(5,np))],"\n")
+#   }
+#)
 
 setGeneric("snps", function(x) standardGeneric("snps"))
-setMethod("snps", "ggExprSet", function(x) pData(phenoData(x)))
+#setMethod("snps", "ggExprSet", function(x) pData(phenoData(x)))
 
 #> getClass("eSet")
 #Virtual Class

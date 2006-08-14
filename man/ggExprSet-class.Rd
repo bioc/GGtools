@@ -47,9 +47,9 @@ the data.frame holding the genotypes }
 	\code{\link[Biobase]{exprSet-class}} 
 }
 \examples{
-getClass("ggExprSet")
-# be patient...
-data(c20GGceu)
-snps(c20GGceu)[1:4,1:4]
+#getClass("ggExprSet")
+## be patient...
+#data(c20GGceu)
+#snps(c20GGceu)[1:4,1:4]
 }
 \keyword{classes}
