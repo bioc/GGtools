@@ -13,7 +13,7 @@
 #invisible(list(bot=bot, cpn=cpn))
 #}
 
-setClass("snpScreenResult", representation(call="call", 
+setClass("snpScreenResult", representation(call="call", gene="character",
     locs="numeric", chr="character", fittertok="character"), contains="list")
 
 setGeneric("snpScreen", function(racExSet, snpMeta, gene, formTemplate, fitter, gran, ...)
@@ -51,7 +51,7 @@ setMethod("snpScreen", c("racExSet", "snpMeta", "genesym", "formula", "function"
       callsave = match.call()
       fittertok = deparse(substitute(fitter))
       new("snpScreenResult", call = callsave, locs = locs, chr = chromosome(snpMeta), 
-        fittertok = fittertok, out)
+        fittertok = fittertok, gene=as.character(gene), out)
 })
 
 setMethod("show", "snpScreenResult", function(object) {
@@ -61,4 +61,15 @@ setMethod("show", "snpScreenResult", function(object) {
    nerr = sum(sapply(object, function(x) inherits(x, "try-error")))
    cat("and", nf, "were successful.\n")
 })
+
+extract_p = function(ssr) {
+  if (ssr@fittertok != "lm") stop("code is idiosyncratic for lm fits")
+  ps = as.numeric(sapply(ssr, function(x) try(summary(x)$coef[2,4],silent=TRUE)))
+}
+
+plot_mlp = function(ssr) {
+  if (ssr@fittertok != "lm") stop("code is idiosyncratic for lm fits")
+  ps = as.numeric(sapply(ssr, function(x) try(summary(x)$coef[2,4],silent=TRUE)))
+  plot(ssr@locs, -log10(ps), xlab="chromosomal location", ylab="-log10 p Ho:Bs=0", main=ssr@gene)
+}
 
