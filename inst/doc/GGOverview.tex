@@ -72,11 +72,11 @@ attr(,"package")
 racExSet instance (SNP rare allele count + expression)
 rare allele count assayData:
   Storage mode: environment 
-  featureNames: rs4814683, rs6076506, rs6139074, ..., rs6062370, rs6090120 (114666 total)
+  featureNames: rs4814683, rs6076506, rs6139074, ..., rs6062370, rs6090120 (117417 total)
   Dimensions:
           racs
-Rows    114666
-Samples     48
+Rows    117417
+Samples     58
 
 expression assayData
   Storage mode: environment 
@@ -84,21 +84,22 @@ expression assayData
   Dimensions:
         exprs
 Rows     8793
-Samples    48
+Samples    58
 
 phenoData
-  sampleNames: NA11829, NA11830, NA11831, ..., NA12891, NA12892 (48 total)
+  sampleNames: NA06985, NA06993, NA06994, ..., NA12891, NA12892 (58 total)
   varLabels and descriptions:
-    rs4814683: snp
+    sample: arbitrary numbering
 
 Experiment data
-  Experimenter name:  
-  Laboratory:  
+  Experimenter name: Cheung VG 
+  Laboratory: Department of Pediatrics, University of Pennsylvania, Philadelphia, Pennsylvania 19104, USA. vcheung@mail.med.upenn.edu 
   Contact information:  
-  Title:  
+  Title: Mapping determinants of human gene expression by regional and genome-wide association. 
   URL:  
-  PMIDs:  
-  No abstract available.
+  PMIDs: 16251966 
+
+  Abstract: A 180 word abstract is available. Use 'abstract' method.
 
 Annotation [1] "hgfocus"
 \end{Soutput}
@@ -110,33 +111,33 @@ CEPH group, and SNP data obtained from their HapMap genotyping
 results.
 
 The data are organized into an 8793
-by 48 matrix of expression values
+by 58 matrix of expression values
 accessible with the \texttt{exprs} method, and
-an 114666 by 48
+an 117417 by 58
 of rare allele counts:
 \begin{Schunk}
 \begin{Sinput}
 > dim(exprs(chr20GGceu))
 \end{Sinput}
 \begin{Soutput}
-[1] 8793   48
+[1] 8793   58
 \end{Soutput}
 \begin{Sinput}
 > dim(snps(chr20GGceu))
 \end{Sinput}
 \begin{Soutput}
-[1] 114666     48
+[1] 117417     58
 \end{Soutput}
 \begin{Sinput}
 > snps(chr20GGceu)[1:5, 1:5]
 \end{Sinput}
 \begin{Soutput}
-          NA11829 NA11830 NA11831 NA11832 NA11839
-rs4814683       0       1       0       1       0
-rs6076506       2       2       2       2       2
-rs6139074       0       1       0       1       0
-rs1418258       0       1       0       1       0
-rs7274499       2       1       2       2       2
+          NA06985 NA06993 NA06994 NA07000 NA07022
+rs4814683       2       0       0       2       1
+rs6076506       0       0       0       0      NA
+rs6139074       2       0       0       2       1
+rs1418258       2       0       0       2       1
+rs7274499       0       0       0       0      NA
 \end{Soutput}
 \end{Schunk}
 
@@ -167,15 +168,15 @@ results in Cheung and Spielman 2005:
 \begin{Schunk}
 \begin{Sinput}
 > S100 = snpScreen(chr20GGceu, chr20meta, genesym("CPNE1"), ~., 
-+     lm, 100)
++     lm, gran = 25)
 > S100
 \end{Sinput}
 \begin{Soutput}
 GGtools snpScreenResult for call:
 snpScreen(racExSet = chr20GGceu, snpMeta = chr20meta, gene = genesym("CPNE1"), 
-    formTemplate = ~., fitter = lm, gran = 100)
-There were 1145 attempted fits,
-and 1145 were successful.
+    formTemplate = ~., fitter = lm, gran = 25)
+There were 4697 attempted fits,
+and 4697 were successful.
 \end{Soutput}
 \end{Schunk}
 A primitive display is obtained as follows.  We know that \texttt{lm}
@@ -213,23 +214,20 @@ Description:
 Package:       GGtools
 Title:         software and data for genetical genomics (c) 2006 VJ
                Carey
-Version:       0.2-4
+Version:       0.2-6
 Author:        stvjc <stvjc@channing.harvard.edu>
 Description:   dealing with hapmap SNP reports, GWAS, etc.
 Depends:       R (>= 2.2.0), Biobase (>= 1.11.26), hgfocus, GGdata
 Maintainer:    stvjc <stvjc@channing.harvard.edu>
 License:       Artistic (see COPYING)
 Packaged:      Thu Aug 10 11:02:04 2006; stvjc
-Built:         R 2.4.0; ; 2006-08-12 23:16:47; unix
+Built:         R 2.4.0; ; 2006-08-14 06:03:54; unix
 
 
 Index:
 
 
 HM2rac                  compute rare allele count from a hapmap file
-c20GGceu                representations of HapMap snp data + expression
-                        data
-chr20meta               representations of HapMap snp metadata
 detScreen               perform a screen for SNP determination of
                         expression using a ggExprSet instance, and
                         produce a plot
@@ -240,8 +238,13 @@ ggreg                   regression analysis for additive effect of
                         genotype on expression
 ggrplot                 plot a regression model for additive effect of
                         genotype on expression
+make_racExSet           create a racExSet from simpler constituents
+racExSet-class          Class "racExSet" for combining RareAlleleCount
+                        representations of SNPs, gene expression data,
+                        and other phenotype data
 regseq                  compute a sequence of regression models
                         relating genotype to expression
+snpScreen               compute model fits over a sequence of SNPs
 snps                    accessor for genotype data in a ggExprSet
 
 
@@ -249,7 +252,7 @@ Further information is available in the following vignettes in
 directory '/Users/stvjc/WOrk/ExternalSoft/R-devel/library/GGtools/doc':
 
 
-GGOverview: GGtools overview (source)
+GGoverview: GGtools overview (source)
 \end{Soutput}
 \end{Schunk}
 
@@ -271,7 +274,7 @@ attached base packages:
 
 other attached packages:
   GGtools    GGdata   hgfocus   Biobase 
-  "0.2-4"   "0.0-1"  "1.12.0" "1.11.26" 
+  "0.2-6"   "0.0-2"  "1.12.0" "1.11.26" 
 \end{Soutput}
 \end{Schunk}
 

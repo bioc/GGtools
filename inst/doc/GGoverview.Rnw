@@ -93,7 +93,7 @@ with this; we illustrate an example related to
 results in Cheung and Spielman 2005:
 
 <<do20>>=
-S100 = snpScreen(chr20GGceu, chr20meta, genesym("CPNE1"), ~., lm, 100) 
+S100 = snpScreen(chr20GGceu, chr20meta, genesym("CPNE1"), ~., lm, gran=25) 
 S100
 @
 A primitive display is obtained as follows.  We know that \texttt{lm}
