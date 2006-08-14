@@ -65,12 +65,10 @@ setMethod("initialize", "racExSet",
                    exprs = new("matrix"),
 		   racs = new("matrix"),
 		   rarebase = character(),
-                   SNPalleles = character(),
-                   ... ) {
+                   SNPalleles = character()) {
             .Object = callNextMethod(.Object,
                            assayData = assayDataNew(
-                             exprs=exprs,
-                             ...),
+                             exprs=exprs),
                            phenoData = phenoData,
                            experimentData = experimentData,
                            annotation = annotation)
