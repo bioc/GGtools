@@ -48,6 +48,7 @@ setMethod("snpScreen", c("racExSet", "snpMeta", "genesym", "formula", "function"
           fm = runTemplate(formTemplate, snpstodo[i])
           out[[i]] = try(oneFit(racExSet, outco, fm, fitter))
       }
+      names(out) = snpstodo
       callsave = match.call()
       fittertok = deparse(substitute(fitter))
       new("snpScreenResult", call = callsave, locs = locs, chr = chromosome(snpMeta), 
@@ -70,6 +71,6 @@ extract_p = function(ssr) {
 plot_mlp = function(ssr) {
   if (ssr@fittertok != "lm") stop("code is idiosyncratic for lm fits")
   ps = as.numeric(sapply(ssr, function(x) try(summary(x)$coef[2,4],silent=TRUE)))
-  plot(ssr@locs, -log10(ps), xlab="chromosomal location", ylab="-log10 p Ho:Bs=0", main=ssr@gene)
+  scatterSmooth(ssr@locs, -log10(ps), xlab="chromosomal location", ylab="-log10 p Ho:Bs=0", main=ssr@gene)
 }
 
