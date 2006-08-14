@@ -68,9 +68,24 @@ extract_p = function(ssr) {
   ps = as.numeric(sapply(ssr, function(x) try(summary(x)$coef[2,4],silent=TRUE)))
 }
 
-plot_mlp = function(ssr) {
-  if (ssr@fittertok != "lm") stop("code is idiosyncratic for lm fits")
-  ps = as.numeric(sapply(ssr, function(x) try(summary(x)$coef[2,4],silent=TRUE)))
-  scatterSmooth(ssr@locs, -log10(ps), xlab="chromosomal location", ylab="-log10 p Ho:Bs=0", main=ssr@gene)
+plot_mlp <- function (ssr, snpMeta, ps=NULL) 
+{
+    if (ssr@fittertok != "lm") 
+        stop("code is idiosyncratic for lm fits")
+    if (is.null(ps)) ps = as.numeric(sapply(ssr, function(x) try(summary(x)$coef[2, 
+        4], silent = TRUE)))
+    if (length(ssr@locs) > 200) plotf = smoothScatter
+     else plotf = plot
+    plotf(ssr@locs, -log10(ps), xlab = "chromosomal location", 
+        ylab = "-log10 p Ho:Bs=0", main = ssr@gene, xlim=range(snpMeta[,"pos"]))
+    data(geneLocs)
+    x = geneLocs[geneLocs$gene == ssr@gene, ]
+    if (nrow(x) == 0) 
+        return(invisible(NULL))
+    for (i in 1:nrow(x)) {
+        axis(3, at = x[i, "beg"], labels = FALSE, col = "green")
+        axis(3, at = x[i, "end"], labels = FALSE, col = "red")
+    }
+    return(invisible(NULL))
 }
 

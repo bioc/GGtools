@@ -63,6 +63,6 @@ scr1 = snpScreen(dem, chr20meta, genesym("DDR1"), ~., lm, gran=100 )
 scr2 = snpScreen(dem, chr20meta, genesym("DDR1"), ~factor(.), lm,  gran=100 )
 scr1[[1]]
 scr2[[1]]
-plot_mlp(scr1)
+plot_mlp(scr1, chr20meta)
 }
 \keyword{ models }
