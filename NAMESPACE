@@ -1,4 +1,4 @@
-#useDynLib(Biobase)
+useDynLib(GGtools)
 #
 #import(tools)
 #
@@ -17,4 +17,8 @@ exportMethods("snps", "snpNames", "racAssays", "snpScreen", "show",
 
 export("HM2rac", 
    "make_racExSet", "countRare", "getRare", "genesym", "getpsid",
-   "oneFit", "thinHM2rac", "genoStrings", "extract_p", "plot_mlp")
+   "oneFit", "thinHM2rac", "genoStrings", "extract_p", "plot_mlp", "fastAGM")
+
+importFrom("KernSmooth", "bkde2D")
+importFrom("RColorBrewer", "brewer.pal")
+

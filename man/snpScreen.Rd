@@ -4,6 +4,7 @@
 \alias{snpScreen,racExSet,snpMeta,genesym,formula,function,numeric-method}
 \alias{snpScreen}
 \alias{extract_p}
+\alias{fastAGM}
 \alias{plot_mlp}
 \title{compute model fits over a sequence of SNPs  }
 \description{
@@ -41,6 +42,9 @@ about a screen, including a list of fit objects.
 For result processing, many SNPs have no variation in observed
 samples and statistical tests of association are indeterminate.
 NAs will be returned for tests on such SNPs.
+
+\code{fastAGM} is a C routine for simple least square fitting
+of an additive genetic model.
 }
 \value{
 creates a list of model fit results; \code{\link{try}} is used to
@@ -59,10 +63,14 @@ example(make_racExSet)
 dem
 snpNames(dem)[1:4]
 featureNames(dem)[1:4]
-scr1 = snpScreen(dem, chr20meta, genesym("DDR1"), ~., lm, gran=100 )
-scr2 = snpScreen(dem, chr20meta, genesym("DDR1"), ~factor(.), lm,  gran=100 )
+scr1 = snpScreen(dem, chr20meta, genesym("DDR1"), ~., lm,  gran=100 )
 scr1[[1]]
+scr2 = snpScreen(dem, chr20meta, genesym("DDR1"), ~factor(.), lm,  gran=200 )
 scr2[[1]]
 plot_mlp(scr1, chr20meta)
+ut = unix.time(scr2 <- snpScreen(chr20GGceu, chr20meta, genesym("CPNE1"), ~factor(.), fastAGM, 1))
+ut
+scr2
+plot_mlp(scr2, chr20meta)
 }
 \keyword{ models }
