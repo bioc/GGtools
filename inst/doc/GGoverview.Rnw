@@ -118,6 +118,38 @@ plot(S100@locs, -log10(ps), xlab="chromosomal location")
 %ds1[[2]][[1]][[1]]
 @
 
+\section{Performance-oriented specialization}
+
+The \texttt{snpScreen} method illustrated above is very
+general (can accommodate and retain results of any R modeling function)
+but fairly slow.  We have added an R function \texttt{fastAGM}
+for fast fitting of an additive genetic model (equivalent to
+but much faster than using \texttt{lm}).  We apply this
+for IRF5 on chromosome 7, and attempt to fit on all SNPs that
+have no missing values:
+<<dofast>>=
+ut = unix.time(sIRF5 <- snpScreen(chr7GGceu, chr7meta, genesym("IRF5"), ~.,
+  fastAGM, 1))
+ut
+sIRF5
+wm = which.min(pp <- extract_p(sIRF5))
+pp[wm]
+<<dofig5,fig=TRUE>>=
+plot_mlp(sIRF5, chr7meta)
+@
+
+With the conservative approach to missing data taken thus far,
+the result does not agree with that of Cheung and Spielman,
+who found rs2280714 to be most significant.  The two SNPs
+are not completely concordant, but the basic patterns are similar:
+<<lkevg,fig=TRUE>>=
+ par(mfrow=c(1,2))
+ plot_EvG(chr7GGceu, genesym("IRF5"), "rs2280714")
+ plot_EvG(chr7GGceu, genesym("IRF5"), "rs6969930")
+@
+
+ 
+
 \section{Appendix: Package documentation for \Rpackage{GGtools}}
 <<getplop,echo=FALSE>>=
 plop = function(x)

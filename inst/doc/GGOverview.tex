@@ -57,6 +57,19 @@ demonstration resource.
 \begin{Schunk}
 \begin{Sinput}
 > library(GGtools)
+\end{Sinput}
+\begin{Soutput}
+Loading required package: Biobase
+Loading required package: tools
+Loading required package: hgfocus
+Loading required package: GGdata
+Loading required package: geneplotter
+Loading required package: annotate
+KernSmooth 2.22 installed
+Copyright M. P. Wand 1997
+Loading required package: RColorBrewer
+\end{Soutput}
+\begin{Sinput}
 > data(chr20GGceu)
 > class(chr20GGceu)
 \end{Sinput}
@@ -203,6 +216,49 @@ of the summarized fit objects.
 %names(ds1[[2]])
 %ds1[[2]][[1]][[1]]
 
+\section{Performance-oriented specialization}
+
+The \texttt{snpScreen} method illustrated above is very
+general (can accommodate and retain results of any R modeling function)
+but fairly slow.  We have added an R function \texttt{fastAGM}
+for fast fitting of an additive genetic model (equivalent to
+but much faster than using \texttt{lm}).  We apply this
+for IRF5 on chromosome 7, and attempt to fit on all SNPs that
+have no missing values:
+\begin{Schunk}
+\begin{Sinput}
+> ut = unix.time(sIRF5 <- snpScreen(chr7GGceu, chr7meta, genesym("IRF5"), 
++     ~., fastAGM, 1))
+> ut
+\end{Sinput}
+\begin{Soutput}
+[1] 47.161  6.239 81.018  0.000  0.000
+\end{Soutput}
+\begin{Sinput}
+> sIRF5
+\end{Sinput}
+\begin{Soutput}
+GGtools snpScreenResult for call:
+snpScreen(racExSet = chr7GGceu, snpMeta = chr7meta, gene = genesym("IRF5"), 
+    formTemplate = ~., fitter = fastAGM, gran = 1)
+There were 128625 attempted fits,
+and 86328 were successful.
+\end{Soutput}
+\begin{Sinput}
+> which.min(extract_p(sIRF5))
+\end{Sinput}
+\begin{Soutput}
+rs6969930 
+   104180 
+\end{Soutput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> plot_mlp(sIRF5, chr7meta)
+\end{Sinput}
+\end{Schunk}
+ 
+
 \section{Appendix: Package documentation for \Rpackage{GGtools}}
 \begin{Schunk}
 \begin{Soutput}
@@ -214,14 +270,16 @@ Description:
 Package:       GGtools
 Title:         software and data for genetical genomics (c) 2006 VJ
                Carey
-Version:       0.2-6
+Version:       0.3-0
 Author:        stvjc <stvjc@channing.harvard.edu>
 Description:   dealing with hapmap SNP reports, GWAS, etc.
-Depends:       R (>= 2.2.0), Biobase (>= 1.11.26), hgfocus, GGdata
+Depends:       R (>= 2.2.0), Biobase (>= 1.11.26), hgfocus, GGdata,
+               geneplotter, RColorBrewer
 Maintainer:    stvjc <stvjc@channing.harvard.edu>
 License:       Artistic (see COPYING)
 Packaged:      Thu Aug 10 11:02:04 2006; stvjc
-Built:         R 2.4.0; ; 2006-08-14 06:03:54; unix
+Built:         R 2.4.0; powerpc-apple-darwin8.7.0; 2006-08-16 01:11:21;
+               unix
 
 
 Index:
@@ -232,6 +290,8 @@ detScreen               perform a screen for SNP determination of
                         expression using a ggExprSet instance, and
                         produce a plot
 geneLocs                gene metadata from NCBI
+genoStrings             create a character vector of genotype value
+                        strings
 ggExprSet-class         Class "ggExprSet", representation of genetical
                         genomics (expression + SNP) data
 ggreg                   regression analysis for additive effect of
@@ -273,8 +333,10 @@ attached base packages:
 [7] "datasets"  "base"     
 
 other attached packages:
-  GGtools    GGdata   hgfocus   Biobase 
-  "0.2-6"   "0.0-2"  "1.12.0" "1.11.26" 
+     GGtools RColorBrewer  geneplotter     annotate       GGdata      hgfocus 
+     "0.3-0"      "0.2-3"     "1.11.4"     "1.11.2"      "0.0-2"     "1.12.0" 
+     Biobase 
+   "1.11.26" 
 \end{Soutput}
 \end{Schunk}
 
