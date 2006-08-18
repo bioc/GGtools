@@ -88,22 +88,26 @@ extract_p = function(ssr) {
   ps = as.numeric(sapply(ssr, function(x) try(summary(x)$coef[2,4],silent=TRUE)))
 }
 
-plot_mlp <- function (ssr, snpMeta, ps=NULL, pch=20, cex=1) 
+plot_mlp <- function (ssr, snpMeta, ps=NULL, pch=20, cex=.5) 
 {
     if (ssr@fittertok == "fastAGM") ps = ssr[["pval"]]
     else if (ssr@fittertok != "lm") 
         stop("code is idiosyncratic for lm fits")
     if (is.null(ps)) ps = as.numeric(sapply(ssr, function(x) try(summary(x)$coef[2, 
         4], silent = TRUE)))
-    if (length(ssr@locs) > 200) plotf = .smoothScatter2
+    if (length(ssr@locs) > 200) plotf = smoothScatter
      else plotf = plot
-    bad = which(is.na(ps))
-    plotf(ssr@locs[-bad], -log10(ps[-bad]), xlab = "chromosomal location", 
-        ylab = "-log10 p Ho:Bs=0", main = ssr@gene, xlim=range(snpMeta[,"pos"]),        pch=pch, cex=cex)
     data(geneLocs)
     x = geneLocs[geneLocs$gene == ssr@gene, ]
     if (nrow(x) == 0) 
         return(invisible(NULL))
+    gchr = x[1,"chr"]
+    bad = which(is.na(ps))
+    plotf(ssr@locs[-bad], -log10(ps[-bad]), xlab = paste("location on chromosome", 
+             chromosome(snpMeta)),
+             ylab = "-log10 p Ho:Bs=0", main = paste(ssr@gene,
+             "(chr", gchr, ")"), xlim=range(snpMeta[,"pos"]),        
+             pch=pch, cex=cex)
     for (i in 1:nrow(x)) {
         axis(3, at = x[i, "beg"], labels = FALSE, col = "green")
         axis(3, at = x[i, "end"], labels = FALSE, col = "red")

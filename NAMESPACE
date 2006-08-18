@@ -20,6 +20,6 @@ export("HM2rac",
    "oneFit", "thinHM2rac", "genoStrings", "extract_p", "plot_mlp", "fastAGM",
    "plot_EvG")
 
-importFrom("KernSmooth", "bkde2D")
-importFrom("RColorBrewer", "brewer.pal")
+#importFrom("KernSmooth", "bkde2D")
+#importFrom("RColorBrewer", "brewer.pal")
 

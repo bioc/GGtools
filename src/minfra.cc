@@ -1782,6 +1782,7 @@ jmp_buf mcpp_env;
   return ans;
   }
  
+/*
  matrix unstrinv(matrix alp, int ni, matrix tim) {
   matrix ans = newmat(ni,ni);
   for (int i = 0 ; i < ni ; i++ )
@@ -1797,6 +1798,7 @@ jmp_buf mcpp_env;
         set_el(ans,i,i) = 1.0;
   return sweep(ans);
   }
+*/
  
  matrix fominv(matrix alp, int ni, matrix tim) {
  // yes there are analytic forms
