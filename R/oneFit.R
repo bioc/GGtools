@@ -24,8 +24,8 @@ getpsid = function( geneid, annostring, one.only=TRUE ) {
   psid
 }
 
-setClass("genesym", contains="character")
-genesym = function(x) new("genesym", x)
+#setClass("genesym", contains="character")
+#genesym = function(x) new("genesym", x)
 
 setMethod("oneFit", c("racExSet", "genesym", "character", "function"),
   function(racExSet, geneid, snpid, fitfun, ...) {

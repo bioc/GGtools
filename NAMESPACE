@@ -1,4 +1,5 @@
 useDynLib(GGtools)
+
 #
 #import(tools)
 #
@@ -8,6 +9,7 @@ useDynLib(GGtools)
 #
 #export("Aggregate", 
 #
+
 import(Biobase)
 
 exportClass(racExSet, genesym, snpScreenResult)
@@ -15,9 +17,9 @@ exportClass(racExSet, genesym, snpScreenResult)
 exportMethods("snps", "snpNames", "racAssays", "snpScreen", "show",
 	"rarebase", "SNPalleles")
 
-export("HM2rac", 
+export("HMworkflow",
    "make_racExSet", "countRare", "getRare", "genesym", "getpsid",
-   "oneFit", "thinHM2rac", "genoStrings", "extract_p", "plot_mlp", "fastAGM",
+   "oneFit", "genoStrings", "extract_p", "plot_mlp", "fastAGM",
    "plot_EvG")
 
 #importFrom("KernSmooth", "bkde2D")
