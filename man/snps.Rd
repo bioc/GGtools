@@ -7,7 +7,7 @@
 snps(x)
 }
 \arguments{
-  \item{x}{ instance of \code{\link{ggExprSet}}}
+  \item{x}{ instance of \code{\link{racExSet-class}}}
 }
 \details{
 simple accessor, can be inefficicent

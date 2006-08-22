@@ -17,6 +17,8 @@
 \alias{snpNames}
 \alias{SNPalleles}
 \alias{rarebase}
+\alias{SNPalleles,racExSet-method}
+\alias{rarebase,racExSet-method}
 \alias{oneFit,racExSet,genesym,character,function-method}
 \alias{oneFit,racExSet,character,character,function-method}
 \alias{oneFit,racExSet,list,character,function-method}

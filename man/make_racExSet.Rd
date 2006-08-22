@@ -1,5 +1,7 @@
 \name{make_racExSet}
 \alias{make_racExSet}
+\alias{rb20M}
+\alias{Sa20M}
 \title{ create a racExSet from simpler constituents }
 \description{create a racExSet from simpler constituents
 }
