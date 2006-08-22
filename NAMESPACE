@@ -17,7 +17,7 @@ exportClass(racExSet, genesym, snpScreenResult)
 exportMethods("snps", "snpNames", "racAssays", "snpScreen", "show",
 	"rarebase", "SNPalleles")
 
-export("HMworkflow",
+export("HMworkflow", "thinHM2rac",
    "make_racExSet", "countRare", "getRare", "genesym", "getpsid",
    "oneFit", "genoStrings", "extract_p", "plot_mlp", "fastAGM",
    "plot_EvG")

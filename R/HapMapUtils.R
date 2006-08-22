@@ -46,7 +46,7 @@ thinHM2rac = function(gzfn) {
 # here we scan in the gzipped data line by line and
 # build up the matrix
 #
- stats = system(paste("gzcat", gzfn, "|wc"), intern=TRUE)
+ stats = system(paste("gunzip -c", gzfn, "|wc"), intern=TRUE)
  stats = as.numeric(strsplit(stats, "\ +")[[1]])
  ntokpline = stats[3]/stats[2]
  nline = stats[2]-1 # header
