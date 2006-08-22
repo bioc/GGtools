@@ -13,7 +13,7 @@ compute model fits over a sequence of SNPs
 \usage{
 snpScreen(racExSet, snpMeta, gene, formTemplate, fitter, gran, ...)
 extract_p(ssr)
-plot_mlp(ssr)
+plot_mlp(ssr, snpMeta, ps = NULL, pch = 20, cex = 0.5)
 }
 \arguments{
   \item{racExSet}{ instance of \code{\link{racExSet-class}}}
@@ -30,6 +30,9 @@ be deterministically selected with frequency 1/\code{gran} along the
 linear sequence in the racExSet racAssay structure }
   \item{\dots}{ \dots -- not in use}
   \item{ssr}{\code{snpScreenResult} instance}
+  \item{ps}{a string with a probe set identifier}
+  \item{pch}{for passage to \code{\link[geneplotter]{scatterSmooth}}}
+  \item{cex}{for passage to \code{\link[geneplotter]{scatterSmooth}}}
 }
 \details{
 for snpScreen:

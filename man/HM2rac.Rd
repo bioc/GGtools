@@ -7,12 +7,13 @@
 \description{compute rare allele count from a hapmap file}
 \usage{
 HM2rac(fn, comment.char="", kppref="NA")
-thinHM2rac(gzfn, comment.char="", kppref="NA")
+thinHM2rac(gzfn)
 countRare(x)
 getRare(x)
 }
 \arguments{
   \item{fn}{ filename string identifying hapmap genotyping file}
+  \item{gzfn}{ filename string identifying gzipped hapmap genotyping file}
   \item{x}{ string vector of simple genotype calls (e.g., "AA") }
   \item{comment.char}{ string identifying comment character
 token for read.table, should not be sharp sign because hapmap

@@ -4,13 +4,16 @@
 \description{create a racExSet from simpler constituents
 }
 \usage{
-make_racExSet(exprs, racs, pd, mi, anno)
+make_racExSet(exprs, racs, rarebase, SNPalleles, pd, mi, anno)
 }
 \arguments{
   \item{exprs}{ matrix of processed expression values, GxN,
  rownames are reporterNames}
   \item{racs}{ matrix of rare allele counts, SxN, rownames
 are snp ids (rs numbers)}
+  \item{rarebase}{ character S-vector of rare base }
+  \item{SNPalleles}{character S-vector of strings of form "A/B" indicating
+biallelic polymorphism options}
   \item{pd}{ old phenoData instance}
   \item{mi}{ MIAME instance }
   \item{anno}{ string for annotation referencing}

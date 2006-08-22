@@ -19,10 +19,10 @@ HMworkflow(gzfn, emat, pd, mi, anno)
 \code{"hgfocus"}}
 }
 \details{
-builds a \code{\link{racExSet}} instance
+builds a \code{\link{racExSet-class}} instance
 }
 \value{
-builds a \code{\link{racExSet}} instance
+builds a \code{\link{racExSet-class}} instance
 }
 %\references{  }
 \author{Vince Carey <stvjc@channing.harvard.edu>}
