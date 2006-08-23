@@ -104,3 +104,19 @@ plot_EvG = function(reset, gene, snpid, anno="hgfocus") {
  plot(x,y,ylab=paste("log", gene, "expression"), xlab=paste("minor allele count,",
   snpid), pch=20)
 }
+
+setGeneric("racAssays<-", function(object,value)standardGeneric("racAssays<-"))
+setReplaceMethod("racAssays", c("racExSet", "AssayData"), function(object, value) {
+ object@racAssays = value
+ object
+})
+
+setMethod("[", "racExSet", function(x, i, j, ..., drop=FALSE) {
+ if (is(i, "genesym")) callNextMethod()
+ else if (is(i, "snpID")) {
+    sel = get("racs", x@racAssays)
+    sel = sel[i,,drop=FALSE]
+    x@racAssays = assayDataNew("lockedEnvironment", racs=sel)
+ }
+ x
+})

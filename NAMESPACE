@@ -12,15 +12,15 @@ useDynLib(GGtools)
 
 import(Biobase)
 
-exportClass(racExSet, genesym, snpScreenResult)
+exportClass(racExSet, genesym, snpScreenResult, snpMeta)
 
 exportMethods("snps", "snpNames", "racAssays", "snpScreen", "show",
 	"rarebase", "SNPalleles")
 
 export("HMworkflow", "thinHM2rac",
-   "make_racExSet", "countRare", "getRare", "genesym", "getpsid",
+   "make_racExSet", "countRare", "getRare", "genesym", "snpID", "getpsid",
    "oneFit", "genoStrings", "extract_p", "plot_mlp", "fastAGM",
-   "plot_EvG")
+   "plot_EvG", "snps3PrimeTo")
 
 #importFrom("KernSmooth", "bkde2D")
 #importFrom("RColorBrewer", "brewer.pal")

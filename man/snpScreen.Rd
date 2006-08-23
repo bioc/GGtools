@@ -13,7 +13,7 @@ compute model fits over a sequence of SNPs
 \usage{
 snpScreen(racExSet, snpMeta, gene, formTemplate, fitter, gran, ...)
 extract_p(ssr)
-plot_mlp(ssr, snpMeta, ps = NULL, pch = 20, cex = 0.5)
+plot_mlp(ssr, snpMeta, ps = NULL, pch = 20, cex = 0.5, local=FALSE)
 }
 \arguments{
   \item{racExSet}{ instance of \code{\link{racExSet-class}}}
@@ -33,6 +33,11 @@ linear sequence in the racExSet racAssay structure }
   \item{ps}{a string with a probe set identifier}
   \item{pch}{for passage to \code{\link[geneplotter]{scatterSmooth}}}
   \item{cex}{for passage to \code{\link[geneplotter]{scatterSmooth}}}
+  \item{local}{by default (local=FALSE) the plot is made over the
+entire chromosome; if local==TRUE, the plot is made over the
+segment of the chromosome within which the snps screened lie;
+this only makes a difference if the racExSet used in the screen
+has been SNP-filtered relative to the HapMap SNP set. }
 }
 \details{
 for snpScreen:
@@ -48,6 +53,9 @@ NAs will be returned for tests on such SNPs.
 
 \code{fastAGM} is a C routine for simple least square fitting
 of an additive genetic model.
+
+\code{plot_mlp} returns a list of x and y values for the
+plotted points.
 }
 \value{
 creates a list of model fit results; \code{\link{try}} is used to
