@@ -27,6 +27,7 @@ e.g., \code{\link[genetics]{genotype}}  }
 %\seealso{  }
 
 \examples{
-genoStrings(chr20GGceu, "rs6060535")
+data(chr20GGdem)
+genoStrings(chr20GGdem, "rs6060535")
 }
 \keyword{ models }

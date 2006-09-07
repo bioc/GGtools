@@ -1,9 +1,13 @@
 Package: GGtools
 Title: software and data for genetical genomics (c) 2006 VJ Carey
-Version: 0.4-2
+Version: 0.5-0
 Author: stvjc <stvjc@channing.harvard.edu>
 Description: dealing with hapmap SNP reports, GWAS, etc.
-Depends: R (>= 2.2.0), Biobase (>= 1.11.26), hgfocus, GGdata, geneplotter(>= 1.11.8)
+Depends: R (>= 2.2.0), Biobase (>= 1.11.26), hgfocus, geneplotter(>= 1.11.8)
+LazyData: yes
 Maintainer: stvjc <stvjc@channing.harvard.edu>
 License: Artistic (see COPYING)
 Packaged: Thu Aug 10 11:02:04 2006; stvjc
+Collate: snpMeta.R AllClasses.R AllGenerics.R HapMapUtils.R
+	countRare.R fastAGM.R genoString.R oneFit.R racExSet-methods.R
+	snpScreenResult-methods.R snps3Pto.R zzz.R

@@ -1,7 +1,7 @@
 setMethod("show", "snpScreenResult", function(object) {
    cat("GGtools snpScreenResult for call:\n")
    print(object@call)
-   if (object@fittertok  != "fastAGM") {
+   if (!(object@fittertok  %in% c("fastAGM", "fastHET"))) {
      cat("There were", nf <- length(object), "attempted fits,\n")
      nerr = sum(sapply(object, function(x) inherits(x, "try-error")))
      cat("and", nf-nerr, "were successful.\n")
@@ -14,7 +14,7 @@ setMethod("show", "snpScreenResult", function(object) {
 })
 
 extract_p = function(ssr) {
-  if (ssr@fittertok == "fastAGM") return(ssr[["pval"]])
+  if (ssr@fittertok %in% c("fastAGM", "fastHET")) return(ssr[["pval"]])
   if (ssr@fittertok != "lm") stop("code is idiosyncratic for lm fits")
   ps = as.numeric(sapply(ssr, function(x) try(summary(x)$coef[2,4],silent=TRUE)))
 }
@@ -22,7 +22,7 @@ extract_p = function(ssr) {
 
 plot_mlp = function (ssr, snpMeta, ps = NULL, pch = 20, cex = 0.5, local = FALSE) 
 {
-    if (ssr@fittertok == "fastAGM") 
+    if (ssr@fittertok %in% c("fastAGM", "fastHET"))
         ps = ssr[["pval"]]
     else if (ssr@fittertok != "lm") 
         stop("code is idiosyncratic for lm fits")

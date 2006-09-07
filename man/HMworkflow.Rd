@@ -32,10 +32,10 @@ builds a \code{\link{racExSet-class}} instance
 %\seealso{  }
 
 \examples{
-data(chr20GGceu)
+data(chr20GGdem)
 fi = system.file("fileDemos/geno20demo.txt.gz", package="GGtools")
-HMworkflow(fi, exprs(chr20GGceu)[1:100,],
-  phenoData(chr20GGceu), experimentData(chr20GGceu),
+HMworkflow(fi, exprs(chr20GGdem)[1:100,],
+  phenoData(chr20GGdem), experimentData(chr20GGdem),
   "hgfocus")
 }
 \keyword{ models }

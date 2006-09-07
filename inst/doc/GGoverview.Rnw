@@ -56,25 +56,25 @@ We will attach the library and have a look at a basic
 demonstration resource.
 <<init>>=
 library(GGtools)
-data(chr20GGceu)
-class(chr20GGceu)
-chr20GGceu
+data(chr20GGdem)
+class(chr20GGdem)
+chr20GGdem
 @
-The \Sexpr{class(chr20GGceu)} class is an extension of the
+The \Sexpr{class(chr20GGdem)} class is an extension of the
 \Rclass{eSet} class.  It represents expression
 data from the hgfocus chip on 48 individuals in the CEU
 CEPH group, and SNP data obtained from their HapMap genotyping
 results.
 
-The data are organized into an \Sexpr{nrow(exprs(chr20GGceu))}
-by \Sexpr{ncol(exprs(chr20GGceu))} matrix of expression values
+The data are organized into an \Sexpr{nrow(exprs(chr20GGdem))}
+by \Sexpr{ncol(exprs(chr20GGdem))} matrix of expression values
 accessible with the \texttt{exprs} method, and
-an \Sexpr{nrow(snps(chr20GGceu))} by \Sexpr{ncol(snps(chr20GGceu))}
+an \Sexpr{nrow(snps(chr20GGdem))} by \Sexpr{ncol(snps(chr20GGdem))}
 of rare allele counts:
 <<lkc20>>=
-dim(exprs(chr20GGceu))
-dim(snps(chr20GGceu))
-snps(chr20GGceu)[1:5,1:5]
+dim(exprs(chr20GGdem))
+dim(snps(chr20GGdem))
+snps(chr20GGdem)[1:5,1:5]
 @
 
 We need some genetic metadata about SNPs; these are
@@ -93,7 +93,7 @@ with this; we illustrate an example related to
 results in Cheung and Spielman 2005:
 
 <<do20>>=
-S100 = snpScreen(chr20GGceu, chr20meta, genesym("CPNE1"), ~., lm, gran=25) 
+S100 = snpScreen(chr20GGdem, chr20meta, genesym("CPNE1"), ~., lm, gran=25) 
 S100
 @
 A primitive display is obtained as follows.  We know that \texttt{lm}
@@ -106,7 +106,7 @@ plot(S100@locs, -log10(ps), xlab="chromosomal location")
 
 %\begin{center}
 %<<dosc,fig=TRUE,results=hide>>=
-%ss1 = snpScreen(chr20GGceu, 
+%ss1 = snpScreen(chr20GGdem, 
 @
 
 %The \Rfunction{detScreen} function returns a list of fit results:
@@ -124,28 +124,29 @@ The \texttt{snpScreen} method illustrated above is very
 general (can accommodate and retain results of any R modeling function)
 but fairly slow.  We have added an R function \texttt{fastAGM}
 for fast fitting of an additive genetic model (equivalent to
-but much faster than using \texttt{lm}).  We apply this
-for IRF5 on chromosome 7, and attempt to fit on all SNPs that
-have no missing values:
+but much faster than using \texttt{lm}).  
+%We apply this
+%for IRF5 on chromosome 7, and attempt to fit on all SNPs that
+%have no missing values:
 <<dofast>>=
-ut = unix.time(sIRF5 <- snpScreen(chr7GGceu, chr7meta, genesym("IRF5"), ~.,
+ut = unix.time(sCPNE1 <- snpScreen(chr20GGdem, chr20meta, genesym("CPNE1"), ~.,
   fastAGM, 1))
 ut
-sIRF5
-wm = which.min(pp <- extract_p(sIRF5))
+sCPNE1
+wm = which.min(pp <- extract_p(sCPNE1))
 pp[wm]
 <<dofig5,fig=TRUE>>=
-plot_mlp(sIRF5, chr7meta)
+plot_mlp(sCPNE1, chr20meta)
 @
 
-With the conservative approach to missing data taken thus far,
-the result does not agree with that of Cheung and Spielman,
-who found rs2280714 to be most significant.  The two SNPs
-are not completely concordant, but the basic patterns are similar:
+%With the conservative approach to missing data taken thus far,
+%the result does not agree with that of Cheung and Spielman,
+%who found rs2280714 to be most significant.  The two SNPs
+%are not completely concordant, but the basic patterns are similar:
 <<lkevg,fig=TRUE>>=
- par(mfrow=c(1,2))
- plot_EvG(chr7GGceu, genesym("IRF5"), "rs2280714")
- plot_EvG(chr7GGceu, genesym("IRF5"), "rs6969930")
+# par(mfrow=c(1,2))
+ plot_EvG(chr20GGdem, genesym("CPNE1"), "rs6060535")
+# plot_EvG(chr7GGdem, genesym("IRF5"), "rs6969930")
 @
 
  

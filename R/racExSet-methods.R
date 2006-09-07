@@ -30,7 +30,7 @@ setMethod("snpScreen", c("racExSet", "snpMeta", "genesym", "formula", "function"
       fittertok = deparse(substitute(fitter))
       callsave = match.call()
       out = list()
-      if (fittertok == "fastAGM") {
+      if (fittertok %in% c("fastAGM", "fastHET")) {
         tmp = snps(racExSet)[snpstodo,]
         bad = apply(tmp,1,function(x) any(is.na(x)))
         if (any(bad)) {
@@ -38,7 +38,8 @@ setMethod("snpScreen", c("racExSet", "snpMeta", "genesym", "formula", "function"
            snpstodo = snpstodo[-which(bad)]
            }
         locs = allpos[snpstodo]
-        ans = fastAGM(snps(racExSet)[snpstodo,], y)
+        if (fittertok == "fastAGM") ans = fastAGM(snps(racExSet)[snpstodo,], y)
+        else if (fittertok == "fastHET") ans = fastHET(snps(racExSet)[snpstodo,], y)
         return(new("snpScreenResult", call=callsave, locs=locs, 
             chr=chromosome(snpMeta), fittertok=fittertok, gene=as.character(gene), ans))
       }
@@ -87,8 +88,8 @@ make_racExSet = function(exprs, racs, rarebase, SNPalleles, pd, mi, anno) {
         stop("exprs must be of class matrix")
     if (!is(racs, "matrix")) 
         stop("racs must be of class matrix")
-    if (!is(pd, "phenoData")) 
-        stop("pd must be of class phenoData")
+    if (!is(pd, "phenoData") & !is(pd, "AnnotatedDataFrame")) 
+        stop("pd must be of class phenoData or AnnotatedDataFrame")
     names(SNPalleles) = rownames(racs)
     names(rarebase) = rownames(racs)
     new("racExSet", exprs=exprs, racs=racs, rarebase=rarebase, 

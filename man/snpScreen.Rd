@@ -5,6 +5,7 @@
 \alias{snpScreen}
 \alias{extract_p}
 \alias{fastAGM}
+\alias{fastHET}
 \alias{plot_mlp}
 \title{compute model fits over a sequence of SNPs  }
 \description{
@@ -24,7 +25,9 @@ the expression phenotype to be regarded as dependent variable}
 \code{~factor(.)}, literally, to specify additive or
 nonadditive models for effects of rare allele copy number}
   \item{fitter}{ R fitting function that can work with formulas
-and data frames, for example \code{\link{lm}}}
+and data frames, for example \code{\link{lm}}, or, if not a
+fitting function, a special function in the package, either
+\code{fastHET}, or \code{fastAGM}, see details below}
   \item{gran}{ a numeric convenience parameter; if not 1, SNPs will
 be deterministically selected with frequency 1/\code{gran} along the
 linear sequence in the racExSet racAssay structure }
@@ -52,7 +55,8 @@ samples and statistical tests of association are indeterminate.
 NAs will be returned for tests on such SNPs.
 
 \code{fastAGM} is a C routine for simple least square fitting
-of an additive genetic model.
+of an additive genetic model.  \code{fastHET} will compare heterozygous
+to homozygous.
 
 \code{plot_mlp} returns a list of x and y values for the
 plotted points.
@@ -74,12 +78,13 @@ example(make_racExSet)
 dem
 snpNames(dem)[1:4]
 featureNames(dem)[1:4]
+data(chr20meta)
 scr1 = snpScreen(dem, chr20meta, genesym("DDR1"), ~., lm,  gran=100 )
 scr1[[1]]
 scr2 = snpScreen(dem, chr20meta, genesym("DDR1"), ~factor(.), lm,  gran=200 )
 scr2[[1]]
 plot_mlp(scr1, chr20meta)
-ut = unix.time(scr2 <- snpScreen(chr20GGceu, chr20meta, genesym("CPNE1"), ~factor(.), fastAGM, 1))
+ut = unix.time(scr2 <- snpScreen(chr20GGdem, chr20meta, genesym("CPNE1"), ~factor(.), fastAGM, 1))
 ut
 scr2
 plot_mlp(scr2, chr20meta)

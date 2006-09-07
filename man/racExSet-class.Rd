@@ -4,6 +4,8 @@
 \alias{racExSet-class}
 \alias{genesym-class}
 \alias{genesym}
+\alias{snpID}
+\alias{snpID-class}
 \alias{getpsid}
 \alias{snps,racExSet-method}
 \alias{snpNames,racExSet-method}
@@ -23,7 +25,11 @@
 \alias{oneFit,racExSet,character,character,function-method}
 \alias{oneFit,racExSet,list,character,function-method}
 \alias{oneFit,racExSet,list,formula,function-method}
+\alias{[,racExSet-method}
 \alias{show,racExSet-method}
+\alias{snps5PrimeTo}
+\alias{snps3PrimeTo}
+\alias{snpsNear}
 
 \title{Class "racExSet" for combining RareAlleleCount representations
 of SNPs, gene expression data, and other phenotype data }
@@ -97,10 +103,16 @@ to affy probe set names according to Bioconductor
 annotation environments.  The \code{getpsid} function
 carries out the translation; the \code{genesym} class/wrapper
 just tells us that a string will be serving the role of
-a HUGO symbol and allows us to dispatch accordingly.}
+a HUGO symbol and allows us to dispatch accordingly.  The
+\code{snpID} class has similar role.  It just lets us
+know that a string is intended to be regarded as an rs number.}
 
 \section{Notes}{Helper functions \code{SNPalleles}
-and \code{rarebase} are accessors}
+and \code{rarebase} are accessors.  \code{snps5PrimeTo(gene,rad)}
+will obtain rs numbers for SNPs in selected locations
+relative to the specified gene.  \code{snps3PrimeTo} and \code{snpsNear}
+have similar purposes.
+}
 
 % ~Make other sections like Warning with \section{Warning }{....} ~
 %
@@ -116,8 +128,8 @@ featureNames(dem)[1:4]
 oneFit(dem, genesym("DDR1"), "rs4814683", lm)
 ddr1 = list(DDR1=exprs(dem)["1007_s_at",])
 oneFit(dem, ddr1, "rs4814683", aov)
-data(chr20GGceu)
-ddr1 = list(DDR1=exprs(chr20GGceu)["1007_s_at",])
-summary(oneFit(chr20GGceu, ddr1, ~rs4814683+factor(rs6060535), lm))
+data(chr20GGdem)
+ddr1 = list(DDR1=exprs(chr20GGdem)["1007_s_at",])
+summary(oneFit(chr20GGdem, ddr1, ~rs4814683+factor(rs6060535), lm))
 }
 \keyword{classes}

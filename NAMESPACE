@@ -19,8 +19,8 @@ exportMethods("snps", "snpNames", "racAssays", "snpScreen", "show",
 
 export("HMworkflow", "thinHM2rac",
    "make_racExSet", "countRare", "getRare", "genesym", "snpID", "getpsid",
-   "oneFit", "genoStrings", "extract_p", "plot_mlp", "fastAGM",
-   "plot_EvG", "snps3PrimeTo")
+   "oneFit", "genoStrings", "extract_p", "plot_mlp", "fastAGM", "fastHET",
+   "plot_EvG", "snps3PrimeTo", "snps5PrimeTo", "snpsNear")
 
 #importFrom("KernSmooth", "bkde2D")
 #importFrom("RColorBrewer", "brewer.pal")

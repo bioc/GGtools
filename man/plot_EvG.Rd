@@ -27,8 +27,8 @@ expression vs rare allele count
 \seealso{  }
 
 \examples{
-data(chr20GGceu)
-plot_EvG( chr20GGceu, genesym("CPNE1"), "rs6060535",
+data(chr20GGdem)
+plot_EvG( chr20GGdem, genesym("CPNE1"), "rs6060535",
   "hgfocus")
 }
 \keyword{ models }
