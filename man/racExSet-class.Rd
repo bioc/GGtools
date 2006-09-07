@@ -4,6 +4,8 @@
 \alias{racExSet-class}
 \alias{genesym-class}
 \alias{genesym}
+\alias{chr20GGdem}
+\alias{hgfocusSYMMEMO}
 \alias{snpID}
 \alias{snpID-class}
 \alias{getpsid}
@@ -105,7 +107,14 @@ carries out the translation; the \code{genesym} class/wrapper
 just tells us that a string will be serving the role of
 a HUGO symbol and allows us to dispatch accordingly.  The
 \code{snpID} class has similar role.  It just lets us
-know that a string is intended to be regarded as an rs number.}
+know that a string is intended to be regarded as an rs number.
+
+\code{hgfocusSYMMEMO} is a lookup table quickly establishing
+the probeset ID based on a HUGO symbol.
+
+\code{chr20GGdem} is a demonstration example of chromosome
+20 hapmap snps and hgfocus expression data from Cheung.
+}
 
 \section{Notes}{Helper functions \code{SNPalleles}
 and \code{rarebase} are accessors.  \code{snps5PrimeTo(gene,rad)}

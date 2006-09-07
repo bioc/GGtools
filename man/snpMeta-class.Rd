@@ -1,6 +1,7 @@
 \name{snpMeta-class}
 \docType{class}
 \alias{snpMeta-class}
+\alias{chr20meta}
 \alias{[,snpMeta-method}
 \alias{chromosome,snpMeta-method}
 \alias{coerce,snpMeta,data.frame-method}
