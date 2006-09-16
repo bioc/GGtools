@@ -44,12 +44,16 @@ plot_mlp = function (ssr, snpMeta, ps = NULL, pch = 20, cex = 0.5, local = FALSE
         snpn = unlist(lapply(ssr, function(x) names(coef(x))[2]))
         XLIM = range(snpMeta[snpn, "pos"])
     }
-    plotf(ssr@locs[-bad], -log10(ps[-bad]), xlab = paste("location on chromosome", 
+    if (length(bad)>0) {
+          ssr@locs = ssr@locs[-bad]
+          ps = ps[-bad]
+    }
+    plotf(ssr@locs, -log10(ps), xlab = paste("location on chromosome", 
         chromosome(snpMeta)), ylab = "-log10 p Ho:Bs=0", main = paste(ssr@gene, 
         "(chr", gchr, ")"), xlim = XLIM, pch = pch, cex = cex)
     for (i in 1:nrow(x)) {
         axis(3, at = x[i, "beg"], labels = FALSE, col = "green")
         axis(3, at = x[i, "end"], labels = FALSE, col = "red")
     }
-    return(invisible(list(x = ssr@locs[-bad], y = -log10(ps[-bad]))))
+    return(invisible(list(x = ssr@locs, y = -log10(ps))))
 }

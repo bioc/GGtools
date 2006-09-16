@@ -14,6 +14,7 @@
 \alias{racAssays,racExSet-method}
 \alias{oneFit,racExSet-method}
 \alias{litsn}
+\alias{exclMono}
 \alias{oneFit}
 \alias{litex}
 \alias{pdd}
@@ -114,6 +115,8 @@ the probeset ID based on a HUGO symbol.
 
 \code{chr20GGdem} is a demonstration example of chromosome
 20 hapmap snps and hgfocus expression data from Cheung.
+
+The \code{exclMono} function eliminates loci that happen to be monomorphic in the sample.
 }
 
 \section{Notes}{Helper functions \code{SNPalleles}

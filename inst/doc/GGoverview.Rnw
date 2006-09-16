@@ -93,6 +93,7 @@ with this; we illustrate an example related to
 results in Cheung and Spielman 2005:
 
 <<do20>>=
+chr20GGdem = exclMono(chr20GGdem)
 S100 = snpScreen(chr20GGdem, chr20meta, genesym("CPNE1"), ~., lm, gran=25) 
 S100
 @
