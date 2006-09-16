@@ -85,7 +85,7 @@ scr2 = snpScreen(dem, chr20meta, genesym("DDR1"), ~factor(.), lm,  gran=200 )
 scr2[[1]]
 plot_mlp(scr1, chr20meta)
 chr20GGdem = exclMono(chr20GGdem)
-ut = unix.time(scr2 <- snpScreen(chr20GGdem, chr20meta, genesym("CPNE1"), ~factor(.), fastAGM, 1))
+ut = unix.time(scr2 <- snpScreen(chr20GGdem, chr20meta, genesym("CPNE1"), ~factor(.), fastAGM, 50))
 ut
 scr2
 plot_mlp(scr2, chr20meta)
