@@ -25,3 +25,5 @@ setMethod("show", "snpMeta", function(object) {
 setAs("snpMeta", "data.frame", function(from) get("meta", from@meta))
 setMethod("dim", "snpMeta", function(x) dim(as(x, "data.frame")))
 setMethod("nrow", "snpMeta", function(x) nrow(as(x, "data.frame")))
+
+
