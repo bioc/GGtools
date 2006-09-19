@@ -94,7 +94,7 @@ results in Cheung and Spielman 2005:
 
 <<do20>>=
 chr20GGdem = exclMono(chr20GGdem)
-S100 = snpScreen(chr20GGdem, chr20meta, genesym("CPNE1"), ~., lm, gran=25) 
+S100 = snpScreen(chr20GGdem, chr20meta, genesym("CPNE1"), ~., lm, gran=30) 
 S100
 @
 A primitive display is obtained as follows.  We know that \texttt{lm}
@@ -131,7 +131,7 @@ but much faster than using \texttt{lm}).
 %have no missing values:
 <<dofast>>=
 ut = unix.time(sCPNE1 <- snpScreen(chr20GGdem, chr20meta, genesym("CPNE1"), ~.,
-  fastAGM, 50))
+  fastAGM, 75))
 ut
 sCPNE1
 wm = which.min(pp <- extract_p(sCPNE1))

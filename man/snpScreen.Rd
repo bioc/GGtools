@@ -76,6 +76,7 @@ model matrix is computed
 \examples{
 example(make_racExSet)
 dem
+dem = exclMono(dem)
 snpNames(dem)[1:4]
 featureNames(dem)[1:4]
 data(chr20meta)

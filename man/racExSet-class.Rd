@@ -143,5 +143,7 @@ oneFit(dem, ddr1, "rs4814683", aov)
 data(chr20GGdem)
 ddr1 = list(DDR1=exprs(chr20GGdem)["1007_s_at",])
 summary(oneFit(chr20GGdem, ddr1, ~rs4814683+factor(rs6060535), lm))
+dim(snps(chr20GGdem))
+dim(snps(exclMono(chr20GGdem)))
 }
 \keyword{classes}
