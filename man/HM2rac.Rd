@@ -1,6 +1,8 @@
 \name{HM2rac}
 \alias{HM2rac}
 \alias{thinHM2rac}
+\alias{thinHM2meta}
+\alias{df2snpMeta}
 \alias{getRare}
 \alias{countRare}
 \title{compute rare allele count from a hapmap file}
@@ -34,6 +36,9 @@ rarealleles: named vector identifying base of rare allele
 anno: character string for annotation indirection
 
 countRare and getRare are simple string processing functions
+
+\code{thinHM2meta} will create a \code{\link{snpMeta-class}} structure from a HapMap gzipped genotyping
+file.
 }
 %\references{  }
 \author{Vince Carey <stvjc@channing.harvard.edu>}
