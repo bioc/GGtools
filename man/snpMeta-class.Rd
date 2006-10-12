@@ -43,6 +43,6 @@ identifying chromosome on which SNPs are documented }
 }
 \examples{
 data(chr20meta)
-chr20meta["CPNE1",]
+chr20meta["rs6060535",]
 }
 \keyword{classes}
