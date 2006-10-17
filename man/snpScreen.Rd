@@ -14,13 +14,16 @@ compute model fits over a sequence of SNPs
 \usage{
 snpScreen(racExSet, snpMeta, gene, formTemplate, fitter, gran, ...)
 extract_p(ssr)
-plot_mlp(ssr, snpMeta, ps = NULL, pch = 20, cex = 0.5, local=FALSE)
+plot_mlp(ssr, snpMeta, gchr=NULL, geneLocDF=NULL, ps = NULL, pch = 20, cex = 0.5, local=FALSE, plotf=smoothScatter)
 }
 \arguments{
   \item{racExSet}{ instance of \code{\link{racExSet-class}}}
   \item{snpMeta}{ instance of \code{\link[GGdata]{snpMeta}}}
   \item{gene}{ instance of \code{\link{genesym}} class identifying
 the expression phenotype to be regarded as dependent variable}
+  \item{gchr}{ string stating chromosome on which gene is resident; looked up in geneLocDF if not supplied}
+  \item{geneLocDF}{ data frame that has one row for each gene symbol, in column `gene', and
+     the chromosome on which it lives, in column `chr'}
   \item{formTemplate}{ a formula having form \code{~.} or
 \code{~factor(.)}, literally, to specify additive or
 nonadditive models for effects of rare allele copy number}
@@ -42,6 +45,9 @@ segment of the chromosome within which the snps screened lie;
 this only makes a difference if the racExSet used in the screen
 has been SNP-filtered relative to the HapMap SNP set. }
 }
+  \item{plotf}{function to use for rendering -- with really
+high-density genotyping, the default works well; in sparse cases,
+use \code{\link{plot}}.}
 \details{
 for snpScreen:
 If \code{options()$verbose == TRUE} then every 100th index in the
@@ -80,15 +86,16 @@ dem = exclMono(dem)
 snpNames(dem)[1:4]
 featureNames(dem)[1:4]
 data(chr20meta)
+data(geneLocs_hsa)
 scr1 = snpScreen(dem, chr20meta, genesym("DDR1"), ~., lm,  gran=100 )
 scr1[[1]]
 scr2 = snpScreen(dem, chr20meta, genesym("DDR1"), ~factor(.), lm,  gran=200 )
 scr2[[1]]
-plot_mlp(scr1, chr20meta)
+plot_mlp(scr1, chr20meta, geneLocDF=geneLocs_hsa)
 chr20GGdem = exclMono(chr20GGdem)
 ut = unix.time(scr2 <- snpScreen(chr20GGdem, chr20meta, genesym("CPNE1"), ~factor(.), fastAGM, 50))
 ut
 scr2
-plot_mlp(scr2, chr20meta)
+plot_mlp(scr2, chr20meta, geneLocDF=geneLocs_hsa)
 }
 \keyword{ models }

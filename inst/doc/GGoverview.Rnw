@@ -137,7 +137,7 @@ sCPNE1
 wm = which.min(pp <- extract_p(sCPNE1))
 pp[wm]
 <<dofig5,fig=TRUE>>=
-plot_mlp(sCPNE1, chr20meta)
+plot_mlp(sCPNE1, chr20meta, geneLocDF=geneLocs_hsa)
 @
 
 %With the conservative approach to missing data taken thus far,

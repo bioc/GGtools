@@ -20,7 +20,7 @@ extract_p = function(ssr) {
 }
 
 
-plot_mlp = function (ssr, snpMeta, ps = NULL, pch = 20, cex = 0.5, local = FALSE) 
+plot_mlp = function (ssr, snpMeta, gchr = NULL, geneLocDF=NULL, ps = NULL, pch = 20, cex = 0.5, local = FALSE, plotf=smoothScatter) 
 {
     if (ssr@fittertok %in% c("fastAGM", "fastHET"))
         ps = ssr[["pval"]]
@@ -29,14 +29,14 @@ plot_mlp = function (ssr, snpMeta, ps = NULL, pch = 20, cex = 0.5, local = FALSE
     if (is.null(ps)) 
         ps = as.numeric(sapply(ssr, function(x) try(summary(x)$coef[2, 
             4], silent = TRUE)))
-    if (length(ssr@locs) > 200) 
-        plotf = smoothScatter
-    else plotf = plot
-    data(geneLocs)
-    x = geneLocs[geneLocs$gene == ssr@gene, ]
-    if (nrow(x) == 0) 
-        return(invisible(NULL))
-    gchr = x[1, "chr"]
+    if (is.null(gchr)) {
+        if (is.null(geneLocDF)) stop("if gchr omitted, please supply geneLocDF")
+	if (!("chr" %in% names(geneLocDF))) stop("geneLocDF does not have chr column.")
+    	gloc = geneLocDF[geneLocDF$gene == ssr@gene, ]
+    	if (nrow(gloc) == 0) 
+        	stop("can't determine gene's chromosome for title from geneLocDF, please supply as arg.")
+    	gchr = gloc[1, "chr"]
+    }
     bad = which(is.na(ps))
     if (!local) 
         XLIM = range(snpMeta[, "pos"])
@@ -51,9 +51,11 @@ plot_mlp = function (ssr, snpMeta, ps = NULL, pch = 20, cex = 0.5, local = FALSE
     plotf(ssr@locs, -log10(ps), xlab = paste("location on chromosome", 
         chromosome(snpMeta)), ylab = "-log10 p Ho:Bs=0", main = paste(ssr@gene, 
         "(chr", gchr, ")"), xlim = XLIM, pch = pch, cex = cex)
-    for (i in 1:nrow(x)) {
-        axis(3, at = x[i, "beg"], labels = FALSE, col = "green")
-        axis(3, at = x[i, "end"], labels = FALSE, col = "red")
+    if (!is.null(geneLocDF)) {
+       for (i in 1:nrow(gloc)) {
+           axis(3, at = gloc[i, "beg"], labels = FALSE, col = "green")
+           axis(3, at = gloc[i, "end"], labels = FALSE, col = "red")
+           }
     }
     return(invisible(list(x = ssr@locs, y = -log10(ps))))
 }
