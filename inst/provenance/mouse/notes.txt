@@ -1,0 +1,16 @@
+Working with WebQTL-related resources to deploy GGtools with mouse
+
+1) genotypes
+
+We use the http://www.well.ox.ac.uk/mouse/INBREDS Strain files and
+the Strain2rac function of GGtools
+
+2) expression
+
+WebQTL provides various CEL file archives, but GEO accession numbers
+are also available, with strains labeled (apparently) in sync with
+Wellcome
+
+3) phenotypes
+
+Manually extracted from WebQTL tables.
