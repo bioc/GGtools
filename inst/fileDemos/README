@@ -1,0 +1,4 @@
+StrainInit.txt -- excerpt from a Wellcome INBREDS 'Strains' file encoding mouse genotypes
+geno20demo.txt -- excerpt from a HapMap CEPH genotyping file
+geno20demo.txt.gz
+pd.rda

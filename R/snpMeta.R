@@ -1,6 +1,9 @@
 setClass("snpMeta", 
   representation(meta="environment", chromosome="character"))
 
+setClass("snpMetaWhole",  contains="snpMeta",
+  representation(chrbounds="numeric", chrlabs="character"))
+
 setGeneric("chromosome", function(x) standardGeneric("chromosome"))
 setMethod("chromosome", "snpMeta", function(x) x@chromosome)
 

@@ -16,6 +16,8 @@
 \alias{litsn}
 \alias{exclMono}
 \alias{oneFit}
+\alias{exprs,racExSet-method}
+\alias{initialize,racExSet-method}
 \alias{litex}
 \alias{pdd}
 \alias{racAssays}

@@ -14,7 +14,8 @@ compute model fits over a sequence of SNPs
 \usage{
 snpScreen(racExSet, snpMeta, gene, formTemplate, fitter, gran, ...)
 extract_p(ssr)
-plot_mlp(ssr, snpMeta, gchr=NULL, geneLocDF=NULL, ps = NULL, pch = 20, cex = 0.5, local=FALSE, plotf=smoothScatter)
+plot_mlp(ssr, snpMeta, gchr=NULL, geneLocDF=NULL, ps = NULL, pch = 20, cex = 0.5, local=FALSE, 
+  plotf=smoothScatter)
 }
 \arguments{
   \item{racExSet}{ instance of \code{\link{racExSet-class}}}
@@ -39,15 +40,15 @@ linear sequence in the racExSet racAssay structure }
   \item{ps}{a string with a probe set identifier}
   \item{pch}{for passage to \code{\link[geneplotter]{scatterSmooth}}}
   \item{cex}{for passage to \code{\link[geneplotter]{scatterSmooth}}}
-  \item{local}{by default (local=FALSE) the plot is made over the
+  \item{local}{by default (local==FALSE) the plot is made over the
 entire chromosome; if local==TRUE, the plot is made over the
 segment of the chromosome within which the snps screened lie;
 this only makes a difference if the racExSet used in the screen
 has been SNP-filtered relative to the HapMap SNP set. }
-}
   \item{plotf}{function to use for rendering -- with really
 high-density genotyping, the default works well; in sparse cases,
 use \code{\link{plot}}.}
+}
 \details{
 for snpScreen:
 If \code{options()$verbose == TRUE} then every 100th index in the
