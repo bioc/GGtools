@@ -98,5 +98,15 @@ ut = unix.time(scr2 <- snpScreen(chr20GGdem, chr20meta, genesym("CPNE1"), ~facto
 ut
 scr2
 plot_mlp(scr2, chr20meta, geneLocDF=geneLocs_hsa)
+#
+# here we work on a WebQTL computation
+#
+# get the expr+genotype data
+data(gse2031GG)
+# get a provisional snp metadata structure
+data(INB34snpMeta)
+# run a screen for Erdr1
+ss = snpScreen(gse2031GG, INB34snpMeta, genesym("Erdr1"), ~., fastAGM, 1)
+plot_mlp(ss, INB34snpMeta, gchr="all", plotf=plot )
 }
 \keyword{ models }

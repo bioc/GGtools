@@ -43,3 +43,21 @@ Strains2rac = function(strfile) {
  snpAll = sapply(allelecodes, sla)
  list(gt=gt, chr=chr, pos=pos, rac=rac, rarebase=rarebase, SNPalleles=snpAll)
 }
+
+INBREDSworkflow = function(inbfile, emat, estrains, pd, mi, anno, fixup=NULL,
+   fixchr=function(x)gsub("_random", "", x)) {
+ srac = Strains2rac(inbfile)
+ sn = estrains
+ ssn = colnames(srac$gt)
+ if (!is.null(fixup)) {
+	ssn = fixup(ssn)
+	colnames(srac$gt) = ssn
+	}
+ if (!all(sn %in% ssn)) stop(paste("there are some strain names in estrains \n[",
+       paste(setdiff(sn,ssn),collapse=", "), "]\n that are not present in the inbfile columns\n",
+"each expr sample strain must match to some inbfile column"))
+ res = make_racExSet( emat, srac$gt[,estrains], srac$rarebase, srac$SNPalleles, pd, mi, anno )
+ smw = wrapSNPmetaWh( rownames(srac$gt), fixchr(srac$chr), srac$pos )
+ list(racExSet=res, snpMetaWh=smw)
+}
+ 

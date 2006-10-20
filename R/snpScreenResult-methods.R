@@ -48,14 +48,33 @@ plot_mlp = function (ssr, snpMeta, gchr = NULL, geneLocDF=NULL, ps = NULL, pch =
           ssr@locs = ssr@locs[-bad]
           ps = ps[-bad]
     }
-    plotf(ssr@locs, -log10(ps), xlab = paste("location on chromosome", 
-        chromosome(snpMeta)), ylab = "-log10 p Ho:Bs=0", main = paste(ssr@gene, 
-        "(chr", gchr, ")"), xlim = XLIM, pch = pch, cex = cex)
-    if (!is.null(geneLocDF)) {
-       for (i in 1:nrow(gloc)) {
-           axis(3, at = gloc[i, "beg"], labels = FALSE, col = "green")
-           axis(3, at = gloc[i, "end"], labels = FALSE, col = "red")
-           }
+    if (!is(snpMeta, "snpMetaWhole")) {
+      plotf(ssr@locs, -log10(ps), xlab = paste("location on chromosome", 
+          chromosome(snpMeta)), ylab = "-log10 p Ho:Bs=0", main = paste(ssr@gene, 
+          "(chr", gchr, ")"), xlim = XLIM, pch = pch, cex = cex)
+      if (!is.null(geneLocDF)) {
+         for (i in 1:nrow(gloc)) {
+             axis(3, at = gloc[i, "beg"], labels = FALSE, col = "green")
+             axis(3, at = gloc[i, "end"], labels = FALSE, col = "red")
+             }
+      }
+    }
+    else if (is(snpMeta, "snpMetaWhole")) {
+      plotf(ssr@locs, -log10(ps), xlab = paste("chromosome"),
+          ylab = "-log10 p Ho:Bs=0", main = paste(ssr@gene, 
+          "(chr", gchr, ")"), xlim = XLIM, pch = pch, cex = cex, axes=FALSE)
+      axis(2)
+      abline(v=snpMeta@chrbounds, col="gray")
+
+      pts = c(0,snpMeta@chrbounds[-length(snpMeta@chrbounds)]) + diff(c(0,snpMeta@chrbounds))/2
+      text ( pts, rep(-.1, length(pts) ) , snpMeta@chrlabs )
+
+      if (!is.null(geneLocDF)) {
+         for (i in 1:nrow(gloc)) {
+             axis(3, at = gloc[i, "beg"], labels = FALSE, col = "green")
+             axis(3, at = gloc[i, "end"], labels = FALSE, col = "red")
+             }
+      }
     }
     return(invisible(list(x = ssr@locs, y = -log10(ps))))
 }
