@@ -14,3 +14,13 @@ Wellcome
 3) phenotypes
 
 Manually extracted from WebQTL tables.
+
+4) gene locations
+
+curl -O ftp://ftp.ncbi.nlm.nih.gov/genomes/M_musculus/mapview/seq_gene.md.gz
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 17.0M  100 17.0M    0     0   358k      0  0:00:48  0:00:48 --:--:--  384k
+
+This was filtered to feature type GENE, "best", "C57bl/6J".  Duplicates on feature_name
+were removed (only first element retained; there were five or so).
