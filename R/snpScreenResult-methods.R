@@ -20,7 +20,7 @@ extract_p = function(ssr) {
 }
 
 
-plot_mlp = function (ssr, snpMeta, gchr = NULL, geneLocDF=NULL, ps = NULL, pch = 20, cex = 0.5, local = FALSE, plotf=smoothScatter) 
+plot_mlp = function (ssr, snpMeta, gchr = NULL, geneLocDF=NULL, ps = NULL, pch = 20, cex = 0.5, local = FALSE, plotf=smoothScatter, organism="human") 
 {
     if (ssr@fittertok %in% c("fastAGM", "fastHET"))
         ps = ssr[["pval"]]
@@ -50,7 +50,7 @@ plot_mlp = function (ssr, snpMeta, gchr = NULL, geneLocDF=NULL, ps = NULL, pch =
     }
     if (!is(snpMeta, "snpMetaWhole")) {
       plotf(ssr@locs, -log10(ps), xlab = paste("location on chromosome", 
-          chromosome(snpMeta)), ylab = "-log10 p Ho:Bs=0", main = paste(ssr@gene, 
+          chromosome(snpMeta)), ylab = "-log10 p Ho:Bs=0", main = paste(organism, ssr@gene, 
           "(chr", gchr, ")"), xlim = XLIM, pch = pch, cex = cex)
       if (!is.null(geneLocDF)) {
          for (i in 1:nrow(gloc)) {
@@ -60,14 +60,15 @@ plot_mlp = function (ssr, snpMeta, gchr = NULL, geneLocDF=NULL, ps = NULL, pch =
       }
     }
     else if (is(snpMeta, "snpMetaWhole")) {
-      plotf(ssr@locs, -log10(ps), xlab = paste("chromosome"),
-          ylab = "-log10 p Ho:Bs=0", main = paste(ssr@gene, 
+      plotf(ssr@locs, -log10(ps), xlab = paste(organism, "chromosome"),
+          ylab = "-log10 p Ho:Bs=0", main = paste(organism, ssr@gene, 
           "(chr", gchr, ")"), xlim = XLIM, pch = pch, cex = cex, axes=FALSE)
       axis(2)
       abline(v=snpMeta@chrbounds, col="gray")
 
       pts = c(0,snpMeta@chrbounds[-length(snpMeta@chrbounds)]) + diff(c(0,snpMeta@chrbounds))/2
-      text ( pts, rep(-.1, length(pts) ) , snpMeta@chrlabs )
+      #text ( pts, rep(-.1, length(pts) ) , snpMeta@chrlabs )
+      axis(1, at=pts, labels = snpMeta@chrlabs )
 
       if (!is.null(geneLocDF)) {
          for (i in 1:nrow(gloc)) {

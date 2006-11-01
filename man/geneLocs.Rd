@@ -50,6 +50,6 @@ accurate sources are welcome.
 \examples{
 data(geneLocs_hsa)
 # be patient
-geneLocs[1:4,]
+geneLocs_hsa[1:4,]
 }
 \keyword{ models }

@@ -2,3 +2,7 @@ Oct 12 2006 -- it would probably be useful to bind the SNP location
  data into the racExSet
 
 Oct 12 2006 -- need to investigate the SQLite representation options
+
+Oct 31 2006 -- need to get rid of the deparsing of the fitter argument.
+   define a GGfitter class extending function and condition on its presence
+   -- this seems related to Martin Morgan's concern for empty classes.

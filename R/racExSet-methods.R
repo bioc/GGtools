@@ -6,9 +6,10 @@ setMethod("rarebase", "racExSet", function(x) x@rarebase)
 setMethod("SNPalleles", "racExSet", function(x) x@SNPalleles)
 
 
+
 setMethod("snpScreen", c("racExSet", "snpMeta", "genesym", "formula", "function", "numeric"),
    function (racExSet, snpMeta, gene, formTemplate = ~., fitter = lm, 
-      gran = 1, ...) 
+      gran) 
   {
       runTemplate = function(x, y) {
           z = as.character(x)
@@ -56,6 +57,62 @@ setMethod("snpScreen", c("racExSet", "snpMeta", "genesym", "formula", "function"
         fittertok = fittertok, gene=as.character(gene), out)
 })
 
+setMethod("snpScreen", c("racExSet", "snpMeta", "genesym", "formula", "function", "missing"),
+   function (racExSet, snpMeta, gene, formTemplate = ~., fitter = lm, 
+      gran) 
+  {
+#
+# absurd to replicate all this code for missing gran, but
+# madness of fitter deparsing compels it.  need to introduce
+# GGfitter class and then dispatch when it is present, otherwise
+# call the function
+#
+      gran = 1
+      runTemplate = function(x, y) {
+          z = as.character(x)
+          z[2] = gsub("\\.", y, z[2])
+          as.formula(z)
+      }
+      psid = getpsid(gene, annotation(racExSet))
+      y = exprs(racExSet)[psid, ]
+      outco = list(y)
+      names(outco) = as.character(gene)
+      nsnp = length(sn <- snpNames(racExSet))
+      snpstodo = sn[inuse <- seq(1, nsnp, gran)]
+      if (any(is.na(snpstodo))) snpstodo = snpstodo[!is.na(snpstodo)]
+      allpos = get("meta", snpMeta@meta)$pos
+      allsn = rownames(get("meta", snpMeta@meta))
+      names(allpos) = allsn
+      snpstodo = intersect(snpstodo, allsn)
+      locs = allpos[snpstodo]
+      fittertok = deparse(substitute(fitter))
+      callsave = match.call()
+      out = list()
+      if (fittertok %in% c("fastAGM", "fastHET")) {
+        tmp = snps(racExSet)[snpstodo,]
+        bad = apply(tmp,1,function(x) any(is.na(x)))
+        if (any(bad)) {
+           warning("some genotype results had missing values; associated SNPs are dropped completely in this version when fastAGM is used.")
+           snpstodo = snpstodo[-which(bad)]
+           }
+        locs = allpos[snpstodo]
+        if (fittertok == "fastAGM") ans = fastAGM(snps(racExSet)[snpstodo,], y)
+        else if (fittertok == "fastHET") ans = fastHET(snps(racExSet)[snpstodo,], y)
+        return(new("snpScreenResult", call=callsave, locs=locs, 
+            chr=chromosome(snpMeta), fittertok=fittertok, gene=as.character(gene), ans))
+      }
+      for (i in 1:length(snpstodo)) {
+          if (options()$verbose == TRUE) {
+              if (i%%100 == 0) 
+                  cat(i)
+          }
+          fm = runTemplate(formTemplate, snpstodo[i])
+          out[[i]] = try(oneFit(racExSet, outco, fm, fitter))
+      }
+      names(out) = snpstodo
+      new("snpScreenResult", call = callsave, locs = locs, chr = chromosome(snpMeta), 
+        fittertok = fittertok, gene=as.character(gene), out)
+})
 
 setMethod("show", "racExSet", function(object) {
     cat("racExSet instance (SNP rare allele count + expression)\n")

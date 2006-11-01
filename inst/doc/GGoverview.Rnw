@@ -39,18 +39,16 @@
 \begin{document}
 %\setkeys{Gin}{width=0.55\textwidth}
 
-\title{Overview of \Rpackage{GGtools} for genetical genomics}
+\title{Overview of \Rpackage{GGtools} for investigating
+genetics of gene expression}
 \author{VJ Carey \texttt{<stvjc@channing.harvard.edu>}}
 \maketitle
 
 \section{Introduction}
 
-We use the term \textit{genetical genomics} to refer to
+The \Rpackage{GGtools} package supports
 data analysis activities that link genotypic information
 such as SNP configurations to gene expression phenotype.
-The \Rpackage{GGtools} package includes various
-demonstration resources and analysis tools for these
-activities.
 @
 We will attach the library and have a look at a basic
 demonstration resource.
@@ -78,7 +76,7 @@ snps(chr20GGdem)[1:5,1:5]
 @
 
 We need some genetic metadata about SNPs; these are
-culled from SNP genotyping panels released on a 
+derived from from SNP genotyping panels released on a 
 chromosome-by-chromosome basis for CEPH participants
 by HapMap project:
 <<lksmeta>>=
@@ -87,7 +85,8 @@ chr20meta[1:4,]
 @
 
 A basic task is to compute a screen (over the genome, or,
-more practically, over a chromosome) of genotypic determination
+more practically, if seeking interactive performance with
+commodity hardware, over a chromosome) of genotypic determination
 of expression.  The \Rfunction{snpScreen} method helps
 with this; we illustrate an example related to
 results in Cheung and Spielman 2005:
@@ -123,7 +122,7 @@ plot(S100@locs, -log10(ps), xlab="chromosomal location")
 
 The \texttt{snpScreen} method illustrated above is very
 general (can accommodate and retain results of any R modeling function)
-but fairly slow.  We have added an R function \texttt{fastAGM}
+but is fairly slow.  We have added an R function \texttt{fastAGM}
 for fast fitting of an additive genetic model (equivalent to
 but much faster than using \texttt{lm}).  
 %We apply this
@@ -137,6 +136,7 @@ sCPNE1
 wm = which.min(pp <- extract_p(sCPNE1))
 pp[wm]
 <<dofig5,fig=TRUE>>=
+data(geneLocs_hsa)
 plot_mlp(sCPNE1, chr20meta, geneLocDF=geneLocs_hsa)
 @
 
@@ -149,6 +149,81 @@ plot_mlp(sCPNE1, chr20meta, geneLocDF=geneLocs_hsa)
  plot_EvG(chr20GGdem, genesym("CPNE1"), "rs6060535")
 # plot_EvG(chr7GGdem, genesym("IRF5"), "rs6969930")
 @
+
+\section{Creating new \texttt{racExSet} instances and supporting
+objects}
+
+Genotypes are available for a wide number of
+reference strains of mice through the Wellcome Trust;
+expression studies of such mice can be obtained using GEO.
+The data structure \texttt{gse2031GG} is an example:
+<<lkgse>>=
+data(gse2031GG)
+gse2031GG
+@
+The expression data are obtained by applying RMA to a
+collection of CEL files readily obtainable from GEO.
+The strains of the mice giving rise to the samples are
+obtained from the WebQTL "contacts" link.
+
+The genotype data for a large number of strains can be obtained
+from the INBREDS distribution at Wellcome Trust.  The URL
+is 
+\url{www.well.ox.ac.uk/mouse/INBREDS}.  An example of the genotype
+data 
+can be seen using the following code:
+<<lkgt>>=
+ff = readLines(system.file("fileDemos/StrainInit.txt", package="GGtools"))
+t(sapply(strsplit(ff[1:5]," "), function(x)x[c(1,2,3,55,56,57,101)]))
+@
+There are various representations provided in various places.
+Tightening the path to accurate genotyping data for reference strains
+would be useful.
+
+Given an expression matrix and a genotyping file as provided at the INBREDS
+site, the INBREDSworkflow function will help generate a \texttt{racExSet}
+instance:
+<<lkiw>>=
+args(INBREDSworkflow)
+@
+The \texttt{estrains} argument is a vector of strings defining
+the reference strains from which columns of \texttt{emat} were
+obtained through microarray hybridization.  This vector will typically
+be available from a \texttt{phenoData} variable on the
+\texttt{ExpressionSet} from which the expression matrix was obtained.
+For the \texttt{gse2031GG}, this is the variable \texttt{strain}:
+<<lks>>=
+as.character(gse2031GG$strain[1:5])
+@
+Now it appears that this nomenclature for strains is not always
+adopted directly.  If we grep for a variation of BXD[nn] in
+the INBREDS strains file, we find
+<<lktag>>=
+grep("BXD-", strsplit(ff[1]," ")[[1]], value=TRUE)[1:5]
+@
+and we see there are lexical variations introduced -- we want BXD6,
+but the labels in the INBREDS file have hyphens.  A \texttt{fixup}
+parameter allows inline reformatting of deviant strain identifiers
+as column names of the INBREDS file.  Additionally, chromosome names
+are sometimes postpended with ``-random'', and some steps may be needed
+to simplify the chromosome nomenclature.  The user must create/find the R
+code to obtain the desired results, or manually massage the source
+data files so that the desired regularities are present.
+
+Once genotype codes are available with a strain naming convention
+that matches that of the expression samples, INBREDSworkflow will
+compute rare allele counts, bind the genotyping,
+expression, and phenotype data together, and generate a \texttt{racExSet} instance.
+
+In summary, \texttt{make_racExSet} is a specification of materials
+that must be made mutually compatible for creation of a \texttt{GGtools}
+resource with which investigations of genetics of gene expression
+can be conveniently made.  \texttt{HMworkflow} and \texttt{INBREDSworkflow}
+are utility functions that support this task for files coming from
+HapMap and Wellcome repositories.
+
+
+
 
  
 

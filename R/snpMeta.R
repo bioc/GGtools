@@ -14,6 +14,7 @@ df2snpMeta = function(df, chrom) {
 }
 
 setMethod("[", "snpMeta", function(x, i, j, ..., drop=FALSE) {
+ if (missing(drop)) drop=FALSE
  if (missing(j)) get("meta", x@meta)[i,,drop=drop]
  else if (missing(i)) get("meta", x@meta)[,j,drop=drop]
  else get("meta", x@meta)[i,j,drop=drop]
