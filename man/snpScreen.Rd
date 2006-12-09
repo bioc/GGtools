@@ -110,6 +110,6 @@ data(gse2031GG)
 data(INB34snpMeta)
 # run a screen for Erdr1
 ss = snpScreen(gse2031GG, INB34snpMeta, genesym("Erdr1"), ~., fastAGM, 1)
-plot_mlp(ss, INB34snpMeta, gchr="all", plotf=plot )
+plot_mlp(ss, INB34snpMeta, gchr="all", plotf=plot, organism="mouse" )
 }
 \keyword{ models }
