@@ -7,7 +7,6 @@ Depends: R (>= 2.2.0), methods, Biobase (>= 1.11.26), hgfocus, geneplotter(>= 1.
 LazyData: no
 Maintainer: stvjc <stvjc@channing.harvard.edu>
 License: Artistic (see COPYING)
-Packaged: Thu Aug 10 11:02:04 2006; stvjc
 Collate: snpMeta.R AllClasses.R AllGenerics.R HapMapUtils.R exclMono.R
 	countRare.R fastAGM.R genoString.R oneFit.R racExSet-methods.R
 	snpScreenResult-methods.R snps3Pto.R updateObject.R 
