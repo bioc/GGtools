@@ -215,7 +215,7 @@ that matches that of the expression samples, INBREDSworkflow will
 compute rare allele counts, bind the genotyping,
 expression, and phenotype data together, and generate a \texttt{racExSet} instance.
 
-In summary, \texttt{make_racExSet} is a specification of materials
+In summary, \texttt{make\_racExSet} is a specification of materials
 that must be made mutually compatible for creation of a \texttt{GGtools}
 resource with which investigations of genetics of gene expression
 can be conveniently made.  \texttt{HMworkflow} and \texttt{INBREDSworkflow}
