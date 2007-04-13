@@ -34,6 +34,8 @@
 \alias{oneFit,racExSet,list,character,function-method}
 \alias{oneFit,racExSet,list,formula,function-method}
 \alias{[,racExSet-method}
+\alias{[,snpMeta,ANY,ANY,ANY-method}
+\alias{[,racExSet,ANY,ANY,ANY-method}
 \alias{show,racExSet-method}
 \alias{snps5PrimeTo}
 \alias{snps3PrimeTo}
