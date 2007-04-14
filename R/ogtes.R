@@ -103,4 +103,55 @@ setMethod("show", "oGtypeExSet", function(object) {
    }
    cat("phenoData combined over expression and SNP contributions:\n")
    show(phenoData(object))
+   if (length(conl <- object@dbConns) > 0) {
+      if (all(unlist(lapply(object@dbConns, isIdCurrent)))) cat(
+		"live SQLite connections detected for ", paste(names(conl),collapse=", "), "\n")
+      }
 })
+
+#addAnno = function(x) {
+# if (!is(x, "oGtypeExSet")) stop("only applies to oGtypeExSet inheritors")
+# anno = annotation(x)
+# anno = anno[names(anno) != "exprs"]
+# tmp = sapply(anno, function(z) if(!exists(z)) library(z, character.only=TRUE))
+# cons = lapply(anno, function(z) get(z)@getdb())
+# names(cons) = names(x@snpCalls)
+# x@dbConns= cons
+# x
+#}
+
+addAnno = function(x) {
+ if (!is(x, "oGtypeExSet")) stop("only applies to oGtypeExSet inheritors")
+ anno = annotation(x)
+ anno = anno[names(anno) != "exprs"]
+ tmp = sapply(anno, function(z) if(!exists(z)) library(z, character.only=TRUE))
+ cons = lapply(anno, function(z) get(z)@getdb())
+ names(cons) = names(x@snpCalls)
+ x@dbConns= cons
+ x
+}
+
+tx_rsnum = function(db, rs="rs177602", out="man_fsetid") {
+# we want to translate from rs number to associated fields in annotation database
+# for now returns a
+ if (length(rs) == 1) qa = try(dbSendQuery(db, paste("select", out, "from featureSet where dbsnp_rs_id = ", sQuote(rs))))
+ else if (length(rs) >= 1)
+     qa = try(dbSendQuery(db, paste("select", out, "from featureSet where dbsnp_rs_id in ( ",
+        paste(sQuote(rs), collapse=", "), ")") ))
+ if (inherits(qa, "try-error")) return(qa)  # for drastic failures like misnamed table
+ tmp = fetch(qa)
+ rr = dbClearResult(qa)
+ if (any(dim(tmp) == 0)) return(NULL)
+ tmp
+}
+
+getSNPindices = function(ogx, dbname, rs="rs177602") {
+ dnames = names(ogx@dbConns)
+ if (!(dbname %in% dnames)) stop(paste(dbname, "not found in dbConns of the oGtypeExSet"))
+ tmp = tx_rsnum( ogx@dbConns[[dbname]], rs, out="man_fsetid" )
+ fn = featureNames( ogx@snpCalls[[dbname]] )
+ ans = which( fn %in% as.character(unlist(tmp)) )
+ if (length(ans) == length(rs)) names(ans) = rs
+ ans
+}
+
