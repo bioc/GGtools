@@ -1,6 +1,6 @@
 Package: GGtools
 Title: software and data for genetical genomics (c) 2006 VJ Carey
-Version: 1.3.18
+Version: 1.3.19
 Author: stvjc <stvjc@channing.harvard.edu>
 Description: dealing with hapmap SNP reports, GWAS, etc.
 Depends: R (>= 2.2.0), methods, Biobase (>= 1.11.26), hgfocus, geneplotter(>= 1.11.8), mgu74av2
