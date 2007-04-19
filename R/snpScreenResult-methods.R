@@ -8,8 +8,8 @@ setMethod("show", "snpScreenResult", function(object) {
    }
    else {
      cat("There were", nf <- length(object[[4]]), "attempted fits,\n")
-     nerr = sum(is.na(object[[4]])) + sum(is.nan(object[[4]]))
-     cat("and", nf-nerr, "were successful.\n")
+ #    nerr = sum(is.na(object[[4]])) + sum(is.nan(object[[4]]))
+     cat("and", length(na.omit(object[[4]])) , "were successful.\n")
    }
 })
 
