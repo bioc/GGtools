@@ -4,8 +4,12 @@
 \alias{coerce,oGtypeExSet,ExpressionSet-method}
 \alias{initialize,oGtypeExSet-method}
 \alias{show,oGtypeExSet-method}
+\alias{addAnno}
+\alias{getSNPindices}
+\alias{tx_rsnum}
 \title{Class "oGtypeExSet" ~~~ }
-\description{	 ~~ A concise (1-5 lines) description of what the class is.  ~~}
+\description{	 Experimental class for combining oligo
+SnpCallSet with ExpressionSet }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("oGtypeExSet", 
 snpCalls=list(), dbConns=list(), x)}
@@ -36,7 +40,8 @@ No methods defined with class "oGtypeExSet" in the signature.
 }
 %\references{ ~put references to the literature/web site here ~ }
 \author{ VJ Carey <stvjc@channing.harvard.edu> }
-%\note{ ~~further notes~~ }
+\note{ addAnno, getSNPindices, and tx.rsnum need further
+development.}
 
 % ~Make other sections like Warning with \section{Warning }{....} ~
 %
