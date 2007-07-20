@@ -160,7 +160,9 @@ plot_EvG = function(reset, gene, snpid, anno="hgfocus") {
  y = exprs(reset)[gn,]
  x = snps(reset)[snpid,]
  plot(x,y,ylab=paste("log", gene, "expression"), xlab=paste("minor allele count,",
-  snpid), pch=20)
+  snpid), pch=20, axes=FALSE)
+ axis(2)
+ axis(1, at=0:2)
 }
 
 setGeneric("racAssays<-", function(object,value)standardGeneric("racAssays<-"))
