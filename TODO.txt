@@ -1,3 +1,6 @@
+Aug 25 2007 -- bug in plot_mlp -- if a trans analysis is done, 
+attempts to plot gene on current chromosome ...
+
 Apr 10 2007 -- need more general framework to deal with various
  representations of genotype data (particularly those obtained
  through multiple SNP chips)
