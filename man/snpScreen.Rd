@@ -3,10 +3,9 @@
 \alias{show,snpScreenResult-method}
 \alias{snpScreen,racExSet,snpMeta,genesym,formula,function,numeric-method}
 \alias{snpScreen,racExSet,snpMeta,genesym,formula,function,missing-method}
+\alias{snpScreen,racExSet,snpMeta,genesym,formula,GGfitter-method}
 \alias{snpScreen}
 \alias{extract_p}
-\alias{fastAGM}
-\alias{fastHET}
 \alias{plot_mlp}
 \title{compute model fits over a sequence of SNPs  }
 \description{
@@ -31,8 +30,8 @@ the expression phenotype to be regarded as dependent variable}
 nonadditive models for effects of rare allele copy number}
   \item{fitter}{ R fitting function that can work with formulas
 and data frames, for example \code{\link{lm}}, or, if not a
-fitting function, a special function in the package, either
-\code{fastHET}, or \code{fastAGM}, see details below}
+fitting function, a special object in the package, either
+\code{fastHETfitter}, or \code{fastAGMfitter}, see details below}
   \item{gran}{ a numeric convenience parameter; if not 1, SNPs will
 be deterministically selected with frequency 1/\code{gran} along the
 linear sequence in the racExSet racAssay structure }
@@ -63,8 +62,10 @@ For result processing, many SNPs have no variation in observed
 samples and statistical tests of association are indeterminate.
 NAs will be returned for tests on such SNPs.
 
-\code{fastAGM} is a C routine for simple least square fitting
-of an additive genetic model.  \code{fastHET} will compare heterozygous
+\code{fastAGMfitter} is an object that wraps a
+call to a C routine for simple least square fitting
+of an additive genetic model.  \code{fastHETfitter} will call
+C code that compares heterozygous
 to homozygous.
 
 \code{plot_mlp} returns a list of x and y values for the
@@ -97,7 +98,7 @@ scr2 = snpScreen(dem, chr20meta, genesym("DDR1"), ~factor(.), lm,  gran=200 )
 scr2[[1]]
 plot_mlp(scr1, chr20meta, geneLocDF=geneLocs_hsa)
 chr20GGdem = exclMono(chr20GGdem)
-ut = unix.time(scr2 <- snpScreen(chr20GGdem, chr20meta, genesym("CPNE1"), ~factor(.), fastAGM, 50))
+ut = unix.time(scr2 <- snpScreen(chr20GGdem, chr20meta, genesym("CPNE1"), ~., fastAGMfitter))
 ut
 scr2
 plot_mlp(scr2, chr20meta, geneLocDF=geneLocs_hsa)
@@ -109,7 +110,7 @@ data(gse2031GG)
 # get a provisional snp metadata structure
 data(INB34snpMeta)
 # run a screen for Erdr1
-ss = snpScreen(gse2031GG, INB34snpMeta, genesym("Erdr1"), ~., fastAGM, 1)
+ss = snpScreen(gse2031GG, INB34snpMeta, genesym("Erdr1"), ~., fastAGMfitter)
 plot_mlp(ss, INB34snpMeta, gchr="all", plotf=plot, organism="mouse" )
 }
 \keyword{ models }

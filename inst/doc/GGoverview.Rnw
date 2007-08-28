@@ -124,13 +124,15 @@ The \texttt{snpScreen} method illustrated above is very
 general (can accommodate and retain results of any R modeling function)
 but is fairly slow.  We have added an R function \texttt{fastAGM}
 for fast fitting of an additive genetic model (equivalent to
-but much faster than using \texttt{lm}).  
+but much faster than using \texttt{lm}).  This function is
+wrapped in an object, \texttt{fastAGMfitter}, to provide
+reflectance.
 %We apply this
 %for IRF5 on chromosome 7, and attempt to fit on all SNPs that
 %have no missing values:
 <<dofast>>=
 ut = unix.time(sCPNE1 <- snpScreen(chr20GGdem, chr20meta, genesym("CPNE1"), ~.,
-  fastAGM, 75))
+  fastAGMfitter))
 ut
 sCPNE1
 wm = which.min(pp <- extract_p(sCPNE1))

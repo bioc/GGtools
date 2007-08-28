@@ -1,5 +1,6 @@
 Aug 25 2007 -- bug in plot_mlp -- if a trans analysis is done, 
-attempts to plot gene on current chromosome ...
+attempts to plot gene on current chromosome ... -- seems fixed, 28 aug,
+  but check for whole-genome as in mouse example
 
 Apr 10 2007 -- need more general framework to deal with various
  representations of genotype data (particularly those obtained

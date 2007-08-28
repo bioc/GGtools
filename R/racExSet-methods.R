@@ -28,10 +28,9 @@ setMethod("snpScreen", c("racExSet", "snpMeta", "genesym", "formula", "function"
       names(allpos) = allsn
       snpstodo = intersect(snpstodo, allsn)
       locs = allpos[snpstodo]
-      fittertok = deparse(substitute(fitter))
       callsave = match.call()
       out = list()
-      if (fittertok %in% c("fastAGM", "fastHET")) {
+      if (is(fitter, "GGfitter")) {
         tmp = snps(racExSet)[snpstodo,]
         bad = apply(tmp,1,function(x) any(is.na(x)))
         if (any(bad)) {
@@ -39,10 +38,10 @@ setMethod("snpScreen", c("racExSet", "snpMeta", "genesym", "formula", "function"
            snpstodo = snpstodo[-which(bad)]
            }
         locs = allpos[snpstodo]
-        if (fittertok == "fastAGM") ans = fastAGM(snps(racExSet)[snpstodo,], y)
-        else if (fittertok == "fastHET") ans = fastHET(snps(racExSet)[snpstodo,], y)
+        if (fitter@name == "fastAGM") ans = fastAGM(snps(racExSet)[snpstodo,], y)
+        else if (fitter@name == "fastHET") ans = fastHET(snps(racExSet)[snpstodo,], y)
         return(new("snpScreenResult", call=callsave, locs=locs, 
-            chr=chromosome(snpMeta), fittertok=fittertok, gene=as.character(gene), ans))
+            chr=chromosome(snpMeta), fitter=fitter, gene=as.character(gene), ans))
       }
       for (i in 1:length(snpstodo)) {
           if (options()$verbose == TRUE) {
@@ -54,7 +53,7 @@ setMethod("snpScreen", c("racExSet", "snpMeta", "genesym", "formula", "function"
       }
       names(out) = snpstodo
       new("snpScreenResult", call = callsave, locs = locs, chr = chromosome(snpMeta), 
-        fittertok = fittertok, gene=as.character(gene), out)
+        fitter = fitter, gene=as.character(gene), out)
 })
 
 setMethod("snpScreen", c("racExSet", "snpMeta", "genesym", "formula", "function", "missing"),
@@ -85,10 +84,9 @@ setMethod("snpScreen", c("racExSet", "snpMeta", "genesym", "formula", "function"
       names(allpos) = allsn
       snpstodo = intersect(snpstodo, allsn)
       locs = allpos[snpstodo]
-      fittertok = deparse(substitute(fitter))
       callsave = match.call()
       out = list()
-      if (fittertok %in% c("fastAGM", "fastHET")) {
+      if (is(fitter, "GGfitter")) {
         tmp = snps(racExSet)[snpstodo,]
         bad = apply(tmp,1,function(x) any(is.na(x)))
         if (any(bad)) {
@@ -96,10 +94,10 @@ setMethod("snpScreen", c("racExSet", "snpMeta", "genesym", "formula", "function"
            snpstodo = snpstodo[-which(bad)]
            }
         locs = allpos[snpstodo]
-        if (fittertok == "fastAGM") ans = fastAGM(snps(racExSet)[snpstodo,], y)
-        else if (fittertok == "fastHET") ans = fastHET(snps(racExSet)[snpstodo,], y)
+        if (fitter@name == "fastAGM") ans = fastAGM(snps(racExSet)[snpstodo,], y)
+        else if (fitter@name == "fastHET") ans = fastHET(snps(racExSet)[snpstodo,], y)
         return(new("snpScreenResult", call=callsave, locs=locs, 
-            chr=chromosome(snpMeta), fittertok=fittertok, gene=as.character(gene), ans))
+            chr=chromosome(snpMeta), fitter=fitter, gene=as.character(gene), ans))
       }
       for (i in 1:length(snpstodo)) {
           if (options()$verbose == TRUE) {
@@ -111,7 +109,7 @@ setMethod("snpScreen", c("racExSet", "snpMeta", "genesym", "formula", "function"
       }
       names(out) = snpstodo
       new("snpScreenResult", call = callsave, locs = locs, chr = chromosome(snpMeta), 
-        fittertok = fittertok, gene=as.character(gene), out)
+        fitter= fitter, gene=as.character(gene), out)
 })
 
 setMethod("show", "racExSet", function(object) {
@@ -180,3 +178,33 @@ setMethod("[", "racExSet", function(x, i, j, ..., drop=FALSE) {
  }
  x
 })
+
+setMethod("snpScreen", c("racExSet", "snpMeta", "genesym", "formula", "GGfitter"),
+   function (racExSet, snpMeta, gene, formTemplate = ~., fitter = fastAGMfitter, 
+      gran) 
+  {
+      psid = getpsid(gene, annotation(racExSet))
+      y = exprs(racExSet)[psid, ]
+      outco = list(y)
+      names(outco) = as.character(gene)
+      nsnp = length(sn <- snpNames(racExSet))
+      snpstodo = sn[inuse <- seq(1, nsnp, gran)]
+      if (any(is.na(snpstodo))) snpstodo = snpstodo[!is.na(snpstodo)]
+      allpos = get("meta", snpMeta@meta)$pos
+      allsn = rownames(get("meta", snpMeta@meta))
+      names(allpos) = allsn
+      snpstodo = intersect(snpstodo, allsn)
+      locs = allpos[snpstodo]
+      callsave = match.call()
+      out = list()
+        tmp = snps(racExSet)[snpstodo,]
+        bad = apply(tmp,1,function(x) any(is.na(x)))
+        if (any(bad)) {
+           warning("some genotype results had missing values; associated SNPs are dropped completely in this version when fastAGM is used.")
+           snpstodo = snpstodo[-which(bad)]
+           }
+        locs = allpos[snpstodo]
+        ans = fitter@func(snps(racExSet)[snpstodo,], y)
+        return(new("snpScreenResult", call=callsave, locs=locs, fitter=fitter,
+            chr=chromosome(snpMeta), gene=as.character(gene), ans))
+      })

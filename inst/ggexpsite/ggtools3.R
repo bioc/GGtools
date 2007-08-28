@@ -2,9 +2,9 @@
 tag(html)
 tag(head)
 
-globGraphDir <<- "/Library/WebServer/Documents/rgraphs/"
-graphDirURLroot <<- "/rgraphs/"
-graphURLroot <<- "/rgraphs/"
+globGraphDir <<- "/Library/WebServer/Documents/RGraphs/"
+graphDirURLroot <<- "/RGraphs/"
+graphURLroot <<- "/RGraphs/"
 
 library(GGtools)
 library(GGdata)
