@@ -30,10 +30,10 @@ of SQLite connections for SNP annotation structures }
   }
 }
 \section{Extends}{
-Class \code{"\linkS4class{ExpressionSet}"}, directly.
-Class \code{"\linkS4class{eSet}"}, by class "ExpressionSet", distance 2.
-Class \code{"\linkS4class{VersionedBiobase}"}, by class "ExpressionSet", distance 3.
-Class \code{"\linkS4class{Versioned}"}, by class "ExpressionSet", distance 4.
+Class \code{\link[Biobase]{ExpressionSet-class}}, directly.
+Class \code{\link[Biobase]{eSet-class}}, by class "ExpressionSet", distance 2.
+Class \code{\link[Biobase]{VersionedBiobase-class}}, by class "ExpressionSet", distance 3.
+Class \code{\link[Biobase]{Versioned-class}}, by class "ExpressionSet", distance 4.
 }
 \section{Methods}{
 No methods defined with class "oGtypeExSet" in the signature.
@@ -47,7 +47,6 @@ development.}
 %
 %\seealso{
 %	~~objects to See Also as \code{\link{~~fun~~}}, ~~~
-%	or \code{\linkS4class{CLASSNAME}} for links to other classes
 %}
 \examples{
 # use new("oGtypeExSet", snpCalls=list(Nsp=nspCalls, Sty=styCalls),
