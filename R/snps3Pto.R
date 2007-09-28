@@ -1,4 +1,4 @@
-snps3PrimeTo = function(gn, rad=50000) {
+snps3PrimeTo = function(gn, rad=50000, geneLocs=geneLocs_hsa) {
  chr = as.character(geneLocs[gn,"chr"])
  metaDat = paste("chr", chr, "meta", sep="")
  md = get(metaDat)
@@ -11,7 +11,7 @@ snps3PrimeTo = function(gn, rad=50000) {
  
  
  
-snps5PrimeTo = function(gn, rad=50000) {
+snps5PrimeTo = function(gn, rad=50000, geneLocs=geneLocs_hsa) {
  chr = as.character(geneLocs[gn,"chr"])
  metaDat = paste("chr", chr, "meta", sep="")
  md = get(metaDat)
