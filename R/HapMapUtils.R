@@ -40,45 +40,81 @@ HM2rac = function (fn, comment.char = "", kppref = "NA")
     list(raremat = t(rr), alleles=allel, rareallele = rrr, anno=adf)
 }
 
-
 thinHM2rac = function(gzfn) {
 #
-# here we scan in the gzipped data line by line and
-# build up the matrix
+# now we can do this in memory for large chromosomes, so stop the line by line
 #
- stats = system(paste("gunzip -c", gzfn, "|wc"), intern=TRUE)
- stats = as.numeric(strsplit(stats, "\ +")[[1]])
- ntokpline = stats[3]/stats[2]
- nline = stats[2]-1 # header
- nind = ntokpline - 11
- rarecount = matrix(NA, nr=nline, nc=nind)
- alleles = rep(NA, nline)
- rarebase = rep(NA, nline)
- rsnum = rep(NA, nline)
  ff = gzfile(gzfn)
  open(ff, "r")
- hd = scan(ff, "", n=ntokpline, quiet=TRUE)
- snames = hd[-c(1:11)]
- cat(paste(nline, "lines to process\n"))
- for (i in 1:nline)
-   {
-   if (i %% 500 == 0) cat(i)
-   tmp = scan(ff, "", n=ntokpline, quiet=TRUE)
-   rarebase[i] = getRare(tmp[-c(1:11)])
-   rarecount[i,] = countRare(tmp[-c(1:11)])
-   rsnum[i] = tmp[1]
-   alleles[i] = tmp[2]
-   }
+ heads = strsplit(readLines(ff,n=1), " ")[[1]]
+ close(ff)
+ ff2 = gzfile(gzfn)
+ open(ff2, "r")
+ snames = heads[-c(1:11)]
+ ntokpline = length(heads)
+ allt = scan(ff2, skip=1, what="")  # do a full read?
+ close(ff2)
+ nline = length(allt)/ntokpline
+ mym = matrix(NA, nr=ntokpline, nc=nline)
+ mym[] = allt
+ rsnum = mym[1,]
+ alleles = mym[2,]
+ ans = t(mym[-c(1:11),])
+ rarebase = apply( ans, 1, getRare )
+ rarecount = t(apply(ans,1,countRare))
+ #nind = ntokpline - 11
+ #rarecount = matrix(NA, nr=nline, nc=nind)
+ #alleles = rep(NA, nline)
+ #rarebase = rep(NA, nline)
+ #rsnum = rep(NA, nline)
+ #hd = scan(ff, "", n=ntokpline, quiet=TRUE)
+ #snames = hd[-c(1:11)]
+ #cat(paste(nline, "lines to process\n"))
  rownames(rarecount) = rsnum
  colnames(rarecount) =  snames
- list(rarecount=rarecount, rarebase=rarebase, 
+ list(rarecount=rarecount, rarebase=rarebase,
        alleles=alleles)
 }
+
+
+#thinHM2racChunk = function(gzfn) {
+##
+## here we scan in the gzipped data line by line and
+## build up the matrix
+##
+# stats = system(paste("gunzip -c", gzfn, "|wc"), intern=TRUE)
+# stats = as.numeric(strsplit(stats, "\ +")[[1]])
+# ntokpline = stats[3]/stats[2]
+# nline = stats[2]-1 # header
+# nind = ntokpline - 11
+# rarecount = matrix(NA, nr=nline, nc=nind)
+# alleles = rep(NA, nline)
+# rarebase = rep(NA, nline)
+# rsnum = rep(NA, nline)
+# ff = gzfile(gzfn)
+# open(ff, "r")
+# hd = scan(ff, "", n=ntokpline, quiet=TRUE)
+# snames = hd[-c(1:11)]
+# cat(paste(nline, "lines to process\n"))
+# for (i in 1:nline)
+#   {
+#   if (i %% 500 == 0) cat(i)
+#   tmp = scan(ff, "", n=ntokpline, quiet=TRUE)
+#   rarebase[i] = getRare(tmp[-c(1:11)])
+#   rarecount[i,] = countRare(tmp[-c(1:11)])
+#   rsnum[i] = tmp[1]
+#   alleles[i] = tmp[2]
+#   }
+# rownames(rarecount) = rsnum
+# colnames(rarecount) =  snames
+# list(rarecount=rarecount, rarebase=rarebase, 
+#       alleles=alleles)
+#}
  
 thinHM2meta = function(gzfn,chr) {
 #
 # here we scan in the gzipped data line by line and
-# build up the matrix
+# build up the matrix  -- will fix oct 17 2007
 #
  stats = system(paste("gunzip -c", gzfn, "|wc"), intern=TRUE)
  stats = as.numeric(strsplit(stats, "\ +")[[1]])
@@ -105,3 +141,4 @@ ans = data.frame(pos=as.numeric(pos), strand=strand)
 rownames(ans) = rsnum
 df2snpMeta(ans,chr)
 }
+
