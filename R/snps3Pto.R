@@ -1,4 +1,5 @@
-snps3PrimeTo = function(gn, rad=50000, geneLocs=geneLocs_hsa) {
+snps3PrimeTo = function(gn, rad=50000, geneLocs) {
+ if (missing(geneLocs)) stop("a geneLocs data frame must be supplied, like geneLocs_hsa in GGtools")
  chr = as.character(geneLocs[gn,"chr"])
  metaDat = paste("chr", chr, "meta", sep="")
  md = get(metaDat)
@@ -11,7 +12,8 @@ snps3PrimeTo = function(gn, rad=50000, geneLocs=geneLocs_hsa) {
  
  
  
-snps5PrimeTo = function(gn, rad=50000, geneLocs=geneLocs_hsa) {
+snps5PrimeTo = function(gn, rad=50000, geneLocs) {
+ if (missing(geneLocs)) stop("a geneLocs data frame must be supplied, like geneLocs_hsa in GGtools")
  chr = as.character(geneLocs[gn,"chr"])
  metaDat = paste("chr", chr, "meta", sep="")
  md = get(metaDat)
@@ -22,7 +24,8 @@ snps5PrimeTo = function(gn, rad=50000, geneLocs=geneLocs_hsa) {
  snpID(rownames(snpdf)[which(pos > las & pos < ini)])
 }
 
-snpsNear = function(gn, rad=50000) {
+snpsNear = function(gn, rad=50000, geneLocs) {
+ if (missing(geneLocs)) stop("a geneLocs data frame must be supplied, like geneLocs_hsa in GGtools")
  chr = as.character(geneLocs[gn,"chr"])
  metaDat = paste("chr", chr, "meta", sep="")
  md = get(metaDat)
