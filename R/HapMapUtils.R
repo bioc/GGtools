@@ -113,32 +113,26 @@ thinHM2rac = function(gzfn) {
  
 thinHM2meta = function(gzfn,chr) {
 #
-# here we scan in the gzipped data line by line and
-# build up the matrix  -- will fix oct 17 2007
+# full read
 #
- stats = system(paste("gunzip -c", gzfn, "|wc"), intern=TRUE)
- stats = as.numeric(strsplit(stats, "\ +")[[1]])
- ntokpline = stats[3]/stats[2]
- nline = stats[2]-1 # header
- nind = ntokpline - 11
- pos = rep(NA, nline)
- strand = rep(NA, nline)
- rsnum = rep(NA, nline)
  ff = gzfile(gzfn)
  open(ff, "r")
- hd = scan(ff, "", n=ntokpline, quiet=TRUE)
-# snames = hd[-c(1:11)]
- cat(paste(nline, "lines to process\n"))
- for (i in 1:nline)
-   {
-   if (i %% 500 == 0) cat(i)
-   tmp = scan(ff, "", n=ntokpline, quiet=TRUE)
-   rsnum[i] = tmp[1]
-   pos[i] = as.numeric(tmp[4])
-   strand[i] = tmp[5]
-   }
-ans = data.frame(pos=as.numeric(pos), strand=strand)
-rownames(ans) = rsnum
-df2snpMeta(ans,chr)
+ heads = strsplit(readLines(ff,n=1), " ")[[1]]
+ close(ff)
+ ff2 = gzfile(gzfn)
+ open(ff2, "r")
+ ntokpline = length(heads)
+ allt = scan(ff2, skip=1, what="")  # do a full read?
+ close(ff2)
+ nline = length(allt)/ntokpline
+ mym = matrix(NA, nr=ntokpline, nc=nline)
+ mym[] = allt
+ pos = mym[4,]
+ strand = mym[5,]
+ rsnum = mym[1,]
+ rm(mym)
+ ans = data.frame(pos=as.numeric(pos), strand=strand)
+ rownames(ans) = rsnum
+ df2snpMeta(ans,chr)
 }
 

@@ -170,7 +170,10 @@ setReplaceMethod("racAssays", c("racExSet", "AssayData"), function(object, value
 })
 
 setMethod("[", "racExSet", function(x, i, j, ..., drop=FALSE) {
- if (is(i, "genesym")) callNextMethod()
+ if (is(i, "genesym")) { #callNextMethod()
+    ind = getpsid(i, annotation(x))
+    x@assayData = assayDataNew("lockedEnvironment", exprs=exprs(x)[ind,,drop=FALSE])
+    }
  else if (is(i, "snpID")) {
     sel = get("racs", x@racAssays)
     sel = sel[i,,drop=FALSE]
