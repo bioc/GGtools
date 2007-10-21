@@ -7,7 +7,7 @@ Depends: R (>= 2.5.0), methods, Biobase (>= 1.11.26), hgfocus, geneplotter(>= 1.
 LazyData: no
 biocViews: SNPsAndGeneticVariability, Genetics, Statistics
 Maintainer: Vince Carey <stvjc@channing.harvard.edu>
-License: Artistic (see COPYING)
+License: Artistic-2.0
 Collate: fastAGM.R snpMeta.R AllClasses.R AllGenerics.R HapMapUtils.R exclMono.R
 	countRare.R genoString.R oneFit.R racExSet-methods.R
 	snpScreenResult-methods.R snps3Pto.R updateObject.R 
