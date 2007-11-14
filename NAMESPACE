@@ -23,7 +23,7 @@ export("HMworkflow", "thinHM2rac", "exclMono", "thinHM2meta", "df2snpMeta",
    "oneFit", "genoStrings", "extract_p", "plot_mlp", "fastAGM", "fastHET",
    "plot_EvG", "snps3PrimeTo", "snps5PrimeTo", "snpsNear", "Strains2rac",
    "wrapSNPmetaWh", "INBREDSworkflow", "addAnno", "tx_rsnum", "getSNPindices", 
-   "fastAGMfitter", "fastHETfitter")
+   "fastAGMfitter", "fastHETfitter", "pos")
 
 #importFrom("KernSmooth", "bkde2D")
 #importFrom("RColorBrewer", "brewer.pal")

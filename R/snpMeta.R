@@ -30,4 +30,12 @@ setAs("snpMeta", "data.frame", function(from) get("meta", from@meta))
 setMethod("dim", "snpMeta", function(x) dim(as(x, "data.frame")))
 setMethod("nrow", "snpMeta", function(x) nrow(as(x, "data.frame")))
 
+setGeneric("pos", function(x) standardGeneric("pos"))
+setMethod("pos", "snpMeta", function(x) {
+ mdf = as(x, "data.frame")
+ po = as.numeric(mdf$pos)
+ names(po) = rownames(mdf)
+ po
+})
+
 

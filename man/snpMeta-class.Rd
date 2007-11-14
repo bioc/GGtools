@@ -3,6 +3,8 @@
 \alias{snpMeta-class}
 \alias{snpMetaWhole-class}
 \alias{snpMetaWhole}
+\alias{pos}
+\alias{pos,snpMeta-method}
 \alias{wrapSNPmetaWh}
 \alias{chr20meta}
 \alias{[,snpMeta-method}
@@ -29,12 +31,15 @@ identifying chromosome on which SNPs are documented }
 }
 \section{Methods}{
   \describe{
-    \item{[}{\code{signature(x = "snpMeta")}: ... }
-    \item{chromosome}{\code{signature(x = "snpMeta")}: ... }
-    \item{coerce}{\code{signature(from = "snpMeta", to = "data.frame")}: ... }
-    \item{dim}{\code{signature(x = "snpMeta")}: ... }
-    \item{nrow}{\code{signature(x = "snpMeta")}: ... }
-    \item{show}{\code{signature(object = "snpMeta")}: ... }
+    \item{[}{\code{signature(x = "snpMeta")}: select subset using rs number}
+    \item{chromosome}{\code{signature(x = "snpMeta")}: obtain chromosome name }
+    \item{pos}{\code{signature(x = "snpMeta")}: obtain named vector of positions }
+    \item{coerce}{\code{signature(from = "snpMeta", to = "data.frame")}: return
+        data.frame with all metadata }
+    \item{dim}{\code{signature(x = "snpMeta")}: give dimensions }
+    \item{nrow}{\code{signature(x = "snpMeta")}: tell number of entries }
+    \item{show}{\code{signature(object = "snpMeta")}: give abbreviated report of contents
+with exemplar records}
 	 }
 }
 \references{ \url{www.hapmap.org} , \url{www.well.ox.ac.uk/mouse/INBREDS} }
