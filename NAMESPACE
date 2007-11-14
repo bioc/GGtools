@@ -13,17 +13,18 @@ useDynLib(GGtools)
 import(Biobase)
 
 exportClass(racExSet, genesym, snpScreenResult, snpMeta, snpMetaWhole, oGtypeExSet,
-  GGfitter)
+  GGfitter, twSnpScreenResult)
 
 exportMethods("snps", "snpNames", "racAssays", "snpScreen", "show",
-	"rarebase", "SNPalleles", "exprs", "initialize", "coerce")
+	"rarebase", "SNPalleles", "exprs", "initialize", "coerce",
+	"twSnpScreen")
 
 export("HMworkflow", "thinHM2rac", "exclMono", "thinHM2meta", "df2snpMeta",
    "make_racExSet", "countRare", "getRare", "genesym", "snpID", "getpsid",
    "oneFit", "genoStrings", "extract_p", "plot_mlp", "fastAGM", "fastHET",
    "plot_EvG", "snps3PrimeTo", "snps5PrimeTo", "snpsNear", "Strains2rac",
    "wrapSNPmetaWh", "INBREDSworkflow", "addAnno", "tx_rsnum", "getSNPindices", 
-   "fastAGMfitter", "fastHETfitter", "pos")
+   "fastAGMfitter", "fastHETfitter", "pos", "exFeatID")
 
-#importFrom("KernSmooth", "bkde2D")
+importFrom("AnnotationDbi", "mget")
 #importFrom("RColorBrewer", "brewer.pal")

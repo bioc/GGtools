@@ -1,9 +1,12 @@
 \name{snpScreen}
 \alias{snpScreenResult-class}
+\alias{twSnpScreenResult-class}
 \alias{show,snpScreenResult-method}
 \alias{snpScreen,racExSet,snpMeta,genesym,formula,function,numeric-method}
 \alias{snpScreen,racExSet,snpMeta,genesym,formula,function,missing-method}
 \alias{snpScreen,racExSet,snpMeta,genesym,formula,GGfitter-method}
+\alias{twSnpScreen,racExSet,snpMeta,formula,GGfitter-method}
+\alias{twSnpScreen}
 \alias{snpScreen}
 \alias{extract_p}
 \alias{plot_mlp}
@@ -12,7 +15,8 @@
 compute model fits over a sequence of SNPs
 }
 \usage{
-snpScreen(racExSet, snpMeta, gene, formTemplate, fitter, gran, ...)
+snpScreen(racExSet, snpMeta, gene, formTemplate, fitter, gran)
+twSnpScreen(racExSet, snpMeta, formTemplate, fitter)
 extract_p(ssr)
 plot_mlp(ssr, snpMeta, gchr=NULL, geneLocDF=NULL, ps = NULL, pch = 20, cex = 0.5, local=FALSE, 
   plotf=smoothScatter, organism="human")
@@ -61,6 +65,10 @@ about a screen, including a list of fit objects.
 For result processing, many SNPs have no variation in observed
 samples and statistical tests of association are indeterminate.
 NAs will be returned for tests on such SNPs.
+
+For twSnpScreen (transcriptome-wide): all genes in the expression array are
+checked against all SNPs.  An instance of twSnpScreenResult is
+returned.
 
 \code{fastAGMfitter} is an object that wraps a
 call to a C routine for simple least square fitting
@@ -112,5 +120,23 @@ data(INB34snpMeta)
 # run a screen for Erdr1
 ss = snpScreen(gse2031GG, INB34snpMeta, genesym("Erdr1"), ~., fastAGMfitter)
 plot_mlp(ss, INB34snpMeta, gchr="all", plotf=plot, organism="mouse" )
+#
+# following will throw warnings, so dontrun but paste by hand
+#
+\dontrun{
+ someg = c("DDR1", "RFC2", "HSPA6", "PAX8", "GUCA1A")
+ somesnps = c("rs6088779", "rs6120881", "rs7346331", "rs6088780", "rs2425024", 
+ "rs6088781", "rs6141540", "rs11167262", "rs6119594", "rs1555322", 
+ "rs2425027", "rs6142341", "rs6058215", "rs6060331", "rs6088785", 
+ "rs6087694", "rs12106107", "rs2425032", "rs2425037", "rs2275274")
+ 
+ somesnps = somesnps[c(5L, 8L, 10L, 11L, 14L, 18L, 19L, 20L)]
+ trim = chr20GGdem[ genesym(someg[1:3]), ]
+ trim = trim[ snpID(somesnps), ]
+ lktw = twSnpScreen( trim, chr20meta, ~., fastAGMfitter)
+ names(lktw)
+ lktw[[1]]
+}
+
 }
 \keyword{ models }

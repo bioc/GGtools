@@ -178,8 +178,13 @@ setMethod("[", "racExSet", function(x, i, j, ..., drop=FALSE) {
     sel = get("racs", x@racAssays)
     sel = sel[i,,drop=FALSE]
     x@racAssays = assayDataNew("lockedEnvironment", racs=sel)
- }
- x
+    }
+ else if (is(i, "exFeatID")) {
+    ind = which( i %in% featureNames(x) )
+    x@assayData = assayDataNew("lockedEnvironment", exprs=exprs(x)[ind,,drop=FALSE])
+    }
+ else stop("selection index must be of class genesym or snpID or exFeatID")
+ return(x)
 })
 
 setMethod("snpScreen", c("racExSet", "snpMeta", "genesym", "formula", "GGfitter"),
@@ -211,3 +216,20 @@ setMethod("snpScreen", c("racExSet", "snpMeta", "genesym", "formula", "GGfitter"
         return(new("snpScreenResult", call=callsave, locs=locs, fitter=fitter,
             chr=chromosome(snpMeta), gene=as.character(gene), ans))
       })
+
+setMethod("twSnpScreen", c("racExSet", "snpMeta", "formula", "GGfitter"),
+   function (racExSet, snpMeta, formTemplate = ~., fitter = fastAGMfitter){
+# transcriptome-wide SnpScreen
+  fn = featureNames(racExSet)
+  syms = na.omit(unlist(lookUp(fn, annotation(racExSet), "SYMBOL")))
+  if (any(dd <- duplicated(syms))) syms = syms[-which(dd)]
+  out = list()
+  for (i in 1:length(syms))
+      out[[i]] = try(snpScreen(racExSet, snpMeta, genesym(syms[i]),
+         formTemplate, fitter))
+  names(out) = syms
+  new("twSnpScreenResult", call=match.call(),
+     genes=syms, locs=pos(snpMeta)[rownames(snps(racExSet))], 
+        fitter=fitter, out)
+  })
+

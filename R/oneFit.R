@@ -2,7 +2,17 @@
 setGeneric("oneFit", function(racExSet, geneid, snpid, fitfun, ...)
   standardGeneric("oneFit"))
 
-getpsid = function( geneid, annostring, one.only=TRUE ) {
+getpsid = function(geneid, annostring) {
+  require(paste(annostring, "db", sep="."), character.only=TRUE)
+  rmap = revmap(get(paste(annostring, "SYMBOL", sep="")))
+  ans = AnnotationDbi::mget(geneid, rmap)
+  tt = sapply(ans,length)
+  if (any(tt>1)) warning("when symbol maps to multiple probesets, first occuring is used")
+  ans = sapply(ans, "[", 1)
+  ans
+}
+
+getpsid.OLD = function( geneid, annostring, one.only=TRUE ) {
   require(annostring, character.only=TRUE)
   lkmemo = paste(annostring, "SYMMEMO", sep="")
   if (exists(lkmemo)) {

@@ -5,6 +5,9 @@
 setClass("snpID", contains="character")
 snpID = function(x) new("snpID", x)
 
+setClass("exFeatID", contains="character")
+exFeatID = function(x) new("exFeatID", x)
+
 setClass("genesym", contains="character")
 genesym = function(x) new("genesym", x)
 
@@ -14,6 +17,9 @@ setGeneric("snps", function(x) standardGeneric("snps"))
 
 setClass("snpScreenResult", representation(call="call", gene="character", 
     locs="numeric", chr="character", fitter="ANY"), contains="list")
+
+setClass("twSnpScreenResult", representation(call="call", genes="character", 
+    locs="numeric", fitter="ANY"), contains="list")
 
 # key class for genetical genomics Aug 2006 -- rare allele
 # count combined with expression (racExSet)

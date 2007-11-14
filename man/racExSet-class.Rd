@@ -5,6 +5,8 @@
 \alias{racExSet}
 \alias{genesym-class}
 \alias{genesym}
+\alias{exFeatID}
+\alias{exFeatID-class}
 \alias{chr20GGdem}
 \alias{gse2031GG}
 \alias{hgfocusSYMMEMO}
@@ -116,6 +118,8 @@ just tells us that a string will be serving the role of
 a HUGO symbol and allows us to dispatch accordingly.  The
 \code{snpID} class has similar role.  It just lets us
 know that a string is intended to be regarded as an rs number.
+\code{exFeatID} class has a similar role, allowing us to use
+an expression feature ID to select (typically a probeset identifier).
 
 \code{hgfocusSYMMEMO} is a lookup table quickly establishing
 the probeset ID based on a HUGO symbol; likewise mgu74av2SYMMEMO.
