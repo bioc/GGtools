@@ -18,7 +18,7 @@ compute model fits over a sequence of SNPs
 snpScreen(racExSet, snpMeta, gene, formTemplate, fitter, gran)
 twSnpScreen(racExSet, snpMeta, formTemplate, fitter)
 extract_p(ssr)
-plot_mlp(ssr, snpMeta, gchr=NULL, geneLocDF=NULL, ps = NULL, pch = 20, cex = 0.5, local=FALSE, 
+plot_mlp(ssr, snpMeta, gchr=NULL, geneLocDF=NULL, ps = NULL, pch = 20, cex = 0.6, local=FALSE, 
   plotf=smoothScatter, organism="human")
 }
 \arguments{

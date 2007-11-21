@@ -153,15 +153,28 @@ make_racExSet = function(exprs, racs, rarebase, SNPalleles, pd, mi, anno) {
         annotation = anno)
 }
 
-plot_EvG = function(reset, gene, snpid, anno="hgfocus") {
- gn = getpsid(gene, anno)
- y = exprs(reset)[gn,]
- x = snps(reset)[snpid,]
- plot(x,y,ylab=paste("log", gene, "expression"), xlab=paste("minor allele count,",
-  snpid), pch=20, axes=FALSE)
- axis(2)
- axis(1, at=0:2)
+#plot_EvG = function(reset, gene, snpid, anno="hgfocus") {
+# gn = getpsid(gene, anno)
+# y = exprs(reset)[gn,]
+# x = snps(reset)[snpid,]
+# plot(jitter(x),y,ylab=paste("log", gene, "expression"), xlab=paste("minor allele count,",
+#  snpid), pch=20, axes=FALSE, cex=1.5)
+# axis(2)
+# axis(1, at=0:2)
+#}
+
+plot_EvG = function (reset, gene, snpid, anno = "hgfocus") 
+{
+    gn = getpsid(gene, anno)
+    y = exprs(reset)[gn, ]
+    x = snps(reset)[snpid, ]
+    plot(jitter(x,.5), y, ylab = paste("log", gene, "expression"), 
+        xlab = paste("minor allele count,", snpid), pch = 20, 
+        axes = FALSE, cex = 1.9, cex.lab=1.5)
+    axis(2, cex=1.9, cex.axis=1.5)
+    axis(1, at = 0:2, cex=1.9, cex.axis=1.5)
 }
+
 
 setGeneric("racAssays<-", function(object,value)standardGeneric("racAssays<-"))
 setReplaceMethod("racAssays", c("racExSet", "AssayData"), function(object, value) {

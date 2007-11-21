@@ -10,7 +10,8 @@ useDynLib(GGtools)
 #export("Aggregate", 
 #
 
-import(Biobase)
+importFrom("AnnotationDbi", "mget")
+import(Biobase, AnnotationDbi)
 
 exportClass(racExSet, genesym, snpScreenResult, snpMeta, snpMetaWhole, oGtypeExSet,
   GGfitter, twSnpScreenResult)
@@ -26,5 +27,4 @@ export("HMworkflow", "thinHM2rac", "exclMono", "thinHM2meta", "df2snpMeta",
    "wrapSNPmetaWh", "INBREDSworkflow", "addAnno", "tx_rsnum", "getSNPindices", 
    "fastAGMfitter", "fastHETfitter", "pos", "exFeatID")
 
-importFrom("AnnotationDbi", "mget")
 #importFrom("RColorBrewer", "brewer.pal")

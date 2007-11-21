@@ -1,0 +1,41 @@
+
+<html>
+<title>gghelp</title>
+<h2>GGexplorer.org: map of the results</h2>
+<p>
+The GGexplorer query facility accepts a gene symbol and
+a chromosome number and performs GGtools::snpScreen to
+test for association between rare allele count and
+expression in the 58 founders of the CEU Ceph cohort.
+<p>
+The query page looks like this:
+<p>
+<img src="ggqueryIllus.png" height=250>
+<p>
+The output takes two main forms: a hyperlinked graphical
+page, and a text output.
+<p>
+The main display of the graphical page is the
+snp screen summary:
+<p>
+<img src="ggqans1.png" height=250>
+<p>
+This image shows the chromosome position on the x axis and expression
+in log 2 scale on the y axis.  The geneplotter::smoothScatter rendering
+algorithm is used.
+<p>
+For each reported snp, GGtools::plot_EvG is used to show the specific
+relationships between expression and rare allele count for each subject.
+<p>
+<img src="ggqans2.png" height=250>
+<p>
+To reduce overplotting, in a future release, x values will be jittered.
+<p>
+GGexplorer also produces a textual output that you can download using
+the TEXT link on the main results page.
+<p>
+<img src="ggqanstxt.png" height=250>
+<p>
+In a future release, an XML encoding of the data and metadata will
+be provided.
+</html>
