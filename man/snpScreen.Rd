@@ -2,6 +2,8 @@
 \alias{snpScreenResult-class}
 \alias{twSnpScreenResult-class}
 \alias{show,snpScreenResult-method}
+\alias{show,twSnpScreenResult-method}
+\alias{annotation,snpScreenResult-method}
 \alias{snpScreen,racExSet,snpMeta,genesym,formula,function,numeric-method}
 \alias{snpScreen,racExSet,snpMeta,genesym,formula,function,missing-method}
 \alias{snpScreen,racExSet,snpMeta,genesym,formula,GGfitter-method}
@@ -9,6 +11,7 @@
 \alias{twSnpScreen}
 \alias{snpScreen}
 \alias{extract_p}
+\alias{topSnps}
 \alias{plot_mlp}
 \title{compute model fits over a sequence of SNPs  }
 \description{
@@ -20,13 +23,17 @@ twSnpScreen(racExSet, snpMeta, formTemplate, fitter)
 extract_p(ssr)
 plot_mlp(ssr, snpMeta, gchr=NULL, geneLocDF=NULL, ps = NULL, pch = 20, cex = 0.6, local=FALSE, 
   plotf=smoothScatter, organism="human")
+topSnps(x, n)
 }
 \arguments{
   \item{racExSet}{ instance of \code{\link{racExSet-class}}}
   \item{snpMeta}{ instance of \code{\link{snpMeta-class}}}
   \item{gene}{ instance of \code{\link{genesym-class}} class identifying
 the expression phenotype to be regarded as dependent variable}
-  \item{gchr}{ string stating chromosome on which gene is resident; looked up in geneLocDF if not supplied}
+  \item{gchr}{ string stating chromosome on which gene is resident; looked up in geneLocDF if not supplied.  This 
+is used to distinguish cis- and trans- cases (in the latter, we cannot plot the gene extent over the
+SNPs).  Exception: Please use gchr = 'all' for a whole-genome SNP series, as occurs with the murine
+example given below.}
   \item{geneLocDF}{ data frame that has one row for each gene symbol, in column `gene', and
      the chromosome on which it lives, in column `chr'}
   \item{formTemplate}{ a formula having form \code{~.} or
@@ -53,6 +60,8 @@ has been SNP-filtered relative to the HapMap SNP set. }
 high-density genotyping, the default works well; in sparse cases,
 use \code{\link{plot}}.}
   \item{organism}{string used for plot annotation}
+  \item{x}{instance of \code{\linkS4class{twSnpScreenResult}}}
+  \item{n}{number of (smallest) p-values to extract for \code{topSnps}}
 }
 \details{
 for snpScreen:
@@ -78,6 +87,9 @@ to homozygous.
 
 \code{plot_mlp} returns a list of x and y values for the
 plotted points.
+
+\code{twSnpScreen} will run \code{snpScreen} on every gene
+in the \code{racExSet} \code{exprs} component.
 }
 \value{
 creates a list of model fit results; \code{\link{try}} is used to
@@ -134,8 +146,8 @@ plot_mlp(ss, INB34snpMeta, gchr="all", plotf=plot, organism="mouse" )
  trim = chr20GGdem[ genesym(someg[1:3]), ]
  trim = trim[ snpID(somesnps), ]
  lktw = twSnpScreen( trim, chr20meta, ~., fastAGMfitter)
- names(lktw)
- lktw[[1]]
+ lktw
+ topSnps(lktw, 5)
 }
 
 }

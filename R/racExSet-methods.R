@@ -40,7 +40,7 @@ setMethod("snpScreen", c("racExSet", "snpMeta", "genesym", "formula", "function"
         locs = allpos[snpstodo]
         if (fitter@name == "fastAGM") ans = fastAGM(snps(racExSet)[snpstodo,], y)
         else if (fitter@name == "fastHET") ans = fastHET(snps(racExSet)[snpstodo,], y)
-        return(new("snpScreenResult", call=callsave, locs=locs, 
+        return(new("snpScreenResult", call=callsave, locs=locs, annotation=annotation(racExSet),
             chr=chromosome(snpMeta), fitter=fitter, gene=as.character(gene), ans))
       }
       for (i in 1:length(snpstodo)) {
@@ -53,7 +53,8 @@ setMethod("snpScreen", c("racExSet", "snpMeta", "genesym", "formula", "function"
       }
       names(out) = snpstodo
       new("snpScreenResult", call = callsave, locs = locs, chr = chromosome(snpMeta), 
-        fitter = fitter, gene=as.character(gene), out)
+        fitter = fitter, gene=as.character(gene), annotation=
+         annotation(racExSet), out)
 })
 
 setMethod("snpScreen", c("racExSet", "snpMeta", "genesym", "formula", "function", "missing"),
@@ -96,7 +97,8 @@ setMethod("snpScreen", c("racExSet", "snpMeta", "genesym", "formula", "function"
         locs = allpos[snpstodo]
         if (fitter@name == "fastAGM") ans = fastAGM(snps(racExSet)[snpstodo,], y)
         else if (fitter@name == "fastHET") ans = fastHET(snps(racExSet)[snpstodo,], y)
-        return(new("snpScreenResult", call=callsave, locs=locs, 
+        return(new("snpScreenResult", call=callsave, locs=locs, annotation=
+		annotation(racExSet),
             chr=chromosome(snpMeta), fitter=fitter, gene=as.character(gene), ans))
       }
       for (i in 1:length(snpstodo)) {
@@ -108,7 +110,8 @@ setMethod("snpScreen", c("racExSet", "snpMeta", "genesym", "formula", "function"
           out[[i]] = try(oneFit(racExSet, outco, fm, fitter))
       }
       names(out) = snpstodo
-      new("snpScreenResult", call = callsave, locs = locs, chr = chromosome(snpMeta), 
+      new("snpScreenResult", call = callsave, locs = locs, 
+          chr = chromosome(snpMeta),  annotation=annotation(racExSet),
         fitter= fitter, gene=as.character(gene), out)
 })
 
@@ -227,7 +230,8 @@ setMethod("snpScreen", c("racExSet", "snpMeta", "genesym", "formula", "GGfitter"
         locs = allpos[snpstodo]
         ans = fitter@func(snps(racExSet)[snpstodo,], y)
         return(new("snpScreenResult", call=callsave, locs=locs, fitter=fitter,
-            chr=chromosome(snpMeta), gene=as.character(gene), ans))
+            chr=chromosome(snpMeta), gene=as.character(gene),
+		annotation=annotation(racExSet), ans))
       })
 
 setMethod("twSnpScreen", c("racExSet", "snpMeta", "formula", "GGfitter"),

@@ -3,13 +3,21 @@ setGeneric("oneFit", function(racExSet, geneid, snpid, fitfun, ...)
   standardGeneric("oneFit"))
 
 getpsid = function(geneid, annostring) {
-  require(paste(annostring, "db", sep="."), character.only=TRUE)
+  if (require(paste(annostring, "db", sep="."), character.only=TRUE, quietly=TRUE)) {
   rmap = revmap(get(paste(annostring, "SYMBOL", sep="")))
   ans = AnnotationDbi::mget(geneid, rmap)
   tt = sapply(ans,length)
   if (any(tt>1)) warning("when symbol maps to multiple probesets, first occuring is used")
   ans = sapply(ans, "[", 1)
-  ans
+  return(ans)
+  }
+  else {
+    require(annostring, character.only=TRUE, quietly=TRUE)
+    gsl = as.list(get(paste(annostring, "SYMBOL", sep="")))
+    psn = names(gsl)
+    ind = which( geneid == unlist(gsl))[1]
+    return(psn[ind])
+    }
 }
 
 getpsid.OLD = function( geneid, annostring, one.only=TRUE ) {

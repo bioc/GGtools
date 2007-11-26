@@ -1,3 +1,5 @@
+setMethod("annotation", "snpScreenResult", function(object) object@annotation)
+
 setMethod("show", "snpScreenResult", function(object) {
    cat("GGtools snpScreenResult for call:\n")
    print(object@call)
@@ -75,27 +77,31 @@ plot_mlp = function (ssr, snpMeta, gchr = NULL, geneLocDF = NULL, ps = NULL,
     pch = 20, cex = 0.6, local = FALSE, plotf = smoothScatter, 
     organism = "human") 
 {
+    annk = ann = annotation(ssr)
+    ann = paste(ann, "db", sep=".")
+    annp = paste("package", ann, sep=":")
+    require(ann, character.only=TRUE)
+    smap = revmap(get(paste(annk, "SYMBOL", sep="")))
+    cmap = get(paste(annk, "CHR", sep=""))
+    psid = get( ssr@gene, smap )[1]
+    if (is.null(gchr)) gchr = chr = get( psid, cmap )[1]
+    else chr = gchr
+    cname = paste("chr", chr, sep="")
+    trans = FALSE
+    if (gchr != "all" && cname != snpMeta@chromosome) trans = TRUE
+    
     if (is(ssr@fitter, "GGfitter")) 
         ps = ssr[["pval"]]
     if (is.null(ps)) 
         ps = as.numeric(sapply(ssr, function(x) try(summary(x)$coef[2, 
             4], silent = TRUE)))
-    if (is.null(gchr)) {
-        if (is.null(geneLocDF)) 
-            stop("if gchr omitted, please supply geneLocDF")
-        if (!("chr" %in% names(geneLocDF))) 
-            stop("geneLocDF does not have chr column.")
+    if (!is.null(geneLocDF))
         gloc = geneLocDF[geneLocDF$gene == ssr@gene, ]
-        if (nrow(gloc) == 0) 
-            stop("can't determine gene's chromosome for title from geneLocDF, please supply as arg.")
-        gchr = gloc[1, "chr"]
-    }
     bad = which(is.na(ps))
-    if (!local) 
+    if (!trans) 
         XLIM = range(snpMeta[, "pos"])
     else {
-        snpn = unlist(lapply(ssr, function(x) names(coef(x))[2]))
-        XLIM = range(snpMeta[snpn, "pos"])
+        XLIM = range(ssr@locs)
     }
     if (length(bad) > 0) {
         ssr@locs = ssr@locs[-bad]
