@@ -1,5 +1,13 @@
 # GGtools AllClasses.R (c) 2006 VJ Carey
 
+
+
+setClass("snpMeta", 
+  representation(meta="environment", chromosome="character"))
+
+setClass("snpMetaWhole",  contains="snpMeta",
+  representation(chrbounds="numeric", chrlabs="character"))
+
 # helper classes to figure out semantics of character strings
 
 setClass("snpID", contains="character")
@@ -42,7 +50,8 @@ topSnps = function(x, n=10) {
 
 setClass("racExSet", representation(
     racAssays="AssayData",
-    rarebase="character", SNPalleles="character"), contains="eSet",
+    rarebase="character", SNPalleles="character"), #, snpMeta="snpMeta"), 
+    contains="eSet",
     prototype = prototype(racAssays=assayDataNew()))
 
 setMethod("initialize", "racExSet",

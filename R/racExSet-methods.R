@@ -196,7 +196,7 @@ setMethod("[", "racExSet", function(x, i, j, ..., drop=FALSE) {
     x@racAssays = assayDataNew("lockedEnvironment", racs=sel)
     }
  else if (is(i, "exFeatID")) {
-    ind = which( i %in% featureNames(x) )
+    ind = which( featureNames(x) %in% i )
     x@assayData = assayDataNew("lockedEnvironment", exprs=exprs(x)[ind,,drop=FALSE])
     }
  else stop("selection index must be of class genesym or snpID or exFeatID")
