@@ -166,14 +166,14 @@ make_racExSet = function(exprs, racs, rarebase, SNPalleles, pd, mi, anno) {
 # axis(1, at=0:2)
 #}
 
-plot_EvG = function (reset, gene, snpid, anno = "hgfocus") 
-{
+plot_EvG = function (reset, gene, snpid, anno = "hgfocus",
+     jitfac = 0.5, ...) {
     gn = getpsid(gene, anno)
     y = exprs(reset)[gn, ]
     x = snps(reset)[snpid, ]
-    plot(jitter(x,.5), y, ylab = paste("log", gene, "expression"), 
+    plot(jitter(x,jitfac), y, ylab = paste("log", gene, "expression"), 
         xlab = paste("minor allele count,", snpid), pch = 20, 
-        axes = FALSE, cex = 1.9, cex.lab=1.5)
+        axes = FALSE, cex = 1.9, cex.lab=1.5, ...)
     axis(2, cex=1.9, cex.axis=1.5)
     axis(1, at = 0:2, cex=1.9, cex.axis=1.5)
 }
@@ -250,3 +250,11 @@ setMethod("twSnpScreen", c("racExSet", "snpMeta", "formula", "GGfitter"),
         fitter=fitter, out)
   })
 
+setGeneric("imputeSNPFixed", function(x,const=0) standardGeneric("imputeSNPFixed"))
+setMethod("imputeSNPFixed", c("racExSet", "missing"), function(x,const=0) {
+ ss = snps(x)
+ if (!any(is.na(ss))) stop("all SNP non-missing; no imputation")
+ ss[is.na(ss)] = const
+ x@racAssays = assayDataNew("lockedEnvironment", racs=ss)
+ x
+})

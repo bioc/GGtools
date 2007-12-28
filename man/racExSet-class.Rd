@@ -42,6 +42,9 @@
 \alias{snps5PrimeTo}
 \alias{snps3PrimeTo}
 \alias{snpsNear}
+\alias{imputeSNPFixed}
+\alias{imputeSNPFixed,racExSet,numeric-method}
+\alias{imputeSNPFixed,racExSet,missing-method}
 
 \title{Class "racExSet" for combining RareAlleleCount representations
 of SNPs, gene expression data, and other phenotype data }
@@ -106,6 +109,8 @@ which the numeric vector is a vector of expression values; the
 \code{~.} or \code{~factor(.)} expressing choice between an additive
 genetic model and a general model.}
 	 }
+   \item{imputeSNPFixed}{\code{signature(racExSet = "racExSet", const = "numeric")}: all NA elements in the \code{snps()} component are replaced by
+\code{const} and the resulting \code{racExSet} is returned.}
 }
 %\references{ ~put references to the literature/web site here ~ }
 \author{ VJ Carey <stvjc@channing.harvard.edu> }

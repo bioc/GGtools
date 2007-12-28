@@ -17,7 +17,7 @@ exportClass(racExSet, genesym, snpScreenResult, snpMeta, snpMetaWhole, oGtypeExS
 
 exportMethods("snps", "snpNames", "racAssays", "snpScreen", "show",
 	"rarebase", "SNPalleles", "exprs", "initialize", "coerce",
-	"twSnpScreen", "annotation")
+	"twSnpScreen", "annotation", "imputeSNPFixed")
 
 export("HMworkflow", "thinHM2rac", "exclMono", "thinHM2meta", "df2snpMeta",
    "make_racExSet", "countRare", "getRare", "genesym", "snpID", "getpsid",
