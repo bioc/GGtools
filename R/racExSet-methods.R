@@ -166,17 +166,35 @@ make_racExSet = function(exprs, racs, rarebase, SNPalleles, pd, mi, anno) {
 # axis(1, at=0:2)
 #}
 
-plot_EvG = function (reset, gene, snpid, anno = "hgfocus",
-     jitfac = 0.5, ...) {
+#plot_EvG = function (reset, gene, snpid, anno = "hgfocus",
+#     jitfac = 0.5, ...) {
+#    gn = getpsid(gene, anno)
+#    y = exprs(reset)[gn, ]
+#    x = snps(reset)[snpid, ]
+#    plot(jitter(x,jitfac), y, ylab = paste("log", gene, "expression"), 
+#        xlab = paste("minor allele count,", snpid), pch = 20, 
+#        axes = FALSE, cex = 1.9, cex.lab=1.5, ...)
+#    axis(2, cex=1.9, cex.axis=1.5)
+#    axis(1, at = 0:2, cex=1.9, cex.axis=1.5)
+#}
+
+plot_EvG = function (reset, gene, snpid, anno = "hgfocus", jitfac = 0.5, 
+    ...) 
+{
     gn = getpsid(gene, anno)
     y = exprs(reset)[gn, ]
+    ry = range(y)
     x = snps(reset)[snpid, ]
-    plot(jitter(x,jitfac), y, ylab = paste("log", gene, "expression"), 
-        xlab = paste("minor allele count,", snpid), pch = 20, 
-        axes = FALSE, cex = 1.9, cex.lab=1.5, ...)
-    axis(2, cex=1.9, cex.axis=1.5)
-    axis(1, at = 0:2, cex=1.9, cex.axis=1.5)
+    boxplot(split(y, x), axes = FALSE, ylab = paste("log", gene, 
+        "expression"), ylim = c(ry[1], ry[2]), xlab = paste("minor allele count,", 
+        snpid), range = 0, border = "darkgray", cex.lab = 1.5, names=c(0,1,2))
+    yt = round(ry, 1)
+    aty = seq(yt[1], yt[2], 0.2)
+    axis(2, cex = 1.9, cex.axis = 1.1, at = aty, las = 2)
+    points(jitter(x + 1, jitfac), y, pch = 19)
+    axis(1, at = 1:3, cex = 1.9, cex.axis = 1.5, labels=c(0,1,2))
 }
+
 
 
 setGeneric("racAssays<-", function(object,value)standardGeneric("racAssays<-"))
