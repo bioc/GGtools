@@ -187,12 +187,12 @@ plot_EvG = function (reset, gene, snpid, anno = "hgfocus", jitfac = 0.5,
     x = snps(reset)[snpid, ]
     boxplot(split(y, x), axes = FALSE, ylab = paste("log", gene, 
         "expression"), ylim = c(ry[1], ry[2]), xlab = paste("minor allele count,", 
-        snpid), range = 0, border = "darkgray", cex.lab = 1.5, names=c(0,1,2))
+        snpid), range = 0, border = "darkgray", cex.lab = 1.5, names=sort(unique(x)))
     yt = round(ry, 1)
     aty = seq(yt[1], yt[2], 0.2)
     axis(2, cex = 1.9, cex.axis = 1.1, at = aty, las = 2)
     points(jitter(x + 1, jitfac), y, pch = 19)
-    axis(1, at = 1:3, cex = 1.9, cex.axis = 1.5, labels=c(0,1,2))
+    axis(1, at = 1:length(unique(x)), cex = 1.9, cex.axis = 1.5, labels=sort(unique(x)))
 }
 
 
