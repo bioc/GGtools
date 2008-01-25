@@ -1,0 +1,21 @@
+#
+# set R_PATH to the executable for R with CGIwithR and GGdata/GGtools installed
+#
+R_PATH=/Users/stvjc/Desktop/ExternalSoft/R-devel/bin/R
+#
+# set CGI_ABSOLUTE to the absolute pathname for the CGI server executables
+# folder -- NOTE: we assume that apache is configured so that
+# <form action="/cgi-bin/R.cgi/[formname].R"> will use the program [formname].R
+# if this is not so, you have to go through the html for forms and alter
+# the /cgi-bin/ instances appropriately
+#
+CGI_ABSOLUTE=/Library/WebServer/CGI-Executables
+#
+# set HTDOCS_ABSOLUTE to the place where HTML files are found by localhost
+#
+HTDOCS_ABSOLUTE=/Library/WebServer/Documents
+#
+# set RGRAPHS_RELATIVE to a subdir of HTDOCS_ABSOLUTE (with enclosing "/")
+# where you want graphs written; server must have read/write access there
+#
+RGRAPHS_RELATIVE=/rgraphs/
