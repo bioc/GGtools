@@ -6,9 +6,9 @@
 
 # THESE NEED TO BE WRITEABLE AND CONSISTENT WITH APACHE SETUP
 
-        globGraphDir <- @GLOB_GRAPH_DIR@
-        graphDirURLroot <- @GRAPH_DIR_URL_ROOT@
-        graphURLroot <- @GRAPH_URL_ROOT@
+        globGraphDir <- "@GLOB_GRAPH_DIR@"
+        graphDirURLroot <- "@GRAPH_DIR_URL_ROOT@"
+        graphURLroot <- "@GRAPH_URL_ROOT@"
 
 # NO MORE CHANGES
 
