@@ -69,7 +69,10 @@ If \code{options()$verbose == TRUE} then every 100th index in the
 vector of snps is printed to stdout to show rate of progress.
 
 \code{snpScreenResult} is a container for relevant information
-about a screen, including a list of fit objects.
+about a screen.  If a GGfitter instance is used as the fitter,
+then a list of per-snp statistics is provided, including measures
+such as slope (b), t-ratio (trat) and r-squared (rsq).  See
+output  of names(scr2) in the example below.
 
 For result processing, many SNPs have no variation in observed
 samples and statistical tests of association are indeterminate.
@@ -121,6 +124,7 @@ chr20GGdem = exclMono(chr20GGdem)
 ut = unix.time(scr2 <- snpScreen(chr20GGdem, chr20meta, genesym("CPNE1"), ~., fastAGMfitter))
 ut
 scr2
+names(scr2)
 plot_mlp(scr2, chr20meta, geneLocDF=geneLocs_hsa)
 #
 # here we work on a WebQTL computation

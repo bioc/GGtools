@@ -1884,11 +1884,12 @@ jmp_buf mcpp_env;
 extern "C" {
 
 void mreg_engine(int* nsnp, int* nsamp,
-  double* expr, double* snp, double* inb, double* inse) {
+  double* expr, double* snp, double* inb, double* inse, double *inrsq) {
 matrix SNP = from_S(snp, *nsnp, *nsamp);
 matrix EXPR = from_S(expr, *nsamp, (int)1);
 matrix b = from_S(inb, *nsnp, (int)1);
 matrix seb = from_S(inse, *nsnp, (int)1);
+matrix rsqout = from_S(inrsq, *nsnp, (int)1);
 double nsamps = (double) *nsamp;
 double den = nsamps - 2.0;
 matrix mns = newmat(*nsnp, 1);
@@ -1941,6 +1942,21 @@ matrix RSS = newmat(*nsnp,1);
 for (int i = 0; i < *nsnp; i++) 
   for (int j = 0; j < *nsamp; j++) 
    set_el(RSS,i,0) += errs.el(i,j)*errs.el(i,j);
+/*
+> r2 = function(x,y) {
++  tot = sum((y-mean(y))^2)
++  fit = lm(y~x)
++  ssr = sum(resid(fit)^2)
++  1-ssr/tot
++ }
+*/
+double sstot = 0.0;
+for (int i = 0; i < *nsamp; i++ )
+     sstot = sstot + re.el(i,0)*re.el(i,0);
+
+for (int i = 0; i < *nsnp; i++ )
+  set_el(rsqout,i,0) = 1.0 - RSS.el(i,0)/sstot;
+
 matrix s2hat = newmat(*nsnp,1);
 for (int i = 0; i < *nsnp; i++) 
    set_el(s2hat,i,0) = RSS.el(i,0)/den;
@@ -1948,6 +1964,7 @@ for (int i = 0; i < *nsnp; i++) {
    set_el(seb,i,0) = sqrt(s2hat.el(i,0)/ss.el(i,0));
    }
 to_S(seb, inse);
+to_S(rsqout, inrsq);
  
 
 }

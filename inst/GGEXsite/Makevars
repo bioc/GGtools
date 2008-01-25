@@ -1,7 +1,7 @@
 #
 # set R_PATH to the executable for R with CGIwithR and GGdata/GGtools installed
 #
-R_PATH=/home/stvjc/ExternalSoft/R-devel/bin/R
+R_PATH=/Users/stvjc/Desktop/ExternalSoft/R-devel/bin/R
 #
 # set CGI_ABSOLUTE to the absolute pathname for the CGI server executables
 # folder -- NOTE: we assume that apache is configured so that
@@ -9,17 +9,17 @@ R_PATH=/home/stvjc/ExternalSoft/R-devel/bin/R
 # if this is not so, you have to go through the html for forms and alter
 # the /cgi-bin/ instances appropriately
 #
-CGI_ABSOLUTE=/var/www/cgi-bin/
+CGI_ABSOLUTE=/Library/WebServer/CGI-Executables/
 #
 # set HTDOCS_ABSOLUTE to the place where HTML files are found by localhost
 #
-HTDOCS_ABSOLUTE=/var/www/
+HTDOCS_ABSOLUTE=/Library/WebServer/Documents/
 #
 # set RGRAPHS_RELATIVE to a subdir of HTDOCS_ABSOLUTE (with enclosing "/")
 # where you want graphs written; server must have read/write access there
 #
-RGRAPHS_RELATIVE=/tmp/
+RGRAPHS_RELATIVE=/rgraphs/
 #
 # set GS_CMD to the absolute path to the ghostscript gs executable
 #
-GS_CMD=/usr/bin/gs
+GS_CMD=/usr/local/bin/gs
