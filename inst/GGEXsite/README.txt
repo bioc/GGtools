@@ -9,7 +9,7 @@ of various R and CGI-related resources
 
 0) R_PATH gives the absolute path to the executable for an R
 that has CGIwithR and Bioconductor GGtools and GGdata packages 
-installed .   You must also have hgfocus.db installed.
+installed.   You must also have hgfocus.db installed.
 
 1) HTDOCS_ABSOLUTE dir holds html and png files used for the
 presentation layer
@@ -27,6 +27,8 @@ CGIwithR.
 
 To prepare and install, 
 a) modify Makevars to be accurate for your R and Apache 
+    note that Makevars.macLike and Makevars.linuxLike may be
+    helpful examples
 b) run make
 c) with sufficient privileges, run make install
 d) point browser to http://localhost/ggexpl.html
