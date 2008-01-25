@@ -1,0 +1,24 @@
+                        Dear Emacs, please make this -*-Text-*- mode!
+        **************************************************
+        *                                                *
+        *        News for GGtools in Bioc (devel)        *
+        *                                                *
+        **************************************************
+
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o  twSnpScreen added to deal with transcriptome-wide (as opposed
+       to gene-specific) tests for eQTL for a given racExSet
+       (N.B. when the snpMatrix-based representation comes in
+       there will be genome-wide searches as well)
+
+    o  plot_EvG includes boxplots
+
+INFRASTRUCTURE CHANGES
+
+    o  The inst/ggsite* folders are gone.  inst/GGEXsite is the
+       new repository for CGIwithR interface, and Makefiles
+       and Makevars are now provided to simplify deployment.
+       ggexplorer.org uses the revised infrastructure.
+
