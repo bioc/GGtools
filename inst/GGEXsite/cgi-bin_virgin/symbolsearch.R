@@ -9,7 +9,7 @@ tag(head)
 tag('body style="color: rgb(0, 0, 0);" alink="#358cff" link="#358cff" 
 vlink="#990099"')
 grepsymbols<-function(string){
-	library(hgfocus)
+	library(hgfocus.db)
 	hgsymbols <- as.list(hgfocusSYMBOL)
 	symbols=names(hgsymbols)
 	pathprobe <- as.list(hgfocusPATH2PROBE)

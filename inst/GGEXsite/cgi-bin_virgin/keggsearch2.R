@@ -11,7 +11,7 @@ vlink="#990099"')
 poptable<-function(string){
 	
 a=read.delim("bboutf.txt",header=F,sep=":",colClasses=c("character","character"))
-	library(hgfocus)
+	library(hgfocus.db)
 	hgsymbols <- as.list(hgfocusSYMBOL)
 	symbols=names(hgsymbols)
 	pathprobe <- as.list(hgfocusPATH2PROBE)

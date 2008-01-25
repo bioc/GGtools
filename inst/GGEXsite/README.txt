@@ -9,7 +9,7 @@ of various R and CGI-related resources
 
 0) R_PATH gives the absolute path to the executable for an R
 that has CGIwithR and Bioconductor GGtools and GGdata packages 
-installed 
+installed .   You must also have hgfocus.db installed.
 
 1) HTDOCS_ABSOLUTE dir holds html and png files used for the
 presentation layer

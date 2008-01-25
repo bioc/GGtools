@@ -9,7 +9,7 @@ tag('body style="color: rgb(0, 0, 0);" alink="#358cff" link="#358cff"
 vlink="#990099"')
 
 getsymbolsbychr<-function(chr){
-library(hgfocus)
+library(hgfocus.db)
 
 	hgsymbols <- as.list(hgfocusSYMBOL)
 	symbolnames=names(hgsymbols);

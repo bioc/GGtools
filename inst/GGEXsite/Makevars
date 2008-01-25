@@ -1,7 +1,7 @@
 #
 # set R_PATH to the executable for R with CGIwithR and GGdata/GGtools installed
 #
-R_PATH=/Users/stvjc/Desktop/ExternalSoft/R-devel/bin/R
+R_PATH=/Users/stvjc/Work/ExternalSoft/R-devel/bin/R
 #
 # set CGI_ABSOLUTE to the absolute pathname for the CGI server executables
 # folder -- NOTE: we assume that apache is configured so that
