@@ -19,7 +19,9 @@ presentation layer
 3) RGRAPHS_RELATIVE is the path to a folder where graphs
 can be written by R, relative to HTDOCS_ABSOLUTE
 
-4) We assume you are capable of
+4) GS_CMD is the absolute path to gs executable
+
+5) We assume you are capable of
 running everything in the trivial.* sources supplied with
 CGIwithR.
 

@@ -40,7 +40,7 @@ R_DEFAULT=/Users/stvjc/Desktop/ExternalSoft/R-devel/bin/R
 ###  where the executable is located on your system via the R_GSCMD
 ###  environment variable.  If using GDD, you can ignore this.
 
-R_GSCMD=/usr/local/bin/gs
+R_GSCMD=@GSCMD@
 export R_GSCMD
 
 ###  The next two lines may optionally be edited to limit access
