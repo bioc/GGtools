@@ -1,3 +1,19 @@
+Current approach for hmceuB36, etc.
+Expression data:
+ftp://ftp.sanger.ac.uk/pub/genevar/CEU_parents_norm_march2007.zip
+etc.
+
+SNP data:  note the getall.sh next door.
+
+pull the files from http://ftp.hapmap.org/genotypes/2008-03/forward/non-redundant ...
+They changed on 1 April from release 23 to 23a, to fix positions for
+over 1000 snp!
+
+The material at the moment is based on r23.  Stay tuned.
+
+
+For previous versions, we used:
+
 GETTING EXPRESSION DATA FOR Cheung/Spielman paper replications
 --------------------------------------------------------------
 
