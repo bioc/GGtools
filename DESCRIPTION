@@ -1,15 +1,21 @@
 Package: GGtools
 Title: software and data for genetical genomics (c) 2006 VJ Carey
-Version: 1.7.17
+Version: 1.7.22
 Author: Vince Carey <stvjc@channing.harvard.edu>
 Description: dealing with hapmap SNP reports, GWAS, etc.
-Depends: R (>= 2.5.0), methods, Biobase (>= 1.11.26), hgfocus.db, geneplotter(>= 1.11.8), mgu74av2.db
+Depends: R (>= 2.7.0), methods, Biobase (>= 1.11.26), hgfocus.db, 
+	geneplotter(>= 1.11.8), snpMatrix, mgu74av2.db, ncdf
+Suggests: GGdata
 LazyData: no
 biocViews: SNPsAndGeneticVariability, Genetics, Statistics
 Maintainer: Vince Carey <stvjc@channing.harvard.edu>
 Imports: AnnotationDbi
 License: Artistic-2.0
-Collate: fastAGM.R AllClasses.R snpMeta.R AllGenerics.R HapMapUtils.R exclMono.R
+Collate: fastAGM.R AllClasses.R 
+	snpLocNCref-methods.R smlSet-methods.R makeLocNCDF.R
+	snpMeta.R AllGenerics.R HapMapUtils.R exclMono.R
 	countRare.R genoString.R oneFit.R racExSet-methods.R
 	snpScreenResult-methods.R snps3Pto.R updateObject.R 
-	Strains2rac.R wrapSNPmetaWh.R anno2chrbnd.R ogtes.R zzz.R 
+	Strains2rac.R wrapSNPmetaWh.R anno2chrbnd.R ogtes.R 
+	gwSnpScreenResult-methods.R
+	zzz.R 

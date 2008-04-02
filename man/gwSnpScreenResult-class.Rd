@@ -1,0 +1,59 @@
+\name{gwSnpScreenResult-class}
+\docType{class}
+\alias{gwSnpScreenResult-class}
+\alias{cwSnpScreenResult-class}
+\alias{plot,gwSnpScreenResult,ANY-method}
+\alias{plot,cwSnpScreenResult,ANY-method}
+\alias{plot,gwSnpScreenResult-method}
+\alias{plot,cwSnpScreenResult-method}
+\alias{show,gwSnpScreenResult-method}
+
+\title{Class "gwSnpScreenResult" -- containers for
+genome-wide and chromosome-wide snp screen statistics }
+\description{Class "gwSnpScreenResult" -- containers for
+genome-wide and chromosome-wide snp screen statistics }
+\section{Objects from the Class}{
+Objects can be created by calls of the form \code{new("gwSnpScreenResult", ...)}.
+Mild extensions to 'list'.
+}
+\section{Slots}{
+	 \describe{
+    \item{\code{.Data}:}{Object of class \code{"list"} list of
+data.frames or matrices of test results }
+    \item{\code{gene}:}{Object of class \code{"character"} gene name }
+    \item{\code{psid}:}{Object of class \code{"character"} probe identifier }
+    \item{\code{annotation}:}{Object of class \code{"character"} -- propagated
+from smlSet }
+    \item{\code{snpLocNCDFref}:}{Object of class \code{"character"}, full pathname
+of netCDF store for snp locations relevant to the smlSet instance from
+which gwSnpScreenResult was computed.}
+  }
+}
+\section{Extends}{
+Class \code{"\linkS4class{list}"}, from data part.
+Class \code{"\linkS4class{vector}"}, by class "list", distance 2.
+Class \code{"\linkS4class{AssayData}"}, by class "list", distance 2.
+}
+\section{Methods}{
+  \describe{
+    \item{plot}{\code{signature(x = "gwSnpScreenResult", y = "ANY")}: ... }
+    \item{show}{\code{signature(object = "gwSnpScreenResult")}: ... }
+	 }
+}
+%\references{ ~put references to the literature/web site here ~ }
+\author{ VJ Carey <stvjc@channing.harvard.edu> }
+%\note{ ~~further notes~~ }
+
+% ~Make other sections like Warning with \section{Warning }{....} ~
+
+%\seealso{
+%	~~objects to See Also as \code{\link{~~fun~~}}, ~~~
+%	or \code{\linkS4class{CLASSNAME}} for links to other classes
+%}
+\examples{
+showClass("gwSnpScreenResult")
+data(hmceuB36.2021)
+x = gwSnpScreen(genesym("CPNE1"), hmceuB36.2021, chrnum(20))
+x
+}
+\keyword{classes}

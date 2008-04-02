@@ -178,7 +178,7 @@ make_racExSet = function(exprs, racs, rarebase, SNPalleles, pd, mi, anno) {
 #    axis(1, at = 0:2, cex=1.9, cex.axis=1.5)
 #}
 
-plot_EvG = function (reset, gene, snpid, anno = "hgfocus", jitfac = 0.5, 
+plot_EvG_old = function (reset, gene, snpid, anno = "hgfocus", jitfac = 0.5, 
     ...) 
 {
     gn = getpsid(gene, anno)

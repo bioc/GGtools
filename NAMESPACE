@@ -1,29 +1,34 @@
 useDynLib(GGtools)
 
 #
-#import(tools)
+import(tools)
 #
-#exportClasses(aggregator, container, eSet, phenoData,
+#exportClasses(
 #
-#exportMethods("[", "[[", "$", abstract, addVarMetadataEntry, aggenv, aggfun,
+#exportMethods(
 #
-#export("Aggregate", 
+#export(
 #
+
+importFrom(graphics, plot)
 
 import(Biobase, AnnotationDbi)
 
 exportClass(racExSet, genesym, snpScreenResult, snpMeta, snpMetaWhole, oGtypeExSet,
-  GGfitter, twSnpScreenResult)
+  GGfitter, twSnpScreenResult, gwSnpScreenResult, cwSnpScreenResult, rsNum,
+  chrnum, cnumOrMissing, snpLocNCref, smlSet)
 
 exportMethods("snps", "snpNames", "racAssays", "snpScreen", "show",
 	"rarebase", "SNPalleles", "exprs", "initialize", "coerce",
-	"twSnpScreen", "annotation", "imputeSNPFixed")
+	"twSnpScreen", "annotation", "imputeSNPFixed", "plot",
+        "gwSnpScreen", "rawSNP", "smList", "getSnpData", "getSnpLocs", "topSnps",
+	"rsNum", "getAlleles", "chrnum", "plot_EvG")
 
 export("HMworkflow", "thinHM2rac", "exclMono", "thinHM2meta", "df2snpMeta",
    "make_racExSet", "countRare", "getRare", "genesym", "snpID", "getpsid",
    "oneFit", "genoStrings", "extract_p", "plot_mlp", "fastAGM", "fastHET",
    "plot_EvG", "snps3PrimeTo", "snps5PrimeTo", "snpsNear", "Strains2rac",
    "wrapSNPmetaWh", "INBREDSworkflow", "addAnno", "tx_rsnum", "getSNPindices", 
-   "fastAGMfitter", "fastHETfitter", "pos", "exFeatID", "topSnps")
+   "fastAGMfitter", "fastHETfitter", "pos", "exFeatID")
 
 #importFrom("RColorBrewer", "brewer.pal")

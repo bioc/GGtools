@@ -1,6 +1,66 @@
-# GGtools AllClasses.R (c) 2006 VJ Carey
+# GGtools infrastructure from hm2ceu, Mar 31 2008 (c) VJ Carey
+
+valsml = function(object) {
+ allns = sapply(smList(object), nrow)
+ if (!(all(allns==allns[1]))) 
+    return("varying numbers of rows in elements of smList")
+ if ((sl <- length(smList(object))) != (cl <- length(object@chromInds)))
+    return(paste("length of chromInds vector [", cl, "] not identical to that of smList(object) [",
+      sl, "]"))
+ nna = names(annotation(object))
+ if ((length(nna) != 2) || (!(all(nna == c("exprs", "snps")))))
+    return("annotation slot must be vector with names 'exprs' and 'snps'")
+# if (!(is(annotation(object)[2], "snpLocNCref")))
+#    return("second item in annotation slot must inherit from snpLocNCref")
+ return(TRUE)
+}
+
+snpLocPathClo = function(pkg="GGdata", subdir="extdata") function(x) {
+  dir(system.file(subdir, package=pkg), full=TRUE, patt=x)
+}
+
+setClass("smlSet", contains="eSet", 
+   representation(smlEnv="environment", snpLocPathMaker="function",
+     chromInds="numeric", organism="character"),
+   validity=valsml, prototype=prototype(
+       new("VersionedBiobase",
+               versions=c(classVersion("eSet"), smlSet="1.0.0")),
+           phenoData = new("AnnotatedDataFrame",
+             data=data.frame(),
+             varMetadata=data.frame(
+               labelDescription=character(0))),
+	   annotation=character(0),
+	   smlEnv = {e = new.env(); assign("smList", list(), e); e},
+ 	   snpLocPathMaker=snpLocPathClo(),
+           chromInds = numeric(0)))
+	   
+setClass("gwSnpScreenResult", contains="list",
+   representation(gene="character", psid="character", annotation="character",
+      snpLocNCDFref="character"))
+
+setClass("chrnum", contains="numeric")
+setClass("rsNum", contains="character")
+
+setClassUnion("cnumOrMissing", c("chrnum", "missing"))
+
+setGeneric("chrnum", function(x) standardGeneric("chrnum"))
+setMethod("chrnum", "numeric", function(x) new("chrnum", x))
+setGeneric("rsNum", function(x) standardGeneric("rsNum"))
+setMethod("rsNum", "character", function(x) new("rsNum", x))
+setClass("genesym", contains="character")
+setGeneric("genesym", function(x) standardGeneric("genesym"))
+setMethod("genesym", "character",  function(x) new("genesym", x))
+
+setClass("cwSnpScreenResult", contains="gwSnpScreenResult",
+   representation(chrnum="chrnum"))
+
+setClass("snpLocNCref", contains="character")
+setMethod("show", "snpLocNCref", function(object) {
+ cat(gsub("..*/", "...", object), " [netCDF]\n")
+})
 
 
+# GGtools AllClasses.R (c) 2006 VJ Carey -- legacy below
 
 setClass("snpMeta", 
   representation(meta="environment", chromosome="character"))
@@ -41,7 +101,7 @@ setMethod("show", "twSnpScreenResult", function(object) {
    cat("--- [there are", length(object)-1, "more]\n")
    })
 
-topSnps = function(x, n=10) {
+topSnpsOLD = function(x, n=10) {
   lapply(x, function(x) sort(extract_p(x))[1:n])
 }
 

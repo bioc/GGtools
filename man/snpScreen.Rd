@@ -11,7 +11,6 @@
 \alias{twSnpScreen}
 \alias{snpScreen}
 \alias{extract_p}
-\alias{topSnps}
 \alias{plot_mlp}
 \title{compute model fits over a sequence of SNPs  }
 \description{
@@ -23,7 +22,6 @@ twSnpScreen(racExSet, snpMeta, formTemplate, fitter)
 extract_p(ssr)
 plot_mlp(ssr, snpMeta, gchr=NULL, geneLocDF=NULL, ps = NULL, pch = 20, cex = 0.6, local=FALSE, 
   plotf=smoothScatter, organism="human")
-topSnps(x, n)
 }
 \arguments{
   \item{racExSet}{ instance of \code{\link{racExSet-class}}}
@@ -60,10 +58,10 @@ has been SNP-filtered relative to the HapMap SNP set. }
 high-density genotyping, the default works well; in sparse cases,
 use \code{\link{plot}}.}
   \item{organism}{string used for plot annotation}
-  \item{x}{instance of \code{\linkS4class{twSnpScreenResult}}}
-  \item{n}{number of (smallest) p-values to extract for \code{topSnps}}
 }
 \details{
+THIS IS NO LONGER TO BE USED.  SEE gwSnpScreen.
+
 for snpScreen:
 If \code{options()$verbose == TRUE} then every 100th index in the
 vector of snps is printed to stdout to show rate of progress.
@@ -151,7 +149,7 @@ plot_mlp(ss, INB34snpMeta, gchr="all", plotf=plot, organism="mouse" )
  trim = trim[ snpID(somesnps), ]
  lktw = twSnpScreen( trim, chr20meta, ~., fastAGMfitter)
  lktw
- topSnps(lktw, 5)
+# topSnps(lktw, 5)
 }
 
 }

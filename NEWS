@@ -8,17 +8,10 @@
 
 SIGNIFICANT USER-VISIBLE CHANGES
 
-    o  twSnpScreen added to deal with transcriptome-wide (as opposed
-       to gene-specific) tests for eQTL for a given racExSet
-       (N.B. when the snpMatrix-based representation comes in
-       there will be genome-wide searches as well)
-
-    o  plot_EvG includes boxplots
+    o  march 2008: complete overhaul to use snpMatrix genotype 
+       representation.  gwSnpScreen is main interface
 
 INFRASTRUCTURE CHANGES
 
-    o  The inst/ggsite* folders are gone.  inst/GGEXsite is the
-       new repository for CGIwithR interface, and Makefiles
-       and Makevars are now provided to simplify deployment.
-       ggexplorer.org uses the revised infrastructure.
+    o  racExSet is not a primary tool any more; smlSet is
 
