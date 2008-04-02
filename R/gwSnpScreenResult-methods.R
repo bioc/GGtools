@@ -51,3 +51,22 @@ setGeneric("topSnps", function(x, ...) standardGeneric("topSnps"))
 setMethod("topSnps", "cwSnpScreenResult", function(x, n=10, which="p.1df") {
    x[[1]][ order(x[[1]][,which], decreasing=FALSE), which, drop=FALSE ][1:n,,drop=FALSE]
 })
+
+setMethod("topSnps", "gwSnpScreenResult", function(x, n=10, which="p.1df") {
+  ts.df = function (w, n = 10, which = "p.1df") 
+    {
+        w[order(w[, which], decreasing = FALSE), which, 
+            drop = FALSE][1:n, , drop = FALSE]
+    } 
+  lapply(x, ts.df, n=n, which=which)
+})
+
+
+
+ setMethod("[" , "gwSnpScreenResult", function(x, i, j, ..., drop=FALSE) {
+  z = x
+  z@.Data = z@.Data[i]
+  names(z@.Data) = as.character(i)
+  z
+ })
+
