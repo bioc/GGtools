@@ -7,6 +7,7 @@
 \alias{plot,gwSnpScreenResult-method}
 \alias{plot,cwSnpScreenResult-method}
 \alias{show,gwSnpScreenResult-method}
+\alias{[,gwSnpScreenResult-method}
 
 \title{Class "gwSnpScreenResult" -- containers for
 genome-wide and chromosome-wide snp screen statistics }
@@ -36,8 +37,12 @@ Class \code{"\linkS4class{AssayData}"}, by class "list", distance 2.
 }
 \section{Methods}{
   \describe{
-    \item{plot}{\code{signature(x = "gwSnpScreenResult", y = "ANY")}: ... }
-    \item{show}{\code{signature(object = "gwSnpScreenResult")}: ... }
+    \item{plot}{\code{signature(x = "gwSnpScreenResult", y = "ANY")}: 
+plots minus log p values of association tests along chromosomal
+coordinates}
+    \item{show}{\code{signature(object = "gwSnpScreenResult")}: brief report }
+    \item{[}{\code{signature(object = "gwSnpScreenResult")}: restricts
+chromosomes represented }
 	 }
 }
 %\references{ ~put references to the literature/web site here ~ }

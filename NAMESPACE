@@ -29,6 +29,6 @@ export("HMworkflow", "thinHM2rac", "exclMono", "thinHM2meta", "df2snpMeta",
    "oneFit", "genoStrings", "extract_p", "plot_mlp", "fastAGM", "fastHET",
    "plot_EvG", "snps3PrimeTo", "snps5PrimeTo", "snpsNear", "Strains2rac",
    "wrapSNPmetaWh", "INBREDSworkflow", "addAnno", "tx_rsnum", "getSNPindices", 
-   "fastAGMfitter", "fastHETfitter", "pos", "exFeatID")
+   "fastAGMfitter", "fastHETfitter", "pos", "exFeatID", "makeLocNCDF")
 
 #importFrom("RColorBrewer", "brewer.pal")

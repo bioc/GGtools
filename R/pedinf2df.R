@@ -1,5 +1,6 @@
 pedinf2df = function(fn, ...) {
 # create a data frame based on a hapmap pedigree info file
+ V1 = V2 = V3 = V4 = V5 = V6 = V7 = 0
  x = read.table(fn, h=FALSE)
  attach(x)
  on.exit(detach(x))
