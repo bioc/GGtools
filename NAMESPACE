@@ -22,7 +22,7 @@ exportMethods("snps", "snpNames", "racAssays", "snpScreen", "show",
 	"rarebase", "SNPalleles", "exprs", "initialize", "coerce",
 	"twSnpScreen", "annotation", "imputeSNPFixed", "plot",
         "gwSnpScreen", "rawSNP", "smList", "getSnpData", "getSnpLocs", "topSnps",
-	"rsNum", "getAlleles", "chrnum", "plot_EvG")
+	"rsNum", "getAlleles", "chrnum", "plot_EvG", "getSnpChroms")
 
 export("HMworkflow", "thinHM2rac", "exclMono", "thinHM2meta", "df2snpMeta",
    "make_racExSet", "countRare", "getRare", "genesym", "snpID", "getpsid",

@@ -15,6 +15,8 @@
 \alias{smlEnv,smlSet-method}
 \alias{getSnpLocs,smlSet-method}
 \alias{getSnpLocs}
+\alias{getSnpChroms,smlSet-method}
+\alias{getSnpChroms}
 \alias{getSnpData}
 \alias{getSnpData,character-method}
 \alias{rawSNP}
@@ -85,6 +87,12 @@ of cwSnpScreenResult. }
     \item{rawSNP}{\code{signature(x = "smlSet", chrind = "numeric")}: returns
 byte (raw) representation of SNP data in snp.matrix format for specified
 chromosome.  }
+    \item{getSnpLocs}{\code{signature(x = "smlSet")}: returns
+all relevant locations in order of rs numbers in the
+snp.matrices as a single vector}
+    \item{getSnpChroms}{\code{signature(x = "smlSet")}: returns
+all relevant chromosome assignments in order of rs numbers in the
+snp.matrices as a single vector}
     \item{sampleNames}{\code{signature(object = "smlSet")}: returns
 vector of sample names. }
     \item{show}{\code{signature(object = "smlSet")}: prints short report. }

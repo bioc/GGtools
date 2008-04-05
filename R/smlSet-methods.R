@@ -122,6 +122,24 @@ setMethod("getSnpLocs", "smlSet", function(x) {
  annoloc[kpinds]
 })
 
+setGeneric("getSnpChroms", function(x) standardGeneric("getSnpChroms"))
+setMethod("getSnpChroms", "smlSet", function(x) {
+#
+# if a smlSet has been subset by chromosome for SNP
+# then its chromInds are the 'active' chromosomes
+# we return the chromosome nums corresponding to these
+# [ if it has not been subset, then all chromosomes are 'active' ]
+#
+ ncpath = x@snpLocPathMaker(x@annotation["snps"])
+ oo = open.ncdf( ncpath )
+ on.exit(close(oo))
+ activeChr = x@chromInds
+ annochr = get.var.ncdf(oo, "chr")
+ kpinds = which(annochr %in% activeChr)
+ annochr[kpinds]
+})
+
+
 setGeneric("getAlleles", function(x, rs, ...) standardGeneric("getAlleles"))
 setMethod("getAlleles", c("smlSet", "rsNum"), function (x, rs)
 {
