@@ -165,3 +165,12 @@ setMethod("plot_EvG", c("genesym", "rsNum", "smlSet"),
       plot(ex~gt, ylab=gsym, xlab=rsn, ...)
       points(jitter(as.numeric(gt),.4), ex, col="gray", pch=19)
       })
+
+setMethod("snps", c("smlSet", "chrnum"), function(x, chr) {
+  if (length(chr) != 1) stop("chr must have length 1")
+  tmp = as(smList(x[chr,])[[1]], "character")
+  rownames(tmp) = sampleNames(x)
+  colnames(tmp) = colnames(smList(x[chr,])[[1]])
+  t(tmp)
+})
+

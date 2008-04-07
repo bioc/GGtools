@@ -79,7 +79,7 @@ exFeatID = function(x) new("exFeatID", x)
 setClass("genesym", contains="character")
 genesym = function(x) new("genesym", x)
 
-setGeneric("snps", function(x) standardGeneric("snps"))
+setGeneric("snps", function(x, chr) standardGeneric("snps"))
 
 # helper class for snp screen output
 
