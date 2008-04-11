@@ -24,6 +24,8 @@ for all snp against the specified expression phenotype.
 \keyword{methods}
 \examples{
 data(hmceuB36.2021)
+library(GGdata)
+objects("package:GGdata")
 g1 = gwSnpScreen( genesym("CPNE1"), hmceuB36.2021, chrnum(20) )
 g1
 plot(g1)

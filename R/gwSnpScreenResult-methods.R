@@ -9,7 +9,7 @@ setMethod("show", "gwSnpScreenResult", function(object) {
 
 setMethod("plot", "gwSnpScreenResult", function(x, y, ...) {
     allp = unlist(lapply(x, "[", , 3))
-    snpdata = getSnpData( x@snpLocNCDFref )
+    snpdata = getSnpData( x@snpLocPackage, x@snpLocNCDFref )
     spos = split(as.numeric(snpdata$cumloc), as.numeric(snpdata$chr))
     chrbnd = sapply(spos, max)
 #
@@ -38,7 +38,7 @@ setMethod("plot", "cwSnpScreenResult", function(x, y, ...) {
 #        }
 #    gloc = get(snpAnno)
 #    loc = gloc$Posi[ which(gloc$Chro == paste("chr", x@chrnum, sep="")) ]
-    snpdata = getSnpData( x@snpLocNCDFref )
+    snpdata = getSnpData( x@snpLocPackage, x@snpLocNCDFref )
     loc = snpdata$cumloc[which(as.numeric(snpdata$chr) == x@chrnum)]
     loc = loc - loc[1]
     smoothScatter(loc, -log10(allp), xlab = paste("genomic position on chr",

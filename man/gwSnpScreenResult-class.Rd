@@ -58,6 +58,8 @@ chromosomes represented }
 \examples{
 showClass("gwSnpScreenResult")
 data(hmceuB36.2021)
+library(GGdata)
+objects("package:GGdata")
 x = gwSnpScreen(genesym("CPNE1"), hmceuB36.2021, chrnum(20))
 x
 }

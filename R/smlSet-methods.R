@@ -15,7 +15,9 @@ setMethod("show", "smlSet", function(object) {
  cat(" exprs: ")
  cat( object@annotation["exprs"])
  cat("\n snps: ")
- cat(object@annotation["snps"], "[arg to @snpLocPathMaker]\n")
+# cat(object@annotation["snps"], "[arg to @snpLocPathMaker]\n")
+ cat("snp locs package:", object@snpLocPackage, "; ncdf ref:", 
+     object@snpLocRef, "\n")
  if (length(dd <- dim(object@assayData$exprs))>0) {
   cat("Expression data:", dd[1], "x", dd[2], "\n") 
  }
@@ -96,48 +98,75 @@ setMethod("gwSnpScreen", c("genesym", "smlSet", "cnumOrMissing"),
         snp.data=x))
     if (!missing(cnum)) return(new("cwSnpScreenResult", gene=sym, psid=pid,
          annotation=sms@annotation, chrnum=cnum, 
-	 snpLocNCDFref=sms@snpLocPathMaker(sms@annotation["snps"]),
+         snpLocPackage=sms@snpLocPackage,
+	 snpLocNCDFref=sms@snpLocRef,
          allsst))
     new("gwSnpScreenResult", gene=sym, psid=pid,
          annotation=sms@annotation, 
-	 snpLocNCDFref=sms@snpLocPathMaker(sms@annotation["snps"]),
+	 snpLocPackage=sms@snpLocPackage, snpLocNCDFref=
+           sms@snpLocRef,
 	 allsst)
     })
 
-setGeneric("getSnpLocs", function(x) standardGeneric("getSnpLocs"))
-setMethod("getSnpLocs", "smlSet", function(x) {
+setGeneric("getSnpLocs", function(x,filterActive) standardGeneric("getSnpLocs"))
+
+setMethod("getSnpLocs", c("smlSet", "missing"), function(x, filterActive) {
+ getSnpLocs(x, TRUE)
+})
+
+setMethod("getSnpLocs", c("smlSet", "logical"), function(x, filterActive=FALSE) {
 #
+# it is now assumed that we have exported the ncdf reference
+# in object named x@snpLocRef, in package named x@snpLocPackage
+#
+  require(x@snpLocPackage, character.only=TRUE)
+  ref = get(x@snpLocRef, paste("package:", x@snpLocPackage, sep=""))
 # if a smlSet has been subset by chromosome for SNP
 # then its chromInds are the 'active' chromosomes
 # we return the locations corresponding to these
 # [ if it has not been subset, then all chromosomes are 'active' ]
-#
- ncpath = x@snpLocPathMaker(x@annotation["snps"])
- oo = open.ncdf( ncpath )
- on.exit(close(oo))
  activeChr = x@chromInds
- annochr = get.var.ncdf(oo, "chr")
- kpinds = which(annochr %in% activeChr)
- annoloc = get.var.ncdf(oo, "cumloc")
- annoloc[kpinds]
-})
+ availchr = get.var.ncdf(ref, "chr")
+ loc = get.var.ncdf(ref, "cumloc")
+ if (!filterActive) return(loc)
+ if (isTRUE(all.equal(sort(activeChr), sort(unique(as.numeric(availchr))))))
+    return(loc)
+ else return(loc[which(availchr %in% activeChr)])
+ })
 
-setGeneric("getSnpChroms", function(x) standardGeneric("getSnpChroms"))
-setMethod("getSnpChroms", "smlSet", function(x) {
-#
-# if a smlSet has been subset by chromosome for SNP
-# then its chromInds are the 'active' chromosomes
-# we return the chromosome nums corresponding to these
-# [ if it has not been subset, then all chromosomes are 'active' ]
-#
- ncpath = x@snpLocPathMaker(x@annotation["snps"])
- oo = open.ncdf( ncpath )
- on.exit(close(oo))
- activeChr = x@chromInds
- annochr = get.var.ncdf(oo, "chr")
- kpinds = which(annochr %in% activeChr)
- annochr[kpinds]
-})
+#setMethod("getSnpLocs", "smlSet", function(x) {
+##
+## if a smlSet has been subset by chromosome for SNP
+## then its chromInds are the 'active' chromosomes
+## we return the locations corresponding to these
+## [ if it has not been subset, then all chromosomes are 'active' ]
+##
+# ncpath = x@snpLocPathMaker(x@annotation["snps"])
+# oo = open.ncdf( ncpath )
+# on.exit(close(oo))
+# activeChr = x@chromInds
+# annochr = get.var.ncdf(oo, "chr")
+# kpinds = which(annochr %in% activeChr)
+# annoloc = get.var.ncdf(oo, "cumloc")
+# annoloc[kpinds]
+#})
+
+#setGeneric("getSnpChroms", function(x) standardGeneric("getSnpChroms"))
+#setMethod("getSnpChroms", "smlSet", function(x) {
+##
+## if a smlSet has been subset by chromosome for SNP
+## then its chromInds are the 'active' chromosomes
+## we return the chromosome nums corresponding to these
+## [ if it has not been subset, then all chromosomes are 'active' ]
+##
+# ncpath = x@snpLocPathMaker(x@annotation["snps"])
+# oo = open.ncdf( ncpath )
+# on.exit(close(oo))
+# activeChr = x@chromInds
+# annochr = get.var.ncdf(oo, "chr")
+# kpinds = which(annochr %in% activeChr)
+# annochr[kpinds]
+#})
 
 
 setGeneric("getAlleles", function(x, rs, ...) standardGeneric("getAlleles"))

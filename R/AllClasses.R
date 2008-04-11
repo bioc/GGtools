@@ -21,7 +21,8 @@ snpLocPathClo = function(pkg="GGdata", subdir="extdata") function(x) {
 
 setClass("smlSet", contains="eSet", 
    representation(smlEnv="environment", snpLocPathMaker="function",
-     chromInds="numeric", organism="character"),
+     chromInds="numeric", organism="character", snpLocPackage="character",
+     snpLocRef="character"),
    validity=valsml, prototype=prototype(
        new("VersionedBiobase",
                versions=c(classVersion("eSet"), smlSet="1.0.0")),
@@ -31,12 +32,13 @@ setClass("smlSet", contains="eSet",
                labelDescription=character(0))),
 	   annotation=character(0),
 	   smlEnv = {e = new.env(); assign("smList", list(), e); e},
- 	   snpLocPathMaker=snpLocPathClo(),
+ 	   snpLocPathMaker=snpLocPathClo(), snpLocRef=character(0),
+   	   snpLocPackage=character(0),
            chromInds = numeric(0)))
 	   
 setClass("gwSnpScreenResult", contains="list",
    representation(gene="character", psid="character", annotation="character",
-      snpLocNCDFref="character"))
+      snpLocPackage="character", snpLocNCDFref="character"))
 
 setClass("chrnum", contains="numeric")
 setClass("rsNum", contains="character")
