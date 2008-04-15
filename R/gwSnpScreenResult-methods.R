@@ -41,6 +41,7 @@ setMethod("plot", "cwSnpScreenResult", function(x, y, ...) {
     snpdata = getSnpData( x@snpLocPackage, x@snpLocNCDFref )
     loc = snpdata$cumloc[which(as.numeric(snpdata$chr) == x@chrnum)]
     loc = loc - loc[1]
+    if (length(x@activeSnpInds) > 0) loc=loc[x@activeSnpInds]
     smoothScatter(loc, -log10(allp), xlab = paste("genomic position on chr",
               x@chrnum),
         ylab = "-log10 p: chisq1 test", nrp = 200, cex = 0.6,
@@ -70,3 +71,8 @@ setMethod("topSnps", "gwSnpScreenResult", function(x, n=10, which="p.1df") {
   z
  })
 
+setGeneric("getAbsSnpLocs", function(x)standardGeneric("getAbsSnpLocs"))
+setMethod("getAbsSnpLocs", c("cwSnpScreenResult"), function(x) {
+     met = getSnpData( x@snpLocPackage, x@snpLocNCDFref )
+     met$cumloc[ met$chr == as(x@chrnum,"numeric") ]
+  })

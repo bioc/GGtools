@@ -25,6 +25,13 @@
 \alias{rsNum}
 \alias{chrnum,numeric-method}
 \alias{rsNum,character-method}
+\alias{getSnpChroms,smlSet,logical-method}
+\alias{getSnpChroms,smlSet,missing-method}
+\alias{getSnpData,character,character-method}
+\alias{getSnpLocs,smlSet,logical-method}
+\alias{getSnpLocs,smlSet,missing-method}
+%\alias{snps,racExSet,missing-method}
+%\alias{snps,smlSet,chrnum-method}
 
 \title{Class "smlSet" -- efficient representation of SNP+expression data,
 based on Clayton snpMatrix package}

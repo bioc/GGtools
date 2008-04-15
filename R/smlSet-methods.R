@@ -38,7 +38,12 @@ setMethod("[", "smlSet", function(x, i, j, ..., drop=FALSE) {
       L2 = L2[match(i, x@chromInds)]
       x@chromInds = x@chromInds[match(i, x@chromInds)]
       }
- else if (!missing(i)) stop("only chrnum 'row' selections for snp.matrix lists supported")
+ else if (!missing(i) && is(i, "exFeatID")) {
+      tmp = exprs(x)[i,,drop=FALSE]
+      x@assayData=assayDataNew("lockedEnvironment", exprs=tmp)
+      x@featureData = x@featureData[i,]
+      }
+ else if (!missing(i)) stop("only exFeatID (gene) or chrnum (chrom for SNPs) row-selections for smlSet supported")
  eL = new.env(hash=TRUE)
  assign("smList", L2, eL)
  x@smlEnv = eL
@@ -99,16 +104,17 @@ setMethod("gwSnpScreen", c("genesym", "smlSet", "cnumOrMissing"),
     if (!missing(cnum)) return(new("cwSnpScreenResult", gene=sym, psid=pid,
          annotation=sms@annotation, chrnum=cnum, 
          snpLocPackage=sms@snpLocPackage,
-	 snpLocNCDFref=sms@snpLocRef,
+	 snpLocNCDFref=sms@snpLocRef, activeSnpInds=sms@activeSnpInds,
          allsst))
     new("gwSnpScreenResult", gene=sym, psid=pid,
          annotation=sms@annotation, 
 	 snpLocPackage=sms@snpLocPackage, snpLocNCDFref=
-           sms@snpLocRef,
+           sms@snpLocRef, activeSnpInds=sms@activeSnpInds,
 	 allsst)
     })
 
 setGeneric("getSnpLocs", function(x,filterActive) standardGeneric("getSnpLocs"))
+setGeneric("getSnpChroms", function(x,filterActive) standardGeneric("getSnpChroms"))
 
 setMethod("getSnpLocs", c("smlSet", "missing"), function(x, filterActive) {
  getSnpLocs(x, TRUE)
@@ -128,6 +134,29 @@ setMethod("getSnpLocs", c("smlSet", "logical"), function(x, filterActive=FALSE) 
  activeChr = x@chromInds
  availchr = get.var.ncdf(ref, "chr")
  loc = get.var.ncdf(ref, "cumloc")
+ if (!filterActive) return(loc)
+ if (isTRUE(all.equal(sort(activeChr), sort(unique(as.numeric(availchr))))))
+    return(loc)
+ else return(loc[which(availchr %in% activeChr)])
+ })
+
+setMethod("getSnpChroms", c("smlSet", "missing"), function(x, filterActive) {
+ getSnpChroms(x, TRUE)
+})
+setMethod("getSnpChroms", c("smlSet", "logical"), function(x, filterActive=FALSE) {
+#
+# it is now assumed that we have exported the ncdf reference
+# in object named x@snpLocRef, in package named x@snpLocPackage
+#
+  require(x@snpLocPackage, character.only=TRUE)
+  ref = get(x@snpLocRef, paste("package:", x@snpLocPackage, sep=""))
+# if a smlSet has been subset by chromosome for SNP
+# then its chromInds are the 'active' chromosomes
+# we return the locations corresponding to these
+# [ if it has not been subset, then all chromosomes are 'active' ]
+ activeChr = x@chromInds
+ availchr = get.var.ncdf(ref, "chr")
+ loc = get.var.ncdf(ref, "chr")  # abuse of varname
  if (!filterActive) return(loc)
  if (isTRUE(all.equal(sort(activeChr), sort(unique(as.numeric(availchr))))))
     return(loc)
