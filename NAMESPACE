@@ -16,7 +16,8 @@ import(Biobase, AnnotationDbi)
 
 exportClass(racExSet, genesym, snpScreenResult, snpMeta, snpMetaWhole, oGtypeExSet,
   GGfitter, twSnpScreenResult, gwSnpScreenResult, cwSnpScreenResult, rsNum,
-  chrnum, cnumOrMissing, snpLocNCref, smlSet)
+  chrnum, cnumOrMissing, snpLocNCref, smlSet)#,
+#  multiGwSnpScreenResult)
 
 exportMethods("snps", "snpNames", "racAssays", "snpScreen", "show",
 	"rarebase", "SNPalleles", "exprs", "initialize", "coerce",

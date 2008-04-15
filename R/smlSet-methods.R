@@ -88,10 +88,11 @@ setMethod("gwSnpScreen", c("genesym", "smlSet", "cnumOrMissing"),
       if (length(cnum) != 1) stop("only supports scalar chrnum cnum at present")
       sms = sms[cnum,]
     }
+    if (length(sym) > 1) stop("for multiple gene expression analysis, please use a GSEABase::GeneSet instance")
     annpack = sms@annotation["exprs"]
     library(annpack, character.only=TRUE)
     rmap = revmap( get(paste(gsub(".db", "", annpack), "SYMBOL", sep="")) )
-    pid = get( sym, rmap )
+    pid = get( as(sym, "character"), rmap )
     if (length(pid) == 0) stop(paste("cannot map", sym, "in", annpack, sep=""))
     if (length(pid) > 1) {
         warning(paste("several probes/sets map to", sym, "; using", pid[1], sep=""))
@@ -230,5 +231,25 @@ setMethod("snps", c("smlSet", "chrnum"), function(x, chr) {
   rownames(tmp) = sampleNames(x)
   colnames(tmp) = colnames(smList(x[chr,])[[1]])
   t(tmp)
+})
+
+#setClass("multiGwSnpScreenResult", representation(geneset="GeneSet"),
+#   contains="list")
+setMethod("gwSnpScreen", c("GeneSet", "smlSet", "cnumOrMissing"),
+  function( sym, sms, cnum, ...) {
+  gid = as(geneIds(sym), "character")
+  ng = length(gid)
+  out = list()
+  for (i in 1:ng) {
+    out[[i]] = try(gwSnpScreen(genesym(gid[i]), sms, cnum, ...))
+  }
+  new("multiGwSnpScreenResult", geneset=sym, out)
+})
+
+setMethod("show", "multiGwSnpScreenResult", function(object) {
+ cat("multi genome-wide snp screen result:\n")
+ cat("gene set used as response:\n")
+ show(object@geneset)
+ cat("there are", length(object), "results.\n")
 })
 

@@ -1,12 +1,14 @@
 \name{gwSnpScreenResult-class}
 \docType{class}
 \alias{gwSnpScreenResult-class}
+\alias{multiGwSnpScreenResult-class}
 \alias{cwSnpScreenResult-class}
 \alias{plot,gwSnpScreenResult,ANY-method}
 \alias{plot,cwSnpScreenResult,ANY-method}
 \alias{plot,gwSnpScreenResult-method}
 \alias{plot,cwSnpScreenResult-method}
 \alias{show,gwSnpScreenResult-method}
+\alias{show,multiGwSnpScreenResult-method}
 \alias{[,gwSnpScreenResult-method}
 
 \title{Class "gwSnpScreenResult" -- containers for

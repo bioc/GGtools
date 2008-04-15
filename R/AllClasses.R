@@ -41,6 +41,10 @@ setClass("gwSnpScreenResult", contains="list",
       snpLocPackage="character", snpLocNCDFref="character",
       activeSnpInds="numeric"))
 
+setClass("multiGwSnpScreenResult", representation(geneset="GeneSet"),
+   contains="list")
+
+
 setClass("chrnum", contains="numeric")
 setClass("rsNum", contains="character")
 
