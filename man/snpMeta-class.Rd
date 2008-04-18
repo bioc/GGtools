@@ -13,6 +13,8 @@
 \alias{dim,snpMeta-method}
 \alias{nrow,snpMeta-method}
 \alias{show,snpMeta-method}
+\alias{[,snpMeta,ANY,ANY-method}
+
 
 \title{Class "snpMeta" -- HapMap (or Wellcome INBREDS) -based metadata structures for SNPs }
 \description{	 HapMap (or Wellcome INBREDS) -based metadata structures for SNPs }

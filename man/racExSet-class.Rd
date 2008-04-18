@@ -17,6 +17,7 @@
 \alias{snps,racExSet-method}
 \alias{snpNames,racExSet-method}
 \alias{racAssays,racExSet-method}
+\alias{[,racExSet,ANY,ANY-method}
 \alias{oneFit,racExSet-method}
 \alias{litsn}
 \alias{exclMono}

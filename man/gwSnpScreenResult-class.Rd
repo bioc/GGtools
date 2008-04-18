@@ -10,6 +10,7 @@
 \alias{show,gwSnpScreenResult-method}
 \alias{show,multiGwSnpScreenResult-method}
 \alias{[,gwSnpScreenResult-method}
+\alias{[,gwSnpScreenResult,ANY,ANY-method}
 
 \title{Class "gwSnpScreenResult" -- containers for
 genome-wide and chromosome-wide snp screen statistics }
