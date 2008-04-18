@@ -5,6 +5,9 @@ setMethod("snpNames", "racExSet", function(x) featureNames(x@racAssays))
 setMethod("rarebase", "racExSet", function(x) x@rarebase)
 setMethod("SNPalleles", "racExSet", function(x) x@SNPalleles)
 
+#fastAGMfitter = new("GGfitter", name="fastAGM", func=fastAGM)
+#fastHETfitter = new("GGfitter", name="fastHET", func=fastHET)
+
 
 
 setMethod("snpScreen", c("racExSet", "snpMeta", "genesym", "formula", "function", "numeric"),

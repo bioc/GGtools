@@ -12,24 +12,13 @@ import(tools)
 
 importFrom(graphics, plot)
 
-import(Biobase, AnnotationDbi)
+import(Biobase, GGBase, AnnotationDbi)
 
-exportClass(racExSet, genesym, snpScreenResult, snpMeta, snpMetaWhole, oGtypeExSet,
-  GGfitter, twSnpScreenResult, gwSnpScreenResult, cwSnpScreenResult, rsNum,
-  chrnum, cnumOrMissing, snpLocNCref, smlSet)#,
-#  multiGwSnpScreenResult)
+importFrom("RColorBrewer", "brewer.pal")
 
-exportMethods("snps", "snpNames", "racAssays", "snpScreen", "show",
-	"rarebase", "SNPalleles", "exprs", "initialize", "coerce",
-	"twSnpScreen", "annotation", "imputeSNPFixed", "plot",
-        "gwSnpScreen", "rawSNP", "smList", "getSnpData", "getSnpLocs", "topSnps",
-	"rsNum", "getAlleles", "chrnum", "plot_EvG", "getSnpChroms")
+exportMethods( "show", "plot", "topSnps", "[", "getAbsSnpLocs",
+ "initialize", "oneFit", "snps", "exprs", "racAssays", "snpNames", "SNPalleles",
+ "snpScreen", "twSnpScreen", "imputeSNPFixed", "nsamp", "sampleNames",
+ "getSnpLocs", "gwSnpScreen", "getSnpChroms", "getAlleles", "plot_EvG", "getSnpData",
+ "dim", "nrows", "pos", "chromosome", "updateObject")
 
-export("HMworkflow", "thinHM2rac", "exclMono", "thinHM2meta", "df2snpMeta",
-   "make_racExSet", "countRare", "getRare", "genesym", "snpID", "getpsid",
-   "oneFit", "genoStrings", "extract_p", "plot_mlp", "fastAGM", "fastHET",
-   "plot_EvG", "snps3PrimeTo", "snps5PrimeTo", "snpsNear", "Strains2rac",
-   "wrapSNPmetaWh", "INBREDSworkflow", "addAnno", "tx_rsnum", "getSNPindices", 
-   "fastAGMfitter", "fastHETfitter", "pos", "exFeatID", "makeLocNCDF")
-
-#importFrom("RColorBrewer", "brewer.pal")

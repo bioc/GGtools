@@ -1,15 +1,15 @@
 # we want to inherit all available infrastructure in a combination
 # of ExpressionSet and SnpCallSet.  We have an arbitrary number of SnpCallSets to
 # associate
-setClass("oGtypeExSet", 
-  representation(snpCalls="list", dbConns="list"), contains="ExpressionSet")
+#setClass("oGtypeExSet", 
+#  representation(snpCalls="list", dbConns="list"), contains="ExpressionSet")
 
-setAs("oGtypeExSet", "ExpressionSet", function(from) {
- anno = as.character(annotation(from)["exprs"])
- new("ExpressionSet", assayData=assayData(from),
-      phenoData=phenoData(from), featureData=featureData(from),
-      experimentData=experimentData(from), annotation=anno)
-})
+#setAs("oGtypeExSet", "ExpressionSet", function(from) {
+# anno = as.character(annotation(from)["exprs"])
+# new("ExpressionSet", assayData=assayData(from),
+#      phenoData=phenoData(from), featureData=featureData(from),
+#      experimentData=experimentData(from), annotation=anno)
+#})
  
 
 

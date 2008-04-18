@@ -1,8 +1,8 @@
 	   
-setGeneric("smlEnv", function(x) standardGeneric("smlEnv"))
-setMethod("smlEnv", "smlSet", function(x) x@smlEnv)
-setGeneric("smList", function(x) standardGeneric("smList"))
-setMethod("smList", "smlSet", function(x) x@smlEnv$smList)
+#setGeneric("smlEnv", function(x) standardGeneric("smlEnv"))
+#setMethod("smlEnv", "smlSet", function(x) x@smlEnv)
+#setGeneric("smList", function(x) standardGeneric("smList"))
+#setMethod("smList", "smlSet", function(x) x@smlEnv$smList)
 setGeneric("nsamp", function(x) standardGeneric("nsamp"))
 setMethod("nsamp", "smlSet", function(x) nrow(smList(x)[[1]]))
 setMethod("sampleNames", "smlSet", function(object) rownames(smList(object)[[1]]))
