@@ -9,6 +9,7 @@
 \alias{chr20meta}
 \alias{[,snpMeta-method}
 \alias{chromosome,snpMeta-method}
+\alias{chromosome}
 \alias{coerce,snpMeta,data.frame-method}
 \alias{dim,snpMeta-method}
 \alias{nrow,snpMeta-method}

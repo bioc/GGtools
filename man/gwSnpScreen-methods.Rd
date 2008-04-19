@@ -31,8 +31,7 @@ instance.
 \keyword{methods}
 \examples{
 data(hmceuB36.2021)
-library(GGdata)
-objects("package:GGdata")
+objects("package:GGBase")
 g1 = gwSnpScreen( genesym("CPNE1"), hmceuB36.2021, chrnum(20) )
 g1
 plot(g1)

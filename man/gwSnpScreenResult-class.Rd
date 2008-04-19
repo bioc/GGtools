@@ -8,9 +8,12 @@
 \alias{plot,gwSnpScreenResult-method}
 \alias{plot,cwSnpScreenResult-method}
 \alias{show,gwSnpScreenResult-method}
+\alias{getAbsSnpLocs,cwSnpScreenResult-method}
+\alias{getAbsSnpLocs}
 \alias{show,multiGwSnpScreenResult-method}
 \alias{[,gwSnpScreenResult-method}
 \alias{[,gwSnpScreenResult,ANY,ANY-method}
+
 
 \title{Class "gwSnpScreenResult" -- containers for
 genome-wide and chromosome-wide snp screen statistics }
@@ -61,8 +64,7 @@ chromosomes represented }
 \examples{
 showClass("gwSnpScreenResult")
 data(hmceuB36.2021)
-library(GGdata)
-objects("package:GGdata")
+objects("package:GGBase")
 x = gwSnpScreen(genesym("CPNE1"), hmceuB36.2021, chrnum(20))
 x
 }

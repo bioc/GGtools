@@ -8,6 +8,7 @@
 \alias{exprs,smlSet-method}
 %\alias{gwSnpScreen,genesym,smlSet-method}
 \alias{nsamp,smlSet-method}
+\alias{nsamp}
 \alias{rawSNP,smlSet,numeric-method}
 \alias{sampleNames,smlSet-method}
 \alias{show,smlSet-method}
