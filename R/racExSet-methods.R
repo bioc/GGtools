@@ -1,3 +1,4 @@
+
 setMethod("snps", c("racExSet","missing"), function(x,chr) get("racs",x@racAssays))
 setMethod("exprs", "racExSet", function(object) get("exprs",object@assayData))
 setMethod("racAssays", "racExSet", function(x) x@racAssays)
@@ -5,8 +6,8 @@ setMethod("snpNames", "racExSet", function(x) featureNames(x@racAssays))
 setMethod("rarebase", "racExSet", function(x) x@rarebase)
 setMethod("SNPalleles", "racExSet", function(x) x@SNPalleles)
 
-#fastAGMfitter = new("GGfitter", name="fastAGM", func=fastAGM)
-#fastHETfitter = new("GGfitter", name="fastHET", func=fastHET)
+fastAGMfitter = new("GGfitter", name="fastAGM", func=fastAGM)
+fastHETfitter = new("GGfitter", name="fastHET", func=fastHET)
 
 
 

@@ -8,3 +8,6 @@ setGeneric("snpScreen", function(racExSet, snpMeta, gene, formTemplate, fitter, 
 
 setGeneric("twSnpScreen", function(racExSet, snpMeta, formTemplate, fitter)
     standardGeneric("twSnpScreen"))
+
+setGeneric("snps", function(x, chr) standardGeneric("snps"))
+
