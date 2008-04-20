@@ -40,6 +40,7 @@
 \alias{[,snpMeta,ANY,ANY,ANY-method}
 \alias{[,racExSet,ANY,ANY,ANY-method}
 \alias{show,racExSet-method}
+\alias{updateObject,racExSet-method}
 \alias{snps5PrimeTo}
 \alias{snps3PrimeTo}
 \alias{snpsNear}
