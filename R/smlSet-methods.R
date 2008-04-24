@@ -33,6 +33,8 @@ setMethod("[", "smlSet", function(x, i, j, ..., drop=FALSE) {
  if (!missing(j)) {
       L2 = lapply(L2, function(z) z[j, ,drop=FALSE])
       phenoData(x)@data = phenoData(x)@data[j,,drop=FALSE]
+      tmp = exprs(x)[,j,drop=FALSE]
+      x@assayData=assayDataNew("lockedEnvironment", exprs=tmp)
       }
  if (!missing(i) && is(i, "chrnum")) {
       L2 = L2[match(i, x@chromInds)]

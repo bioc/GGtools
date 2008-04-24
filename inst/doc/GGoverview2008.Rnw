@@ -54,7 +54,7 @@ and high-density SNP genotyping data.  For Bioconductor
 2.2 we adopted a representation of genotypes due to Clayton
 (in package \Rpackage{snpMatrix}) allowing reasonably
 convenient storage and manipulation of 4 megaSNP phase II
-HapMap genotypes on all the CEPH samples.  This contrasts with
+HapMap genotypes on all the CEPH CEU samples.  This contrasts with
 the previous version of \Rpackage{GGtools} which was limited
 to 550 kiloSNP and 58 CEU founders.
 
@@ -94,6 +94,10 @@ as(smList(hmceuB36.2021)[["20"]][1:5,1:5], "character")
 The demonstration object \Robject{hmceuB36.2021} has only
 chromosomes 20 and 21.  An object in the \Rpackage{GGdata}
 package called \Robject{hmceuB36} has all 24 chromosomes.
+The \Rpackage{GGBase} package has the SNP locations
+for hmceuB36 in a netCDF store that is exported dynamically
+upon attaching GGBase, on which GGtools depends.
+
 It is fairly easy to test for eQTL for a given gene
 on a specified chromosome:
 <<dot>>=

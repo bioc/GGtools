@@ -47,6 +47,7 @@
 \alias{imputeSNPFixed}
 \alias{imputeSNPFixed,racExSet,numeric-method}
 \alias{imputeSNPFixed,racExSet,missing-method}
+\alias{updateObject,racExSet-method}
 
 \title{Class "racExSet" for combining RareAlleleCount representations
 of SNPs, gene expression data, and other phenotype data }
