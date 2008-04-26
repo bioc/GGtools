@@ -4,7 +4,8 @@ Version: 1.99.9
 Author: Vince Carey <stvjc@channing.harvard.edu>
 Description: dealing with hapmap SNP reports, GWAS, etc.
 Depends: R (>= 2.7.0), methods, Biobase (>= 1.11.26), GGBase, hgfocus.db, 
-	geneplotter(>= 1.11.8), snpMatrix, mgu74av2.db, RColorBrewer
+	geneplotter(>= 1.11.8), snpMatrix, mgu74av2.db, RColorBrewer,
+	RSQLite, Biostrings
 Suggests: illuminaHumanv1.db, GGdata, org.Hs.eg.db
 LazyData: no
 biocViews: SNPsAndGeneticVariability, Genetics, Statistics
