@@ -15,8 +15,10 @@
 \alias{smList,smlSet-method}
 \alias{smlEnv,smlSet-method}
 \alias{getSnpLocs,smlSet-method}
+\alias{getSnpLocs,SQLiteConnection,character-method}
 \alias{getSnpLocs}
 \alias{getSnpChroms,smlSet-method}
+\alias{getSnpChroms,SQLiteConnection,character-method}
 \alias{getSnpChroms}
 \alias{getSnpData}
 \alias{getSnpData,character-method}
