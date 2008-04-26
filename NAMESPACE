@@ -26,6 +26,6 @@ exportMethods( "show", "plot", "topSnps", "[", "getAbsSnpLocs",
 export("HMworkflow", "thinHM2rac", "exclMono", "thinHM2meta",
   "getRare", "genoStrings", "snps3PrimeTo", "snps5PrimeTo", "snpsNear",
   "Strains2rac", "wrapSNPmetaWh", "INBREDSworkflow", "addAnno",
-  "tx_rsnum", "getSNPindices", "makeLocNCDF", "countRare", "make_racExSet", 
+  "tx_rsnum", "getSNPindices", "countRare", "make_racExSet", 
   "plot_mlp", "fastAGMfitter", "fastHETfitter")
 
