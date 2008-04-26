@@ -16,7 +16,7 @@ setMethod("show", "smlSet", function(object) {
  cat( object@annotation["exprs"])
  cat("\n snps: ")
 # cat(object@annotation["snps"], "[arg to @snpLocPathMaker]\n")
- cat("snp locs package:", object@snpLocPackage, "; ncdf ref:", 
+ cat("snp locs package:", object@snpLocPackage, "; SQLite ref:", 
      object@snpLocRef, "\n")
  if (length(dd <- dim(object@assayData$exprs))>0) {
   cat("Expression data:", dd[1], "x", dd[2], "\n") 
@@ -107,11 +107,11 @@ setMethod("gwSnpScreen", c("genesym", "smlSet", "cnumOrMissing"),
     if (!missing(cnum)) return(new("cwSnpScreenResult", gene=sym, psid=pid,
          annotation=sms@annotation, chrnum=cnum, 
          snpLocPackage=sms@snpLocPackage,
-	 snpLocNCDFref=sms@snpLocRef, activeSnpInds=sms@activeSnpInds,
+	 snpLocExtRef=sms@snpLocRef, activeSnpInds=sms@activeSnpInds,
          allsst))
     new("gwSnpScreenResult", gene=sym, psid=pid,
          annotation=sms@annotation, 
-	 snpLocPackage=sms@snpLocPackage, snpLocNCDFref=
+	 snpLocPackage=sms@snpLocPackage, snpLocExtRef=
            sms@snpLocRef, activeSnpInds=sms@activeSnpInds,
 	 allsst)
     })
@@ -123,82 +123,45 @@ setMethod("getSnpLocs", c("smlSet", "missing"), function(x, filterActive) {
  getSnpLocs(x, TRUE)
 })
 
-setMethod("getSnpLocs", c("smlSet", "logical"), function(x, filterActive=FALSE) {
-#
-# it is now assumed that we have exported the ncdf reference
-# in object named x@snpLocRef, in package named x@snpLocPackage
-#
-  require(x@snpLocPackage, character.only=TRUE)
-  ref = get(x@snpLocRef, paste("package:", x@snpLocPackage, sep=""))
-# if a smlSet has been subset by chromosome for SNP
-# then its chromInds are the 'active' chromosomes
-# we return the locations corresponding to these
-# [ if it has not been subset, then all chromosomes are 'active' ]
- activeChr = x@chromInds
- availchr = get.var.ncdf(ref, "chr")
- loc = get.var.ncdf(ref, "cumloc")
- if (!filterActive) return(loc)
- if (isTRUE(all.equal(sort(activeChr), sort(unique(as.numeric(availchr))))))
-    return(loc)
- else return(loc[which(availchr %in% activeChr)])
- })
+setMethod("getSnpLocs", c("SQLiteConnection", "character"), function(x, filterActive) {
+ RSQLite:::sqliteQuickColumn(x, filterActive, "loc")
+})
+
+setGeneric("getSnpLocConn", function(x)standardGeneric("getSnpLocConn"))
+setMethod("getSnpLocConn", "smlSet", function(x) {
+  get(x@snpLocRef)()
+})
+
+setMethod("getSnpLocs", c("smlSet", "logical"), function(x, filterActive) {
+ locs = getSnpLocs( getSnpLocConn(x), gsub("_dbconn", "", x@snpLocRef))
+ if (!filterActive) return(locs)
+ else {
+      activeChr = x@chromInds
+      chrnum = getSnpChroms( getSnpLocConn(x), gsub("_dbconn", "", x@snpLocRef) )
+      if (isTRUE(all.equal(sort(activeChr), sort(unique(as.numeric(chrnum))))))
+            return(locs)
+      else return(locs[which(chrnum %in% activeChr)])
+      }
+})
+       
+setMethod("getSnpChroms", c("SQLiteConnection", "character"), function(x, filterActive) {
+ RSQLite:::sqliteQuickColumn(x, filterActive, "chrnum")
+})
 
 setMethod("getSnpChroms", c("smlSet", "missing"), function(x, filterActive) {
  getSnpChroms(x, TRUE)
 })
-setMethod("getSnpChroms", c("smlSet", "logical"), function(x, filterActive=FALSE) {
-#
-# it is now assumed that we have exported the ncdf reference
-# in object named x@snpLocRef, in package named x@snpLocPackage
-#
-  require(x@snpLocPackage, character.only=TRUE)
-  ref = get(x@snpLocRef, paste("package:", x@snpLocPackage, sep=""))
-# if a smlSet has been subset by chromosome for SNP
-# then its chromInds are the 'active' chromosomes
-# we return the locations corresponding to these
-# [ if it has not been subset, then all chromosomes are 'active' ]
- activeChr = x@chromInds
- availchr = get.var.ncdf(ref, "chr")
- loc = get.var.ncdf(ref, "chr")  # abuse of varname
- if (!filterActive) return(loc)
- if (isTRUE(all.equal(sort(activeChr), sort(unique(as.numeric(availchr))))))
-    return(loc)
- else return(loc[which(availchr %in% activeChr)])
- })
 
-#setMethod("getSnpLocs", "smlSet", function(x) {
-##
-## if a smlSet has been subset by chromosome for SNP
-## then its chromInds are the 'active' chromosomes
-## we return the locations corresponding to these
-## [ if it has not been subset, then all chromosomes are 'active' ]
-##
-# ncpath = x@snpLocPathMaker(x@annotation["snps"])
-# oo = open.ncdf( ncpath )
-# on.exit(close(oo))
-# activeChr = x@chromInds
-# annochr = get.var.ncdf(oo, "chr")
-# kpinds = which(annochr %in% activeChr)
-# annoloc = get.var.ncdf(oo, "cumloc")
-# annoloc[kpinds]
-#})
-
-#setGeneric("getSnpChroms", function(x) standardGeneric("getSnpChroms"))
-#setMethod("getSnpChroms", "smlSet", function(x) {
-##
-## if a smlSet has been subset by chromosome for SNP
-## then its chromInds are the 'active' chromosomes
-## we return the chromosome nums corresponding to these
-## [ if it has not been subset, then all chromosomes are 'active' ]
-##
-# ncpath = x@snpLocPathMaker(x@annotation["snps"])
-# oo = open.ncdf( ncpath )
-# on.exit(close(oo))
-# activeChr = x@chromInds
-# annochr = get.var.ncdf(oo, "chr")
-# kpinds = which(annochr %in% activeChr)
-# annochr[kpinds]
-#})
+setMethod("getSnpChroms", c("smlSet", "logical"), function(x, filterActive) {
+ chrnum = getSnpChroms( getSnpLocConn(x), gsub("_dbconn", "", x@snpLocRef))
+ if (!filterActive) return(chrnum)
+ else {
+      activeChr = x@chromInds
+      if (isTRUE(all.equal(sort(activeChr), sort(unique(as.numeric(chrnum))))))
+            return(chrnum)
+      else return(chrnum[which(chrnum %in% activeChr)])
+      }
+})
 
 
 setGeneric("getAlleles", function(x, rs, ...) standardGeneric("getAlleles"))

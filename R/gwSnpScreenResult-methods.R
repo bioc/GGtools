@@ -9,7 +9,7 @@ setMethod("show", "gwSnpScreenResult", function(object) {
 
 setMethod("plot", "gwSnpScreenResult", function(x, y, ...) {
     allp = unlist(lapply(x, "[", , 3))
-    snpdata = getSnpData( x@snpLocPackage, x@snpLocNCDFref )
+    snpdata = getSnpData( x@snpLocPackage, x@snpLocExtRef )
     spos = split(as.numeric(snpdata$cumloc), as.numeric(snpdata$chr))
     chrbnd = sapply(spos, max)
 #
@@ -38,7 +38,7 @@ setMethod("plot", "cwSnpScreenResult", function(x, y, ...) {
 #        }
 #    gloc = get(snpAnno)
 #    loc = gloc$Posi[ which(gloc$Chro == paste("chr", x@chrnum, sep="")) ]
-    snpdata = getSnpData( x@snpLocPackage, x@snpLocNCDFref )
+    snpdata = getSnpData( x@snpLocPackage, x@snpLocExtRef )
     loc = snpdata$cumloc[which(as.numeric(snpdata$chr) == x@chrnum)]
     loc = loc - loc[1]
     if (length(x@activeSnpInds) > 0) loc=loc[x@activeSnpInds]
@@ -73,6 +73,6 @@ setMethod("topSnps", "gwSnpScreenResult", function(x, n=10, which="p.1df") {
 
 setGeneric("getAbsSnpLocs", function(x)standardGeneric("getAbsSnpLocs"))
 setMethod("getAbsSnpLocs", c("cwSnpScreenResult"), function(x) {
-     met = getSnpData( x@snpLocPackage, x@snpLocNCDFref )
+     met = getSnpData( x@snpLocPackage, x@snpLocExtRef )
      met$cumloc[ met$chr == as(x@chrnum,"numeric") ]
   })
