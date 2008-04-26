@@ -1,11 +1,11 @@
 Package: GGtools
 Title: software and data for genetical genomics (c) 2006 VJ Carey
-Version: 1.99.6
+Version: 1.99.9
 Author: Vince Carey <stvjc@channing.harvard.edu>
 Description: dealing with hapmap SNP reports, GWAS, etc.
 Depends: R (>= 2.7.0), methods, Biobase (>= 1.11.26), GGBase, hgfocus.db, 
-	geneplotter(>= 1.11.8), snpMatrix, mgu74av2.db, ncdf, RColorBrewer
-Suggests: illuminaHumanv1.db, GGdata
+	geneplotter(>= 1.11.8), snpMatrix, mgu74av2.db, RColorBrewer
+Suggests: illuminaHumanv1.db, GGdata, org.Hs.eg.db
 LazyData: no
 biocViews: SNPsAndGeneticVariability, Genetics, Statistics
 Maintainer: Vince Carey <stvjc@channing.harvard.edu>
@@ -19,4 +19,4 @@ Collate: fastAGM.R
 	snpScreenResult-methods.R snps3Pto.R updateObject.R 
 	Strains2rac.R wrapSNPmetaWh.R anno2chrbnd.R ogtes.R 
 	gwSnpScreenResult-methods.R pedinf2df.R twSnpScreenResult-methods.R
-	zzz.R 
+	supp2SQLite.R zzz.R 
