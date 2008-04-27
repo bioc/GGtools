@@ -95,7 +95,7 @@ The demonstration object \Robject{hmceuB36.2021} has only
 chromosomes 20 and 21.  An object in the \Rpackage{GGdata}
 package called \Robject{hmceuB36} has all 24 chromosomes.
 The \Rpackage{GGBase} package has the SNP locations
-for hmceuB36 in a netCDF store that is exported dynamically
+for hmceuB36 in an external SQLite store that is exported dynamically
 upon attaching GGBase, on which GGtools depends.
 
 It is fairly easy to test for eQTL for a given gene
