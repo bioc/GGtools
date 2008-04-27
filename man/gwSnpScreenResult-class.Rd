@@ -31,8 +31,8 @@ data.frames or matrices of test results }
     \item{\code{psid}:}{Object of class \code{"character"} probe identifier }
     \item{\code{annotation}:}{Object of class \code{"character"} -- propagated
 from smlSet }
-    \item{\code{snpLocNCDFref}:}{Object of class \code{"character"}, full pathname
-of netCDF store for snp locations relevant to the smlSet instance from
+    \item{\code{snpLocExtRef}:}{Object of class \code{"character"}, full pathname
+of external store for snp locations relevant to the smlSet instance from
 which gwSnpScreenResult was computed.}
   }
 }
