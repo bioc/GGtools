@@ -49,7 +49,7 @@ setMethod("[", "smlSet", function(x, i, j, ..., drop=FALSE) {
  eL = new.env(hash=TRUE)
  assign("smList", L2, eL)
  x@smlEnv = eL
- if (!missing(j)) phenoData(x)@data = phenoData(x)@data[j,,drop=FALSE]
+ #if (!missing(j)) phenoData(x)@data = phenoData(x)@data[j,,drop=FALSE]
  #callNextMethod() # for now, adequate to deal with phenoData
  x
 })
