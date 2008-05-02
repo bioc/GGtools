@@ -184,7 +184,8 @@ setMethod("plot_EvG", c("genesym", "rsNum", "smlSet"),
       psid = get(gsym, rmap)
       if (length(psid) > 1) warning("gene symbol matches multiple probe sets, using first")
       psid = psid[1]
-      ex = exprs(sms)[psid, ]
+      ex = exprs(sms)[psid, ] # this returns a data.frame!?! for hmyriB36
+      if (is(ex, "data.frame")) ex = as.numeric(ex)
       gt = factor(getAlleles( sms, rsn ))
       plot(ex~gt, ylab=gsym, xlab=rsn, ...)
       points(jitter(as.numeric(gt),.4), ex, col="gray", pch=19)
