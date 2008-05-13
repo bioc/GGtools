@@ -84,6 +84,30 @@ setGeneric("gwSnpScreen", function(sym, sms, cnum, ...)
 #         annotation=sms@annotation, allsst)
 #    })
 
+setMethod("gwSnpScreen", c("probeId", "smlSet", "cnumOrMissing"),
+  function( sym, sms, cnum, ...) {
+    if (!missing(cnum)) {
+      if (length(cnum) != 1) stop("only supports scalar chrnum cnum at present")
+      sms = sms[cnum,]
+    }
+    if (length(sym) > 1) stop("for multiple gene expression analysis, please use a GSEABase::GeneSet instance")
+    ph = exprs(sms)[sym,]
+    allsst = lapply( smList(sms), function(x) single.snp.tests(pheno=ph,
+        snp.data=x))
+    pid = sym
+    if (!missing(cnum)) return(new("cwSnpScreenResult", gene=sym, psid=pid,
+         annotation=sms@annotation, chrnum=cnum, 
+         snpLocPackage=sms@snpLocPackage,
+	 snpLocExtRef=sms@snpLocRef, activeSnpInds=sms@activeSnpInds,
+         allsst))
+    new("gwSnpScreenResult", gene=sym, psid=pid,
+         annotation=sms@annotation, 
+	 snpLocPackage=sms@snpLocPackage, snpLocExtRef=
+           sms@snpLocRef, activeSnpInds=sms@activeSnpInds,
+	 allsst)
+    })
+
+
 setMethod("gwSnpScreen", c("genesym", "smlSet", "cnumOrMissing"),
   function( sym, sms, cnum, ...) {
     if (!missing(cnum)) {
@@ -192,6 +216,20 @@ setMethod("plot_EvG", c("genesym", "rsNum", "smlSet"),
       plot(ex~gt, ylab=gsym, xlab=rsn, ...)
       points(jitter(as.numeric(gt),.4), ex, col="gray", pch=19)
       })
+setMethod("plot_EvG", c("probeId", "rsNum", "smlSet"), 
+    function(gsym, rsn, sms, ...) {
+#      annpack = sms@annotation["exprs"]
+#      library(annpack, character.only=TRUE)
+#      rmap = revmap( get(paste(gsub(".db", "", annpack), "SYMBOL", sep="")) )
+#      psid = gsym
+      if (length(psid) > 1) warning("gene symbol matches multiple probe sets, using first")
+      psid = psid[1]
+      ex = exprs(sms)[psid, ] # this returns a data.frame!?! for hmyriB36
+      if (is(ex, "data.frame")) ex = as.numeric(ex)
+      gt = factor(getAlleles( sms, rsn ))
+      plot(ex~gt, ylab=gsym, xlab=rsn, ...)
+      points(jitter(as.numeric(gt),.4), ex, col="gray", pch=19)
+      })
 
 setMethod("snps", c("smlSet", "chrnum"), function(x, chr) {
   if (length(chr) != 1) stop("chr must have length 1")
@@ -210,6 +248,8 @@ setMethod("gwSnpScreen", c("GeneSet", "smlSet", "cnumOrMissing"),
   out = list()
   for (i in 1:ng) {
     out[[i]] = try(gwSnpScreen(genesym(gid[i]), sms, cnum, ...))
+    if (inherits(out[[i]], "try-error")) out[[i]] =  
+               try(gwSnpScreen(probeId(gid[i]), sms, cnum, ...))
   }
   new("multiGwSnpScreenResult", geneset=sym, out)
 })

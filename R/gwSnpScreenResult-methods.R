@@ -39,13 +39,14 @@ setMethod("plot", "cwSnpScreenResult", function(x, y, ...) {
 #    gloc = get(snpAnno)
 #    loc = gloc$Posi[ which(gloc$Chro == paste("chr", x@chrnum, sep="")) ]
     snpdata = getSnpData( x@snpLocPackage, x@snpLocExtRef )
+    offs = getSnpOffsets(x)
     loc = snpdata$cumloc[which(as.numeric(snpdata$chr) == x@chrnum)]
-    loc = loc - loc[1]
+    loc = loc - loc[1] + offs[x@chrnum]
     if (length(x@activeSnpInds) > 0) loc=loc[x@activeSnpInds]
     smoothScatter(loc, -log10(allp), xlab = paste("genomic position on chr",
               x@chrnum),
         ylab = "-log10 p: chisq1 test", nrp = 200, cex = 0.6,
-        pch = 19, main=x@gene)
+        pch = 19, main=x@gene, xlim=c(0,1.01*max(loc,na.rm=TRUE)))
 })
 
 setGeneric("topSnps", function(x, ...) standardGeneric("topSnps"))
