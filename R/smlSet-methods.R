@@ -221,7 +221,7 @@ setMethod("plot_EvG", c("probeId", "rsNum", "smlSet"),
 #      annpack = sms@annotation["exprs"]
 #      library(annpack, character.only=TRUE)
 #      rmap = revmap( get(paste(gsub(".db", "", annpack), "SYMBOL", sep="")) )
-#      psid = gsym
+      psid = gsym
       if (length(psid) > 1) warning("gene symbol matches multiple probe sets, using first")
       psid = psid[1]
       ex = exprs(sms)[psid, ] # this returns a data.frame!?! for hmyriB36
