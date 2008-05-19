@@ -123,28 +123,35 @@ plot_EvG( genesym("CPNE1"), rsNum(rownames(tt)[1]), hmceuB36.2021 )
 \section{Genome-wide SNP screens}
 
 The \Rpackage{GGdata} package contains a representation of
-all chromosomes.
+all chromosomes.  These computations cannot be done on the
+standard windows machine.  Please see a unix-generated vignette
+for results.
 <<getddd>>=
-library(GGdata)
-if (!exists("hmceuB36")) data(hmceuB36)
+ONWIN = (Sys.info()["sysname"] == "Windows")
+if (!ONWIN) {
+ library(GGdata)
+ if (!exists("hmceuB36")) data(hmceuB36)
+}
 @
 We can use \verb+gwSnpScreen+ to find eQTL:
 <<dodo>>=
-rr = gwSnpScreen(genesym("RPS26"), hmceuB36)
-rrt = topSnps(rr)
-rrt[[12]]
+if (!ONWIN) {
+ rr = gwSnpScreen(genesym("RPS26"), hmceuB36)
+ rrt = topSnps(rr)
+ rrt[[12]]
+}
 @
 Note that topSnps, when applied to a genome-wide screen
 output, will return a list of chromosome-specific results.
 
 The whole-genome plot is automatic but somewhat slow.
 <<dodwg,fig=TRUE>>=
-plot(rr)
+if (ONWIN) plot(1) else plot(rr)
 @
 
 \section{Phenotype data available on CEPH samples}
 <<lkpd>>=
-names(pData(hmceuB36))
+if (!ONWIN) names(pData(hmceuB36))
 @
 
 \section{Session information}
