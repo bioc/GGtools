@@ -49,9 +49,7 @@ Objects can be created by calls of the form \code{new("smlSet", smlEnv, assayDat
 	 \describe{
     \item{\code{smlEnv}:}{Object of class \code{"environment"} -- there is
 one key 'smList' with value a list of \code{snp.matrix} from snpMatrix package }
-    \item{\code{snpLocPathMaker}:}{Object of class \code{"function"} --
-a function of one argument that returns a full pathname to the netCDF
-store for SNP location information }
+    \item{\code{snpLocPathMaker}:}{OBSOLETE -- IGNORE}
     \item{\code{chromInds}:}{Object of class \code{"numeric"}, a numeric
 vector telling what chromosomes are represented. If chromosomes 20 and 21
 are present, the values is c(20,21).  X and Y are 23, 24.}
