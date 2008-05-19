@@ -116,7 +116,7 @@ setMethod("gwSnpScreen", c("genesym", "smlSet", "cnumOrMissing"),
     }
     if (length(sym) > 1) stop("for multiple gene expression analysis, please use a GSEABase::GeneSet instance")
     annpack = sms@annotation["exprs"]
-    library(annpack, character.only=TRUE)
+    require(annpack, character.only=TRUE)
     rmap = revmap( get(paste(gsub(".db", "", annpack), "SYMBOL", sep="")) )
     pid = get( as(sym, "character"), rmap )
     if (length(pid) == 0) stop(paste("cannot map", sym, "in", annpack, sep=""))
@@ -205,7 +205,7 @@ setGeneric("plot_EvG", function(gsym, rsn, sms, ...)standardGeneric("plot_EvG"))
 setMethod("plot_EvG", c("genesym", "rsNum", "smlSet"), 
     function(gsym, rsn, sms, ...) {
       annpack = sms@annotation["exprs"]
-      library(annpack, character.only=TRUE)
+      require(annpack, character.only=TRUE)
       rmap = revmap( get(paste(gsub(".db", "", annpack), "SYMBOL", sep="")) )
       psid = get(gsym, rmap)
       if (length(psid) > 1) warning("gene symbol matches multiple probe sets, using first")
