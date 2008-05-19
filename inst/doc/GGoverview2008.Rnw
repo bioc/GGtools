@@ -128,18 +128,25 @@ all chromosomes.
 library(GGdata)
 if (!exists("hmceuB36")) data(hmceuB36)
 @
-We can use \verb+gwSnpScreen+ to find eQTL:
+We can use \verb+gwSnpScreen+ to find eQTL, if we have sufficient
+memory.  On windows, we skip this step.
 <<dodo>>=
+ONWIN = FALSE
+ONWIN = (Sys.info()["sysname"] == "Windows") 
+if (!ONWIN) {
 rr = gwSnpScreen(genesym("RPS26"), hmceuB36)
 rrt = topSnps(rr)
 rrt[[12]]
+}
 @
 Note that topSnps, when applied to a genome-wide screen
 output, will return a list of chromosome-specific results.
 
-The whole-genome plot is automatic but somewhat slow.
+The whole-genome plot is automatic but somewhat slow; on 
+windows, this is a placeholder.  Please get the genuine vignette
+from the web site.
 <<dodwg,fig=TRUE>>=
-plot(rr)
+if (ONWIN) { rr = 1 }; plot(rr)
 @
 
 \section{Phenotype data available on CEPH samples}
