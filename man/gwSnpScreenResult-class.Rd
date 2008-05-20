@@ -13,6 +13,8 @@
 \alias{show,multiGwSnpScreenResult-method}
 \alias{[,gwSnpScreenResult-method}
 \alias{[,gwSnpScreenResult,ANY,ANY-method}
+\alias{getSnpOffsets,cwSnpScreenResult-method}
+\alias{getSnpOffsets}
 
 
 \title{Class "gwSnpScreenResult" -- containers for
@@ -49,6 +51,9 @@ coordinates}
     \item{show}{\code{signature(object = "gwSnpScreenResult")}: brief report }
     \item{[}{\code{signature(object = "gwSnpScreenResult")}: restricts
 chromosomes represented }
+    \item{getSnpOffsets}{\code{signature(object = "cwSnpScreenResult")}: 
+     return vector of offsets from telomere end to first SNP per
+chromosome }
 	 }
 }
 %\references{ ~put references to the literature/web site here ~ }

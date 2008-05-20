@@ -36,6 +36,12 @@
 \alias{[,smlSet,ANY,ANY-method}
 %\alias{snps,racExSet,missing-method}
 %\alias{snps,smlSet,chrnum-method}
+\alias{getSnpMetadata}
+\alias{getSnpMetadata,smlSet,chrnum-method}
+\alias{getSnpMetadata,smlSet,missing-method}
+\alias{getSnpMetadata,smlSet,rsNum-method}
+\alias{getSnpOffsets,smlSet-method}
+
 
 \title{Class "smlSet" -- efficient representation of SNP+expression data,
 based on Clayton snpMatrix package}
@@ -111,6 +117,12 @@ vector of sample names. }
 snp.matrix encoding genotypes. }
     \item{smlEnv}{\code{signature(x = "smlSet")}: returns the environment
 in which the smList list is contained. }
+    \item{getSnpMetadata}{\code{signature(x = "smlSet", 
+ sel = "chrnum" or "rsNum" or "missing")}: executes dbGetQuery
+to return data frame with relevant snp location information.}
+    \item{getSnpOffsets}{\code{signature(x = "smlSet")}:
+returns vector of chromosome-specific offsets (bases from telomere
+to first SNP}
 	 }
 }
 %\references{ ~put references to the literature/web site here ~ }

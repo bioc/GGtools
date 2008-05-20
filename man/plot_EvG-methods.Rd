@@ -3,6 +3,7 @@
 \alias{plot_EvG-methods}
 \alias{plot_EvG}
 \alias{plot_EvG,genesym,rsNum,smlSet-method}
+\alias{plot_EvG,probeId,rsNum,smlSet-method}
 \alias{getAlleles,smlSet,rsNum-method}
 \alias{getAlleles}
 \title{ plot expression vs. genotype }
@@ -17,7 +18,8 @@ of gene expression values for gene
 identified by \code{gsym} (which must be a symbol identified
 in the [platform]SYMBOL AnnDbBimap for the 
 smlSet annotation) stratified by SNP genotype  for SNP identified
-by \code{rsn}.}
+by \code{rsn}.  \code{gsym} may also be bound to an instance
+of \code{probeId} for specific selection.}
 \item{getAlleles(sms="smlSet", rsn="rsNum")}{return character
 tokens describing subject-specific genotypes}
 }
