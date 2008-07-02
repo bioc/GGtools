@@ -8,7 +8,8 @@ setMethod("show", "gwSnpScreenResult", function(object) {
 #setGeneric("plot", function(x, y, ...) standardGeneric("plot"))
 
 setMethod("plot", "gwSnpScreenResult", function(x, y, ...) {
-    allp = unlist(lapply(x, "[", , 3))
+#    allp = unlist(lapply(x, "[", , 3))
+    allp = unlist(lapply(x, p.value, 1))
     snpdata = getSnpData( x@snpLocPackage, x@snpLocExtRef )
     spos = split(as.numeric(snpdata$cumloc), as.numeric(snpdata$chr))
     chrbnd = sapply(spos, max)
@@ -29,8 +30,9 @@ setMethod("plot", "gwSnpScreenResult", function(x, y, ...) {
 })
 
 setMethod("plot", "cwSnpScreenResult", function(x, y, ...) {
-    allp = lapply(x, "[", , 3)
-    allp = unlist(allp)
+    #allp = lapply(x, "[", , 3)
+    allp = p.value(x@.Data[[1]], 1) # assume 1df -- must improve
+    #allp = unlist(allp)
     snpAnno = x@annotation["snps"]
 #    if (!(exists(snpAnno))) {
 #        cat( paste("procuring snpAnno [", snpAnno, "]...\n"))
@@ -51,15 +53,27 @@ setMethod("plot", "cwSnpScreenResult", function(x, y, ...) {
 
 setGeneric("topSnps", function(x, ...) standardGeneric("topSnps"))
 setMethod("topSnps", "cwSnpScreenResult", function(x, n=10, which="p.1df") {
-   x[[1]][ order(x[[1]][,which], decreasing=FALSE), which, drop=FALSE ][1:n,,drop=FALSE]
+   DF = 1
+   if (which == "p.2df") DF = 2
+   else if (which  != "p.1df") warning("chisq df assumed to be 1, 'which' not recognized")
+   pp = p.value(x@.Data[[1]], DF)
+   spp = pp[ order(pp, decreasing=FALSE) ]
+   df = data.frame(p.val=spp)
+   rownames(df) = names(spp)
+   df[1:n,,drop=FALSE]
 })
 
 setMethod("topSnps", "gwSnpScreenResult", function(x, n=10, which="p.1df") {
-  ts.df = function (w, n = 10, which = "p.1df") 
-    {
-        w[order(w[, which], decreasing = FALSE), which, 
-            drop = FALSE][1:n, , drop = FALSE]
-    } 
+  ts.df = function (w, n = 10, which = "p.1df") {
+   DF = 1
+   if (which == "p.2df") DF = 2
+   else if (which  != "p.1df") warning("chisq df assumed to be 1, 'which' not recognized")
+   pp = p.value(x@.Data[[1]], DF)
+   spp = pp[ order(pp, decreasing=FALSE) ]
+   df = data.frame(p.val=spp)
+   rownames(df) = names(spp)
+   df[1:n,,drop=FALSE]
+   } 
   lapply(x, ts.df, n=n, which=which)
 })
 
