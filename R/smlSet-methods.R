@@ -247,10 +247,17 @@ setMethod("gwSnpScreen", c("GeneSet", "smlSet", "cnumOrMissing"),
   ng = length(gid)
   out = list()
   for (i in 1:ng) {
+   if (!missing(cnum)) {
     out[[i]] = try(gwSnpScreen(genesym(gid[i]), sms, cnum, ...))
     if (inherits(out[[i]], "try-error")) out[[i]] =  
                try(gwSnpScreen(probeId(gid[i]), sms, cnum, ...))
-  }
+    }
+   else {
+    out[[i]] = try(gwSnpScreen(genesym(gid[i]), sms, ...))
+    if (inherits(out[[i]], "try-error")) out[[i]] =  
+               try(gwSnpScreen(probeId(gid[i]), sms, ...))
+    }
+   }
   new("multiGwSnpScreenResult", geneset=sym, out)
 })
 
