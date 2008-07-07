@@ -27,6 +27,20 @@ setMethod("plot", "gwSnpScreenResult", function(x, y, ...) {
     clab = c(1:22, "X", "Y")
     abline(v = chrbnd, col = "darkgray")
     axis(3, at = mn, labels = clab, cex = 0.5, las = 2)
+    tst = try(library(org.Hs.eg.db))
+    if (!inherits(tst, "try-error")) {
+       rmap = revmap(org.Hs.egSYMBOL)
+       egid = get(x@gene, rmap)
+       ch = get(egid, org.Hs.egCHR)
+       loc = get(egid, org.Hs.egCHRLOC)
+       if (ch == "X") ch = 23
+        else if (ch == "Y") ch = 24
+        else if (ch %in% c("Un", "MT")) ch = 25
+        else ch = as.numeric(ch)
+       if (ch>1) gpos = chrbnd[ch-1]+abs(loc)
+       else gpos = loc
+       axis(3, at=gpos, col="red", lwd=2, labels=" ")
+       }
 })
 
 setMethod("plot", "cwSnpScreenResult", function(x, y, ...) {

@@ -230,6 +230,21 @@ setMethod("plot_EvG", c("probeId", "rsNum", "smlSet"),
       plot(ex~gt, ylab=gsym, xlab=rsn, ...)
       points(jitter(as.numeric(gt),.4), ex, col="gray", pch=19)
       })
+setMethod("plot_EvG", c("character", "character", "smlSet"), 
+    function(gsym, rsn, sms, ...) {
+      warning("arguments not cast using, e.g., genesym, assuming HUGO symbol and dbSnp IDs are passed")
+      annpack = sms@annotation["exprs"]
+      require(annpack, character.only=TRUE)
+      rmap = revmap( get(paste(gsub(".db", "", annpack), "SYMBOL", sep="")) )
+      psid = get(gsym, rmap)
+      if (length(psid) > 1) warning("gene symbol matches multiple probe sets, using first")
+      psid = psid[1]
+      ex = exprs(sms)[psid, ] # this returns a data.frame!?! for hmyriB36
+      if (is(ex, "data.frame")) ex = as.numeric(ex)
+      gt = factor(getAlleles( sms, rsn ))
+      plot(ex~gt, ylab=gsym, xlab=rsn, ...)
+      points(jitter(as.numeric(gt),.4), ex, col="gray", pch=19)
+      })
 
 setMethod("snps", c("smlSet", "chrnum"), function(x, chr) {
   if (length(chr) != 1) stop("chr must have length 1")
@@ -258,6 +273,7 @@ setMethod("gwSnpScreen", c("GeneSet", "smlSet", "cnumOrMissing"),
                try(gwSnpScreen(probeId(gid[i]), sms, ...))
     }
    }
+  if (options()$verbose) cat(sym, "\n")
   new("multiGwSnpScreenResult", geneset=sym, out)
 })
 
