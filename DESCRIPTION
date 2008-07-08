@@ -3,7 +3,7 @@ Title: software and data for genetical genomics (c) 2006 VJ Carey
 Version: 2.2.1
 Author: Vince Carey <stvjc@channing.harvard.edu>
 Description: dealing with hapmap SNP reports, GWAS, etc.
-Depends: R (>= 2.7.0), methods, Biobase (>= 1.11.26), GGBase (>= 2.1.21), hgfocus.db, 
+Depends: R (>= 2.7.0), methods, Biobase (>= 1.11.26), GGBase (>= 2.2.0), hgfocus.db, 
 	geneplotter(>= 1.11.8), snpMatrix(>= 1.5.1), mgu74av2.db, RColorBrewer,
 	RSQLite, Biostrings
 Suggests: illuminaHumanv1.db, GGdata (>= 0.1.1), org.Hs.eg.db
