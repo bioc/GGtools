@@ -13,6 +13,7 @@
 \alias{show,multiGwSnpScreenResult-method}
 \alias{[,gwSnpScreenResult-method}
 \alias{[,gwSnpScreenResult,ANY,ANY-method}
+\alias{[,gwSnpScreenResult,ANY,ANY,ANY-method}
 \alias{getSnpOffsets,cwSnpScreenResult-method}
 \alias{getSnpOffsets}
 

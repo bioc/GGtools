@@ -34,6 +34,7 @@
 \alias{getSnpLocs,smlSet,logical-method}
 \alias{getSnpLocs,smlSet,missing-method}
 \alias{[,smlSet,ANY,ANY-method}
+\alias{[,smlSet,ANY,ANY,ANY-method}
 %\alias{snps,racExSet,missing-method}
 %\alias{snps,smlSet,chrnum-method}
 \alias{getSnpMetadata}
