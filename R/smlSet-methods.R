@@ -101,6 +101,7 @@ setMethod("gwSnpScreen", c("probeId", "smlSet", "cnumOrMissing"),
       if (length(cnum) != 1) stop("only supports scalar chrnum cnum at present")
       sms = sms[cnum,]
     }
+    theCall = match.call()
     if (length(sym) > 1) stop("for multiple gene expression analysis, please use a GSEABase::GeneSet instance")
     ph = exprs(sms)[sym,]
     allsst = lapply( smList(sms), function(x) single.snp.tests(pheno=ph,
@@ -109,12 +110,12 @@ setMethod("gwSnpScreen", c("probeId", "smlSet", "cnumOrMissing"),
     if (!missing(cnum)) return(new("cwSnpScreenResult", gene=sym, psid=pid,
          annotation=sms@annotation, chrnum=cnum, 
          snpLocPackage=sms@snpLocPackage,
-	 snpLocExtRef=sms@snpLocRef, activeSnpInds=sms@activeSnpInds,
+	 snpLocExtRef=sms@snpLocRef, activeSnpInds=sms@activeSnpInds, call=theCall,
          allsst))
     new("gwSnpScreenResult", gene=sym, psid=pid,
          annotation=sms@annotation, 
 	 snpLocPackage=sms@snpLocPackage, snpLocExtRef=
-           sms@snpLocRef, activeSnpInds=sms@activeSnpInds,
+           sms@snpLocRef, activeSnpInds=sms@activeSnpInds, call=theCall,
 	 allsst)
     })
 
@@ -125,6 +126,7 @@ setMethod("gwSnpScreen", c("genesym", "smlSet", "cnumOrMissing"),
       if (length(cnum) != 1) stop("only supports scalar chrnum cnum at present")
       sms = sms[cnum,]
     }
+    theCall = match.call()
     if (length(sym) > 1) stop("for multiple gene expression analysis, please use a GSEABase::GeneSet instance")
     annpack = sms@annotation["exprs"]
     require(annpack, character.only=TRUE)
@@ -142,12 +144,12 @@ setMethod("gwSnpScreen", c("genesym", "smlSet", "cnumOrMissing"),
     if (!missing(cnum)) return(new("cwSnpScreenResult", gene=sym, psid=pid,
          annotation=sms@annotation, chrnum=cnum, 
          snpLocPackage=sms@snpLocPackage,
-	 snpLocExtRef=sms@snpLocRef, activeSnpInds=sms@activeSnpInds,
+	 snpLocExtRef=sms@snpLocRef, activeSnpInds=sms@activeSnpInds, call=theCall,
          allsst))
     new("gwSnpScreenResult", gene=sym, psid=pid,
          annotation=sms@annotation, 
 	 snpLocPackage=sms@snpLocPackage, snpLocExtRef=
-           sms@snpLocRef, activeSnpInds=sms@activeSnpInds,
+           sms@snpLocRef, activeSnpInds=sms@activeSnpInds, call=theCall,
 	 allsst)
     })
 
@@ -295,12 +297,36 @@ setMethod("show", "multiGwSnpScreenResult", function(object) {
  cat("there are", length(object), "results.\n")
 })
 
+gsetFmla2FmlaList = function(fm) {
+#
+# this function takes a formula with a GeneSet on the lhs
+# and returns a list of gene-specific formulas
+#
+ flist = as.list(fm)
+ gs = eval(flist[[2]])
+ if (length(flist[[3]]) > 1) pred = paste(flist[[3]][-1], collapse="+")
+ else if (length(flist[[3]]) == 1) pred = flist[[3]]
+ if (!is(gs, "GeneSet")) stop("needs GeneSet instance in response position")
+ wrapg = function(x) paste("genesym(", dQuote(x), ")")
+ wrapex = function(x) paste("exFeatID(", dQuote(x), ")")
+ toks = geneIds(gs)
+ idty = geneIdType(gs)
+ if (is(idty, "SymbolIdentifier"))
+   resps = wrapg(toks)
+ else if (is(idty, "AnnotationIdentifier"))
+   resps = wrapex(toks)
+ else stop("geneIdType for gene set must be either SymbolIdentifier or AnnotationIdentifier")
+ lapply(paste(resps, pred, sep="~"), formula)
+}
+
+
 setMethod("gwSnpScreen", c("formula", "smlSet", "cnumOrMissing"),
   function( sym, sms, cnum, ...) {
     if (!missing(cnum)) {
       if (length(cnum) != 1) stop("only supports scalar chrnum cnum at present")
       sms = sms[cnum,]
     }
+    theCall = match.call()
     flist = as.list(sym)
     respObj = eval(flist[[2]])
     if (is(respObj, "genesym")) {
@@ -316,7 +342,14 @@ setMethod("gwSnpScreen", c("formula", "smlSet", "cnumOrMissing"),
         }
       }
     else if (is(respObj, "exFeatID")) pid = respObj
-    else stop("response in formula must be of class genesym or exFeatID")
+    else if (is(respObj, "GeneSet")) {
+       fms = gsetFmla2FmlaList(sym)
+       theCall = match.call()
+       if (!missing(cnum)) ans = lapply(fms, function(z) gwSnpScreen(z, sms, cnum, ...))
+       else ans = lapply(fms, function(z) gwSnpScreen(z, sms, ...))
+       return(new("multiGwSnpScreenResult", geneset=respObj, call=theCall, ans))
+       }
+    else stop("response in formula must be of class genesym, exFeatID, or GeneSet")
     pname = as.character(respObj)
     assign(pname, exprs(sms)[pid,]) # expression phenotype genename
     alld = data.frame(get(pname), pData(sms))
@@ -334,11 +367,11 @@ setMethod("gwSnpScreen", c("formula", "smlSet", "cnumOrMissing"),
     if (!missing(cnum)) return(new("cwSnpScreenResult", gene=as.character(respObj), psid=pid,
          annotation=sms@annotation, chrnum=cnum, 
          snpLocPackage=sms@snpLocPackage,
-	 snpLocExtRef=sms@snpLocRef, activeSnpInds=sms@activeSnpInds,
+	 snpLocExtRef=sms@snpLocRef, activeSnpInds=sms@activeSnpInds, call=theCall,
          allsst))
     new("gwSnpScreenResult", gene=as.character(respObj), psid=pid,
          annotation=sms@annotation, 
 	 snpLocPackage=sms@snpLocPackage, snpLocExtRef=
-           sms@snpLocRef, activeSnpInds=sms@activeSnpInds,
+           sms@snpLocRef, activeSnpInds=sms@activeSnpInds, call=theCall,
 	 allsst)
     })
