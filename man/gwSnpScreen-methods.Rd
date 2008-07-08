@@ -8,6 +8,7 @@
 \alias{gwSnpScreen,genesym,smlSet,cnumOrMissing-method}
 \alias{gwSnpScreen,GeneSet,smlSet,cnumOrMissing-method}
 \alias{gwSnpScreen,probeId,smlSet,cnumOrMissing-method}
+\alias{gwSnpScreen,formula,smlSet,cnumOrMissing-method}
 
 \title{genome-wide test for association between SNP and phenotype}
 \description{genome-wide test for association between SNP and phenotype}
@@ -22,8 +23,10 @@ snp.matrix genotype data in a list and coordinated expression data.
 Restriction of analysis to specific chromosomes can be accomplished by
 passing an instance of \code{chrnum} as the third argument.
 
+If a formula is supplied,
 The \code{gwSnpScreen} computes the snp.rhs.tests from snpMatrix
 for all snp against the specified expression phenotype.
+Otherwise single.snp.tests from snpMatrix is used.
 
 If \code{sym} is an instance of the GSEABase GeneSet class,
 a list of gwSnpScreenResults is packaged in a multiGwSnpScreenResult
@@ -39,6 +42,7 @@ the rows of exprs(sms).
 data(hmceuB36.2021)
 objects("package:GGBase")
 g1 = gwSnpScreen( genesym("CPNE1"), hmceuB36.2021, chrnum(20) )
+g1b = gwSnpScreen( genesym("CPNE1")~male+strata(famid), hmceuB36.2021, chrnum(20) )
 g1
 plot(g1)
 }

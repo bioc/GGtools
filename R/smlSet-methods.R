@@ -45,7 +45,18 @@ setMethod("[", "smlSet", function(x, i, j, ..., drop=FALSE) {
       x@assayData=assayDataNew("lockedEnvironment", exprs=tmp)
       x@featureData = x@featureData[i,]
       }
- else if (!missing(i)) stop("only exFeatID (gene) or chrnum (chrom for SNPs) row-selections for smlSet supported")
+ else if (!missing(i) && is(i, "genesym")) {
+      annpack = x@annotation["exprs"]
+      require(annpack, character.only=TRUE)
+      rmap = revmap( get(paste(gsub(".db", "", annpack), "SYMBOL", sep="")) )
+      psid = get(i, rmap)
+      if (length(psid) > 1) warning("gene symbol matches multiple probe sets, using first")
+      psid = psid[1]
+      if (missing(j)) return(x[ exFeatID(psid), ])
+      else return(x[ exFeatID(psid), j])
+      }
+ else if (!missing(i)) stop("only exFeatID (probe), chrnum (chrom for SNPs),
+    or genesym (HUGO)  row-selections for smlSet supported")
  eL = new.env(hash=TRUE)
  assign("smList", L2, eL)
  x@smlEnv = eL
@@ -284,3 +295,50 @@ setMethod("show", "multiGwSnpScreenResult", function(object) {
  cat("there are", length(object), "results.\n")
 })
 
+setMethod("gwSnpScreen", c("formula", "smlSet", "cnumOrMissing"),
+  function( sym, sms, cnum, ...) {
+    if (!missing(cnum)) {
+      if (length(cnum) != 1) stop("only supports scalar chrnum cnum at present")
+      sms = sms[cnum,]
+    }
+    flist = as.list(sym)
+    respObj = eval(flist[[2]])
+    if (is(respObj, "genesym")) {
+      annpack = sms@annotation["exprs"]
+      require(annpack, character.only=TRUE)
+      rmap = revmap( get(paste(gsub(".db", "", annpack), "SYMBOL", sep="")) )
+      pid = get( as(respObj, "character"), rmap )
+      if (length(pid) == 0) stop(paste("cannot map", respObj, "in", annpack, sep=""))
+      if (length(pid) > 1) {
+        warning(paste("several probes/sets map to", respObj, "; using", pid[1], sep=""))
+        print(pid) 
+        pid = pid[1]
+        }
+      }
+    else if (is(respObj, "exFeatID")) pid = respObj
+    else stop("response in formula must be of class genesym or exFeatID")
+    pname = as.character(respObj)
+    assign(pname, exprs(sms)[pid,]) # expression phenotype genename
+    alld = data.frame(get(pname), pData(sms))
+    names(alld)[1] = pname
+    fmla = formula(paste(pname, "~", paste(flist[[3]][-1], collapse="+")))
+    allsst = lapply( smList(sms), function(x) snp.rhs.tests(fmla, family="gaussian",
+        snp.data=x, data=alld))
+# as of 8 july, we have data frames instead of snp.tests.single objects
+# need to coerce
+    mksts = function(x) { 
+      new("snp.tests.single", chisq=cbind(`1 df`=x$Chi.squared, `2 df`=NA),
+          snp.names=rownames(x), N=x$Df.residual+x$Df, N.r2=numeric(0))
+    }
+    allsst = lapply(allsst, mksts)
+    if (!missing(cnum)) return(new("cwSnpScreenResult", gene=as.character(respObj), psid=pid,
+         annotation=sms@annotation, chrnum=cnum, 
+         snpLocPackage=sms@snpLocPackage,
+	 snpLocExtRef=sms@snpLocRef, activeSnpInds=sms@activeSnpInds,
+         allsst))
+    new("gwSnpScreenResult", gene=as.character(respObj), psid=pid,
+         annotation=sms@annotation, 
+	 snpLocPackage=sms@snpLocPackage, snpLocExtRef=
+           sms@snpLocRef, activeSnpInds=sms@activeSnpInds,
+	 allsst)
+    })
