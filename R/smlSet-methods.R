@@ -307,8 +307,8 @@ gsetFmla2FmlaList = function(fm) {
  if (length(flist[[3]]) > 1) pred = paste(flist[[3]][-1], collapse="+")
  else if (length(flist[[3]]) == 1) pred = flist[[3]]
  if (!is(gs, "GeneSet")) stop("needs GeneSet instance in response position")
- wrapg = function(x) paste("genesym(", dQuote(x), ")")
- wrapex = function(x) paste("exFeatID(", dQuote(x), ")")
+ wrapg = function(x) paste("genesym(\"", x, "\")", sep="")
+ wrapex = function(x) paste("exFeatID(\"", x, "\")", sep="")
  toks = geneIds(gs)
  idty = geneIdType(gs)
  if (is(idty, "SymbolIdentifier"))
