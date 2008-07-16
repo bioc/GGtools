@@ -329,8 +329,7 @@ setMethod("gwSnpScreen", c("formula", "smlSet", "cnumOrMissing"),
       sms = sms[cnum,]
     }
     theCall = match.call()
-    flist = as.list(sym)
-    respObj = eval(flist[[2]])
+    respObj = eval(sym[[2]]) # we know sym is a formula, sym[[2]] is dep var
     if (is(respObj, "genesym")) {
       annpack = sms@annotation["exprs"]
       require(annpack, character.only=TRUE)
@@ -356,8 +355,8 @@ setMethod("gwSnpScreen", c("formula", "smlSet", "cnumOrMissing"),
     assign(pname, exprs(sms)[pid,]) # expression phenotype genename
     alld = data.frame(get(pname), pData(sms))
     names(alld)[1] = pname
-    fmla = formula(paste(pname, "~", paste(flist[[3]][-1], collapse="+")))
-    allsst = lapply( smList(sms), function(x) snp.rhs.tests(fmla, family="gaussian",
+    sym[[2]] = as.name(pname)  # replace the dependent variable spec in fmla
+    allsst = lapply( smList(sms), function(x) snp.rhs.tests(sym, family="gaussian",
         snp.data=x, data=alld))
 # as of 8 july, we have data frames instead of snp.tests.single objects
 # need to coerce
