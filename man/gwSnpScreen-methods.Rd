@@ -44,11 +44,13 @@ the rows of exprs(sms).
 \examples{
 data(hmceuB36.2021)
 objects("package:GGBase")
-g1 = gwSnpScreen( genesym("CPNE1"), hmceuB36.2021, chrnum(20) )
-g1b = gwSnpScreen( genesym("CPNE1")~male+strata(famid), hmceuB36.2021, chrnum(20) )
+# limit to genetically unrelated subjects
+hfou = hmceuB36.2021[, hmceuB36.2021$isFounder == TRUE]
+g1 = gwSnpScreen( genesym("CPNE1"), hfou, chrnum(20) )
+g1b = gwSnpScreen( genesym("CPNE1")~male+strata(famid), hfou, chrnum(20) )
 library(GSEABase)
 gs = GeneSet(c("CPNE1", "RPS26"), geneIdType=SymbolIdentifier())
-g1c = gwSnpScreen( gs~male+strata(famid), hmceuB36.2021, chrnum(20))
+g1c = gwSnpScreen( gs~male+strata(famid), hfou, chrnum(20))
 g1
 plot(g1)
 }

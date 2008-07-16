@@ -1,5 +1,5 @@
 setGeneric("racAssays", function(x) standardGeneric("racAssays"))
-setGeneric("snpNames", function(x) standardGeneric("snpNames"))
+#setGeneric("snpNames", function(x) standardGeneric("snpNames"))
 setGeneric("rarebase", function(x) standardGeneric("rarebase"))
 setGeneric("SNPalleles", function(x) standardGeneric("SNPalleles"))
 

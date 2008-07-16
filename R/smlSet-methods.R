@@ -295,6 +295,8 @@ setMethod("show", "multiGwSnpScreenResult", function(object) {
  cat("gene set used as response:\n")
  show(object@geneset)
  cat("there are", length(object), "results.\n")
+ cat("the call was:\n")
+ print(object@call)
 })
 
 gsetFmla2FmlaList = function(fm) {

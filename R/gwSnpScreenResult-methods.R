@@ -3,11 +3,13 @@ setMethod("show", "gwSnpScreenResult", function(object) {
  cat("gwSnpScreenResult with", length(object), "inference data.frames\n")
  cat("gene used: ", object@gene,
     "; expression platform:", object@annotation["exprs"], "\n")
+ cat("call was:\n")
+ print(object@call)
 })
 
 #setGeneric("plot", function(x, y, ...) standardGeneric("plot"))
 
-setMethod("plot", "gwSnpScreenResult", function(x, y, ...) {
+setMethod("plot", "gwSnpScreenResult", function(x, y, doSmooth=TRUE, npts=500, ...) {
 #    allp = unlist(lapply(x, "[", , 3))
     allp = unlist(lapply(x, p.value, 1))
     snpdata = getSnpData( x@snpLocPackage, x@snpLocExtRef )
@@ -20,9 +22,21 @@ setMethod("plot", "gwSnpScreenResult", function(x, y, ...) {
     if (length(allp) != length(allpos)) stop(
       "you have used gwSnpScreen without a full set of snp tests; please rerun gwSnpScreen with a chrnum parameter"
       )
-    smoothScatter(allpos, -log10(allp), xlab = "genomic position",
-        ylab = "-log10 p: chisq1 test", nrp = 200, cex = 0.6,
+    if (doSmooth) {
+      smoothScatter(allpos, -log10(allp), xlab = "genomic position",
+        ylab = "-log10 p: chisq1 test", nrp = npts, cex = 0.6,
         pch = 19, main=x@gene)
+        }
+    else {
+       drop = which(is.na(allp))
+       if (length(drop)>0) {
+         loc = loc[-drop]
+         allp = allp[-drop]
+         }
+       best = rev(order(-log10(allp)))[1:min(npts,length(loc))]  # inds of top npts 
+       plot( allpos[best], -log10(allp)[best], xlab = "genomic position",
+         ylab = "-log10 p: chisq1 test", cex = 0.6, pch=19, main=x@gene )
+       }
     mn = apply(cbind(c(0, chrbnd[-length(chrbnd)]), chrbnd), 1, mean)
     clab = c(1:22, "X", "Y")
     abline(v = chrbnd, col = "darkgray")
@@ -43,7 +57,7 @@ setMethod("plot", "gwSnpScreenResult", function(x, y, ...) {
        }
 })
 
-setMethod("plot", "cwSnpScreenResult", function(x, y, ...) {
+setMethod("plot", "cwSnpScreenResult", function(x, y, doSmooth=TRUE, npts=500, ...) {
     #allp = lapply(x, "[", , 3)
     allp = p.value(x@.Data[[1]], 1) # assume 1df -- must improve
     #allp = unlist(allp)
@@ -59,10 +73,35 @@ setMethod("plot", "cwSnpScreenResult", function(x, y, ...) {
     loc = snpdata$cumloc[which(as.numeric(snpdata$chr) == x@chrnum)]
     loc = loc - loc[1] + offs[x@chrnum]
     if (length(x@activeSnpInds) > 0) loc=loc[x@activeSnpInds]
-    smoothScatter(loc, -log10(allp), xlab = paste("genomic position on chr",
-              x@chrnum),
-        ylab = "-log10 p: chisq1 test", nrp = 200, cex = 0.6,
+    if (doSmooth) {
+      smoothScatter(loc, -log10(allp), xlab = "genomic position",
+        ylab = "-log10 p: chisq1 test", nrp = npts, cex = 0.6,
         pch = 19, main=x@gene, xlim=c(0,1.01*max(loc,na.rm=TRUE)))
+        }
+    else {
+         drop = which(is.na(allp))
+         if (length(drop)>0) {
+            loc = loc[-drop]
+            allp = allp[-drop]
+            }
+       best = rev(order(-log10(allp)))[1:min(npts,length(loc))]  # inds of top npts 
+       plot( loc[best], -log10(allp)[best], xlab = "genomic position",
+         ylab = "-log10 p: chisq1 test", cex = 0.6, pch=19, main=x@gene ,
+         xlim=c(0,1.01*max(loc,na.rm=TRUE)))
+       }
+       tst = try(library(org.Hs.eg.db))
+    if (!inherits(tst, "try-error")) {
+       rmap = revmap(org.Hs.egSYMBOL)
+       egid = get(x@gene, rmap)
+       ch = get(egid, org.Hs.egCHR)
+       loc = get(egid, org.Hs.egCHRLOC) # local to chrom!
+       axis(3, at=abs(loc), col="red", lwd=2, labels=" ")
+       }
+
+#    smoothScatter(loc, -log10(allp), xlab = paste("genomic position on chr",
+#              x@chrnum),
+#        ylab = "-log10 p: chisq1 test", nrp = 200, cex = 0.6,
+#        pch = 19, main=x@gene, xlim=c(0,1.01*max(loc,na.rm=TRUE)))
 })
 
 setGeneric("topSnps", function(x, ...) standardGeneric("topSnps"))
