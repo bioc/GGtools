@@ -50,6 +50,7 @@ setMethod("[", "smlSet", function(x, i, j, ..., drop=FALSE) {
       require(annpack, character.only=TRUE)
       rmap = revmap( get(paste(gsub(".db", "", annpack), "SYMBOL", sep="")) )
       psid = get(i, rmap)
+      psid = intersect(psid, featureNames(x))
       if (length(psid) > 1) warning("gene symbol matches multiple probe sets, using first")
       psid = psid[1]
       if (missing(j)) return(x[ exFeatID(psid), ])
@@ -133,6 +134,7 @@ setMethod("gwSnpScreen", c("genesym", "smlSet", "cnumOrMissing"),
     rmap = revmap( get(paste(gsub(".db", "", annpack), "SYMBOL", sep="")) )
     pid = get( as(sym, "character"), rmap )
     if (length(pid) == 0) stop(paste("cannot map", sym, "in", annpack, sep=""))
+    pid = intersect(pid, featureNames(sms))
     if (length(pid) > 1) {
         warning(paste("several probes/sets map to", sym, "; using", pid[1], sep=""))
         print(pid) 
@@ -221,6 +223,7 @@ setMethod("plot_EvG", c("genesym", "rsNum", "smlSet"),
       require(annpack, character.only=TRUE)
       rmap = revmap( get(paste(gsub(".db", "", annpack), "SYMBOL", sep="")) )
       psid = get(gsym, rmap)
+      psid = intersect(psid, featureNames(sms))
       if (length(psid) > 1) warning("gene symbol matches multiple probe sets, using first")
       psid = psid[1]
       ex = exprs(sms)[psid, ] # this returns a data.frame!?! for hmyriB36
@@ -235,6 +238,7 @@ setMethod("plot_EvG", c("probeId", "rsNum", "smlSet"),
 #      library(annpack, character.only=TRUE)
 #      rmap = revmap( get(paste(gsub(".db", "", annpack), "SYMBOL", sep="")) )
       psid = gsym
+      psid = intersect(psid, featureNames(sms))
       if (length(psid) > 1) warning("gene symbol matches multiple probe sets, using first")
       psid = psid[1]
       ex = exprs(sms)[psid, ] # this returns a data.frame!?! for hmyriB36
@@ -250,6 +254,7 @@ setMethod("plot_EvG", c("character", "character", "smlSet"),
       require(annpack, character.only=TRUE)
       rmap = revmap( get(paste(gsub(".db", "", annpack), "SYMBOL", sep="")) )
       psid = get(gsym, rmap)
+      psid = intersect(psid, featureNames(sms))
       if (length(psid) > 1) warning("gene symbol matches multiple probe sets, using first")
       psid = psid[1]
       ex = exprs(sms)[psid, ] # this returns a data.frame!?! for hmyriB36
@@ -336,6 +341,7 @@ setMethod("gwSnpScreen", c("formula", "smlSet", "cnumOrMissing"),
       rmap = revmap( get(paste(gsub(".db", "", annpack), "SYMBOL", sep="")) )
       pid = get( as(respObj, "character"), rmap )
       if (length(pid) == 0) stop(paste("cannot map", respObj, "in", annpack, sep=""))
+      pid = intersect(pid, featureNames(sms))
       if (length(pid) > 1) {
         warning(paste("several probes/sets map to", respObj, "; using", pid[1], sep=""))
         print(pid) 
