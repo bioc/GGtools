@@ -303,6 +303,14 @@ setMethod("show", "multiGwSnpScreenResult", function(object) {
  cat("the call was:\n")
  print(object@call)
 })
+setMethod("show", "filteredMultiGwSnpScreenResult", function(object) {
+ cat("filtered ")
+ callNextMethod()
+})
+setMethod("show", "filteredGwSnpScreenResult", function(object) {
+ cat("filtered ")
+ callNextMethod()
+})
 
 gsetFmla2FmlaList = function(fm) {
 #
@@ -326,6 +334,10 @@ gsetFmla2FmlaList = function(fm) {
  lapply(paste(resps, pred, sep="~"), formula)
 }
 
+#
+# eventually this is to be the only visible method
+# use . to prefix the other methods
+#
 
 setMethod("gwSnpScreen", c("formula", "smlSet", "cnumOrMissing"),
   function( sym, sms, cnum, ...) {
@@ -381,4 +393,81 @@ setMethod("gwSnpScreen", c("formula", "smlSet", "cnumOrMissing"),
 	 snpLocPackage=sms@snpLocPackage, snpLocExtRef=
            sms@snpLocRef, activeSnpInds=sms@activeSnpInds, call=theCall,
 	 allsst)
+    })
+
+setGeneric("filterSnpTests", function(x, n) standardGeneric(
+ "filterSnpTests"))
+
+topSingSnps = function(x, n=250, df=1) {
+  pp = p.value(x, df)
+  opp = order(pp)
+  x[opp[1:n]]
+}
+
+filterGWS = function(x, ...) {
+  x@.Data = lapply(x@.Data, topSingSnps, ...)
+  new("filteredGwSnpScreenResult", x)
+}
+
+
+setMethod("filterSnpTests", 
+  "multiGwSnpScreenResult", function(x, n) {
+    tmp = lapply( x@.Data, filterGWS, n )
+    new("filteredMultiGwSnpScreenResult", geneset=x@geneset,
+      call=x@call, tmp)
+})
+
+setMethod("filterSnpTests", 
+  "gwSnpScreenResult", function(x, n) {
+   filterGWS(x, n)
+})
+      
+
+setMethod("gwSnpScreen", c("formula", "smlSet", "numeric"),
+  function( sym, sms, cnum, ...) {
+    if (cnum < 250) stop("with numeric third argument you are defining the number of best snps to save per chromosome; it must exceed 250\n")
+    theCall = match.call()
+    respObj = eval(sym[[2]]) # we know sym is a formula, sym[[2]] is dep var
+    if (is(respObj, "genesym")) {
+      annpack = sms@annotation["exprs"]
+      require(annpack, character.only=TRUE)
+      rmap = revmap( get(paste(gsub(".db", "", annpack), "SYMBOL", sep="")) )
+      pid = get( as(respObj, "character"), rmap )
+      if (length(pid) == 0) stop(paste("cannot map", respObj, "in", annpack, sep=""))
+      pid = intersect(pid, featureNames(sms))
+      if (length(pid) > 1) {
+        warning(paste("several probes/sets map to", respObj, "; using", pid[1], sep=""))
+        print(pid) 
+        pid = pid[1]
+        }
+      }
+    else if (is(respObj, "exFeatID")) pid = respObj
+    else if (is(respObj, "GeneSet")) {
+       fms = gsetFmla2FmlaList(sym)
+       theCall = match.call()
+       ans = lapply(fms, function(z) gwSnpScreen(z, sms, ...))
+       tmp <- new("multiGwSnpScreenResult", geneset=respObj, call=theCall, ans)
+       return( filterSnpTests( tmp, cnum ) )
+       }
+    else stop("response in formula must be of class genesym, exFeatID, or GeneSet")
+    pname = as.character(respObj)
+    assign(pname, exprs(sms)[pid,]) # expression phenotype genename
+    alld = data.frame(get(pname), pData(sms))
+    names(alld)[1] = pname
+    sym[[2]] = as.name(pname)  # replace the dependent variable spec in fmla
+    allsst = lapply( smList(sms), function(x) snp.rhs.tests(sym, family="gaussian",
+        snp.data=x, data=alld))
+# as of 8 july, we have data frames instead of snp.tests.single objects
+# need to coerce
+    mksts = function(x) { 
+      new("snp.tests.single", chisq=cbind(`1 df`=x$Chi.squared, `2 df`=NA),
+          snp.names=rownames(x), N=x$Df.residual+x$Df, N.r2=numeric(0))
+    }
+    allsst = lapply(allsst, mksts)
+    tmp = new("gwSnpScreenResult", gene=as.character(respObj), psid=pid,
+         annotation=sms@annotation, 
+	 snpLocPackage=sms@snpLocPackage, snpLocExtRef=
+           sms@snpLocRef, activeSnpInds=sms@activeSnpInds, call=theCall,
+	 allsst)
+    return( filterSnpTests( tmp, cnum ) )
     })

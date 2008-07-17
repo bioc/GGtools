@@ -144,3 +144,13 @@ setMethod("getAbsSnpLocs", c("cwSnpScreenResult"), function(x) {
      met = getSnpData( x@snpLocPackage, x@snpLocExtRef )
      met$cumloc[ met$chr == as(x@chrnum,"numeric") ]
   })
+
+setMethod("plot", "filteredGwSnpScreenResult", function(x, y, ...) {
+ pp = lapply(x@.Data, p.value, 1)
+ boxplot(lapply(pp, function(x)-log10(x)), main=x@gene, xlab="chromosome",
+   ylab="-log10 p [GLM]")
+})
+
+setMethod("plot", "filteredMultiGwSnpScreenResult", function(x, y, ...) {
+ stop("please select the desired gene-specific result via [[ and plot directly\n")
+})
