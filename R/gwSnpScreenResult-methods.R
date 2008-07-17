@@ -149,6 +149,17 @@ setMethod("plot", "filteredGwSnpScreenResult", function(x, y, ...) {
  pp = lapply(x@.Data, p.value, 1)
  boxplot(lapply(pp, function(x)-log10(x)), main=x@gene, xlab="chromosome",
    ylab="-log10 p [GLM]")
+ xx = try(require(org.Hs.eg.db, quietly=TRUE))
+ if (!inherits(xx, "try-error")) {
+    rmap = revmap(org.Hs.egSYMBOL)
+    egid = get(x@gene, rmap)
+    ch = try(get(egid, org.Hs.egCHR))
+    if (!inherits(ch, "try-error")) {
+       if (ch == "X") ch = 23
+       else if (ch == "Y") ch = 24
+       axis(3, at=as.numeric(ch), col="red", labels=" ")
+       }
+    }
 })
 
 setMethod("plot", "filteredMultiGwSnpScreenResult", function(x, y, ...) {

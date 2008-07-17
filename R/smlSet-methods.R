@@ -292,7 +292,9 @@ setMethod("gwSnpScreen", c("GeneSet", "smlSet", "cnumOrMissing"),
     }
    }
   if (options()$verbose) cat(sym, "\n")
-  new("multiGwSnpScreenResult", geneset=sym, out)
+  tmp = new("multiGwSnpScreenResult", geneset=sym, out)
+  names(tmp@.Data) = geneIds(sym)
+  tmp
 })
 
 setMethod("show", "multiGwSnpScreenResult", function(object) {
@@ -366,6 +368,7 @@ setMethod("gwSnpScreen", c("formula", "smlSet", "cnumOrMissing"),
        theCall = match.call()
        if (!missing(cnum)) ans = lapply(fms, function(z) gwSnpScreen(z, sms, cnum, ...))
        else ans = lapply(fms, function(z) gwSnpScreen(z, sms, ...))
+       names(ans) = geneIds(respObj)
        return(new("multiGwSnpScreenResult", geneset=respObj, call=theCall, ans))
        }
     else stop("response in formula must be of class genesym, exFeatID, or GeneSet")
@@ -413,6 +416,7 @@ filterGWS = function(x, ...) {
 setMethod("filterSnpTests", 
   "multiGwSnpScreenResult", function(x, n) {
     tmp = lapply( x@.Data, filterGWS, n )
+    names(tmp) = geneIds(x@geneset)
     new("filteredMultiGwSnpScreenResult", geneset=x@geneset,
       call=x@call, tmp)
 })
@@ -446,7 +450,9 @@ setMethod("gwSnpScreen", c("formula", "smlSet", "numeric"),
        fms = gsetFmla2FmlaList(sym)
        theCall = match.call()
        ans = lapply(fms, function(z) gwSnpScreen(z, sms, ...))
+       names(ans) = geneIds(respObj)
        tmp <- new("multiGwSnpScreenResult", geneset=respObj, call=theCall, ans)
+       names(tmp@.Data) = geneIds(respObj)
        return( filterSnpTests( tmp, cnum ) )
        }
     else stop("response in formula must be of class genesym, exFeatID, or GeneSet")
