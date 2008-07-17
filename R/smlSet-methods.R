@@ -427,9 +427,9 @@ setMethod("filterSnpTests",
 })
       
 
-setMethod("gwSnpScreen", c("formula", "smlSet", "numeric"),
+setMethod("gwSnpScreen", c("formula", "smlSet", "snpdepth"),
   function( sym, sms, cnum, ...) {
-    if (cnum < 250) stop("with numeric third argument you are defining the number of best snps to save per chromosome; it must exceed 250\n")
+    if (cnum < 250) stop("with snpdepth numeric third argument you are defining the number of best snps to save per chromosome; it must exceed 250\n")
     theCall = match.call()
     respObj = eval(sym[[2]]) # we know sym is a formula, sym[[2]] is dep var
     if (is(respObj, "genesym")) {
