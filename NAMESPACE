@@ -12,7 +12,7 @@ import(tools)
 
 importFrom(graphics, plot)
 
-import(Biobase, AnnotationDbi)
+import(Biobase, AnnotationDbi, rtracklayer)
 
 importFrom("RColorBrewer", "brewer.pal")
 
@@ -22,7 +22,7 @@ exportMethods( "show", "plot", "topSnps", "[", "getAbsSnpLocs",
  "getSnpLocs", "gwSnpScreen", "getSnpChroms", "getAlleles", 
  "plot_EvG", "getSnpData",
  "dim", "pos", "chromosome", "updateObject", "rawSNP", "annotation",
-  "getSnpOffsets", "getSnpMetadata")
+  "getSnpOffsets", "getSnpMetadata", "toTrackSet")
 
 export("HMworkflow", "thinHM2rac", "exclMono", "thinHM2meta",
   "getRare", "genoStrings", "snps3PrimeTo", "snps5PrimeTo", "snpsNear",

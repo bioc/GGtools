@@ -47,6 +47,13 @@ setMethod("plot", "gwSnpScreenResult", function(x, y, doSmooth=TRUE, npts=500, .
        egid = get(x@gene, rmap)
        ch = get(egid, org.Hs.egCHR)
        loc = get(egid, org.Hs.egCHRLOC)
+       if (length(loc) > 1) {
+          loc = loc[ as.character(ch) ][1]
+       }
+       if (length(loc) != 1) {
+          warning("org.Hs.egCHRLOC has uninterpretable information for this gene; no tick at top of plot attempted.")
+          return(invisible(NULL))
+       }
        if (ch == "X") ch = 23
         else if (ch == "Y") ch = 24
         else if (ch %in% c("Un", "MT")) ch = 25
@@ -165,3 +172,31 @@ setMethod("plot", "filteredGwSnpScreenResult", function(x, y, ...) {
 setMethod("plot", "filteredMultiGwSnpScreenResult", function(x, y, ...) {
  stop("please select the desired gene-specific result via [[ and plot directly\n")
 })
+
+
+setGeneric("toTrackSet", function(x) standardGeneric("toTrackSet"))
+setMethod("toTrackSet", "cwSnpScreenResult", function(x) {
+    allp = p.value(x@.Data[[1]], 1) # assume 1df -- must improve
+    snpAnno = x@annotation["snps"]
+    snpdata = getSnpData( x@snpLocPackage, x@snpLocExtRef )
+    offs = getSnpOffsets(x)
+    loc = snpdata$cumloc[which(as.numeric(snpdata$chr) == x@chrnum)]
+    loc = loc - loc[1] + offs[x@chrnum]
+    if (length(x@activeSnpInds) > 0) loc=loc[x@activeSnpInds]
+    rmap = revmap(org.Hs.egSYMBOL)
+    egid = get(x@gene, rmap)
+    ch = paste("chr", get(egid, org.Hs.egCHR), sep="")
+    fdata = data.frame(featChrom=ch, featStart=loc, featEnd=loc+1, strand="+", phase=NA,
+       type="snpeff", group="gws")
+    bad = which(is.na(allp) | !is.finite(allp))
+    if (length(bad) > 0) {
+     adata = assayDataNew("lockedEnvironment", dataVals=matrix(-log10(allp[-bad]),nc=1))
+     fd = new("AnnotatedDataFrame", data=fdata[-bad,])
+    } else {
+     adata = assayDataNew("lockedEnvironment", dataVals=matrix(-log10(allp),nc=1))
+     fd = new("AnnotatedDataFrame", data=fdata)
+    }
+    require(rtracklayer, quietly=TRUE)
+    new("trackSet", genome="Hs", assayData=adata, featureData=fd)
+})
+    
