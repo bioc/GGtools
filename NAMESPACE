@@ -12,9 +12,10 @@ import(tools)
 
 importFrom(graphics, plot)
 
-import(Biobase, AnnotationDbi, rtracklayer)
+import(Biobase, AnnotationDbi) #, rtracklayer)
 
 importFrom("RColorBrewer", "brewer.pal")
+importFrom("GGBase", "snpNames")
 
 exportMethods( "show", "plot", "topSnps", "[", "getAbsSnpLocs",
  "initialize", "oneFit", "snps", "exprs", "racAssays", "snpNames", "SNPalleles",

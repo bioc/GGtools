@@ -10,6 +10,8 @@
 \alias{show,gwSnpScreenResult-method}
 \alias{getAbsSnpLocs,cwSnpScreenResult-method}
 \alias{getAbsSnpLocs}
+\alias{toTrackSet}
+\alias{toTrackSet,cwSnpScreenResult-method}
 \alias{show,multiGwSnpScreenResult-method}
 \alias{[,gwSnpScreenResult-method}
 \alias{[,gwSnpScreenResult,ANY,ANY-method}
@@ -55,6 +57,10 @@ chromosomes represented }
     \item{getSnpOffsets}{\code{signature(object = "cwSnpScreenResult")}: 
      return vector of offsets from telomere end to first SNP per
 chromosome }
+    \item{toTrackSet}{\code{signature(x = "cwSnpScreenResult")}: 
+          creates a trackSet for use with rtracklayer, with
+          -log10p as the dataVals and appropriate location information
+          in the featureData }
 	 }
 }
 %\references{ ~put references to the literature/web site here ~ }

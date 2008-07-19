@@ -40,7 +40,7 @@ setMethod("[", "smlSet", function(x, i, j, ..., drop=FALSE) {
       L2 = L2[match(i, x@chromInds)]
       x@chromInds = x@chromInds[match(i, x@chromInds)]
       }
- else if (!missing(i) && is(i, "exFeatID")) {
+ else if (!missing(i) && is(i, "probeId")) {
       tmp = exprs(x)[i,,drop=FALSE]
       x@assayData=assayDataNew("lockedEnvironment", exprs=tmp)
       x@featureData = x@featureData[i,]
@@ -53,10 +53,10 @@ setMethod("[", "smlSet", function(x, i, j, ..., drop=FALSE) {
       psid = intersect(psid, featureNames(x))
       if (length(psid) > 1) warning("gene symbol matches multiple probe sets, using first")
       psid = psid[1]
-      if (missing(j)) return(x[ exFeatID(psid), ])
-      else return(x[ exFeatID(psid), j])
+      if (missing(j)) return(x[ probeId(psid), ])
+      else return(x[ probeId(psid), j])
       }
- else if (!missing(i)) stop("only exFeatID (probe), chrnum (chrom for SNPs),
+ else if (!missing(i)) stop("only probeId (probe), chrnum (chrom for SNPs),
     or genesym (HUGO)  row-selections for smlSet supported")
  eL = new.env(hash=TRUE)
  assign("smList", L2, eL)
@@ -325,7 +325,7 @@ gsetFmla2FmlaList = function(fm) {
  else if (length(flist[[3]]) == 1) pred = flist[[3]]
  if (!is(gs, "GeneSet")) stop("needs GeneSet instance in response position")
  wrapg = function(x) paste("genesym(\"", x, "\")", sep="")
- wrapex = function(x) paste("exFeatID(\"", x, "\")", sep="")
+ wrapex = function(x) paste("probeId(\"", x, "\")", sep="")
  toks = geneIds(gs)
  idty = geneIdType(gs)
  if (is(idty, "SymbolIdentifier"))
@@ -362,7 +362,7 @@ setMethod("gwSnpScreen", c("formula", "smlSet", "cnumOrMissing"),
         pid = pid[1]
         }
       }
-    else if (is(respObj, "exFeatID")) pid = respObj
+    else if (is(respObj, "probeId")) pid = respObj
     else if (is(respObj, "GeneSet")) {
        fms = gsetFmla2FmlaList(sym)
        theCall = match.call()
@@ -371,7 +371,7 @@ setMethod("gwSnpScreen", c("formula", "smlSet", "cnumOrMissing"),
        names(ans) = geneIds(respObj)
        return(new("multiGwSnpScreenResult", geneset=respObj, call=theCall, ans))
        }
-    else stop("response in formula must be of class genesym, exFeatID, or GeneSet")
+    else stop("response in formula must be of class genesym, probeId, or GeneSet")
     pname = as.character(respObj)
     assign(pname, exprs(sms)[pid,]) # expression phenotype genename
     alld = data.frame(get(pname), pData(sms))
@@ -386,12 +386,12 @@ setMethod("gwSnpScreen", c("formula", "smlSet", "cnumOrMissing"),
           snp.names=rownames(x), N=x$Df.residual+x$Df, N.r2=numeric(0))
     }
     allsst = lapply(allsst, mksts)
-    if (!missing(cnum)) return(new("cwSnpScreenResult", gene=as.character(respObj), psid=pid,
+    if (!missing(cnum)) return(new("cwSnpScreenResult", gene=respObj, psid=pid,
          annotation=sms@annotation, chrnum=cnum, 
          snpLocPackage=sms@snpLocPackage,
 	 snpLocExtRef=sms@snpLocRef, activeSnpInds=sms@activeSnpInds, call=theCall,
          allsst))
-    new("gwSnpScreenResult", gene=as.character(respObj), psid=pid,
+    new("gwSnpScreenResult", gene=respObj, psid=pid,
          annotation=sms@annotation, 
 	 snpLocPackage=sms@snpLocPackage, snpLocExtRef=
            sms@snpLocRef, activeSnpInds=sms@activeSnpInds, call=theCall,
@@ -445,7 +445,7 @@ setMethod("gwSnpScreen", c("formula", "smlSet", "snpdepth"),
         pid = pid[1]
         }
       }
-    else if (is(respObj, "exFeatID")) pid = respObj
+    else if (is(respObj, "probeId")) pid = respObj
     else if (is(respObj, "GeneSet")) {
        fms = gsetFmla2FmlaList(sym)
        theCall = match.call()
@@ -455,7 +455,7 @@ setMethod("gwSnpScreen", c("formula", "smlSet", "snpdepth"),
        names(tmp@.Data) = geneIds(respObj)
        return( filterSnpTests( tmp, cnum ) )
        }
-    else stop("response in formula must be of class genesym, exFeatID, or GeneSet")
+    else stop("response in formula must be of class genesym, probeId, or GeneSet")
     pname = as.character(respObj)
     assign(pname, exprs(sms)[pid,]) # expression phenotype genename
     alld = data.frame(get(pname), pData(sms))
@@ -470,7 +470,7 @@ setMethod("gwSnpScreen", c("formula", "smlSet", "snpdepth"),
           snp.names=rownames(x), N=x$Df.residual+x$Df, N.r2=numeric(0))
     }
     allsst = lapply(allsst, mksts)
-    tmp = new("gwSnpScreenResult", gene=as.character(respObj), psid=pid,
+    tmp = new("gwSnpScreenResult", gene=respObj, psid=pid,
          annotation=sms@annotation, 
 	 snpLocPackage=sms@snpLocPackage, snpLocExtRef=
            sms@snpLocRef, activeSnpInds=sms@activeSnpInds, call=theCall,

@@ -43,7 +43,16 @@ setMethod("plot", "gwSnpScreenResult", function(x, y, doSmooth=TRUE, npts=500, .
     axis(3, at = mn, labels = clab, cex = 0.5, las = 2)
     tst = try(library(org.Hs.eg.db))
     if (!inherits(tst, "try-error")) {
-       rmap = revmap(org.Hs.egSYMBOL)
+  if (is(x@gene, "genesym")) rmap = revmap(org.Hs.egSYMBOL)
+  else if (is(x@gene, "probeId"))  {
+           require(x@annotation["exprs"], character.only=TRUE, quietly=TRUE)
+           rmap = get(paste(gsub(".db", "", x@annotation["exprs"]), "ENTREZID", sep=""))
+           }
+  else {
+    warning("x@gene is neither symbol nor probeID, we do not plot the location.")
+    return(invisible(NULL))
+    }
+
        egid = get(x@gene, rmap)
        ch = get(egid, org.Hs.egCHR)
        loc = get(egid, org.Hs.egCHRLOC)
@@ -98,7 +107,13 @@ setMethod("plot", "cwSnpScreenResult", function(x, y, doSmooth=TRUE, npts=500, .
        }
        tst = try(library(org.Hs.eg.db))
     if (!inherits(tst, "try-error")) {
-       rmap = revmap(org.Hs.egSYMBOL)
+  if (is(x@gene, "genesym")) rmap = revmap(org.Hs.egSYMBOL)
+ else if (is(x@gene, "probeId"))  {
+           require(x@annotation["exprs"], character.only=TRUE, quietly=TRUE)
+           rmap = get(paste(gsub(".db", "", x@annotation["exprs"]), "ENTREZID", sep="")) }
+  else {
+    warning("x@gene is neither symbol nor probeID, we do not plot the location.")
+    return(invisible(NULL)) }
        egid = get(x@gene, rmap)
        ch = get(egid, org.Hs.egCHR)
        loc = get(egid, org.Hs.egCHRLOC) # local to chrom!
@@ -158,7 +173,16 @@ setMethod("plot", "filteredGwSnpScreenResult", function(x, y, ...) {
    ylab="-log10 p [GLM]")
  xx = try(require(org.Hs.eg.db, quietly=TRUE))
  if (!inherits(xx, "try-error")) {
-    rmap = revmap(org.Hs.egSYMBOL)
+  if (is(x@gene, "genesym")) rmap = revmap(org.Hs.egSYMBOL)
+ else if (is(x@gene, "probeId"))  {
+           require(x@annotation["exprs"], character.only=TRUE, quietly=TRUE)
+           rmap = get(paste(gsub(".db", "", x@annotation["exprs"]), "ENTREZID", sep=""))
+           }
+
+  else {
+    warning("x@gene is neither symbol nor probeID, we do not plot the location.")
+    return(invisible(NULL))
+    }
     egid = get(x@gene, rmap)
     ch = try(get(egid, org.Hs.egCHR))
     if (!inherits(ch, "try-error")) {
@@ -183,11 +207,22 @@ setMethod("toTrackSet", "cwSnpScreenResult", function(x) {
     loc = snpdata$cumloc[which(as.numeric(snpdata$chr) == x@chrnum)]
     loc = loc - loc[1] + offs[x@chrnum]
     if (length(x@activeSnpInds) > 0) loc=loc[x@activeSnpInds]
+    require(org.Hs.eg.db, quietly=TRUE)
     rmap = revmap(org.Hs.egSYMBOL)
+  if (is(x@gene, "genesym")) rmap = revmap(org.Hs.egSYMBOL)
+ else if (is(x@gene, "probeId"))  {
+           require(x@annotation["exprs"], character.only=TRUE, quietly=TRUE)
+           rmap = get(paste(gsub(".db", "", x@annotation["exprs"]), "ENTREZID", sep=""))
+           }
+
+  else {
+    stop("x@gene is neither symbol nor probeID, we do not find the location.")
+    }
+
     egid = get(x@gene, rmap)
     ch = paste("chr", get(egid, org.Hs.egCHR), sep="")
-    fdata = data.frame(featChrom=ch, featStart=loc, featEnd=loc+1, strand="+", phase=NA,
-       type="snpeff", group="gws")
+    fdata = data.frame(chrom=ch, start=loc, end=loc, strand="+", phase=NA,
+       type="snpeff", group="gws", score=-log10(allp))
     bad = which(is.na(allp) | !is.finite(allp))
     if (length(bad) > 0) {
      adata = assayDataNew("lockedEnvironment", dataVals=matrix(-log10(allp[-bad]),nc=1))
