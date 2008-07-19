@@ -1,0 +1,6 @@
+load("cpneTrack.rda")
+library(rtracklayer)
+con = file("cpnetr.wig")
+export(cpneTrack, con, "wig")
+# then manually load the custom track after changing
+# the title information manually
