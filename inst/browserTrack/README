@@ -1,0 +1,11 @@
+
+Here is how a serialized trackSet (cpneTrack.rda, serialized
+July 20 2008) can be rendered (after reconfiguring
+custom tracks to 'full' and running macosx screen capture)
+
+> load("cpneTrack.rda")
+> sess = browserSession("ucsc")
+> sess = layTrack(sess, cpneTrack, name="CPNE1 -log10p", view=TRUE)
+
+now look at the browser and reconfigure the custom track to
+full format
