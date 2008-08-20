@@ -1,34 +1,7 @@
-useDynLib(GGtools)
 
-#
-import(tools)
-#
-#exportClasses(
-#
-#exportMethods(
-#
-#export(
-#
+import(tools, AnnotationDbi)
 
-importFrom(graphics, plot)
+importFrom("graphics", "plot")
 
-import(Biobase, AnnotationDbi) #, rtracklayer)
-
-importFrom("RColorBrewer", "brewer.pal")
-importFrom("GGBase", "snpNames")
-
-exportMethods( "show", "plot", "topSnps", "[", "getAbsSnpLocs",
- "initialize", "oneFit", "snps", "exprs", "racAssays", "snpNames", "SNPalleles",
- "snpScreen", "twSnpScreen", "imputeSNPFixed", "nsamp", "sampleNames",
- "getSnpLocs", "gwSnpScreen", "getSnpChroms", "getAlleles", 
- "plot_EvG", "getSnpData",
- "dim", "pos", "chromosome", "updateObject", "rawSNP", "annotation",
-  "getSnpOffsets", "getSnpMetadata", "toTrackSet")
-
-export("HMworkflow", "thinHM2rac", "exclMono", "thinHM2meta",
-  "getRare", "genoStrings", "snps3PrimeTo", "snps5PrimeTo", "snpsNear",
-  "Strains2rac", "wrapSNPmetaWh", "INBREDSworkflow", "addAnno",
-  "tx_rsnum", "getSNPindices", "countRare", "make_racExSet", 
-  "plot_mlp", "fastAGMfitter", "fastHETfitter", "supp2SQLite",
-  "parse2SM")
+exportMethods(gwSnpTests, plot, topSnps)
 

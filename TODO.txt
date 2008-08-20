@@ -1,3 +1,6 @@
+Aug 2008 -- removed SQLite snp location metadata, substituting a
+    structure based on the SNPlocs.Hsapiens package
+---
 Aug 25 2007 -- bug in plot_mlp -- if a trans analysis is done, 
 attempts to plot gene on current chromosome ... -- seems fixed, 28 aug,
   but check for whole-genome as in mouse example
