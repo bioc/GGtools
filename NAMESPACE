@@ -5,3 +5,4 @@ importFrom("graphics", "plot")
 
 exportMethods(gwSnpTests, plot, topSnps)
 
+export(snpm2phase)
