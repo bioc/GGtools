@@ -136,3 +136,7 @@ setMethod("gwSnpTests", c("formula", "smlSet", "snpdepth"),
 	 allsst)
     return( filterSnpTests( tmp, cnum ) )
     })
+
+gwSnpScreen = function(...) {
+ .Deprecated("gwSnpTests", package="GGtools", "use gwSnpTests instead of gwSnpScreen")
+}

@@ -2,7 +2,8 @@
 import(tools, AnnotationDbi)
 
 importFrom("graphics", "plot")
+importFrom("rtracklayer", "trackSet")
 
-exportMethods(gwSnpTests, plot, topSnps)
+exportMethods(gwSnpTests, plot, topSnps, trackSet)
 
-export(snpm2phase)
+export(snpm2phase, snpsNear, gwSnpScreen)
