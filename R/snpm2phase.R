@@ -29,3 +29,25 @@ snpm2phase = function(snpm, cnum, outfilename) {
  }
  cat(paste("wrote", outfilename), ".\n")
 }
+
+parsePhPairs = function(fn) {
+ li = readLines(fn)
+ iinds = c(grep("IND", li), length(li)+1)
+ sep = rep(1:(length(iinds)-1), diff(iinds))
+ strr = split(li, sep)
+ ids = sapply(strr, "[", 1)
+ data = lapply(strr, "[", -1) # drop id token
+ names(data) = ids
+ sdata = lapply(data, function(x) strsplit(x, " , "))
+ probs = lapply(sdata, function(x) sapply(x, "[", 3))
+ kp = sapply(probs, function(x)which.max(as.numeric(x)))
+ tdata = list()
+ for (i in 1:length(sdata))
+   tdata[[i]] = sdata[[i]][[kp[i]]]
+ names(tdata) = names(sdata)
+ probs = as.numeric(sapply(tdata, "[", 3))
+ names(probs) = names(sdata)
+ tdata = lapply(tdata, "[", -3)
+ list(tdata=tdata, probs=probs)
+}
+

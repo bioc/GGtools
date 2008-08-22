@@ -6,4 +6,4 @@ importFrom("rtracklayer", "trackSet")
 
 exportMethods(gwSnpTests, plot, topSnps, trackSet)
 
-export(snpm2phase, snpsNear, gwSnpScreen)
+export(snpm2phase, snpsNear, gwSnpScreen, parsePhPairs)
