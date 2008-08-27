@@ -32,7 +32,8 @@ writes to a file and gives a message
 \examples{
 data(smtest)
 tt = tempfile()
-snpm2phase(smtest, chrnum(20), tt)
+pin = snpm2phase(smtest, chrnum(20), tt)
+pin
 readLines(tt)
 unlink(tt)
 pp = parsePhPairs(system.file("phaseOut/cpne1_20k.out_pairs", package="GGtools"))

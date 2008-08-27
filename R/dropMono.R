@@ -34,7 +34,7 @@ personalHap = function(x) {
  fixn = gsub("1$", "", fixn)
  ttt = apply(tt,1,paste,collapse="")
  tttt = matrix(ttt,nr=2)
- ans = apply(tttt,2,paste,collapse=":")
+ ans = apply(tttt,2,function(z)paste(sort(z),collapse=":"))
  names(ans) = fixn
  ans
 }
