@@ -24,7 +24,7 @@ personalTags = function(x) {
  m1 = dropMono(x)
  t1 = getTags(m1$polyu)
  inds = as.numeric(gsub("X", "", t1))
- m1$polyfull[, inds]
+ m1$polyfull[, inds, drop=FALSE]
 }
 
 personalHap = function(x) {
