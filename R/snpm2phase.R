@@ -111,7 +111,14 @@ parsePh.out = function(fn) {
  el2 = as.numeric(sapply(prs, "[", 2))
  ans = cbind( co[el1], co[el2])
  ans = t(apply(ans, 1, sort))
- ans = apply(ans, 1, paste, collapse=":")
- names(ans) = id
- ans
+ al = list()
+ for (i in 1:nrow(ans))
+   al[[i]] = ans[i,]
+ names(al) = id
+ #ans = apply(ans, 1, paste, collapse=":")
+ #names(ans) = id
+ #ans
+ pro = rep(NA, nrow(ans))
+ names(pro) = id
+ list(tdata=al, probs=pro)
 }

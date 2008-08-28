@@ -8,5 +8,5 @@ exportClasses(phaseInput)
 
 exportMethods(gwSnpTests, plot, topSnps, trackSet)
 
-export(snpm2phase, snpsNear, gwSnpScreen, parsePhPairs, personalHap,
+export(snpm2phase, snpsNear, gwSnpScreen, personalHap,
  parsePh.out)
