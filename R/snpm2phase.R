@@ -20,7 +20,8 @@ setGeneric("invokePhase", function(x, cnum, parmstring,
 
 setMethod("invokePhase", c("phaseInput", "chrnum", "character", "character",
       "character", "logical"),
-  function(x, cnum, parmstring, globpname, where2run, doParse) {
+  function(x, cnum, parmstring="", 
+     globpname=Sys.getenv("PHASE_LOC"), where2run=".", doParse=TRUE) {
     if (!file.exists(globpname)) stop(paste(globpname, "does not exist but should be path for PHASE"))
     if (!file.exists(where2run)) stop(paste(where2run, "does not exist but should be folder where PHASE will run"))
     pinp = x@file4phase
@@ -37,7 +38,8 @@ setMethod("invokePhase", c("phaseInput", "chrnum", "character", "character",
 
 setMethod("invokePhase", c("snp.matrix", "chrnum", "character", "character",
       "character", "logical"),
-  function(x, cnum, parmstring, globpname, where2run, doParse) {
+  function(x, cnum, parmstring="", 
+     globpname=Sys.getenv("PHASE_LOC"), where2run=".", doParse=TRUE) {
     phin = snpm2phase(x, cnum, tempfile())
     if (!file.exists(globpname)) stop(paste(globpname, "does not exist but should be path for PHASE"))
     if (!file.exists(where2run)) stop(paste(where2run, "does not exist but should be folder where PHASE will run"))
