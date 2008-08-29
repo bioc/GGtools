@@ -116,6 +116,19 @@ setMethod("gwSnpTests", c("formula", "smlSet", "snpdepth"),
        names(tmp@.Data) = geneIds(respObj)
        return( filterSnpTests( tmp, cnum ) )
        }
+    else if (is(respObj, "chrnum")) {
+       rmap = revmap(get(paste(sms@annotation, "CHR", sep="")))
+       allpid = get(respObj, rmap)
+       allsym = unlist(mget(allpid, get(paste(sms@annotation, "SYMBOL", sep=""))))
+	stop("not done")
+#       fms = gsetFmla2FmlaList(sym)
+#       theCall = match.call()
+#       ans = lapply(fms, function(z) gwSnpTests(z, sms, ...))
+#       names(ans) = geneIds(respObj)
+#       tmp <- new("multiGwSnpScreenResult", geneset=respObj, call=theCall, ans)
+#       names(tmp@.Data) = geneIds(respObj)
+#       return( filterSnpTests( tmp, cnum ) )
+       }
     else stop("response in formula must be of class genesym, probeId, or GeneSet")
     pname = as.character(respObj)
     assign(pname, exprs(sms)[pid,]) # expression phenotype genename
