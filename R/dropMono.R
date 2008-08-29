@@ -6,9 +6,9 @@ dropMono = function(x) {
  uu = unique(allh)
  uus = t(sapply(uu, function(x) strsplit(x, "")[[1]]))
  mono = apply(uus,2,function(x)length(unique(x))==1)
- saveh = saveh[,-which(mono)]
+ saveh = saveh[,-which(mono),drop=FALSE]
  rownames(uus) = NULL
- list(polyu=uus[,-which(mono)], polyfull=saveh, monoinds=which(mono))
+ list(polyu=uus[,-which(mono),drop=FALSE], polyfull=saveh, monoinds=which(mono))
 }
 
 getTags = function(polyu) {
