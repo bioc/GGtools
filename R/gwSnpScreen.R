@@ -117,17 +117,20 @@ setMethod("gwSnpTests", c("formula", "smlSet", "snpdepth"),
        return( filterSnpTests( tmp, cnum ) )
        }
     else if (is(respObj, "chrnum")) {
-       rmap = revmap(get(paste(sms@annotation, "CHR", sep="")))
-       allpid = get(respObj, rmap)
-       allsym = unlist(mget(allpid, get(paste(sms@annotation, "SYMBOL", sep=""))))
-	stop("not done")
-#       fms = gsetFmla2FmlaList(sym)
-#       theCall = match.call()
-#       ans = lapply(fms, function(z) gwSnpTests(z, sms, ...))
-#       names(ans) = geneIds(respObj)
-#       tmp <- new("multiGwSnpScreenResult", geneset=respObj, call=theCall, ans)
-#       names(tmp@.Data) = geneIds(respObj)
-#       return( filterSnpTests( tmp, cnum ) )
+#
+# in this segment we transform chrnum spec to gene set
+# and then reinvoke
+#
+       require( sms@annotation, character.only=TRUE, quietly=TRUE )
+       require( GSEABase, quietly=TRUE )
+       rmap = revmap(get(paste(gsub(".db", "", sms@annotation), "CHR", sep="")))
+       allpid = get(as(respObj,"character"), rmap)
+       allsym = unlist(mget(allpid, get(paste(gsub(".db", "", sms@annotation), "SYMBOL", sep=""))))
+       gs = GeneSet(unique(allsym), geneIdType=SymbolIdentifier())
+       tmp = as.list(sym)
+       tmp[[2]] = gs
+       sym = as.formula(tmp)
+       return( gwSnpTests( sym, sms, cnum, ...) )
        }
     else stop("response in formula must be of class genesym, probeId, or GeneSet")
     pname = as.character(respObj)
