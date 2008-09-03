@@ -6,9 +6,13 @@ dropMono = function(x) {
  uu = unique(allh)
  uus = t(sapply(uu, function(x) strsplit(x, "")[[1]]))
  mono = apply(uus,2,function(x)length(unique(x))==1)
- saveh = saveh[,-which(mono),drop=FALSE]
  rownames(uus) = NULL
- list(polyu=uus[,-which(mono),drop=FALSE], polyfull=saveh, monoinds=which(mono))
+ if (any(mono)) {
+     saveh = saveh[,-which(mono),drop=FALSE]
+     polyu = uus[,-which(mono),drop=FALSE]
+     }
+ else polyu = uus
+ list(polyu=polyu, polyfull=saveh, monoinds=which(mono))
 }
 
 getTags = function(polyu) {
@@ -33,6 +37,7 @@ personalHap = function(x) {
  fixn = fixn[seq(1,length(fixn),2)]
  fixn = gsub("1$", "", fixn)
  ttt = apply(tt,1,paste,collapse="")
+ if (ncol(tt) == 1) dim(ttt) = dim(tt) # in case we have a single nuc tag
  tttt = matrix(ttt,nr=2)
  ans = apply(tttt,2,function(z)paste(sort(z),collapse=":"))
  names(ans) = fixn
