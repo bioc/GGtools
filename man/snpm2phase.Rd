@@ -5,8 +5,8 @@
 \alias{personalHap}
 \alias{invokePhase}
 \alias{phaseInput-class}
-\alias{invokePhase,phaseInput,chrnum,character,character,character,logical-method}
-\alias{invokePhase,snp.matrix,chrnum,character,character,character,logical-method}
+%\alias{invokePhase,phaseInput,chrnum,character,character,character,logical-method}
+%\alias{invokePhase,snp.matrix,chrnum,character,character,character,logical-method}
 
 \title{convert information in a snp.matrix to PHASE input format;
 invokePhase can run a suitably installed version of PHASE  }
