@@ -9,4 +9,4 @@ exportClasses(phaseInput)
 exportMethods(gwSnpTests, plot, topSnps, trackSet, invokePhase)
 
 export(snpm2phase, gwSnpScreen, personalHap,
- parsePh.out)
+ parsePh.out, snpm2mapLD)
