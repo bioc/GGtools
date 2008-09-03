@@ -9,6 +9,7 @@ topSingSnps = function(x, n=250, df=1) {
 }
 
 filterGWS = function(x, ...) {
+  gc()
   x@.Data = lapply(x@.Data, topSingSnps, ...)
   new("filteredGwSnpScreenResult", x)
 }
@@ -17,6 +18,7 @@ filterGWS = function(x, ...) {
 setMethod("filterSnpTests",
   "multiGwSnpScreenResult", function(x, n) {
     tmp = lapply( x@.Data, filterGWS, n )
+    gc()
     names(tmp) = geneIds(x@geneset)
     new("filteredMultiGwSnpScreenResult", geneset=x@geneset,
       call=x@call, tmp)
