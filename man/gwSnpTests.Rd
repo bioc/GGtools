@@ -1,5 +1,6 @@
 \name{gwSnpTests}
 \alias{gwSnpTests}
+\alias{gwSnpScreen}
 \alias{gwSnpTests,formula,smlSet,cnumOrMissing-method}
 \alias{gwSnpTests,formula,smlSet,snpdepth-method}
 \title{methods for iterating association tests (expression vs SNP)
@@ -17,6 +18,8 @@ gwSnpTests(sym, sms, cnum, ...)
 }
 \details{
 invokes snpMatrix test procedures as appropriate
+
+gwSnpScreen is deprecated and simply throws a message indicating this.
 }
 \value{
 gwSnpScreenResult or cwSnpScreenResult instance

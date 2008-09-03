@@ -1,5 +1,6 @@
 \name{snpm2mapLD}
 \alias{snpm2mapLD}
+\alias{smtest}
 \title{ prepare input to mapLD function for haplotype block identification }
 \description{prepare input to mapLD function for haplotype block identification
 }
@@ -16,6 +17,8 @@ snpm2mapLD(x, chrnum, runMAP=TRUE, ...)
 sets up a data frame suitable for mapLD, and will invoke with
 appropriate arguments identifying columns for alleles and
 other identifiers if runMAP is TRUE (default).
+
+smtest is a small snp.matrix instance
 }
 \value{a list with element struc holding the data frame,
 and mapLD output if requested.  Note that mapLD writes an eps

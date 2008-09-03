@@ -1,14 +1,21 @@
 \name{snpm2phase}
 \alias{snpm2phase}
-\alias{parsePhPairs}
+%\alias{parsePhPairs}
 \alias{parsePh.out}
 \alias{personalHap}
-\title{convert information in a snp.matrix to PHASE input format  }
-\description{convert information in a snp.matrix to PHASE input format
+\alias{invokePhase}
+\alias{phaseInput-class}
+\alias{invokePhase,phaseInput,chrnum,character,character,character,logical-method}
+\alias{invokePhase,snp.matrix,chrnum,character,character,character,logical-method}
+
+\title{convert information in a snp.matrix to PHASE input format;
+invokePhase can run a suitably installed version of PHASE  }
+\description{convert information in a snp.matrix to PHASE input format;
+invokePhase can run a suitably installed version of PHASE  }
+
 }
 \usage{
 snpm2phase(snpm, cnum, outfilename)
-parsePhPairs(fn)
 parsePh.out(fn)
 personalHap(x)
 }
@@ -16,11 +23,14 @@ personalHap(x)
   \item{snpm}{ snp.matrix instance}
   \item{cnum}{ chromosome number as chrnum instance}
   \item{outfilename}{ character name of file to write}
-  \item{fn}{ character name of PHASE pairs [or .out] file to read}
-  \item{x}{ output of parsePhPairs}
+  \item{fn}{ character name of PHASE .out file to read}
+  \item{x}{ output of parsePh.out}
 }
 \details{ follows phase 2.1 documentation for input format
+
+a phaseInput container class can store relevant metadata
 }
+
 \value{
 writes to a file and gives a message
 }
@@ -35,6 +45,9 @@ writes to a file and gives a message
 data(smtest)
 tt = tempfile()
 pin = snpm2phase(smtest, chrnum(20), tt)
+
+class(pin)
+getClass("phaseInput")
 pin
 readLines(tt)
 unlink(tt)

@@ -39,7 +39,7 @@ setMethod("plot", "filteredGwSnpScreenResult", function(x, y, ...) {
   if (is(x@gene, "genesym")) rmap = revmap(org.Hs.egSYMBOL)
  else if (is(x@gene, "probeId"))  {
            require(x@annotation, character.only=TRUE, quietly=TRUE)
-           rmap = get(paste(gsub(".db", "", x@annotation, "ENTREZID", sep="")))
+           rmap = get(paste(gsub(".db", "", x@annotation), "ENTREZID", sep=""))
            }
 
   else {
