@@ -32,8 +32,12 @@ setMethod("invokePhase", c("phaseInput", "chrnum", "character", "character",
     path2 = function(x) gsub("[A-Za-z0-9]*$", "", x)
     execLine = paste(globpname, pinp, pout <- paste(pinp, "out", sep="."), parmstring)
     system(execLine)
-    if (doParse) ans = parsePh.out(pout)
-    ans
+    if (doParse) {
+      ans = parsePh.out(pout)
+      ans[["rsid"]] = phin@snpid
+      return(ans)
+      }
+    else return(invisible(NULL))
 })
 
 setMethod("invokePhase", c("snp.matrix", "chrnum", "character", "character",
@@ -51,8 +55,12 @@ setMethod("invokePhase", c("snp.matrix", "chrnum", "character", "character",
     path2 = function(x) gsub("[A-Za-z0-9]*$", "", x)
     execLine = paste(globpname, pinp, pout <- paste(pinp, "out", sep="."), parmstring)
     system(execLine)
-    if (doParse) ans = parsePh.out(pout)
-    ans
+    if (doParse) {
+      ans = parsePh.out(pout)
+      ans[["rsid"]] = phin@snpid
+      return(ans)
+      }
+    else return(invisible(NULL))
 })
     
 

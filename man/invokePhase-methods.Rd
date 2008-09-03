@@ -22,7 +22,7 @@
 }}
 \examples{
 data(smtest)
-invokePhase(smtest, chrnum(20), "", 
-  "/Users/stvjc/Desktop/CompCVS/PHASE/MAC/PHASE", ".", TRUE)
+invokePhase(smtest, chrnum(20), "", Sys.getenv("PHASE_LOC"),
+   ".", TRUE)
 }
 \keyword{methods}

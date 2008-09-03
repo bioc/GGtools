@@ -1,6 +1,6 @@
 
 dropMono = function(x) {
- # output of parsePhPairs
+ # output of parsePh.out
  allh = unlist(x[[1]])
  saveh = t(sapply(allh, function(x) strsplit(x, "")[[1]]))
  uu = unique(allh)
@@ -12,7 +12,7 @@ dropMono = function(x) {
      polyu = uus[,-which(mono),drop=FALSE]
      }
  else polyu = uus
- list(polyu=polyu, polyfull=saveh, monoinds=which(mono))
+ list(polyu=polyu, polyfull=saveh, monoinds=which(mono), rsid=x$rsid)
 }
 
 getTags = function(polyu) {
@@ -28,11 +28,14 @@ personalTags = function(x) {
  m1 = dropMono(x)
  t1 = getTags(m1$polyu)
  inds = as.numeric(gsub("X", "", t1))
- m1$polyfull[, inds, drop=FALSE]
+ if (length(m1$monoinds)>0) keeprs = m1$rsid[-m1$monoinds]
+ else keeprs = m1$rsid
+ list(tagdata=m1$polyfull[, inds, drop=FALSE], rsid=keeprs[inds])
 }
 
 personalHap = function(x) {
- tt = personalTags(x)
+ tmp = personalTags(x)
+ tt = tmp$tagdata
  fixn = rownames(tt)
  fixn = fixn[seq(1,length(fixn),2)]
  fixn = gsub("1$", "", fixn)
@@ -41,6 +44,6 @@ personalHap = function(x) {
  tttt = matrix(ttt,nr=2)
  ans = apply(tttt,2,function(z)paste(sort(z),collapse=":"))
  names(ans) = fixn
- ans
+ list(hapdata=ans, rsid=tmp$rsid)
 }
 
