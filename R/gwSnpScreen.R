@@ -30,6 +30,7 @@ setMethod("gwSnpTests", c("formula", "smlSet", "cnumOrMissing"),
       sms = sms[cnum,]
     }
     theCall = match.call()
+    infmla = sym
 #
 # decode formula -- note that for a gene set we are essentially recursing
 # so it is hard to factor this part out
@@ -81,7 +82,7 @@ setMethod("gwSnpTests", c("formula", "smlSet", "cnumOrMissing"),
 #
     if (!missing(cnum)) return(new("cwSnpScreenResult", gene=respObj, psid=pid,
          annotation=sms@annotation, chrnum=cnum, 
-	 call=theCall, testType= testType, allsst))
+	 call=theCall, testType= testType, allsst)) # modFmla=infmla, allsst))
     new("gwSnpScreenResult", gene=respObj, psid=pid,
          annotation=sms@annotation, 
          call=theCall, testType= testType, allsst)
@@ -156,3 +157,37 @@ setMethod("gwSnpTests", c("formula", "smlSet", "snpdepth"),
 gwSnpScreen = function(...) {
  .Deprecated("gwSnpTests", package="GGtools", "use gwSnpTests instead of gwSnpScreen")
 }
+
+setGeneric("residTests", function(fit, sms, litfmla, rsnum) 
+  standardGeneric("residTests"))
+
+setMethod("residTests", c("cwSnpScreenResult", "smlSet", "formula", "missing"), function(fit, sms, litfmla, rsnum) {
+  theCall = match.call()
+  top = rownames(topSnps(fit))[1]
+  smm = smList(sms)[[fit@chrnum]][, top, drop=FALSE]
+  baseRAC = as( smm, "numeric" )
+  ex = exprs(sms)[ fit@psid, ]
+  ok = 1:length(ex)
+  if (any(lkna <- is.na(baseRAC))) bad = which(lkna)
+  if (any(lkna <- is.na(ex))) bad = union(bad, which(lkna))
+  ok = ok[-bad]
+  res = resid(lm(ex ~ baseRAC, subset=ok))
+  #fmla = fit@formula
+  litfmla[[2]] = as.name("res")
+  alld = data.frame(res, pData(sms)[-bad,])
+  allsst = lapply( smList(sms), function(x) snp.rhs.tests(litfmla, family="gaussian",
+        snp.data=x, data=alld))
+ mksts = function(x) {
+      new("snp.tests.single", chisq=cbind(`1 df`=x$Chi.squared, `2 df`=NA),
+          snp.names=rownames(x), N=x$Df.residual+x$Df, N.r2=numeric(0))
+    }
+    allsst = lapply(allsst, mksts)
+#
+# return cwSnpScreenResult if chromosome specific, otherwise gwSnpScreenResult
+#
+    return(new("cwSnpScreenResult", gene=fit@gene, psid=fit@psid,
+         annotation=sms@annotation, chrnum=fit@chrnum,
+         call=theCall, testType= "Gaussian resid", allsst)) # modFmla=fit@formula, allsst))
+
+})
+ 
