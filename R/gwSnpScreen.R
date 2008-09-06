@@ -168,13 +168,14 @@ setMethod("residTests", c("cwSnpScreenResult", "smlSet", "formula", "missing"), 
   baseRAC = as( smm, "numeric" )
   ex = exprs(sms)[ fit@psid, ]
   ok = 1:length(ex)
+  bad = NULL
   if (any(lkna <- is.na(baseRAC))) bad = which(lkna)
   if (any(lkna <- is.na(ex))) bad = union(bad, which(lkna))
-  ok = ok[-bad]
+  if (length(bad)>0) ok = ok[-bad]
   res = resid(lm(ex ~ baseRAC, subset=ok))
   #fmla = fit@formula
   litfmla[[2]] = as.name("res")
-  alld = data.frame(res, pData(sms)[-bad,])
+  alld = data.frame(res, pData(sms)[ok,])
   allsst = lapply( smList(sms), function(x) snp.rhs.tests(litfmla, family="gaussian",
         snp.data=x, data=alld))
  mksts = function(x) {
