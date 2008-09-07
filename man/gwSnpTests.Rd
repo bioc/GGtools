@@ -1,5 +1,7 @@
 \name{gwSnpTests}
 \alias{gwSnpTests}
+\alias{residTests}
+\alias{residTests,cwSnpScreenResult,smlSet,formula,missing-method}
 \alias{gwSnpScreen}
 \alias{gwSnpTests,formula,smlSet,cnumOrMissing-method}
 \alias{gwSnpTests,formula,smlSet,snpdepth-method}
