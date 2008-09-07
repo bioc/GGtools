@@ -21,8 +21,10 @@
 
 }}
 \examples{
+\dontrun{
 data(smtest)
 invokePhase(smtest, chrnum(20), "", Sys.getenv("PHASE_LOC"),
    ".", TRUE)
+}
 }
 \keyword{methods}
