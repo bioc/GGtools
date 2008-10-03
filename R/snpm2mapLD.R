@@ -18,7 +18,10 @@ snpm2mapLD = function(x, chrnum, runMAP=TRUE, ...) {
  rsid = rep(rsid, nsamp)
  pos = rep(locs, nsamp)
  struc = data.frame(Allele1=A1, Allele2=A2, subjectID=sid, markerID=rsid, position=pos)
- if (runMAP) tmp = mapLD( struc, 4, 3, 1:2, ... )
+ if (runMAP) {
+    require(mapLD)
+    tmp = mapLD( struc, 4, 3, 1:2, ... )
+ }
  else tmp = NA
  list(struc=struc, mapLDans=tmp)
 }
