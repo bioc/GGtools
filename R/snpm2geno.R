@@ -24,6 +24,7 @@ snpm2geno = function (x)
 }
 
 bbHapTests = function(ph, cnum, sm, rsid, rad=1e5, doPhase=FALSE, ... ) {
+  require(haplo.stats)
   if (!is(sm, "snp.matrix")) stop("sm must be snp.matrix instance")
   if (!is(cnum, "chrnum")) stop("cnum must be chrnum instance")
   slook = snpsNear(rsid, rad, cnum)

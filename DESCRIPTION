@@ -7,7 +7,7 @@ Depends: R (>= 2.7.0), methods, Biobase (>= 1.11.26), GGBase (>= 2.3.0),
 	GSEABase, geneplotter(>= 1.11.8), snpMatrix(>= 1.5.1), RColorBrewer,
 	RSQLite, Biostrings, rtracklayer, rpart
 Suggests: illuminaHumanv1.db, org.Hs.eg.db, 
-	SNPlocs.Hsapiens.dbSNP.20071016, mapLD
+	SNPlocs.Hsapiens.dbSNP.20071016, mapLD, haplo.stats
 LazyData: no
 biocViews: SNPsAndGeneticVariability, Genetics, Statistics
 Maintainer: Vince Carey <stvjc@channing.harvard.edu>
