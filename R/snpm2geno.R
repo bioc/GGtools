@@ -49,5 +49,19 @@ bbHapTests = function(ph, cnum, sm, rsid, rad=1e5, doPhase=FALSE, ... ) {
   else ph = NULL
   list(schaidRun=schaidRun, phap = ph)
 }
+
+setGeneric("hbTests", function(fmla, sms, cnum, start, end, inc, ...) 
+ standardGeneric("hbTests"))
+setMethod("hbTests", c("genesym", "smlSet", "chrnum", "numeric", "numeric", "numeric"),
+  function(fmla, sms, cnum, start, end, inc, ...) {
+    if (length(cnum)!=1) stop("must have only a length-1 cnum")
+    restr = sms[cnum,]
+    ph = as.numeric(exprs(restr[fmla,]))
+    sm = smList(restr)[[1]]
+    locs = seq(start, end, inc)
+print(locs)
+    ans = lapply(locs, function(x) {print(x); bbHapTests(ph, cnum, sm, x+inc/2, inc/2, doPhase=FALSE, ...)})
+    list(runs=runs, locs=locs)
+})
   
   
