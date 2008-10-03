@@ -23,7 +23,7 @@ snpm2geno = function (x)
     list(geno=geno, names=cnames)
 }
 
-bbHapTests = function(ph, cnum, sm, rsid, rad=1e5, ... ) {
+bbHapTests = function(ph, cnum, sm, rsid, rad=1e5, doPhase=FALSE, ... ) {
   if (!is(sm, "snp.matrix")) stop("sm must be snp.matrix instance")
   if (!is(cnum, "chrnum")) stop("cnum must be chrnum instance")
   slook = snpsNear(rsid, rad, cnum)
@@ -41,8 +41,12 @@ bbHapTests = function(ph, cnum, sm, rsid, rad=1e5, ... ) {
 #      "character", "logical"),
 #  function(x, cnum, parmstring="",
 #     globpname=Sys.getenv("PHASE_LOC"), where2run=".", doParse=TRUE) {
-  phobj = invokePhase(smf, cnum, "", Sys.getenv("PHASE_LOC"), ".", TRUE)
-  list(schaidRun=schaidRun, phap = personalHap(phobj))
+  if (doPhase) {
+    phobj = invokePhase(smf, cnum, "", Sys.getenv("PHASE_LOC"), ".", TRUE)
+    ph = personalHap(phobj)
+  }
+  else ph = NULL
+  list(schaidRun=schaidRun, phap = ph)
 }
   
   
