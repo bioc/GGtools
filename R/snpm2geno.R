@@ -61,7 +61,7 @@ setMethod("hbTests", c("genesym", "smlSet", "chrnum", "numeric", "numeric", "num
     locs = seq(start, end, inc)
 print(locs)
     ans = lapply(locs, function(x) {print(x); bbHapTests(ph, cnum, sm, x+inc/2, inc/2, doPhase=FALSE, ...)})
-    list(runs=runs, locs=locs)
+    list(runs=ans, locs=locs)
 })
   
   
