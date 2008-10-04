@@ -60,7 +60,7 @@ setMethod("hbTests", c("genesym", "smlSet", "chrnum", "numeric", "numeric", "num
     sm = smList(restr)[[1]]
     locs = seq(start, end, inc)
 print(locs)
-    ans = lapply(locs, function(x) {print(x); bbHapTests(ph, cnum, sm, x+inc/2, inc/2, doPhase=FALSE, ...)})
+    ans = lapply(locs, function(x) {gc(); print(x); bbHapTests(ph, cnum, sm, x+inc/2, inc/2, doPhase=FALSE, ...)})
     list(runs=ans, locs=locs)
 })
   
