@@ -10,7 +10,7 @@ snpm2mapLD = function(x, chrnum, runMAP=TRUE, ...) {
   z[nchar(z)==0] = "A/A"
  }
  A1 = (apply(z, 1, function(x) sapply(strsplit(x, "/"), "[", 1)))
- A2 = (apply(z, 1, function(x) sapply(strsplit(x, "/"), "[", 1)))
+ A2 = (apply(z, 1, function(x) sapply(strsplit(x, "/"), "[", 2)))
 # now individuals are columns, snps are rows
  A1 = as.character(A1)
  A2 = as.character(A2)
