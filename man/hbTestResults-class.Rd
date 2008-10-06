@@ -1,7 +1,12 @@
 \name{hbTestResults-class}
 \docType{class}
 \alias{hbTestResults-class}
+\alias{pvals}
+\alias{locs}
+\alias{hscores}
 \alias{pvals,hbTestResults-method}
+\alias{hscores,hbTestResults-method}
+\alias{locs,hbTestResults-method}
 
 \title{Class "hbTestResults" holds results of tests
   of association of expression levels with
@@ -40,7 +45,7 @@ p-values for global score tests, one per block }
     \item{locs}{\code{signature(x = "hbTestResults")}: extracts
 locations of haplotype blocks found  (average SNP location within block) }
     \item{hscores}{\code{signature(x = "hbTestResults")}: extracts
-\code{\link{haplo.score}} results as a list, for all blocks}
+\code{\link[haplo.stats]{haplo.score}} results as a list, for all blocks}
 	 }
 }
 %\references{ ~put references to the literature/web site here ~ }

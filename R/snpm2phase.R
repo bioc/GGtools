@@ -18,27 +18,27 @@ setMethod("show", "phaseInput", function(object) {
 setGeneric("invokePhase", function(x, cnum, parmstring, 
     globpname, where2run, doParse) standardGeneric("invokePhase"))
 
-setMethod("invokePhase", c("phaseInput", "chrnum", "character", "character",
-      "character", "logical"),
-  function(x, cnum, parmstring="", 
-     globpname=Sys.getenv("PHASE_LOC"), where2run=".", doParse=TRUE) {
-    if (!file.exists(globpname)) stop(paste(globpname, "does not exist but should be path for PHASE"))
-    if (!file.exists(where2run)) stop(paste(where2run, "does not exist but should be folder where PHASE will run"))
-    pinp = x@file4phase
-    if (!file.exists(pinp)) stop(paste(pinp, "does not exist but should be input file for PHASE"))
-    curwd = getwd()
-    on.exit(setwd(curwd))
-    setwd(where2run)
-    path2 = function(x) gsub("[A-Za-z0-9]*$", "", x)
-    execLine = paste(globpname, pinp, pout <- paste(pinp, "out", sep="."), parmstring)
-    system(execLine)
-    if (doParse) {
-      ans = parsePh.out(pout)
-      ans[["rsid"]] = phin@snpid
-      return(ans)
-      }
-    else return(invisible(NULL))
-})
+#setMethod("invokePhase", c("phaseInput", "chrnum", "character", "character",
+#      "character", "logical"),
+#  function(x, cnum, parmstring="", 
+#     globpname=Sys.getenv("PHASE_LOC"), where2run=".", doParse=TRUE) {
+#    if (!file.exists(globpname)) stop(paste(globpname, "does not exist but should be path for PHASE"))
+#    if (!file.exists(where2run)) stop(paste(where2run, "does not exist but should be folder where PHASE will run"))
+#    pinp = x@file4phase
+#    if (!file.exists(pinp)) stop(paste(pinp, "does not exist but should be input file for PHASE"))
+#    curwd = getwd()
+#    on.exit(setwd(curwd))
+#    setwd(where2run)
+#    path2 = function(x) gsub("[A-Za-z0-9]*$", "", x)
+#    execLine = paste(globpname, pinp, pout <- paste(pinp, "out", sep="."), parmstring)
+#    system(execLine)
+#    if (doParse) {
+#      ans = parsePh.out(pout)
+#      ans[["rsid"]] = phin@snpid
+#      return(ans)
+#      }
+#    else return(invisible(NULL))
+#})
 
 setMethod("invokePhase", c("snp.matrix", "chrnum", "character", "character",
       "character", "logical"),
