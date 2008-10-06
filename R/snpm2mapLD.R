@@ -1,9 +1,15 @@
 snpm2mapLD = function(x, chrnum, runMAP=TRUE, ...) {
  rsid = colnames(x)
- nsnps = length(rsid)
+# nsnps = length(rsid)
  sid = rownames(x) # sample
  nsamp = length(sid)
- locs = snpLocs.Hs(chrnum(chrnum), rsid(rsid))["loc",]
+ locdat = snpLocs.Hs(chrnum(chrnum), rsid(rsid))  # will filter
+ locid = locdat["rsid",]
+ locs = locdat["loc",]
+ locdrs = paste("rs", locid, sep="")
+ x = x[,rsid(locdrs)]
+ nsnps = ncol(x)
+ rsid = colnames(x)
  z = as(x, "character")
  if (any(nchar(z) == 0)) {
   warning("for missing genotypes we have substituted A/A")
