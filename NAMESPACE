@@ -7,7 +7,7 @@ importFrom("rtracklayer", "trackSet")
 exportClasses(phaseInput, hbTestResults)
 
 exportMethods(gwSnpTests, plot, topSnps, trackSet, 
-   invokePhase, residTests, hbTests, pvals)
+   invokePhase, residTests, hbTests, pvals, locs, hscores)
 
 export(snpm2phase, gwSnpScreen, personalHap,
  parsePh.out, snpm2mapLD, snpm2geno)

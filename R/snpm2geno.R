@@ -130,6 +130,10 @@ setGeneric("pvals", function(x)standardGeneric("pvals"))
 setMethod("pvals", "hbTestResults", function(x) {
  sapply(x@hscores, function(x)x$score.global.p)
 })
+setGeneric("locs", function(x) standardGeneric("locs"))
+setMethod("locs", "hbTestResults", function(x) x@locs)
+setGeneric("hscores", function(x) standardGeneric("hscores"))
+setMethod("hscores", "hbTestResults", function(x) x@hscores)
  
 setMethod("show", "hbTestResults", function(object){
  cat("GGtools haplotype block test results\n")
