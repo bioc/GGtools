@@ -4,10 +4,10 @@ import(tools, AnnotationDbi)
 importFrom("graphics", "plot")
 importFrom("rtracklayer", "trackSet")
 
-exportClasses(phaseInput)
+exportClasses(phaseInput, hbTestResults)
 
 exportMethods(gwSnpTests, plot, topSnps, trackSet, 
    invokePhase, residTests, hbTests, pvals)
 
 export(snpm2phase, gwSnpScreen, personalHap,
- parsePh.out, snpm2mapLD, snpm2geno, bbHapTests)
+ parsePh.out, snpm2mapLD, snpm2geno)
