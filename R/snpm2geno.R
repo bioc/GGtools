@@ -77,7 +77,7 @@ setMethod("hbTests", c("genesym", "smlSet", "chrnum", "numeric", "numeric"),
     restr = sms[cnum,]
     ph = as.numeric(exprs(restr[fmla,]))
     sm = smList(restr)[[1]]
-    bbHapTests2(ph, cnum, sm, rsid, rad, ...) 
+    bbHapTests2(ph, cnum, sm, rsid, rad, fmla, ...) 
 })
 #    locs = seq(start, end, inc)
 #print(locs)
@@ -123,7 +123,7 @@ setMethod("hbTests", c("genesym", "smlSet", "chrnum", "numeric", "numeric"),
 
 
 
-setClass("hbTestResults", representation(hscores="list",
+setClass("hbTestResults", representation(hscores="list", formula="ANY",
      locs="numeric", chrnum="chrnum", smlSetName="character",
      rsid="ANY", rad="numeric", ldStruc="ANY"))
 setGeneric("pvals", function(x)standardGeneric("pvals"))
@@ -139,9 +139,10 @@ setMethod("show", "hbTestResults", function(object){
  cat("GGtools haplotype block test results\n")
  cat("Locations used: ", selectSome(object@locs), "\n")
  cat("Minimum p:", min(pvals(object)), "\n")
+ cat("Formula:", object@formula, "\n")
 })
 
-bbHapTests2 = function (ph, cnum, sm, rsid, rad = 1e+05, ...) 
+bbHapTests2 = function (ph, cnum, sm, rsid, rad = 1e+05, fmla, ...) 
 {
     require(haplo.stats)
     if (!is(sm, "snp.matrix")) 
@@ -168,6 +169,6 @@ bbHapTests2 = function (ph, cnum, sm, rsid, rad = 1e+05, ...)
           locus.label = genostruc$names, ...)
       locs[j] = mnloc=curloc
       }
-    new("hbTestResults", hscores=ans, locs=locs, ldStruc=ldStruc,
+    new("hbTestResults", hscores=ans, locs=locs, ldStruc=ldStruc, formula=fmla,
       smlSetName=deparse(substitute(sm)), rsid=rsid, rad=rad, chrnum=cnum)
 }
