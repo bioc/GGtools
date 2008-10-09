@@ -151,3 +151,20 @@ parsePh.out = function(fn) {
  names(pro) = id
  list(tdata=al, probs=pro)
 }
+
+# iii = invokePhase(OO, chrnum(20), "", Sys.getenv("PHASE_LOC"), ".", TRUE)
+
+
+phaseHS = function(x,cnum,sms,parmstring="", globpname=Sys.getenv("PHASE_LOC"),
+    where2run=".", doParse=TRUE) {
+rsids = colnames(x$haplotype)
+sm = smList(sms[cnum,])[[1]]
+hsm = sm[, rsid(rsids)]
+invokePhase(hsm, cnum, parmstring=parmstring, globpname=globpname, where2run=where2run,
+   doParse=doParse)
+}
+
+#setMethod("invokePhase", c("hbTestResults", "numeric", "ANY"),
+#  function(x, cnum, ...) {
+#TRUE
+#})
