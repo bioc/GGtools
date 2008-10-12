@@ -67,7 +67,7 @@ setMethod("gwSnpTests", c("formula", "smlSet", "cnumOrMissing"),
     alld = data.frame(get(pname), pData(sms))
     names(alld)[1] = pname
     sym[[2]] = as.name(pname)  # replace the dependent variable spec in fmla
-    allsst = lapply( smList(sms), function(x) snp.rhs.tests(sym, family="gaussian",
+    allsst = lapply( smList(sms), function(x) snp.rhs.tests154(sym, family="gaussian",
         snp.data=x, data=alld))
     testType = "Gaussian"
 # as of 8 july, we have data frames instead of snp.tests.single objects
@@ -139,7 +139,7 @@ setMethod("gwSnpTests", c("formula", "smlSet", "snpdepth"),
     alld = data.frame(get(pname), pData(sms))
     names(alld)[1] = pname
     sym[[2]] = as.name(pname)  # replace the dependent variable spec in fmla
-    allsst = lapply( smList(sms), function(x) snp.rhs.tests(sym, family="gaussian",
+    allsst = lapply( smList(sms), function(x) snp.rhs.tests154(sym, family="gaussian",
         snp.data=x, data=alld))
 # as of 8 july, we have data frames instead of snp.tests.single objects
 # need to coerce
@@ -176,7 +176,7 @@ setMethod("residTests", c("cwSnpScreenResult", "smlSet", "formula", "missing"), 
   #fmla = fit@formula
   litfmla[[2]] = as.name("res")
   alld = data.frame(res, pData(sms)[ok,])
-  allsst = lapply( smList(sms), function(x) snp.rhs.tests(litfmla, family="gaussian",
+  allsst = lapply( smList(sms), function(x) snp.rhs.tests154(litfmla, family="gaussian",
         snp.data=x, data=alld))
  mksts = function(x) {
       new("snp.tests.single", chisq=cbind(`1 df`=x$Chi.squared, `2 df`=NA),
