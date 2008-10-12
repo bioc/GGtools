@@ -1,10 +1,10 @@
 Package: GGtools
 Title: software and data for genetical genomics (c) 2006 VJ Carey
-Version: 2.99.33
+Version: 2.99.34
 Author: Vince Carey <stvjc@channing.harvard.edu>
 Description: dealing with hapmap SNP reports, GWAS, etc.
-Depends: R (>= 2.7.0), methods, Biobase (>= 1.11.26), GGBase (>= 2.3.0),
-	GSEABase, geneplotter(>= 1.11.8), snpMatrix(>= 1.5.1), RColorBrewer,
+Depends: R (>= 2.7.0), methods, Biobase (>= 1.11.26), GGBase (>= 2.99.0),
+	GSEABase, geneplotter(>= 1.11.8), snpMatrix(>= 1.5.4), RColorBrewer,
 	RSQLite, Biostrings, rtracklayer, rpart
 Suggests: illuminaHumanv1.db, org.Hs.eg.db, 
 	SNPlocs.Hsapiens.dbSNP.20071016, mapLD, haplo.stats

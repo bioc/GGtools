@@ -10,4 +10,4 @@ exportMethods(gwSnpTests, plot, topSnps, trackSet,
    invokePhase, residTests, hbTests, pvals, locs, hscores)
 
 export(snpm2phase, gwSnpScreen, personalHap,
- parsePh.out, snpm2mapLD, phaseHS)
+ parsePh.out, snpm2mapLD) #, phaseHS)
