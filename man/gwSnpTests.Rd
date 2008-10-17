@@ -45,12 +45,12 @@ plot(f1)
 f1b = gwSnpTests(genesym("CPNE1")~1-1, hmFou, chrnum(20))
 # show gene set modeling on chromosome
 library(GSEABase)
-gs1 = GeneSet(c("CPNE1", "RBM12"))
+gs1 = GeneSet(c("CPNE1", "ADA"))
 geneIdType(gs1) = SymbolIdentifier()
 f2 = gwSnpTests(gs1~male, hmFou, chrnum(20))
 f2
 names(f2)
-plot(f2[["RBM12"]])
+plot(f2[["ADA"]])
 # show 'smlSet-wide' fit
 f3 = gwSnpTests(gs1~male, hmFou)
 f3
