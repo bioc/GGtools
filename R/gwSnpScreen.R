@@ -56,6 +56,7 @@ setMethod("gwSnpTests", c("formula", "smlSet", "cnumOrMissing"),
        if (!missing(cnum)) ans = lapply(fms, function(z) gwSnpTests(z, sms, cnum, ...))
        else ans = lapply(fms, function(z) gwSnpTests(z, sms, ...))
        names(ans) = geneIds(respObj)
+       if (!missing(cnum)) ans = lapply(ans, function(x) { x@chrnum = cnum; x })
        return(new("multiGwSnpScreenResult", geneset=respObj, call=theCall, ans))
        }
     else stop("response in formula must be of class genesym, probeId, or GeneSet")
@@ -67,16 +68,16 @@ setMethod("gwSnpTests", c("formula", "smlSet", "cnumOrMissing"),
     alld = data.frame(get(pname), pData(sms))
     names(alld)[1] = pname
     sym[[2]] = as.name(pname)  # replace the dependent variable spec in fmla
-    allsst = lapply( smList(sms), function(x) snp.rhs.tests154(sym, family="gaussian",
+    allsst = lapply( smList(sms), function(x) snp.rhs.tests(sym, family="gaussian",
         snp.data=x, data=alld))
     testType = "Gaussian"
-# as of 8 july, we have data frames instead of snp.tests.single objects
-# need to coerce
-    mksts = function(x) { 
-      new("snp.tests.single", chisq=cbind(`1 df`=x$Chi.squared, `2 df`=NA),
-          snp.names=rownames(x), N=x$Df.residual+x$Df, N.r2=numeric(0))
-    }
-    allsst = lapply(allsst, mksts)
+## as of 8 july, we have data frames instead of snp.tests.single objects
+## need to coerce
+#    mksts = function(x) { 
+#      new("snp.tests.single", chisq=cbind(`1 df`=x$Chi.squared, `2 df`=NA),
+#          snp.names=rownames(x), N=x$Df.residual+x$Df, N.r2=numeric(0))
+#    }
+#    allsst = lapply(allsst, mksts)
 #
 # return cwSnpScreenResult if chromosome specific, otherwise gwSnpScreenResult
 #
@@ -139,15 +140,15 @@ setMethod("gwSnpTests", c("formula", "smlSet", "snpdepth"),
     alld = data.frame(get(pname), pData(sms))
     names(alld)[1] = pname
     sym[[2]] = as.name(pname)  # replace the dependent variable spec in fmla
-    allsst = lapply( smList(sms), function(x) snp.rhs.tests154(sym, family="gaussian",
+    allsst = lapply( smList(sms), function(x) snp.rhs.tests(sym, family="gaussian",
         snp.data=x, data=alld))
 # as of 8 july, we have data frames instead of snp.tests.single objects
 # need to coerce
-    mksts = function(x) { 
-      new("snp.tests.single", chisq=cbind(`1 df`=x$Chi.squared, `2 df`=NA),
-          snp.names=rownames(x), N=x$Df.residual+x$Df, N.r2=numeric(0))
-    }
-    allsst = lapply(allsst, mksts)
+#    mksts = function(x) { 
+#      new("snp.tests.single", chisq=cbind(`1 df`=x$Chi.squared, `2 df`=NA),
+#          snp.names=rownames(x), N=x$Df.residual+x$Df, N.r2=numeric(0))
+#    }
+#    allsst = lapply(allsst, mksts)
     tmp = new("gwSnpScreenResult", gene=respObj, psid=pid,
          annotation=sms@annotation, call=theCall,
 	 allsst)
@@ -176,13 +177,16 @@ setMethod("residTests", c("cwSnpScreenResult", "smlSet", "formula", "missing"), 
   #fmla = fit@formula
   litfmla[[2]] = as.name("res")
   alld = data.frame(res, pData(sms)[ok,])
-  allsst = lapply( smList(sms), function(x) snp.rhs.tests154(litfmla, family="gaussian",
+  allsst = lapply( smList(sms), function(x) snp.rhs.tests(litfmla, family="gaussian",
         snp.data=x, data=alld))
- mksts = function(x) {
-      new("snp.tests.single", chisq=cbind(`1 df`=x$Chi.squared, `2 df`=NA),
-          snp.names=rownames(x), N=x$Df.residual+x$Df, N.r2=numeric(0))
-    }
-    allsst = lapply(allsst, mksts)
+# mksts = function(x) {
+##
+## I THINK YOU NEED TO DROP
+##
+#      new("snp.tests.single", chisq=cbind(`1 df`=x$Chi.squared, `2 df`=NA),
+#          snp.names=rownames(x), N=x$Df.residual+x$Df, N.r2=numeric(0))
+#    }
+#    allsst = lapply(allsst, mksts)
 #
 # return cwSnpScreenResult if chromosome specific, otherwise gwSnpScreenResult
 #

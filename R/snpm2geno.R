@@ -138,7 +138,7 @@ setMethod("hscores", "hbTestResults", function(x) x@hscores)
 setMethod("show", "hbTestResults", function(object){
  cat("GGtools haplotype block test results\n")
  cat("Locations used: ", selectSome(object@locs), "\n")
- cat("Minimum p:", min(pvals(object)), "\n")
+ cat("Minimum global p:", min(pvals(object)), "\n")
  cat("Formula:", object@formula, "\n")
 })
 
