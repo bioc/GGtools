@@ -1,6 +1,6 @@
 
 setMethod("trackSet", "cwSnpScreenResult", function(object, ...) {
-    allp = p.value(object@.Data[[1]], 1) # assume 1df -- must improve
+    allp = p.value(object@.Data[[1]]) # , 1) # assume 1df -- must improve
     rs = names(allp)
     locstr = snpLocs.Hs(chrnum(object@chrnum), rsid(rs))
     loc = locstr["loc",]
