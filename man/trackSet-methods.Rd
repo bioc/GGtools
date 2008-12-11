@@ -1,15 +1,15 @@
-\name{GGtools-trackSet-methods}
+\name{GGtools-RangedData}
 \docType{methods}
-\alias{trackSet-methods}
-\alias{trackSet,cwSnpScreenResult-method}
-\title{ create a browser track from a chromosome-wide SNP screen}
-\description{ create a browser track from a chromosome-wide SNP screen}
-\section{Methods}{
-\describe{
-
-
-\item{object = "cwSnpScreenResult"}{ returns a track set with genomic
-coordinates for x axis and -log10 p-values for y axis}
-
-}}
+\alias{coerce,cwSnpScreenResult,RangedData-method}
+\title{Screens to tracks}
+\description{Create a browser track from a chromosome-wide SNP screen}
+\section{Coercion}{
+  \describe{
+    \item{}{\code{as(object, "RangedData")}: Coerce a
+      \code{\linkS4class{cwSnpScreenResult}}, \code{object}, to a
+      \code{\linkS4class{RangedData}} instance, with the genomic
+      coordinates -log10 p-values for each SNP
+    }
+  }
+}
 \keyword{methods}

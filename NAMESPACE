@@ -2,11 +2,11 @@
 import(tools, AnnotationDbi)
 
 importFrom("graphics", "plot")
-importFrom("rtracklayer", "trackSet")
+importClassesFrom("IRanges", "RangedData")
 
 exportClasses(phaseInput, hbTestResults)
 
-exportMethods(gwSnpTests, plot, topSnps, trackSet, 
+exportMethods(gwSnpTests, plot, topSnps, coerce, 
    invokePhase, residTests, hbTests, pvals, locs, hscores)
 
 export(snpm2phase, gwSnpScreen, personalHap,
