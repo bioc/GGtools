@@ -53,8 +53,15 @@ setMethod("gwSnpTests", c("formula", "smlSet", "cnumOrMissing"),
     else if (is(respObj, "GeneSet")) {
        fms = gsetFmla2FmlaList(sym)
        theCall = match.call()
-       if (!missing(cnum)) ans = lapply(fms, function(z) gwSnpTests(z, sms, cnum, ...))
-       else ans = lapply(fms, function(z) gwSnpTests(z, sms, ...))
+       if (!missing(cnum)) ans = lapply(fms, function(z) {
+               if (options()$verbose) cat(".")
+               gwSnpTests(z, sms, cnum, ...)
+               })
+       else ans = lapply(fms, function(z) {
+          if (options()$verbose) cat(".")
+          gwSnpTests(z, sms, ...)
+          })
+       if (options()$verbose) cat("\n")
        names(ans) = geneIds(respObj)
        if (!missing(cnum)) ans = lapply(ans, function(x) { x@chrnum = cnum; x })
        return(new("multiGwSnpScreenResult", geneset=respObj, call=theCall, ans))
