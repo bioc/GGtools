@@ -3,7 +3,7 @@ setGeneric("filterSnpTests", function(x, n) standardGeneric(
  "filterSnpTests"))
 
 topSingSnps = function(x, n=250, df=1) {
-  pp = p.value(x, df)
+  pp = p.value(x) #, df)
   opp = order(pp)
   x[opp[1:n]]
 }
@@ -31,7 +31,7 @@ setMethod("filterSnpTests",
 
 
 setMethod("plot", "filteredGwSnpScreenResult", function(x, y, ...) {
- pp = lapply(x@.Data, p.value, 1)
+ pp = lapply(x@.Data, p.value) #, 1)
  boxplot(lapply(pp, function(x)-log10(x)), main=x@gene, xlab="chromosome",
    ylab="-log10 p [GLM]")
  xx = try(require(org.Hs.eg.db, quietly=TRUE))
