@@ -63,8 +63,10 @@ setMethod("gwSnpTests", c("formula", "smlSet", "cnumOrMissing"),
           })
        if (options()$verbose) cat("\n")
        names(ans) = geneIds(respObj)
+       SI = new("SessionInfo", sessionInfo())
        if (!missing(cnum)) ans = lapply(ans, function(x) { x@chrnum = cnum; x })
-       return(new("multiGwSnpScreenResult", geneset=respObj, call=theCall, ans))
+       return(new("multiGwSnpScreenResult", geneset=respObj, call=theCall, 
+          sessionInfo = SI, ans))
        }
     else stop("response in formula must be of class genesym, probeId, or GeneSet")
 #
@@ -88,11 +90,12 @@ setMethod("gwSnpTests", c("formula", "smlSet", "cnumOrMissing"),
 #
 # return cwSnpScreenResult if chromosome specific, otherwise gwSnpScreenResult
 #
+    SI = new("SessionInfo", sessionInfo())
     if (!missing(cnum)) return(new("cwSnpScreenResult", gene=respObj, psid=pid,
          annotation=sms@annotation, chrnum=cnum, 
-	 call=theCall, testType= testType, allsst)) # modFmla=infmla, allsst))
+	 call=theCall, sessionInfo=SI, testType= testType, allsst)) # modFmla=infmla, allsst))
     new("gwSnpScreenResult", gene=respObj, psid=pid,
-         annotation=sms@annotation, 
+         annotation=sms@annotation, sessionInfo=SI,
          call=theCall, testType= testType, allsst)
     })
 
@@ -121,7 +124,9 @@ setMethod("gwSnpTests", c("formula", "smlSet", "snpdepth"),
        theCall = match.call()
        ans = lapply(fms, function(z) gwSnpTests(z, sms, ...))
        names(ans) = geneIds(respObj)
-       tmp <- new("multiGwSnpScreenResult", geneset=respObj, call=theCall, ans)
+       SI = new("SessionInfo", sessionInfo())
+       tmp <- new("multiGwSnpScreenResult", geneset=respObj, call=theCall, 
+            sessionInfo=SI, ans)
        names(tmp@.Data) = geneIds(respObj)
        return( filterSnpTests( tmp, cnum ) )
        }
@@ -156,8 +161,9 @@ setMethod("gwSnpTests", c("formula", "smlSet", "snpdepth"),
 #          snp.names=rownames(x), N=x$Df.residual+x$Df, N.r2=numeric(0))
 #    }
 #    allsst = lapply(allsst, mksts)
+    SI = new("SessionInfo", sessionInfo())
     tmp = new("gwSnpScreenResult", gene=respObj, psid=pid,
-         annotation=sms@annotation, call=theCall,
+         annotation=sms@annotation, call=theCall, sessionInfo=SI,
 	 allsst)
     return( filterSnpTests( tmp, cnum ) )
     })
@@ -197,8 +203,9 @@ setMethod("residTests", c("cwSnpScreenResult", "smlSet", "formula", "missing"), 
 #
 # return cwSnpScreenResult if chromosome specific, otherwise gwSnpScreenResult
 #
+    SI = new("SessionInfo", sessionInfo())
     return(new("cwSnpScreenResult", gene=fit@gene, psid=fit@psid,
-         annotation=sms@annotation, chrnum=fit@chrnum,
+         annotation=sms@annotation, chrnum=fit@chrnum, sessionInfo=SI,
          call=theCall, testType= "Gaussian resid", allsst)) # modFmla=fit@formula, allsst))
 
 })

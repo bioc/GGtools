@@ -1,6 +1,6 @@
 masterSnps = function(mgw, n=50, auto=TRUE, orgdb="org.Hs.eg.db",
    minl10=5, genomesize=3e9, pcex=1, 
-   leg.x = -9e8, leg.y=2.9e9, pal=rainbow(20), ...) {
+   pal=rainbow(20), ...) {
 #
 # visualize a multiGwSnpScreenResult (filtered)
 #
