@@ -1,5 +1,5 @@
 masterSnps = function(mgw, n=50, auto=TRUE, orgdb="org.Hs.eg.db",
-   minl10=5, genomesize=3e9, pcex=1, 
+   minl10=5, gstart=0, gend=3e9, genomesize=3e9, pcex=1, 
    pal=rainbow(20), ...) {
 #
 # visualize a multiGwSnpScreenResult (filtered)
@@ -37,9 +37,11 @@ masterSnps = function(mgw, n=50, auto=TRUE, orgdb="org.Hs.eg.db",
            drc = which(chr %in% c("X", "Y"))
            if (length(drc)>0) dr[drc] = TRUE
            }
- allp = allp[-which(dr)]
- locs = locs[-which(dr)]
- chr = chr[-which(dr)]
+ if (sum(dr)>0) {
+  allp = allp[-which(dr)]
+  locs = locs[-which(dr)]
+  chr = chr[-which(dr)]
+  }
  off = cumsum(c(0,lens))
  nchr = as.numeric(chr)
  gloc = locs + off[nchr]
@@ -47,10 +49,11 @@ masterSnps = function(mgw, n=50, auto=TRUE, orgdb="org.Hs.eg.db",
  oksnp = lapply(allp, function(x) {uu = unlist(x); uu[uu>minl10]})
  names(oksnp) = names(allp)
  empt = sapply(oksnp, function(x)length(x)==0)
- OKS = oksnp[-which(empt)]
+ OKS = oksnp
+ if (sum(empt)>0) OKS = oksnp[-which(empt)]
  nn = sapply(OKS,names)
  us = unique(unlist(nn))
- ULOC = snpLocs.Hs(rsid(us)) 
+ ULOC = snpLocs.Hs(rsid(as.character(us)))
  if (any(bc <- is.na(ULOC[1,]))) {
     badcol = which(bc)
     ULOC = ULOC[,-badcol]
@@ -95,7 +98,7 @@ legend(0,100, legend=names(ans$gloc),
 # now the data plot
 #
 par(mar=c(4,4,4,4))
-plot(ans$okgx[[1]], ans$okgy[[1]], xlim=c(0,genomesize), ylim=c(0,genomesize), 
+plot(ans$okgx[[1]], ans$okgy[[1]], xlim=c(gstart,gend), ylim=c(0,genomesize), 
    pch=1, cex=pcex, axes=FALSE, xlab="chromosome harboring gene", ylab="chromosome harboring SNP", ...)
 #
 # put in a guide to help see cis-assoc
