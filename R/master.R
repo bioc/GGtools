@@ -1,6 +1,6 @@
 masterSnps = function(mgw, n=50, auto=TRUE, orgdb="org.Hs.eg.db",
    minl10=5, gstart=0, gend=3e9, genomesize=3e9, pcex=1, 
-   pal=rainbow(20), ...) {
+   pal=rainbow(20), numxax=FALSE, ...) {
 #
 # visualize a multiGwSnpScreenResult (filtered)
 #
@@ -99,7 +99,9 @@ legend(0,100, legend=names(ans$gloc),
 #
 par(mar=c(4,4,4,4))
 plot(ans$okgx[[1]], ans$okgy[[1]], xlim=c(gstart,gend), ylim=c(0,genomesize), 
-   pch=1, cex=pcex, axes=FALSE, xlab="chromosome harboring gene", ylab="chromosome harboring SNP", ...)
+   pch=1, cex=pcex, axes=FALSE, 
+   xlab= ifelse(numxax, "genomewide location", "chromosome harboring gene"), 
+   ylab="chromosome harboring SNP", ...)
 #
 # put in a guide to help see cis-assoc
 #
@@ -115,7 +117,8 @@ abline(0,1,col="gray")
 # axes -- an ugly business
 #
 midpts = (off[-1] + off[-length(off)])/2
-axis(1, at=off[-1], lab=1:22, cex.lab=.8)
+if (!numxax) axis(1, at=off[-1], lab=1:22, cex.lab=.8)
+   else axis(1, cex.lab=.8)
 axis(2, at=off[-1], lab=1:22, cex.lab=.8)
 #
 # following from 1 to overplot
