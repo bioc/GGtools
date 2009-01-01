@@ -54,5 +54,11 @@ plot(f2[["ADA"]])
 # show 'smlSet-wide' fit
 f3 = gwSnpTests(gs1~male, hmFou)
 f3
+\dontrun{
+# in example() we run into a problem with sys.call(2); works
+# in interpreter
+f4 = gwSnpTests(gs1~male, hmFou, snpdepth(250), chunksize(1))
+f4
+  }
 }
 \keyword{ models }
