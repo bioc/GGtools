@@ -13,7 +13,6 @@ invokePhase can run a suitably installed version of PHASE  }
 \description{convert information in a snp.matrix to PHASE input format;
 invokePhase can run a suitably installed version of PHASE  }
 
-}
 \usage{
 snpm2phase(snpm, cnum, outfilename)
 parsePh.out(fn)
