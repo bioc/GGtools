@@ -3,25 +3,36 @@
 \alias{residTests}
 \alias{residTests,cwSnpScreenResult,smlSet,formula,missing-method}
 \alias{gwSnpScreen}
+\alias{chunksize}
+\alias{chunksize-class}
 \alias{gwSnpTests,formula,smlSet,cnumOrMissing-method}
+\alias{gwSnpTests,formula,smlSet,cnumOrMissing,ANY-method}
 \alias{gwSnpTests,formula,smlSet,snpdepth-method}
+\alias{gwSnpTests,formula,smlSet,snpdepth,ANY-method}
+\alias{gwSnpTests,formula,smlSet,snpdepth,chunksize-method}
 \title{methods for iterating association tests (expression vs SNP)
    across genomes or chromosomes}
 \description{methods for iterating association tests (expression vs SNP)
    across genomes or chromosomes}
 \usage{
-gwSnpTests(sym, sms, cnum, ...)
+gwSnpTests(sym, sms, cnum, cs, ...)
 }
 \arguments{
   \item{sym}{ genesym, probeId, or formula instance}
   \item{sms}{ smlSet instance}
   \item{cnum}{ chrnum instance or missing}
+  \item{cs}{ chunksize specification }
   \item{\dots}{ \dots}
 }
 \details{
 invokes snpMatrix test procedures as appropriate
 
 gwSnpScreen is deprecated and simply throws a message indicating this.
+
+chunksize can be specified to divide
+task up into chunks of chromosomes; gc() will be run
+between each chunk -- this may lead to some benefits
+when memory capacity is exceeded
 }
 \value{
 gwSnpScreenResult or cwSnpScreenResult instance
