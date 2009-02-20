@@ -9,5 +9,5 @@ exportClasses(phaseInput, hbTestResults, chunksize)
 exportMethods(gwSnpTests, plot, topSnps, coerce, 
    invokePhase, residTests, hbTests, pvals, locs, hscores)
 
-export(snpm2phase, gwSnpScreen, personalHap,
+export(snpm2phase, personalHap,
  parsePh.out, snpm2mapLD, masterSnps, chunksize) #, phaseHS)
