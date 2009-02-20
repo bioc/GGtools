@@ -2,7 +2,6 @@
 \alias{gwSnpTests}
 \alias{residTests}
 \alias{residTests,cwSnpScreenResult,smlSet,formula,missing-method}
-\alias{gwSnpScreen}
 \alias{chunksize}
 \alias{chunksize-class}
 \alias{gwSnpTests,formula,smlSet,cnumOrMissing-method}
@@ -25,17 +24,18 @@ gwSnpTests(sym, sms, cnum, cs, ...)
   \item{\dots}{ \dots}
 }
 \details{
-invokes snpMatrix test procedures as appropriate
+invokes \code{snpMatrix} package test procedures 
+(e.g., \code{\link[snpMatrix]{snp.rhs.tests}} as appropriate
 
-gwSnpScreen is deprecated and simply throws a message indicating this.
 
-chunksize can be specified to divide
-task up into chunks of chromosomes; gc() will be run
+\code{chunksize} can be specified to divide
+task up into chunks of chromosomes; \code{gc()} will be run
 between each chunk -- this may lead to some benefits
 when memory capacity is exceeded
 }
 \value{
-gwSnpScreenResult or cwSnpScreenResult instance
+\code{\link[GGBase]{gwSnpScreenResult-class}} or 
+\code{\link[GGBase]{cwSnpScreenResult-class}} instance
 }
 %\references{  }
 \author{Vince Carey <stvjc@channing.harvard.edu>}

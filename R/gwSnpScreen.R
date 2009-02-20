@@ -168,10 +168,6 @@ setMethod("gwSnpTests", c("formula", "smlSet", "snpdepth"),
     return( filterSnpTests( tmp, cnum ) )
     })
 
-gwSnpScreen = function(...) {
- .Deprecated("gwSnpTests", package="GGtools", "use gwSnpTests instead of gwSnpScreen")
-}
-
 setGeneric("residTests", function(fit, sms, litfmla, rsnum) 
   standardGeneric("residTests"))
 

@@ -12,8 +12,8 @@
   and SNP genotype series (chromosome-specific or genome-wide).
   The \code{\link{gwSnpTests}} method is the primary interface.
 
-  Important data classes in use: \code{\link[GGBase]{smlSet}},
-  \code{\link[GGBase]{gwSnpScreenResult}}, defined in GGBase package.
+  Important data classes in use: \code{\link[GGBase]{smlSet-class}},
+  \code{\link[GGBase]{gwSnpScreenResult-class}}, defined in GGBase package.
 
   Main data sets: \code{\link{hmceuB36.2021}}, an excerpt based on
   chromosomes 20 and 21, with genotypes for all phase II HapMap SNP

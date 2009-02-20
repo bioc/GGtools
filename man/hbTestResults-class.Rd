@@ -27,7 +27,7 @@ at which blocks were found (mean location within each block) }
     \item{\code{chrnum}:}{Object of class \code{"chrnum"} chromosome
 being analyzed }
     \item{\code{smlSetName}:}{Object of class \code{"character"} name
-of the smlSet harboring data in use }
+of the \code{\link[GGBase]{smlSet-class}} harboring data in use }
     \item{\code{rsid}:}{Object of class \code{"ANY"} can be
 a dbSNP id to use as an anchor, or a number constituting
 absolute chromosomal location at which blocks will be

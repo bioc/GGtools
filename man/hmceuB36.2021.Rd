@@ -7,14 +7,23 @@
 \format{
   The format is:
 Formal class 'smlSet' [package "GGBase"] with 9 slots
+
   ..@ smlEnv           :<environment: 0x3902e98> 
+
   ..@ annotation       : chr "illuminaHumanv1.db"
+
   ..@ chromInds        : num [1:2] 20 21
+
   ..@ organism         : chr "Hs"
+
   ..@ assayData        :<environment: 0x3c96504> 
+
   ..@ phenoData        :Formal class 'AnnotatedDataFrame' [package "Biobase"] with 4 slots
+
   ..@ featureData      :Formal class 'AnnotatedDataFrame' [package "Biobase"] with 4 slots
+
   ..@ experimentData   :Formal class 'MIAME' [package "Biobase"] with 13 slots
+
   ..@ ...classVersion..:Formal class 'Versions' [package "Biobase"] with 1 slots
 }
 %\details{

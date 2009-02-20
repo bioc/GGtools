@@ -4,9 +4,9 @@
 \alias{plot,filteredGwSnpScreenResult,ANY-method}
 \alias{plot,filteredMultiGwSnpScreenResult,ANY-method}
 \alias{plot,snp.reg.imputation,missing-method}
-\title{ ~~ Methods for Function plot in Package `GGtools' ~~}
+\title{  Methods for Function plot in Package `GGtools' }
 \description{
- ~~ Methods for function \code{plot} in Package `GGtools' ~~
+  Methods for function \code{plot} in Package `GGtools' 
 }
 \section{Methods}{
 \describe{
