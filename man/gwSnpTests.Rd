@@ -19,7 +19,7 @@ gwSnpTests(sym, sms, cnum, cs, ...)
 }
 \arguments{
   \item{sym}{ genesym, probeId, or formula instance}
-  \item{sms}{ smlSet instance}
+  \item{sms}{ \link[GGBase]{smlSet} instance}
   \item{cnum}{ chrnum instance or missing}
   \item{cs}{ chunksize specification }
   \item{\dots}{ \dots}

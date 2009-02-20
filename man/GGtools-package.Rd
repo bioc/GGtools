@@ -1,0 +1,32 @@
+\name{GGtools-package}
+\alias{GGtools-package}
+\alias{GGtools}
+\docType{package}
+\title{GGtools Package Overview}
+\description{
+   GGtools Package Overview
+}
+\details{
+  This package provides facilities for analyzing relationships
+  between gene expression distributions (singly or in groups)
+  and SNP genotype series (chromosome-specific or genome-wide).
+  The \code{\link{gwSnpTests}} method is the primary interface.
+
+  Important data classes in use: \code{\link[GGBase]{smlSet}},
+  \code{\link[GGBase]{gwSnpScreenResult}}, defined in GGBase package.
+
+  Main data sets: \code{\link{hmceuB36.2021}}, an excerpt based on
+  chromosomes 20 and 21, with genotypes for all phase II HapMap SNP
+  and full expression data for 90 CEU HapMap cohort members.
+
+  Introductory information is available from vignettes, type
+  \code{openVignette()}.
+
+  Full listing of documented articles is available in HTML view by
+  typing \code{help.start()} and selecting \code{GGtools} package from the
+  \code{Packages} menu or via \code{library(help="GGtools")}.
+}
+\author{
+   V. Carey 
+}
+\keyword{package}
