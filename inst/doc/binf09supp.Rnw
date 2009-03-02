@@ -46,23 +46,24 @@ Note, 2009}
 \maketitle
 
 The main illustrations in the Applications note involve
-a gene set.
+a gene set.  All chunks have eval=FALSE; to run this code, please
+manually reset.
 
-<<geta>>=
+<<geta,eval=FALSE>>=
 library(GGtools)
 data(hla2set)
 hla2set
 @
 
 We need to filter the full HapMap CEU cohort to founders:
-<<aasd>>=
+<<aasd,eval=FALSE>>=
 library(GGdata)
 data(hmceuB36)
 hmFou = hmceuB36[, which(hmceuB36$isFounder == TRUE)]
 @
 
 Now we run the tests:
-<<dorun>>=
+<<dorun,eval=FALSE>>=
 hla2run = gwSnpTests(hla2set~male, hmFou, snpdepth(250))
 @
 
