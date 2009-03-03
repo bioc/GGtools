@@ -32,6 +32,14 @@ invokes \code{snpMatrix} package test procedures
 task up into chunks of chromosomes; \code{gc()} will be run
 between each chunk -- this may lead to some benefits
 when memory capacity is exceeded
+
+The dependent variable in the formula can have class
+genesym (chip annotation package used for lookup),
+probeId (direct specification using chip annotation vocabulary),
+or phenoVar (here we use a phenoData variable as dependent variable).
+If you want to put expression values on the right-hand side
+of the model, add them to the phenoData and enter them in the
+formula.
 }
 \value{
 \code{\link[GGBase]{gwSnpScreenResult-class}} or 
@@ -65,6 +73,9 @@ plot(f2[["ADA"]])
 # show 'smlSet-wide' fit
 f3 = gwSnpTests(gs1~male, hmFou)
 f3
+# now use a phenoVar
+f3b = gwSnpTests(phenoVar("persid")~male, hmFou, chrnum(20))
+topSnps(f3b)
 \dontrun{
 # in example() we run into a problem with sys.call(2); works
 # in interpreter

@@ -36,7 +36,8 @@ setMethod("gwSnpTests", c("formula", "smlSet", "cnumOrMissing"),
 # so it is hard to factor this part out
 #
     respObj = eval(sym[[2]]) # we know sym is a formula, sym[[2]] is dep var
-    if (is(respObj, "genesym")) {
+    if (is(respObj, "phenoVar")) { pid = as.character(respObj@.Data) }
+    else if (is(respObj, "genesym")) {
       annpack = sms@annotation
       require(annpack, character.only=TRUE)
       rmap = revmap( get(paste(gsub(".db", "", annpack), "SYMBOL", sep="")) )
@@ -68,15 +69,18 @@ setMethod("gwSnpTests", c("formula", "smlSet", "cnumOrMissing"),
        return(new("multiGwSnpScreenResult", geneset=respObj, call=theCall, 
           sessionInfo = SI, ans))
        }
-    else stop("response in formula must be of class genesym, probeId, or GeneSet")
+    else stop("response in formula must be of class phenoVar, genesym, probeId, or GeneSet")
 #
 # at this point we have the featureName that we need
 #
     pname = as.character(respObj)
-    assign(pname, exprs(sms)[pid,]) # expression phenotype genename
-    alld = data.frame(get(pname), pData(sms))
-    names(alld)[1] = pname
     sym[[2]] = as.name(pname)  # replace the dependent variable spec in fmla
+    if (!is(respObj, "phenoVar")) {
+      assign(pname, exprs(sms)[pid,]) # expression phenotype genename
+      alld = data.frame(get(pname), pData(sms))
+      names(alld)[1] = pname
+      }
+    else alld = pData(sms)
     allsst = lapply( smList(sms), function(x) snp.rhs.tests(sym, family="gaussian",
         snp.data=x, data=alld))
     testType = "Gaussian"
@@ -105,7 +109,8 @@ setMethod("gwSnpTests", c("formula", "smlSet", "snpdepth"),
     if (cnum < 250) stop("with snpdepth numeric third argument you are defining the number of best snps to save per chromosome; it must exceed 250\n")
     theCall = match.call()
     respObj = eval(sym[[2]]) # we know sym is a formula, sym[[2]] is dep var
-    if (is(respObj, "genesym")) {
+    if (is(respObj, "phenoVar")) { pid = as.character(respObj@.Data)     }
+    else if (is(respObj, "genesym")) {
       annpack = sms@annotation
       require(annpack, character.only=TRUE)
       rmap = revmap( get(paste(gsub(".db", "", annpack), "SYMBOL", sep="")) )
@@ -136,6 +141,7 @@ setMethod("gwSnpTests", c("formula", "smlSet", "snpdepth"),
 # and then reinvoke
 #
        require( sms@annotation, character.only=TRUE, quietly=TRUE )
+    if (is(respObj, "phenoVar")) { pid = as.character(respObj@.Data) }
        require( GSEABase, quietly=TRUE )
        rmap = revmap(get(paste(gsub(".db", "", sms@annotation), "CHR", sep="")))
        allpid = get(as(respObj,"character"), rmap)
@@ -146,12 +152,15 @@ setMethod("gwSnpTests", c("formula", "smlSet", "snpdepth"),
        sym = as.formula(tmp)
        return( gwSnpTests( sym, sms, cnum, ...) )
        }
-    else stop("response in formula must be of class genesym, probeId, or GeneSet")
+    else stop("response in formula must be of class phenoVar, genesym, probeId, or GeneSet")
     pname = as.character(respObj)
-    assign(pname, exprs(sms)[pid,]) # expression phenotype genename
-    alld = data.frame(get(pname), pData(sms))
-    names(alld)[1] = pname
     sym[[2]] = as.name(pname)  # replace the dependent variable spec in fmla
+    if (!is(respObj, "phenoVar")) {
+      assign(pname, exprs(sms)[pid,]) # expression phenotype genename
+      alld = data.frame(get(pname), pData(sms))
+      names(alld)[1] = pname
+      }
+    else alld = pData(sms)
     allsst = lapply( smList(sms), function(x) snp.rhs.tests(sym, family="gaussian",
         snp.data=x, data=alld))
 # as of 8 july, we have data frames instead of snp.tests.single objects
