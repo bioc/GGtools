@@ -60,12 +60,15 @@ cisSnpTests = function(fmla, smls, radius, ...) {
      if (nsnps == 0) {
          warning(paste("no snps on chip for given radius relative to gene; need to increase; executing full chromosome test for gene ", toks[i],"chr", chroms[i]))
          conditions[[i]] = list(gene=toks[i], chrom=chroms[i], cond="no SNP in radius")
+         outl[[i]] = NA
        }
-     else smat = smat[, intersect(onc,keepSnps[[i]]) ]
-     tmp = list(smat)
-     names(tmp) = chroms[i]
-     assign("smList", tmp, cursm@smlEnv)
-     outl[[i]] = gwSnpTests(curfmla, cursm, chrnum(chroms[i]))
+     else {
+        smat = smat[, intersect(onc,keepSnps[[i]]) ]
+        tmp = list(smat)
+        names(tmp) = chroms[i]
+        assign("smList", tmp, cursm@smlEnv)
+        outl[[i]] = gwSnpTests(curfmla, cursm, chrnum(chroms[i]))
+        }
      }
    return(new("multiCisTestResult", call=mc, conditions=conditions, outl))
   }
