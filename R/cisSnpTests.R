@@ -28,6 +28,7 @@ GeneSet2LocInfo = function(gs) {
  
 
 cisSnpTests = function(fmla, smls, radius, ...) {
+ mc = match.call()
  wrapg = function(x) paste("genesym(\"", x, "\")", sep="")
  wrapex = function(x) paste("probeId(\"", x, "\")", sep="")
 
@@ -45,23 +46,29 @@ cisSnpTests = function(fmla, smls, radius, ...) {
    chroms = sapply(sapply(geneLocList, names), "[", 1)
    keepSnps = snpsNear(respObj, radius)
    ntests = length(chroms)
+   conditions = list()
    outl = list()
    curfmla = fmla
    for (i in 1:ntests) {
+     if (options()$verbose) cat(".")
      resp = wrapex( toks[i] )
      curfmla = formula(paste(resp , pred, sep="~"))
      cursm = smls[ chrnum(chroms[i]), ]
      smat = smList(cursm)[[chroms[i]]]
      onc = colnames(smat)
      nsnps = length(intersect(onc,keepSnps[[i]]) )
-     if (nsnps == 0) stop("no snps on chip for given radius; need to increase")
-     smat = smat[, intersect(onc,keepSnps[[i]]) ]
+     if (nsnps == 0) {
+         warning(paste("no snps on chip for given radius relative to gene; need to increase; executing full chromosome test for gene ", toks[i],"chr", chroms[i]))
+         conditions[[i]] = list(gene=toks[i], chrom=chroms[i], cond="no SNP in radius")
+       }
+     else smat = smat[, intersect(onc,keepSnps[[i]]) ]
      tmp = list(smat)
      names(tmp) = chroms[i]
      assign("smList", tmp, cursm@smlEnv)
      outl[[i]] = gwSnpTests(curfmla, cursm, chrnum(chroms[i]))
      }
-   outl
+   return(new("multiCisTestResult", call=mc, conditions=conditions, outl))
   }
+  else stop("only functioning for GeneSets based on probeIds")
 }
   
