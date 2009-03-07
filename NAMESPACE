@@ -10,4 +10,5 @@ exportMethods(gwSnpTests, plot, topSnps, coerce,
    invokePhase, residTests, hbTests, pvals, locs, hscores)
 
 export(snpm2phase, personalHap,
- parsePh.out, snpm2mapLD, masterSnps, chunksize) #, phaseHS)
+ parsePh.out, snpm2mapLD, masterSnps, chunksize,
+ cisSnpTests) #, phaseHS)
