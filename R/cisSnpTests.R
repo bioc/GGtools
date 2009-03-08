@@ -49,6 +49,7 @@ cisSnpTests = function(fmla, smls, radius, ...) {
      lnames[[i]] = lnames[[i]][ lnl[[i]] < 3 ]
    chroms = sapply(lnames, "[", 1)
    keepSnps = snpsNear(respObj, radius)
+   targInfo = lapply(keepSnps, function(x)attr(x, "target"))
    ntests = length(chroms)
    conditions = list()
    outl = list()
@@ -63,7 +64,7 @@ cisSnpTests = function(fmla, smls, radius, ...) {
      nsnps = length(intersect(onc,keepSnps[[i]]) )
      if (nsnps == 0) {
          warning(paste("no snps on chip for given radius relative to gene; need to increase; executing full chromosome test for gene ", toks[i],"chr", chroms[i]))
-         conditions[[i]] = list(gene=toks[i], chrom=chroms[i], cond="no SNP in radius")
+         conditions[[i]] = list(gene=toks[i], chrom=chroms[i], cond="no SNP in radius", targInfo=targInfo[[i]])
          outl[[i]] = NA
        }
      else {
@@ -72,6 +73,7 @@ cisSnpTests = function(fmla, smls, radius, ...) {
         names(tmp) = chroms[i]
         assign("smList", tmp, cursm@smlEnv)
         outl[[i]] = gwSnpTests(curfmla, cursm, chrnum(chroms[i]))
+        conditions[[i]] = list(gene=toks[i], chrom=chroms[i], cond=NA, targInfo=targInfo[[i]])
         }
      }
    names(outl) = toks
