@@ -74,6 +74,7 @@ cisSnpTests = function(fmla, smls, radius, ...) {
         outl[[i]] = gwSnpTests(curfmla, cursm, chrnum(chroms[i]))
         }
      }
+   names(outl) = toks
    return(new("multiCisTestResult", call=mc, conditions=conditions, outl))
   }
   else stop("only functioning for GeneSets based on probeIds")
