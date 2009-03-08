@@ -43,7 +43,11 @@ cisSnpTests = function(fmla, smls, radius, ...) {
 
    geneLocList = GeneSet2LocInfo(respObj)
    toks = geneIds(respObj)
-   chroms = sapply(sapply(geneLocList, names), "[", 1)
+   lnames = lapply(geneLocList, names)
+   lnl = lapply(lnames, nchar)
+   for (i in 1:length(lnl))
+     lnames[[i]] = lnames[[i]][ lnl[[i]] < 3 ]
+   chroms = sapply(lnames, "[", 1)
    keepSnps = snpsNear(respObj, radius)
    ntests = length(chroms)
    conditions = list()
