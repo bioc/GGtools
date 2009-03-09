@@ -4,11 +4,11 @@ import(tools, AnnotationDbi, annaffy)
 importFrom("graphics", "plot")
 importClassesFrom("IRanges", "RangedData")
 
-exportClasses(phaseInput, hbTestResults, chunksize)
+exportClasses(phaseInput, hbTestResults, chunksize, aafSNP)
 
 exportMethods(gwSnpTests, plot, topSnps, coerce, 
    invokePhase, residTests, hbTests, pvals, locs, hscores)
 
 export(snpm2phase, personalHap,
  parsePh.out, snpm2mapLD, masterSnps, chunksize,
- cisSnpTests) #, phaseHS)
+ cisSnpTests, aafSNP) #, phaseHS)
