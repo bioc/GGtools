@@ -1,5 +1,5 @@
 
-import(tools, AnnotationDbi)
+import(tools, AnnotationDbi, annaffy)
 
 importFrom("graphics", "plot")
 importClassesFrom("IRanges", "RangedData")
