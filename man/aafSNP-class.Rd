@@ -16,12 +16,6 @@ Objects can be created by calls of the form \code{new("aafSNP", ...)}.
 }
 \section{Extends}{
 Class \code{"\linkS4class{character}"}, from data part.
-Class \code{"\linkS4class{vector}"}, by class "character", distance 2.
-Class \code{"\linkS4class{data.frameRowLabels}"}, by class "character", distance 2.
-Class \code{"\linkS4class{characterORMIAME}"}, by class "character", distance 2.
-Class \code{"\linkS4class{ANYTHING}"}, by class "character", distance 2.
-Class \code{"\linkS4class{characterORNULL}"}, by class "character", distance 2.
-Class \code{"\linkS4class{vectorORfactor}"}, by class "character", distance 3.
 }
 \section{Methods}{
 The constructor has the same name, and operates on a list of character vectors.
