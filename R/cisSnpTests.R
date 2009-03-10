@@ -48,14 +48,21 @@ cisSnpTests = function(fmla, smls, radius, ...) {
    for (i in 1:length(lnl))
      lnames[[i]] = lnames[[i]][ lnl[[i]] < 3 ]
    chroms = sapply(lnames, "[", 1)
-   keepSnps = snpsNear(respObj, radius)
-   targInfo = lapply(keepSnps, function(x)attr(x, "target"))
+   keepSnps = snpsNear(respObj, radius)  # will have try-errors
+   targInfo = lapply(keepSnps, function(x)try(attr(x, "target")))
    ntests = length(chroms)
    conditions = list()
    outl = list()
    curfmla = fmla
    for (i in 1:ntests) {
      if (options()$verbose) cat(".")
+     if (inherits(keepSnps[[i]], "try-error") |   # try-error attribute gets lost
+        length(grep("rror", keepSnps[[i]])>0)) {
+        conditions[[i]] = list(gene=toks[i], chrom=
+            chroms[i], cond="snpsNear fails for this gene, location probably ambiguous", targInfo=NA)
+        outl[[i]] = NA
+        next
+        }
      resp = wrapex( toks[i] )
      curfmla = formula(paste(resp , pred, sep="~"))
      cursm = smls[ chrnum(chroms[i]), ]
