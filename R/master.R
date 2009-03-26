@@ -25,12 +25,13 @@ masterSnps = function(mgw, n=50, auto=TRUE, orgdb="org.Hs.eg.db",
  nln = as.numeric(nl)
  lens = lens[order(nln)]
  rsmap = revmap(smap)
- egid = unlist(mget(gn, rsmap))
+ egid = na.omit(unlist(mget(gn, rsmap, ifnotfound=NA)))
  locs = abs(unlist(lapply(mget(egid, lmap), "[", 1))) # deal with multiloc
  nl = names(locs)
  chr = gsub(".*\\.", "", nl)
  hap = grep("hap", chr)
- names(locs) = gn
+ ngn = mget(egid, smap)  # should be clean
+ names(locs) = ngn
  dr = is.na(locs)
  dr[hap] = TRUE
  if (auto) { 
