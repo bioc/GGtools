@@ -42,10 +42,18 @@ cisSnpTests = function(fmla, smls, radius, ...) {
      else if (length(flist[[3]]) == 1) pred = flist[[3]]
 
    geneLocList = GeneSet2LocInfo(respObj)
+   isna = sapply(geneLocList, function(x)is.na(x[1]))
+   isnull = sapply(geneLocList, function(x)length(x[1])==0)
+   if (any(isna) | any(isnull)) {
+       kill = union(which(isna), which(isnull))
+       geneLocList = geneLocList[-kill]
+       respObj = respObj[-kill]
+       warning(paste(length(kill), "genes in response object dropped for lack of location info"))
+       }
    toks = geneIds(respObj)
    lnames = lapply(geneLocList, names)
    lnl = lapply(lnames, nchar)
-   for (i in 1:length(lnl))
+   for (i in 1:length(lnl))  # this is to get rid of chromosome annos with weird names
      lnames[[i]] = lnames[[i]][ lnl[[i]] < 3 ]
    chroms = sapply(lnames, "[", 1)
    keepSnps = snpsNear(respObj, radius)  # will have try-errors
@@ -75,7 +83,7 @@ cisSnpTests = function(fmla, smls, radius, ...) {
          outl[[i]] = NA
        }
      else {
-        smat = smat[, intersect(onc,keepSnps[[i]]) ]
+        smat = smat[, intersect(onc,keepSnps[[i]]), drop=FALSE ]
         tmp = list(smat)
         names(tmp) = chroms[i]
         assign("smList", tmp, cursm@smlEnv)
