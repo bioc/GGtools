@@ -11,4 +11,4 @@ exportMethods(gwSnpTests, plot, topSnps, coerce,
 
 export(snpm2phase, personalHap,
  parsePh.out, snpm2mapLD, masterSnps, chunksize,
- cisSnpTests, aafSNP) #, phaseHS)
+ cisSnpTests, aafSNP, make_smlSet) #, phaseHS)
