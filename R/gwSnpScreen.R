@@ -23,7 +23,7 @@ gsetFmla2FmlaList = function(fm) {
 
 setGeneric("gwSnpTests", function( sym, sms, cnum, cs, ...) standardGeneric("gwSnpTests"))
 
-setMethod("gwSnpTests", c("formula", "smlSet", "cnumOrMissing"),
+setMethod("gwSnpTests", c("formula", "smlSet", "cnumOrMissing", "missing"),
   function( sym, sms, cnum, cs, ...) {
     if (!missing(cnum)) {
       if (length(cnum) != 1) stop("only supports scalar chrnum cnum at present")
@@ -104,7 +104,7 @@ setMethod("gwSnpTests", c("formula", "smlSet", "cnumOrMissing"),
     })
 
 
-setMethod("gwSnpTests", c("formula", "smlSet", "snpdepth"),
+setMethod("gwSnpTests", c("formula", "smlSet", "snpdepth", "missing"),
   function( sym, sms, cnum, cs, ...) {
     if (cnum < 250) stop("with snpdepth numeric third argument you are defining the number of best snps to save per chromosome; it must exceed 250\n")
     theCall = match.call()
