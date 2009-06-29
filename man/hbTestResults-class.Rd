@@ -20,6 +20,7 @@ Objects can be created by calls of the form \code{new("hbTestResults", ...)}.
 }
 \section{Slots}{
 	 \describe{
+    \item{\code{formula}:}{specify gene of interest and covariates from pData}
     \item{\code{hscores}:}{Object of class \code{"list"} series of
 haplo.stats:::haplo.score results for blocks  }
     \item{\code{locs}:}{Object of class \code{"numeric"} locations

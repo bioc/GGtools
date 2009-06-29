@@ -5,8 +5,10 @@
 \alias{chunksize}
 \alias{chunksize-class}
 \alias{gwSnpTests,formula,smlSet,cnumOrMissing-method}
+\alias{gwSnpTests,formula,smlSet,cnumOrMissing,missing-method}
 \alias{gwSnpTests,formula,smlSet,cnumOrMissing,ANY-method}
 \alias{gwSnpTests,formula,smlSet,snpdepth-method}
+\alias{gwSnpTests,formula,smlSet,snpdepth,missing-method}
 \alias{gwSnpTests,formula,smlSet,snpdepth,ANY-method}
 \alias{gwSnpTests,formula,smlSet,snpdepth,chunksize-method}
 \title{methods for iterating association tests (expression vs SNP)
