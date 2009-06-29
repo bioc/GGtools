@@ -3,6 +3,7 @@ import(tools, AnnotationDbi, annaffy)
 
 importFrom("graphics", "plot")
 importClassesFrom("IRanges", "RangedData")
+importClassesFrom("GGBase", "cnumOrMissing")
 
 exportClasses(phaseInput, hbTestResults, chunksize, aafSNP)
 
