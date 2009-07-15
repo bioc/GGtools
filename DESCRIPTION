@@ -9,7 +9,7 @@ Depends: R (>= 2.7.0), methods, Biobase (>= 1.11.26), GGBase (>= 3.2.17),
 Suggests: illuminaHumanv1.db, org.Hs.eg.db, 
 	SNPlocs.Hsapiens.dbSNP.20071016, mapLD, haplo.stats
 LazyData: no
-biocViews: SNPsAndGeneticVariability, Genetics, Bioinformatics
+biocViews: SNP, GeneticVariability, Genetics, Bioinformatics
 Maintainer: Vince Carey <stvjc@channing.harvard.edu>
 Imports: AnnotationDbi, IRanges (>= 1.1.6)
 License: Artistic-2.0
