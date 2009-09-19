@@ -22,8 +22,9 @@ The constructor has the same name, and operates on a list of character vectors.
 It is expected that you would have a vector of rs numbers  for each gene,
 thus a list of vectors with elements corresponding to genes.
 
-getURL, getHTML are defined; see \code{\link[annaffy]{getURL}}, for example.
-Apes the handling of UniGene links.
+getURL, getHTML are defined; see
+\code{\link[annaffy:getURL-methods]{getURL}}, for example, Apes the
+handling of UniGene links. 
 }
 %\references{ ~put references to the literature/web site here ~ }
 %\author{ ~~who you are~~ }

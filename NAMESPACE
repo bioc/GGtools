@@ -1,9 +1,27 @@
 
-import(tools, AnnotationDbi, annaffy)
+import(annaffy, AnnotationDbi, methods)
 
-importFrom("graphics", "plot")
-importClassesFrom("IRanges", "RangedData")
+#importClassesFrom("IRanges", "RangedData")
 importClassesFrom("GGBase", "cnumOrMissing")
+
+importClassesFrom(IRanges,
+                  RangedData)
+
+importFrom(graphics,
+           abline,
+           axis,
+           boxplot,
+           layout,
+           legend,
+           par,
+           plot,
+           points)
+
+importFrom(stats,
+           as.formula,
+           formula,
+           lm,
+           resid)
 
 exportClasses(phaseInput, hbTestResults, chunksize, aafSNP)
 

@@ -20,7 +20,7 @@ gwSnpTests(sym, sms, cnum, cs, ...)
 }
 \arguments{
   \item{sym}{ genesym, probeId, or formula instance}
-  \item{sms}{ \link[GGBase]{smlSet} instance}
+  \item{sms}{ \link[GGBase:smlSet-class]{smlSet} instance}
   \item{cnum}{ chrnum instance or missing}
   \item{cs}{ chunksize specification }
   \item{\dots}{ \dots}
@@ -45,7 +45,7 @@ formula.
 }
 \value{
 \code{\link[GGBase]{gwSnpScreenResult-class}} or 
-\code{\link[GGBase]{cwSnpScreenResult-class}} instance
+\code{\link[GGBase:gwSnpScreenResult-class]{cwSnpScreenResult-class}} instance
 }
 %\references{  }
 \author{Vince Carey <stvjc@channing.harvard.edu>}
