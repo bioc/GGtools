@@ -1,7 +1,7 @@
+import(tools, AnnotationDbi)
+importFrom(annaffy, "getURL")
+importFrom(annaffy, "getHTML")
 
-import(annaffy, AnnotationDbi, methods)
-
-#importClassesFrom("IRanges", "RangedData")
 importClassesFrom("GGBase", "cnumOrMissing")
 
 importClassesFrom(IRanges,

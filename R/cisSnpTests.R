@@ -73,7 +73,7 @@ cisSnpTests = function(fmla, smls, radius, ...) {
         }
      resp = wrapex( toks[i] )
      curfmla = formula(paste(resp , pred, sep="~"))
-     cursm = smls[ chrnum(chroms[i]), ]
+     cursm = smls[ chrnum(chroms[i]), ,drop=FALSE]
      smat = smList(cursm)[[chroms[i]]]
      onc = colnames(smat)
      nsnps = length(intersect(onc,keepSnps[[i]]) )
