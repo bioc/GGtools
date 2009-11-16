@@ -26,8 +26,8 @@ importFrom(stats,
 exportClasses(phaseInput, hbTestResults, chunksize, aafSNP)
 
 exportMethods(gwSnpTests, plot, topSnps, coerce, 
-   invokePhase, residTests, hbTests, pvals, locs, hscores)
+   invokePhase, residTests, hbTests, pvals, locs, hscores, slimdown)
 
 export(snpm2phase, personalHap,
  parsePh.out, snpm2mapLD, masterSnps, chunksize,
- cisSnpTests, aafSNP, make_smlSet) #, phaseHS)
+ cisSnpTests, aafSNP, make_smlSet, slimCisTrans) #, phaseHS)
