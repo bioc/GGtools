@@ -48,6 +48,7 @@ slimCisTrans = function( smlSet, genes2do=1:45, ncores=15,
     save(list=n, file=nf)
     NULL
    }
+  require(multicore, quietly=TRUE)
   mclapply( inds, msetup, smlSet=smlSet, fmla=fmla, targdir=targdir )
 }
     
