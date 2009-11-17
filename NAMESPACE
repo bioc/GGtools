@@ -1,6 +1,7 @@
 import(tools, AnnotationDbi)
 importFrom(annaffy, "getURL")
 importFrom(annaffy, "getHTML")
+importFrom(annotate, "organism")
 
 importClassesFrom("GGBase", "cnumOrMissing")
 
@@ -26,8 +27,9 @@ importFrom(stats,
 exportClasses(phaseInput, hbTestResults, chunksize, aafSNP)
 
 exportMethods(gwSnpTests, plot, topSnps, coerce, 
-   invokePhase, residTests, hbTests, pvals, locs, hscores, slimdown)
+   invokePhase, residTests, hbTests, pvals, locs, hscores )
 
 export(snpm2phase, personalHap,
  parsePh.out, snpm2mapLD, masterSnps, chunksize,
- cisSnpTests, aafSNP, make_smlSet, slimCisTrans) #, phaseHS)
+ cisSnpTests, aafSNP, make_smlSet, slimCisTrans,
+ slimCTchr2SQLite) #, phaseHS)

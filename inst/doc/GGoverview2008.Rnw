@@ -112,10 +112,10 @@ We need to know a) that the A/B tokens map in lexical order to
 the nucleotides (A will be the alphabetically first nucleotide
 for the diallelic call).
 
-Using the SNPlocs.Hsapiens.dbSNP.20071016 package, we can get the
+Using the SNPlocs.Hsapiens.dbSNP.* package, we can get the
 nucleotides:
 <<gets>>=
-library(SNPlocs.Hsapiens.dbSNP.20071016)
+library(SNPlocs.Hsapiens.dbSNP.20080617)
 s20 = getSNPlocs("chr20")
 s20[ s20[,1] == 4814683, ]
 @

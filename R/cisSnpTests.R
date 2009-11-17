@@ -4,7 +4,8 @@ GeneSet2LocInfo = function(gs) {
 # id as name and a vector of signed locations on chromosomes
 # the names of the location elements are the chromosome names
 #
- if (organism(gs) != "Homo sapiens") stop("only written for Homo sapiens at this time")
+ if (annotate::organism(gs) == "") warning("organism missing from gene set object, assuming Homo sapiens")
+ else if (annotate::organism(gs) != "Homo sapiens") stop("only functioning for gene sets satisfying organism(gs) %in% c('', 'Homo sapiens')")
  gst = geneIdType(gs)
  tags = geneIds(gs)
  if (gst@type == "Annotation") {

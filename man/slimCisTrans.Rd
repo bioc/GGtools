@@ -57,8 +57,11 @@ VJ Carey
 require(multicore)
 data(hmceuB36.2021)
 td = tempdir()
+availc = multicore:::volatile$detectedCores
+if (availc > 2) availc=availc-1
+usec = min(5, availc)
 m1 = slimCisTrans(fmla=gs~male, smlSet=hmceuB36.2021,
-   genes2do=1:10, ncores=5, targdir=td)
+   genes2do=1:10, ncores=usec, targdir=td)
 dir(td)
 od = getwd()
 setwd(td)
