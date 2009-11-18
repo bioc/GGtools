@@ -30,6 +30,7 @@ setMethod("slimdown", "multiGwSnpScreenResult", function(x, keepnames=NA) {
 # fmla must have gs as dependent variable
 slimCisTrans = function( smlSet, genes2do=1:45, ncores=15,
      targdir = "/mnt/data/stvjc/GWAS", fmla=gs~male ) {
+  require(multicore, quietly=TRUE)
   coreinds = rep(1:ncores, each=floor(length(genes2do)/ncores))
   leftover = length(genes2do)-length(coreinds)
   inds = split(genes2do[1:length(coreinds)], coreinds)
