@@ -1,18 +1,20 @@
 \name{slimCTchr2SQLite}
 \alias{slimCTchr2SQLite}
 \alias{slimCTchr2flat}
+\alias{minp}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 transform matrices of chromosome-wide cis/trans eQTL statistics to
-SQLite or flat text
+SQLite or flat text, and support extraction of minimum p per SNP
 }
 \description{
 transform matrices of chromosome-wide cis/trans eQTL statistics to
-SQLite or flat text
+SQLite or flat text, and support extraction of minimum p per SNP
 }
 \usage{
 slimCTchr2SQLite(path, chr = 1, dbname = paste("chr", chr, sep = ""))
 slimCTchr2flat(path, chr = 1, dbname = paste("chr", chr, sep = ""))
+minp(path, BUFSIZE=100000, breakat=Inf, freqdump=20000)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -30,13 +32,23 @@ biological name of chromosome
 name of table and prefix of name of file to be written; in
 case of 'flat' application, just interpreted as prefix
 }
+\item{BUFSIZE}{ numeric specification of a buffer size to
+avoid incremental growth of arrays }
+\item{breakat}{ for testing, line number at which to stop
+prematurely}
+\item{freqdump}{ rate at which a record number will be printed,
+if options()$verbose == TRUE }
 }
 \details{
 uses dbWriteTable for SQLite driver built in function call,
 or write.table (for 'flat' application)
 }
 \value{
-NULL, just runs for side effects
+slim* NULL, just runs for side effects
+
+minp -- a list of 3 elements, rsid (as numeric, no rs prefix),
+ans (minimum p value), and hline (header record, enumerates
+probe names)
 }
 %\references{
 %%% ~put references to the literature/web site here ~
@@ -54,6 +66,7 @@ VJ Carey
 %%% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
+overb = options()$verbose
 example(slimCisTrans)
 slimCTchr2SQLite(td,chr=1, dbname="chr20")
 setwd(td)
@@ -63,5 +76,9 @@ dbListTables(con)
 dbGetQuery(con, "select * from chr20 limit 5")
 # notice the fiddling with the column names in sqlite!
 slimCTchr2flat(td,chr=1, dbname="chr20flat")
+options(verbose=TRUE)
+mp = minp("chr20flat.txt")
+sapply(mp, head, 30)
+options(verbose=overb)
 }
 \keyword{ models }
