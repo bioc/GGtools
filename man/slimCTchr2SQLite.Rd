@@ -1,16 +1,18 @@
 \name{slimCTchr2SQLite}
 \alias{slimCTchr2SQLite}
+\alias{slimCTchr2flat}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 transform matrices of chromosome-wide cis/trans eQTL statistics to
-SQLite
+SQLite or flat text
 }
 \description{
 transform matrices of chromosome-wide cis/trans eQTL statistics to
-SQLite
+SQLite or flat text
 }
 \usage{
 slimCTchr2SQLite(path, chr = 1, dbname = paste("chr", chr, sep = ""))
+slimCTchr2flat(path, chr = 1, dbname = paste("chr", chr, sep = ""))
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -25,11 +27,13 @@ biological name of chromosome
 }
 
   \item{dbname}{
-name of table and prefix of name of file to be written
+name of table and prefix of name of file to be written; in
+case of 'flat' application, just interpreted as prefix
 }
 }
 \details{
-uses dbWriteTable for SQLite driver built in function call
+uses dbWriteTable for SQLite driver built in function call,
+or write.table (for 'flat' application)
 }
 \value{
 NULL, just runs for side effects
@@ -57,6 +61,7 @@ dr = dbDriver("SQLite")
 con = dbConnect(dr, "chr20.db")
 dbListTables(con)
 dbGetQuery(con, "select * from chr20 limit 5")
-# notice the fiddling with the column names!
+# notice the fiddling with the column names in sqlite!
+slimCTchr2flat(td,chr=1, dbname="chr20flat")
 }
 \keyword{ models }
