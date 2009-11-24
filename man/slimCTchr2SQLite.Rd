@@ -14,12 +14,14 @@ SQLite or flat text, and support extraction of minimum p per SNP
 \usage{
 slimCTchr2SQLite(path, chr = 1, dbname = paste("chr", chr, sep = ""))
 slimCTchr2flat(path, chr = 1, dbname = paste("chr", chr, sep = ""))
-minp(path, BUFSIZE=100000, breakat=Inf, freqdump=20000)
+minp(path, BUFSIZE=100000, breakat=Inf, freqdump=20000, filefun=gzfile)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{path}{
-folder where slimCisTrans wrote the *+.rda files
+for minp, the path of the file holding flat output, otherwise
+folder where slimCisTrans wrote the *+.rda files.  for minp
+the file will typically be compressed; if not, set filefun=file (literally)
 }
   \item{chr}{
 an index into the list of chromosome-specific results written
@@ -38,6 +40,9 @@ avoid incremental growth of arrays }
 prematurely}
 \item{freqdump}{ rate at which a record number will be printed,
 if options()$verbose == TRUE }
+\item{filefun}{ R function to open connection to flat file with
+data; for recent runs of slimCTchr2flat, gzfile will work because
+the output file is gzcompressed.}
 }
 \details{
 uses dbWriteTable for SQLite driver built in function call,

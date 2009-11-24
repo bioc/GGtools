@@ -1,9 +1,10 @@
-minp = function(path, BUFSIZE=100000, breakat=Inf, freqdump=10000) {
+minp = function(path, BUFSIZE=100000, breakat=Inf, freqdump=10000,
+  filefun=gzfile) {
    owarn = options()$warn
    ans = rep(NA, BUFSIZE)
    rsid = rep(NA, BUFSIZE)
    on.exit(close(fi))
-   nl = 0; fi = file(path, "r");
+   nl = 0; fi = filefun(path, "r");
    hline = NULL
    while( !inherits(try(tmp <- readLines(fi, n=1, ok=FALSE)), "try-error") ) {
      if (nl == 0 & is.null(hline)) {  # get header record and don't increment nl
