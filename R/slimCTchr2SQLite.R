@@ -45,8 +45,8 @@ slimCTchr2flat = function(path,chr=1, dbname=paste("chr", chr, sep="")) {
    rm(list=obn[i])
    }
  stats = cbind(rsid=rsn,stats)
- dr = dbDriver("SQLite")
- write.table(stats, paste(dbname, ".txt", sep=""))
+ ofile = gzfile(paste(dbname, ".txt.gz", sep=""))
+ write.table(stats, ofile)
  cat("table written\n")
  NULL
 }
