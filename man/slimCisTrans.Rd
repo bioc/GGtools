@@ -60,8 +60,15 @@ td = tempdir()
 availc = multicore:::volatile$detectedCores
 if (availc > 2) availc=availc-1
 usec = min(5, availc)
-m1 = slimCisTrans(fmla=gs~male, smlSet=hmceuB36.2021,
-   genes2do=1:10, ncores=usec, targdir=td)
+time2 = unix.time(m1 <- slimCisTrans(fmla=gs~male, smlSet=hmceuB36.2021,
+   genes2do=1:10, ncores=usec, targdir=td))
+gc()
+time1 = unix.time(m1 <- slimCisTrans(fmla=gs~male, smlSet=hmceuB36.2021,
+   genes2do=1:10, ncores=1, targdir=td))
+cat("for 2 cores, time elapsed:\n")
+time2
+cat("for 1 core, time elapsed:\n")
+time1
 dir(td)
 od = getwd()
 setwd(td)
