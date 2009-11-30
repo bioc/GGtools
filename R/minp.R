@@ -50,3 +50,26 @@ minp = function(path, BUFSIZE=100000, breakat=Inf, freqdump=10000,
     }
     list(rsid=rsid[1:nl], ans=ans[1:nl], minind=minind[1:nl], genes=hline[-1])
 }
+
+
+
+locreport = function (winfo, chr) 
+{
+    if (!is.numeric(chr)) 
+        stop("chr must be in 1:24")
+    require(GGBase)
+    locs = snpLocs.Hs(chrnum(chr), rsid(paste("rs", winfo[["rsid"]], 
+        sep = "")))
+    ldf = data.frame(reflocs = locs[2, ], rsid = paste("rs", 
+        locs[1, ], sep = ""))
+    gns = gsub("\"", "", winfo[["genes"]])
+    picks = gns[winfo[["minind"]]]
+    ac = as.character
+    indf = data.frame(rsid = ac(paste("rs", winfo[["rsid"]], 
+        sep = "")), mlogp = -log10(winfo[["ans"]]), mind = winfo[["minind"]], 
+        bestgene = ac(picks), stringsAsFactors = FALSE)
+    fulldf = merge(ldf, indf, by = "rsid", all.x = TRUE)
+    fulldf$rsid = ac(fulldf$rsid)
+    fulldf
+}
+
