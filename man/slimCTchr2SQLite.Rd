@@ -73,6 +73,7 @@ VJ Carey
 \examples{
 overb = options()$verbose
 example(slimCisTrans)
+if (FALSE) {
 slimCTchr2SQLite(td,chr=1, dbname="chr20")
 setwd(td)
 dr = dbDriver("SQLite")
@@ -80,9 +81,11 @@ con = dbConnect(dr, "chr20.db")
 dbListTables(con)
 dbGetQuery(con, "select * from chr20 limit 5")
 # notice the fiddling with the column names in sqlite!
+}
+setwd(td)
 slimCTchr2flat(td,chr=1, dbname="chr20flat")
 options(verbose=TRUE)
-mp = minp("chr20flat.txt")
+mp = minp("chr20flat.txt.gz")
 sapply(mp, head, 30)
 options(verbose=overb)
 }

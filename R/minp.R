@@ -2,6 +2,7 @@ minp = function(path, BUFSIZE=100000, breakat=Inf, freqdump=10000,
   filefun=gzfile) {
    owarn = options()$warn
    ans = rep(NA, BUFSIZE)
+   minind = rep(NA, BUFSIZE)
    rsid = rep(NA, BUFSIZE)
    on.exit(close(fi))
    nl = 0; fi = filefun(path, "r");
@@ -15,6 +16,7 @@ minp = function(path, BUFSIZE=100000, breakat=Inf, freqdump=10000,
      nl = nl+1  # bump line count
      if (nl %% BUFSIZE == 0) {       # add buffer if needed
             ans = c(ans, rep(NA, BUFSIZE))  
+            minind = c(minind, rep(NA, BUFSIZE))  
             rsid = c(rsid, rep(NA, BUFSIZE)) 
             if (options()$verbose) cat("growing buffer...\n")
             }
@@ -31,6 +33,7 @@ minp = function(path, BUFSIZE=100000, breakat=Inf, freqdump=10000,
      N = sum(!is.na(chisqs))
      rawp = pmin(1, 2*(1-pchisq(chisqs,1)))
      ans[nl] = min(rawp)
+     minind[nl] = which.min(rawp)
 # following chunk is intended to deal with multiplicity and correlation
 # through Benjamini-Yekutieli algorithm -- but passing for now
    #  adjp.tmp = mt.rawp2adjp(rawp, "BY")
@@ -45,5 +48,5 @@ minp = function(path, BUFSIZE=100000, breakat=Inf, freqdump=10000,
    #  fishp = 1-pchisq(fish, 2*N)
    #  ans[nl] = abs(qnorm(fishp))
     }
-    list(rsid=rsid[1:nl], ans=ans[1:nl], hline=hline)
+    list(rsid=rsid[1:nl], ans=ans[1:nl], minind=minind[1:nl], genes=hline[-1])
 }
