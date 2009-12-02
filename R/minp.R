@@ -73,3 +73,28 @@ locreport = function (winfo, chr)
     fulldf
 }
 
+wgtinfo2browser = function(winfo, chr, start, end, trname="newtrack",
+  bsession=NULL, ...) {
+  require(rtracklayer, quietly=TRUE)
+  lrep = locreport(winfo, chr)
+  lrepc = na.omit(lrep)
+  lrepco = lrepc[ order(lrepc$reflocs), ]
+  space = paste("chr", chr, sep="")
+  rr = RangedData(IRanges(start=lrepco[,2], end=lrepco[,2]),
+      score = lrepco$mlogp, space=space)
+  if (is.null(bsession)) ee = browserSession("UCSC")
+  else ee = bsession
+  ee[[trname]] = rr
+  browserView(ee, GenomicRanges(start=start, end=end, chrom=space),
+    track=c("ruler", "cytoBand"), full=trname, ...)
+}
+ 
+top4 = function (x, sms) 
+{
+# assumes you have split a locreport output by gene
+    par(mfrow = c(2, 2))
+    for (i in 1:4) plot_EvG(probeId(names(x)), rsid(x[[1]][i, 
+        "rsid"]), sms, main = paste("-log10p=", round(x[[1]][i, "mlogp"], 
+        3)))
+}
+

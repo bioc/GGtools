@@ -3,6 +3,8 @@
 \alias{slimCTchr2flat}
 \alias{minp}
 \alias{locreport}
+\alias{wgtinfo2browser}
+\alias{top4}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 transform matrices of chromosome-wide cis/trans eQTL statistics to
@@ -16,8 +18,11 @@ SQLite or flat text, and support extraction of minimum p per SNP
 \usage{
 slimCTchr2SQLite(path, chr = 1, dbname = paste("chr", chr, sep = ""))
 slimCTchr2flat(path, chr = 1, dbname = paste("chr", chr, sep = ""))
-minp(path, BUFSIZE=100000, breakat=Inf, freqdump=20000, filefun=gzfile)
+minp(path, BUFSIZE=100000, breakat=Inf, freqdump=10000, filefun=gzfile)
 locreport(winfo, chr)
+wgtinfo2browser(winfo, chr, start, end, trname="newtrack",
+  bsession=NULL, ...)
+top4(x, sms)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -30,7 +35,8 @@ the file will typically be compressed; if not, set filefun=file (literally)
 an index into the list of chromosome-specific results written
 by slimCisTrans -- if you only ran slimCisTrans on a selected
 chromosome, use 1 for this, then set the dbname to reflect the
-biological name of chromosome
+biological name of chromosome; for locreport or wgtinfo2browser, a numerical
+chromosome identifier
 }
 
   \item{dbname}{
@@ -47,7 +53,14 @@ if options()$verbose == TRUE }
 data; for recent runs of slimCTchr2flat, gzfile will work because
 the output file is gzcompressed.}
 \item{winfo}{output of minp (weighting info)}
-\item{chr}{for locreport -- numerical chromosome identifier}
+\item{start}{starting base position for browser}
+\item{end}{starting base position for browser}
+\item{trname}{display name for new track on browser}
+\item{bsession}{browserSession instance if you want to modify an existing session}
+  bsession=NULL, ...)
+\item{x}{list, result of splitting a locreport result by gene}
+\item{sms}{an smlSet instance}
+\item{\dots}{parameters passed to browserSession}
 }
 \details{
 uses dbWriteTable for SQLite driver built in function call,
@@ -59,6 +72,8 @@ slim* NULL, just runs for side effects
 minp -- a list of 3 elements, rsid (as numeric, no rs prefix),
 ans (minimum p value), and hline (header record, enumerates
 probe names)
+
+wgtinfo2browser -- a ucsc browsersession instance
 }
 %\references{
 %%% ~put references to the literature/web site here ~
@@ -101,8 +116,12 @@ lr = locreport(mp, 20)
 lr[1:10,]
 # now visualize the best eQTL association on chr20
 oo = order(lr[,"mlogp"], decreasing=TRUE)
-plot_EvG(probeId(lr[oo[1],"bestgene"]), rsid(
+#
+# following throws margin error in CMD check for 2.10.0
+#
+if (interactive()) plot_EvG(probeId(lr[oo[1],"bestgene"]), rsid(
    lr[oo[1], "rsid"]), hmceuB36.2021[chrnum(20),])
+lrc = na.omit(lr)
 #
 # now put the best scores for all snps on chr20 vs 10 genes on chr20
 # on the browser
@@ -112,17 +131,27 @@ plot_EvG(probeId(lr[oo[1],"bestgene"]), rsid(
 #
 if (interactive()) {
  library(rtracklayer)
- lrc = na.omit(lr)
  lrco = lrc[ order(lrc$reflocs),]
  rr = RangedData(IRanges(start=lrco[,2], end=lrco[,2]),
          score=lrco$mlogp, space="chr20")
  ee = browserSession("UCSC")
  tn = trackNames(ee)
- vp = ucscTrackModes(hide=setdiff(tn, c("ruler", "cytoband")), full="ct20d")
+# vp = ucscTrackModes(hide=setdiff(tn, c("ruler", "cytoband")), full="ct20d")
  ee[["ct20d"]] = rr
  ff = browserView(ee,
    GenomicRanges(start=1, end=62435964,chrom="chr20"), 
     track=c("ruler", "cytoBand"), full="ct20d")
  }
+# above can be replaced by wgtinfo2browser function
+#
+# here we look at the best snps per gene, expression vs genotype,
+# for four genes
+#
+oo2 = order(lrc[,"mlogp"], decreasing=TRUE)
+slr = split(lrc[oo2,], lrc[oo2,"bestgene"])
+topsnps = sapply(slr, function(x)x[1,"mlogp"])
+olist = order(topsnps, decreasing=TRUE)
+par(ask=TRUE)
+for (i in 1:4) top4(slr[olist[i]], hmceuB36.2021)
 }
 \keyword{ models }
