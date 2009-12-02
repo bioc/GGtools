@@ -121,7 +121,8 @@ if (interactive()) {
  vp = ucscTrackModes(hide=setdiff(tn, c("ruler", "cytoband")), full="ct20d")
  ee[["ct20d"]] = rr
  ff = browserView(ee,
-   GenomicRanges(start=1, end=62435964,chrom="chr20"), track=vp)
+   GenomicRanges(start=1, end=62435964,chrom="chr20"), 
+    track=c("ruler", "cytoBand"), full="ct20d")
  }
 }
 \keyword{ models }
