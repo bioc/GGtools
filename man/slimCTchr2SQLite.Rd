@@ -103,5 +103,25 @@ lr[1:10,]
 oo = order(lr[,"mlogp"], decreasing=TRUE)
 plot_EvG(probeId(lr[oo[1],"bestgene"]), rsid(
    lr[oo[1], "rsid"]), hmceuB36.2021[chrnum(20),])
+#
+# now put the best scores for all snps on chr20 vs 10 genes on chr20
+# on the browser
+#
+# it is pretty slow to get going, and it does not set ct20d to
+# full view mode, but you can do that manually
+#
+if (interactive()) {
+ library(rtracklayer)
+ lrc = na.omit(lr)
+ lrco = lrc[ order(lrc$reflocs),]
+ rr = RangedData(IRanges(start=lrco[,2], end=lrco[,2]),
+         score=lrco$mlogp, space="chr20")
+ ee = browserSession("UCSC")
+ tn = trackNames(ee)
+ vp = ucscTrackModes(hide=setdiff(tn, c("ruler", "cytoband")), full="ct20d")
+ ee[["ct20d"]] = rr
+ ff = browserView(ee,
+   GenomicRanges(start=1, end=62435964,chrom="chr20"), track=vp)
+ }
 }
 \keyword{ models }
