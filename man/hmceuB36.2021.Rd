@@ -36,6 +36,7 @@ Formal class 'smlSet' [package "GGBase"] with 9 slots
 %  ~~ possibly secondary sources and usages ~~
 %}
 \examples{
-#data(hmceuB36.2021)
+data(hmceuB36.2021)
+validObject(hmceuB36.2021)
 }
 \keyword{datasets}
