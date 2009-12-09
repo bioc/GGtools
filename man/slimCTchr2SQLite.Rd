@@ -65,6 +65,9 @@ the output file is gzcompressed.}
 \details{
 uses dbWriteTable for SQLite driver built in function call,
 or write.table (for 'flat' application)
+
+note that wgtinfo2browser will winsorize 0 p-values to the smallest
+non-zero values reported (on -log scale)
 }
 \value{
 slim* NULL, just runs for side effects
@@ -129,6 +132,7 @@ lrc = na.omit(lr)
 # it is pretty slow to get going, and it does not set ct20d to
 # full view mode, but you can do that manually
 #
+\dontrun{
 if (interactive()) {
  library(rtracklayer)
  lrco = lrc[ order(lrc$reflocs),]
@@ -142,7 +146,12 @@ if (interactive()) {
    GenomicRanges(start=1, end=62435964,chrom="chr20"), 
     track=c("ruler", "cytoBand"), full="ct20d")
  }
+}
 # above can be replaced by wgtinfo2browser function
+if (interactive()) {
+ data(chr17wgtinfo)
+ wgtinfo2browser(chr17wgtinfo, 17, 1, 20000000, "cis17")
+}
 #
 # here we look at the best snps per gene, expression vs genotype,
 # for four genes

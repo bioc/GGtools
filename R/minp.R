@@ -80,8 +80,10 @@ wgtinfo2browser = function(winfo, chr, start, end, trname="newtrack",
   lrepc = na.omit(lrep)
   lrepco = lrepc[ order(lrepc$reflocs), ]
   space = paste("chr", chr, sep="")
+  tsco = lrepco$mlogp
+  tsco[!is.finite(tsco)] = max(tsco[is.finite(tsco)]) # winsorize at top
   rr = RangedData(IRanges(start=lrepco[,2], end=lrepco[,2]),
-      score = lrepco$mlogp, space=space)
+      score = tsco, space=space)
   if (is.null(bsession)) ee = browserSession("UCSC")
   else ee = bsession
   ee[[trname]] = rr
