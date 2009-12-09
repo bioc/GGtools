@@ -21,7 +21,7 @@ slimCTchr2flat(path, chr = 1, dbname = paste("chr", chr, sep = ""))
 minp(path, BUFSIZE=100000, breakat=Inf, freqdump=10000, filefun=gzfile)
 locreport(winfo, chr)
 wgtinfo2browser(winfo, chr, start, end, trname="newtrack",
-  bsession=NULL, ...)
+  bsession=NULL, vlim=c(0,16), ...)
 top4(x, sms)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -60,6 +60,9 @@ the output file is gzcompressed.}
   bsession=NULL, ...)
 \item{x}{list, result of splitting a locreport result by gene}
 \item{sms}{an smlSet instance}
+\item{vlim}{a 2-vector like the output of base::range() prescribing the
+initial vertical range for the track to be browserd by wgtinfo2browser; units are
+-log 10 p}
 \item{\dots}{parameters passed to browserSession}
 }
 \details{

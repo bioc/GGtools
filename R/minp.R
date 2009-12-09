@@ -74,7 +74,7 @@ locreport = function (winfo, chr)
 }
 
 wgtinfo2browser = function(winfo, chr, start, end, trname="newtrack",
-  bsession=NULL, ...) {
+  bsession=NULL, vlim=c(0,16),  ...) {
   require(rtracklayer, quietly=TRUE)
   lrep = locreport(winfo, chr)
   lrepc = na.omit(lrep)
@@ -86,7 +86,7 @@ wgtinfo2browser = function(winfo, chr, start, end, trname="newtrack",
       score = tsco, space=space)
   if (is.null(bsession)) ee = browserSession("UCSC")
   else ee = bsession
-  ee[[trname]] = rr
+  track(ee, trname, viewLimits=vlim) = rr
   browserView(ee, GenomicRanges(start=start, end=end, chrom=space),
     track=c("ruler", "cytoBand"), full=trname, ...)
 }
