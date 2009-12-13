@@ -1,6 +1,7 @@
 \name{slimCTchr2SQLite}
 \alias{slimCTchr2SQLite}
 \alias{slimCTchr2flat}
+\alias{slimCTchr2ff}
 \alias{minp}
 \alias{locreport}
 \alias{wgtinfo2browser}
@@ -13,11 +14,13 @@ with location information
 }
 \description{
 transform matrices of chromosome-wide cis/trans eQTL statistics to
-SQLite or flat text, and support extraction of minimum p per SNP
+SQLite, flat text, or ff package managed
+flat file format, and support extraction of minimum p per SNP
 }
 \usage{
 slimCTchr2SQLite(path, chr = 1, dbname = paste("chr", chr, sep = ""))
 slimCTchr2flat(path, chr = 1, dbname = paste("chr", chr, sep = ""))
+slimCTchr2ff(path, chr = 1, dbname = paste("chr", chr, sep = ""))
 minp(path, BUFSIZE=100000, breakat=Inf, freqdump=10000, filefun=gzfile)
 locreport(winfo, chr)
 wgtinfo2browser(winfo, chr, start, end, trname="newtrack",
@@ -87,9 +90,21 @@ wgtinfo2browser -- a ucsc browsersession instance
 \author{
 VJ Carey
 }
-%\note{
-%%%  ~~further notes~~
-%}
+\note{
+After limited experimentation it was decided that SQLite was not
+effective for this application, while ff seems to be.
+
+slimCTchr2ff takes a folder assumed to be populated with
+lists of slimCisTrans results.  Each set of results is over
+a common set of SNPs typically on multiple chromosomes, but on an
+element of a partition of the set of genes.  slimCTchr2ff will
+combine results over genes for all SNP on a single
+chromosome and generate an ff array holding all
+the information.  column 1 of the resulting array is the numeric
+component of the dbSNP id for the SNP defining the row (it will
+be NA if a non rs-number has been used), and the remaining
+columns are snp-specific, gene-specific chisquared stats with 1df.
+}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
@@ -99,21 +114,12 @@ VJ Carey
 \examples{
 overb = options()$verbose
 example(slimCisTrans)
-if (FALSE) {
-slimCTchr2SQLite(td,chr=1, dbname="chr20")
-setwd(td)
-dr = dbDriver("SQLite")
-con = dbConnect(dr, "chr20.db")
-dbListTables(con)
-dbGetQuery(con, "select * from chr20 limit 5")
-# notice the fiddling with the column names in sqlite!
-}
 setwd(td)
 #
 # note that the chr=1 below indicates the first in sequence
 # in this smlSet (hmceuB36.2021), which is chr20
 #
-slimCTchr2flat(td,chr=1, dbname="chr20flat")
+slimCTchr2flat(td, chr=1, dbname="chr20flat")
 options(verbose=TRUE)
 mp = minp("chr20flat.txt.gz")
 sapply(mp, head, 10)
@@ -132,25 +138,6 @@ lrc = na.omit(lr)
 # now put the best scores for all snps on chr20 vs 10 genes on chr20
 # on the browser
 #
-# it is pretty slow to get going, and it does not set ct20d to
-# full view mode, but you can do that manually
-#
-\dontrun{
-if (interactive()) {
- library(rtracklayer)
- lrco = lrc[ order(lrc$reflocs),]
- rr = RangedData(IRanges(start=lrco[,2], end=lrco[,2]),
-         score=lrco$mlogp, space="chr20")
- ee = browserSession("UCSC")
- tn = trackNames(ee)
-# vp = ucscTrackModes(hide=setdiff(tn, c("ruler", "cytoband")), full="ct20d")
- ee[["ct20d"]] = rr
- ff = browserView(ee,
-   GenomicRanges(start=1, end=62435964,chrom="chr20"), 
-    track=c("ruler", "cytoBand"), full="ct20d")
- }
-}
-# above can be replaced by wgtinfo2browser function
 if (interactive()) {
  data(chr17wgtinfo)
  wgtinfo2browser(chr17wgtinfo, 17, 1, 20000000, "cis17")
@@ -165,5 +152,14 @@ topsnps = sapply(slr, function(x)x[1,"mlogp"])
 olist = order(topsnps, decreasing=TRUE)
 par(ask=TRUE)
 for (i in 1:4) top4(slr[olist[i]], hmceuB36.2021)
+#
+# new interface uses ff structures instead of flat files
+#
+if (require(ff)) {
+  slimCTchr2ff(td, chr=1, dbname="chr20flat")
+  load("chr20flat.rda")
+  chr20flatchisq
+  }
+# end examples
 }
 \keyword{ models }

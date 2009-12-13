@@ -63,12 +63,15 @@ usec = min(5, availc)
 time2 = unix.time(m1 <- slimCisTrans(fmla=gs~male, smlSet=hmceuB36.2021,
    genes2do=1:10, ncores=usec, targdir=td))
 gc()
-time1 = unix.time(m1 <- slimCisTrans(fmla=gs~male, smlSet=hmceuB36.2021,
+\dontrun{
+# if you want to check single core timing, use:
+ time1 = unix.time(m1 <- slimCisTrans(fmla=gs~male, smlSet=hmceuB36.2021,
    genes2do=1:10, ncores=1, targdir=td))
+ cat("for 1 core, time elapsed:\n")
+ time1
+}
 cat("for 2 cores, time elapsed:\n")
 time2
-cat("for 1 core, time elapsed:\n")
-time1
 dir(td)
 od = getwd()
 setwd(td)
