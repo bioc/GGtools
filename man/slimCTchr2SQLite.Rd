@@ -23,7 +23,7 @@ slimCTchr2SQLite(path, chr = 1, dbname = paste("chr", chr, sep = ""))
 slimCTchr2flat(path, chr = 1, dbname = paste("chr", chr, sep = ""))
 slimCTchr2ff(path, chr = 1, dbname = paste("chr", chr, sep = ""))
 minp(path, BUFSIZE=100000, breakat=Inf, freqdump=10000, filefun=gzfile)
-ffs2minp(ffl)
+ffs2minp(ffl, ...)
 locreport(winfo, chr)
 wgtinfo2browser(winfo, chr, start, end, trname="newtrack",
   bsession=NULL, vlim=c(0,16), ...)
@@ -70,7 +70,8 @@ initial vertical range for the track to be browserd by wgtinfo2browser; units ar
 -log 10 p}
 \item{ffl}{a list of ff references -- note that the ff package has to be
 attached and you must load the .rda object corresponding to each ff entity}
-\item{\dots}{parameters passed to browserSession}
+\item{\dots}{for wgtinfo2browser, parameters passed to browserSession; for ffs2minp,
+not currently used.}
 }
 \details{
 uses dbWriteTable for SQLite driver built in function call,
@@ -123,6 +124,7 @@ setwd(td)
 # note that the chr=1 below indicates the first in sequence
 # in this smlSet (hmceuB36.2021), which is chr20
 #
+\dontrun{
 slimCTchr2flat(td, chr=1, dbname="chr20flat")
 options(verbose=TRUE)
 mp = minp("chr20flat.txt.gz")
@@ -138,6 +140,7 @@ oo = order(lr[,"mlogp"], decreasing=TRUE)
 if (interactive()) plot_EvG(probeId(lr[oo[1],"bestgene"]), rsid(
    lr[oo[1], "rsid"]), hmceuB36.2021[chrnum(20),])
 lrc = na.omit(lr)
+}
 #
 # now put the best scores for all snps on chr20 vs 10 genes on chr20
 # on the browser
@@ -146,16 +149,6 @@ if (interactive()) {
  data(chr17wgtinfo)
  wgtinfo2browser(chr17wgtinfo, 17, 1, 20000000, "cis17")
 }
-#
-# here we look at the best snps per gene, expression vs genotype,
-# for four genes
-#
-oo2 = order(lrc[,"mlogp"], decreasing=TRUE)
-slr = split(lrc[oo2,], lrc[oo2,"bestgene"])
-topsnps = sapply(slr, function(x)x[1,"mlogp"])
-olist = order(topsnps, decreasing=TRUE)
-par(ask=TRUE)
-for (i in 1:4) top4(slr[olist[i]], hmceuB36.2021)
 #
 # new interface uses ff structures instead of flat files
 #
@@ -166,6 +159,23 @@ if (require(ff)) {
   mmf = ffs2minp( list(chr20flatchisq ) )
   sapply(mmf, length)
   sapply(mmf, class)
+  sapply(mmf, head, 10)
+  options(verbose=overb)
+  lr = locreport(mmf, 20)
+  lr[1:10,]
+  oo = order(lr[,"mlogp"], decreasing=TRUE)
+  if (interactive()) plot_EvG(probeId(lr[oo[1],"bestgene"]), rsid(
+   lr[oo[1], "rsid"]), hmceuB36.2021[chrnum(20),])
+  lrc = na.omit(lr)
+#
+# here we look at the best snps per gene, expression vs genotype,
+# for four genes
+#
+  oo2 = order(lrc[,"mlogp"], decreasing=TRUE)
+  slr = split(lrc[oo2,], lrc[oo2,"bestgene"])
+  topsnps = sapply(slr, function(x)x[1,"mlogp"])
+  olist = order(topsnps, decreasing=TRUE)
+  top4(slr[olist[1]], hmceuB36.2021)
   }
 # end examples
 }
