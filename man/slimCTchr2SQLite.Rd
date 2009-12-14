@@ -2,6 +2,7 @@
 \alias{slimCTchr2SQLite}
 \alias{slimCTchr2flat}
 \alias{slimCTchr2ff}
+\alias{ffs2minp}
 \alias{minp}
 \alias{locreport}
 \alias{wgtinfo2browser}
@@ -22,6 +23,7 @@ slimCTchr2SQLite(path, chr = 1, dbname = paste("chr", chr, sep = ""))
 slimCTchr2flat(path, chr = 1, dbname = paste("chr", chr, sep = ""))
 slimCTchr2ff(path, chr = 1, dbname = paste("chr", chr, sep = ""))
 minp(path, BUFSIZE=100000, breakat=Inf, freqdump=10000, filefun=gzfile)
+ffs2minp(ffl)
 locreport(winfo, chr)
 wgtinfo2browser(winfo, chr, start, end, trname="newtrack",
   bsession=NULL, vlim=c(0,16), ...)
@@ -66,6 +68,8 @@ the output file is gzcompressed.}
 \item{vlim}{a 2-vector like the output of base::range() prescribing the
 initial vertical range for the track to be browserd by wgtinfo2browser; units are
 -log 10 p}
+\item{ffl}{a list of ff references -- note that the ff package has to be
+attached and you must load the .rda object corresponding to each ff entity}
 \item{\dots}{parameters passed to browserSession}
 }
 \details{
@@ -159,6 +163,9 @@ if (require(ff)) {
   slimCTchr2ff(td, chr=1, dbname="chr20flat")
   load("chr20flat.rda")
   chr20flatchisq
+  mmf = ffs2minp( list(chr20flatchisq ) )
+  sapply(mmf, length)
+  sapply(mmf, class)
   }
 # end examples
 }
