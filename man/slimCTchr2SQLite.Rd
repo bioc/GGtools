@@ -42,6 +42,9 @@ by slimCisTrans -- if you only ran slimCisTrans on a selected
 chromosome, use 1 for this, then set the dbname to reflect the
 biological name of chromosome; for locreport or wgtinfo2browser, a numerical
 chromosome identifier
+
+for slimCTchr2ff, the chr must be an index into the smList of the
+originating smlSet
 }
 
   \item{dbname}{
