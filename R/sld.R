@@ -7,6 +7,7 @@ setMethod("slimdown", c("gwSnpScreenResult", "logical"),
               ns = lapply(ns, function(w) as.integer(gsub("rs", "", w)))
               }
         else ns = lapply(1:length(cs), function(x)NA)
+        names(cs) = names(ns)  # lost names of chr?
     list(snpnames = ns, chisq=cs)
 })
 
@@ -23,6 +24,7 @@ setMethod("slimdown", "multiGwSnpScreenResult", function(x, keepnames=NA) {
          allchi[[i]] = cbind(allchi[[i]], srem[[j]]$chisq[[i]])
        colnames(allchi[[i]]) = names(x)
        }
+     names(allchi) = names(s1$snpnames)
      list(snpnames = s1$snpnames, chisq=allchi)
 })
 
