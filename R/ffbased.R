@@ -32,6 +32,7 @@ ffcistrans = function(sms, gfmla, geneinds, targdir, runname="foo", ...) {
       ans = snp.rhs.tests( gfmla, snp.data=smList(sms)[[i]], data=pData(sms),
          family="gaussian", ...)
       tmp[,j] = ans@chisq
+      gc()
       }
    fns[i] = paste(basefn, ".rda", sep="")
    assign(obname, 
