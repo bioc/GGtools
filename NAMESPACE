@@ -33,4 +33,5 @@ export(snpm2phase, personalHap,
  parsePh.out, snpm2mapLD, masterSnps, chunksize,
  cisSnpTests, aafSNP, slimCisTrans,
  slimCTchr2SQLite, slimCTchr2flat, minp, locreport, 
-  wgtinfo2browser, top4, slimCTchr2ff, ffs2minp, ffcistrans, multffCT, makeCommonSNPs) #, phaseHS)
+  wgtinfo2browser, top4, slimCTchr2ff, ffs2minp, ffcistrans, 
+  multffCT, makeCommonSNPs, checkCommonSNPs) #, phaseHS)

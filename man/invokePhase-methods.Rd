@@ -4,7 +4,7 @@
 \alias{invokePhase-methods}
 \alias{invokePhase,phaseInput,chrnum,character,character,character,logical-method}
 \alias{invokePhase,snp.matrix,chrnum,character,character,character,logical-method}
-\title{ ~~ Methods for Function invokePhase in Package `GGtools' ~~}
+\title{ Methods for Function invokePhase in Package `GGtools' }
 \description{
  ~~ Methods for function \code{invokePhase} in Package `GGtools' ~~
 }
