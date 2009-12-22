@@ -135,7 +135,11 @@ sumScores2ff = function( listOfSms, gfmla, targdir, runname, theCall=call("1"),
           if (length(isna)>0) 
              tmpc[isna] = rchisq(length(isna), 1)
           }
+       print("before add")
+       print(as.ram(fflist[[j]])["rs6060535",])
        fflist[[j]][,k] = as.ram(fflist[[j]][,k]) + tmpc
+       print("after add")
+       print(as.ram(fflist[[j]])["rs6060535",])
        }  # end k
       }, mc.cores=ncores, mc.set.seed=mc.set.seed)  # end j/mclapply
    names(fflist) = chrnames
