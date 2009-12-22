@@ -11,7 +11,7 @@ setMethod("show", "multffManager", function(object) {
 })
  
 multffCT = function(listOfSms, gfmla, geneinds=1:10, harmonizeSNPs=FALSE, 
-     targdir=".", runname="foo", overwriteFF=TRUE, fillNA=TRUE, ncores=2, mc.set.seed=TRUE, vmode="single", shortfac=1000, ...) {
+     targdir=".", runname="foo", overwriteFF=TRUE, fillNA=TRUE, ncores=2, mc.set.seed=TRUE, vmode="single", shortfac=100, ...) {
   theCall = match.call()
   require(ff, quietly=TRUE)
   require(multicore, quietly=TRUE)
