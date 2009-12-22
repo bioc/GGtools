@@ -10,7 +10,7 @@ setMethod("show", "multffManager", function(object) {
 })
  
 multffCT = function(listOfSms, gfmla, geneinds=1:10, harmonizeSNPs=FALSE, 
-     targdir=".", runname="foo", overwriteFF=TRUE, fillNA=TRUE, ncores=2, vmode="single", ...) {
+     targdir=".", runname="foo", overwriteFF=TRUE, fillNA=TRUE, ncores=2, mc.set.seed=TRUE, vmode="single", ...) {
   theCall = match.call()
   require(ff, quietly=TRUE)
   require(multicore, quietly=TRUE)
@@ -19,7 +19,7 @@ multffCT = function(listOfSms, gfmla, geneinds=1:10, harmonizeSNPs=FALSE,
   if (harmonizeSNPs) listOfSms = makeCommonSNPs( listOfSms )
   else if(!isTRUE(checkCommonSNPs( listOfSms ))) stop("harmonizeSNPs = FALSE but SNPs not common across listOfSms, run makeCommonSNPs")
   sumScores2ff( listOfSms, gfmla, targdir, runname, theCall, overwriteFF=overwriteFF,
-       fillNA=fillNA, write=TRUE, ncores=ncores, vmode=vmode, ... )
+       fillNA=fillNA, write=TRUE, ncores=ncores, vmode=vmode, mc.set.seed=mc.set.seed, ... )
 }
 
 .checkArgsMF = function( listOfSms, gfmla, geneinds, targdir, runname ) {
@@ -89,7 +89,7 @@ checkCommonSNPs = function( listOfSms ) {
 }
 
 sumScores2ff = function( listOfSms, gfmla, targdir, runname, theCall=call("1"), 
-      overwriteFF=FALSE, fillNA=TRUE, write=TRUE, ncores, vmode, ... ) {
+      overwriteFF=FALSE, fillNA=TRUE, write=TRUE, ncores, vmode, mc.set.seed, ... ) {
   fnhead = paste(targdir, "/", runname, "_", sep="")
   nsms = length(listOfSms)
   nchr = length(smList(listOfSms[[1]]))
@@ -137,7 +137,7 @@ sumScores2ff = function( listOfSms, gfmla, targdir, runname, theCall=call("1"),
           }
        fflist[[j]][,k] = as.ram(fflist[[j]][,k]) + tmpc
        }  # end k
-      }, mc.cores=ncores)  # end j/mclapply
+      }, mc.cores=ncores, mc.set.seed=mc.set.seed)  # end j/mclapply
    names(fflist) = chrnames
    ans = list(fflist=fflist, call=theCall, runname=runname, targdir=targdir, generangetag=generangetag,
      filenames=filenames, df=nsms)

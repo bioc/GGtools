@@ -39,7 +39,9 @@ run should be overwritten (by default they are)
 }
   \item{fillNA}{
 logical indicating whether array elements corresponding to missing tests should 
-be filled with independent chisquared df 1
+be filled with independent chisquared df 1.  Note that concrete reproducibility of sets
+of scores that are randomly generated is not achieved if mc.set.seed=TRUE, which
+is the default value.
 }
   \item{ncores}{
 maximum number of cores to be used by \code{\link[multicore]{mclapply}}
