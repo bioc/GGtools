@@ -15,4 +15,5 @@ getChisq = function(rsid, gene, ctmgr) {
  ctmgr$fflist[[c2use]][ rsid, g2use ]
 }
 ee = getChisq("rs6060535", pid, dd)
+if (abs(ee/2 - sco) > .0001 ) stop("test failed for scalar gwSnpTests vs multicore multffCT")
 
