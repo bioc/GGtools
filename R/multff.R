@@ -1,9 +1,19 @@
 
+setClass("multffManager", contains="list")
+setMethod("show", "multffManager", function(object) {
+ cat("multffManager instance. The call was:\n")
+ print(object$call)
+ cat("There are ", length(object$filenames), " ff files.\n")
+ cat("Excerpt from first file:\n")
+ ngenes = ncol(object$fflist[[1]])
+ print(object$fflist[[1]][1:4,1:min(4,ngenes)])
+})
  
 multffCT = function(listOfSms, gfmla, geneinds=1:10, harmonizeSNPs=FALSE, 
      targdir=".", runname="foo", overwriteFF=TRUE, fillNA=TRUE, ncores=2, vmode="single", ...) {
   theCall = match.call()
   require(ff, quietly=TRUE)
+  require(multicore, quietly=TRUE)
   .checkArgsMF( listOfSms, fgmla, geneinds, targdir, runname )
   listOfSms = reduceGenes( listOfSms, geneinds )
   if (harmonizeSNPs) listOfSms = makeCommonSNPs( listOfSms )
@@ -17,8 +27,7 @@ multffCT = function(listOfSms, gfmla, geneinds=1:10, harmonizeSNPs=FALSE,
   allc = sapply(listOfSms, function(x) inherits(x, "smlSet"))
   if (!isTRUE(all(allc))) stop("each element of listOfSms must inherit from GGtools smlSet")
  allcsets = sapply(listOfSms, function(x) names(smList(x)))
- if(!is(allcsets,"matrix")) stop("probably not all elements of listOfSms  have
-chromosome set")
+ if(!is.atomic(allcsets)) stop("probably not all elements of listOfSms have same chromosome set")
  allfn = unique(unlist(lapply(listOfSms, featureNames)))
  allfi = sapply(lapply(listOfSms, featureNames), length)
  if (inherits(geneinds, "character") & !(all(geneinds %in% allfn)))
@@ -130,10 +139,9 @@ sumScores2ff = function( listOfSms, gfmla, targdir, runname, theCall=call("1"),
        }  # end k
       }, mc.cores=ncores)  # end j/mclapply
    names(fflist) = chrnames
-#  save(fflist, file=paste(fnhead, generangetag, "rda", sep="."))
-#  invisible(fflist)
-   assign(runname, list(fflist=fflist, call=theCall, runname=runname, targdir=targdir, generangetag=generangetag,
-     filenames=filenames, df=nsms))
+   ans = list(fflist=fflist, call=theCall, runname=runname, targdir=targdir, generangetag=generangetag,
+     filenames=filenames, df=nsms)
+   assign(runname, new("multffManager", ans))
    save(list=runname, file=paste(runname, ".rda", sep=""))
    invisible(get(runname))
 }
