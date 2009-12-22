@@ -27,7 +27,7 @@ importFrom(stats,
 exportClasses(phaseInput, hbTestResults, chunksize, aafSNP, multffManager)
 
 exportMethods(gwSnpTests, plot, topSnps, coerce, 
-   invokePhase, residTests, hbTests, pvals, locs, hscores )
+   invokePhase, residTests, hbTests, pvals, locs, hscores, show )
 
 export(snpm2phase, personalHap,
  parsePh.out, snpm2mapLD, masterSnps, chunksize,

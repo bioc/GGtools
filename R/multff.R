@@ -1,6 +1,7 @@
 
 setClass("multffManager", contains="list")
 setMethod("show", "multffManager", function(object) {
+ require(ff, quietly=TRUE)
  cat("multffManager instance. The call was:\n")
  print(object$call)
  cat("There are ", length(object$filenames), " ff files.\n")
@@ -49,6 +50,7 @@ intersectSnps = function( listOfSms ) {
   nchr = length(smList(listOfSms[[1]]))
   chnames = names(smList(listOfSms[[1]]))
   rsidlist = lapply(smList(listOfSms[[1]]), colnames)
+  if (length(listOfSms) == 1) return(rsidlist)
   for (j in 2:nsms)
     for (k in 1:length(rsidlist))
       rsidlist[[k]]  = intersect(rsidlist[[k]], colnames(smList(listOfSms[[j]])[[k]]))
@@ -75,6 +77,7 @@ trimSnps = function( listOfSms, rsidlist ) {
 }
 
 checkCommonSNPs = function( listOfSms ) {
+  if (length(listOfSms) == 1) return(TRUE)
   rsidlist = lapply( smList(listOfSms[[1]]), colnames )
   for (j in 2:length(listOfSms) ) {
     tmp = lapply(smList(listOfSms[[j]]), colnames )
@@ -146,20 +149,20 @@ sumScores2ff = function( listOfSms, gfmla, targdir, runname, theCall=call("1"),
    invisible(get(runname))
 }
   
-saveSums = function(sumout, filename="fullout.rda", overwriteFF=TRUE) {
-  fflist = sumout$fflist
-  chrnames = names(fflist)
-  output = list()
-  obname = gsub(".rda", "", filename)
-  for (i in 1:length(fflist)) {
-    obname = paste(sumout$runname, paste("chr", chrnames[i], sep=""), sumout$generangetag, sep="_")
-    assign(obname, clone(fflist[[i]], filename=sumout$filenames[[i]], overwrite=overwriteFF))
-    output[[i]] = get(obname)
-    }
-  names(output) = chrnames
-  assign(obname, output)
-  save(list=obname, file=filename)
-}
+#saveSums = function(sumout, filename="fullout.rda", overwriteFF=TRUE) {
+#  fflist = sumout$fflist
+#  chrnames = names(fflist)
+#  output = list()
+#  obname = gsub(".rda", "", filename)
+#  for (i in 1:length(fflist)) {
+#    obname = paste(sumout$runname, paste("chr", chrnames[i], sep=""), sumout$generangetag, sep="_")
+#    assign(obname, clone(fflist[[i]], filename=sumout$filenames[[i]], overwrite=overwriteFF))
+#    output[[i]] = get(obname)
+#    }
+#  names(output) = chrnames
+#  assign(obname, output)
+#  save(list=obname, file=filename)
+#}
 #
 	
 # nchroms = length(smList(sms))
