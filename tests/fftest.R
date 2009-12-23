@@ -1,12 +1,16 @@
 library(GGtools)
-data(hmceuB36.2021)
+if (!exists("hmceuB36.2021")) data(hmceuB36.2021)
 f1 = gwSnpTests(genesym("CPNE1")~male, hmceuB36.2021, chrnum(20))
+f2 = gwSnpTests(genesym("PRND")~male, hmceuB36.2021, chrnum(20))
 ind = which(f1@.Data[[1]]@test.names == "rs6060535")
 sco = f1@.Data[[1]]@chisq[ ind ]
+sco2 = f2@.Data[[1]]@chisq[ ind ]
 lith = hmceuB36.2021[chrnum(20),]
 library(illuminaHumanv1.db)
 pid = get("CPNE1", revmap(illuminaHumanv1SYMBOL))
-dd = multffCT( list(lith, lith), gs~male, probeId(pid))
+pid2 = get("PRND", revmap(illuminaHumanv1SYMBOL))[1]
+pid3 = get("DUSP15", revmap(illuminaHumanv1SYMBOL))[1]
+dd = multffCT( list(lith, lith), gs~male, probeId(c(pid,pid2,pid3)))
 getChisq = function(rsid, gene, ctmgr) {
  allrs = lapply(ctmgr$fflist, rownames)
  allg = colnames(ctmgr$fflist[[1]])
@@ -16,4 +20,6 @@ getChisq = function(rsid, gene, ctmgr) {
 }
 ee = getChisq("rs6060535", pid, dd)
 if (abs(ee/2 - sco) > .0001 ) stop("test failed for scalar gwSnpTests vs multicore multffCT")
+ee2 = getChisq("rs6060535", pid2, dd)
+if (abs(ee2/2 - sco2) > .0001 ) stop("test failed for scalar gwSnpTests vs multicore multffCT")
 
