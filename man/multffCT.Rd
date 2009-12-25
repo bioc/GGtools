@@ -84,6 +84,7 @@ od = getwd()
 on.exit(unlink(td))
 setwd(td)
 dem = multffCT( list(smlSet.example, smlSet.example), gs~male, 1:3 )
+dem
 dir()
 }
 \keyword{ models }
