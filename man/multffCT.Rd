@@ -47,7 +47,12 @@ is the default value.
 maximum number of cores to be used by \code{\link[multicore]{mclapply}}
 }
   \item{vmode}{
-mode for numeric storage in ff files, see \code{\link[ff]{vmode}}.
+mode for numeric storage in ff files, see \code{\link[ff]{vmode}}.  If you
+use "short", the "shortfac" will multiply the chisquares so that integer
+storage retains some precision (if shortfac = 100, you have two 
+digits beyond the decimal point; the short can only represent
+0-32767.)  More infrastructure is needed for downstream handling
+of the short representation, but it seems worthwhile.
 }
   \item{\dots}{
 additional arguments for passage to \code{\link[snpMatrix]{snp.rhs.tests}}
@@ -83,8 +88,16 @@ td = tempdir()
 od = getwd()
 on.exit(unlink(td))
 setwd(td)
-dem = multffCT( list(smlSet.example, smlSet.example), gs~male, 1:3 )
+set.seed(1234)
+dem = multffCT( list(smlSet.example, smlSet.example), gs~male, 1:3, runname="dem1" )
+set.seed(1234)
+dems = multffCT( list(smlSet.example, smlSet.example), gs~male, 
+   1:3, vmode="short", shortfac=100, runname="dem2" )
+#
+# note that chisq fillin of missing snps make strict numerical reproducibility
+# nontrivial
 dem
+dems
 dir()
 }
 \keyword{ models }
