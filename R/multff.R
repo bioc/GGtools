@@ -94,6 +94,7 @@ checkCommonSNPs = function( listOfSms ) {
 sumScores2ff = function( listOfSms, gfmla, targdir, runname, theCall=call("1"), 
       overwriteFF=FALSE, fillNA=TRUE, write=TRUE, ncores, vmode, mc.set.seed, shortfac, ... ) {
   fnhead = paste(targdir, "/", runname, "_", sep="")
+  expd = lapply(listOfSms, experimentData)
   nsms = length(listOfSms)
   nchr = length(smList(listOfSms[[1]]))
   nsnps = sapply(smList(listOfSms[[1]]), ncol)
@@ -143,8 +144,10 @@ sumScores2ff = function( listOfSms, gfmla, targdir, runname, theCall=call("1"),
        }  # end k
       }, mc.cores=ncores, mc.set.seed=mc.set.seed)  # end j/mclapply
    names(fflist) = chrnames
-   ans = list(fflist=fflist, call=theCall, runname=runname, targdir=targdir, generangetag=generangetag,
-     filenames=filenames, df=nsms, vmode=vmode, shortfac=shortfac)
+   ans = list(fflist=fflist, call=theCall, runname=runname, targdir=targdir, 
+     generangetag=generangetag,
+     filenames=filenames, df=nsms, 
+     vmode=vmode, shortfac=shortfac, sessionInfo=sessionInfo(), wd=getwd(), expdataList=expd)
    assign(runname, new("multffManager", ans))
    save(list=runname, file=paste(runname, ".rda", sep=""))
    invisible(get(runname))
