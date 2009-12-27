@@ -5,10 +5,10 @@ Author: Vince Carey <stvjc@channing.harvard.edu>
 Description: dealing with hapmap SNP reports, GWAS, etc.
 Depends: R (>= 2.7.0), methods, Biobase (>= 1.11.26), GGBase (>= 3.7.5),
 	GSEABase, snpMatrix(>= 1.7.3), RColorBrewer, RSQLite, Biostrings,
-	rpart, annotate
+	rpart, annotate, ff
 Suggests: illuminaHumanv1.db, org.Hs.eg.db, 
 	SNPlocs.Hsapiens.dbSNP.20080617, mapLD, haplo.stats, multicore,
-	rtracklayer, ff
+	rtracklayer
 LazyData: no
 biocViews: SNP, GeneticVariability, Genetics, Bioinformatics
 Maintainer: Vince Carey <stvjc@channing.harvard.edu>
