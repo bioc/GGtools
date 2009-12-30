@@ -8,7 +8,8 @@ parallelized multipopulation cis-trans eQTL searches
 run a parallelized cis-trans eQTL search
 }
 \usage{
-multffCT(listOfSms, gfmla, geneinds = 1:10, harmonizeSNPs = FALSE, targdir = ".", runname = "foo", overwriteFF = TRUE, fillNA = TRUE, ncores = 2, vmode = "single", ...)
+multffCT(listOfSms, gfmla, geneinds = 1:10, harmonizeSNPs = FALSE, targdir = ".", runname = "foo", overwriteFF = TRUE, fillNA = TRUE, 
+   ncores = 2, mc.set.seed=TRUE, vmode = "single", shortfac=100, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -46,6 +47,8 @@ is the default value.
   \item{ncores}{
 maximum number of cores to be used by \code{\link[multicore]{mclapply}}
 }
+  \item{mc.set.seed}{
+as passed to \code{\link[multicore]{mclapply}}}
   \item{vmode}{
 mode for numeric storage in ff files, see \code{\link[ff]{vmode}}.  If you
 use "short", the "shortfac" will multiply the chisquares so that integer
@@ -54,6 +57,8 @@ digits beyond the decimal point; the short can only represent
 0-32767.)  More infrastructure is needed for downstream handling
 of the short representation, but it seems worthwhile.
 }
+  \item{shortfac}{quantity by which short ints will be inflated for storage to allow
+more precision in usage}
   \item{\dots}{
 additional arguments for passage to \code{\link[snpMatrix]{snp.rhs.tests}}
 }

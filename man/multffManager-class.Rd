@@ -3,6 +3,9 @@
 \docType{class}
 \alias{multffManager-class}
 \alias{show,multffManager-method}
+\alias{[,multffManager,missing,probeId,ANY-method}
+\alias{[,multffManager,rsid,probeId,ANY-method}
+\alias{[,multffManager,rsid,missing,ANY-method}
 
 \title{Class "multffManager"  }
 \description{	 coordinates access to and interrogation of multipopulation eQTL searches }
@@ -23,7 +26,10 @@ Class \code{"\linkS4class{vectorORfactor}"}, by class "list", distance 3.
 }
 \section{Methods}{
   \describe{
-    \item{show}{\code{signature(object = "multffManager")}: ... }
+    \item{show}{\code{signature(object = "multffManager")}: concise report that
+provides an excerpt from the ff image }
+    \item{[}{\code{signature(x = "multffManager"), i, j, ...}: you can extract results by rsid or probeId with customary
+bracket semantics, with the exception that if the SNP request spans multiple chromosomes, you will get a list of results }
 	 }
 }
 %\references{ ~put references to the literature/web site here ~ }

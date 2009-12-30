@@ -7,6 +7,8 @@
 \alias{pvals,hbTestResults-method}
 \alias{hscores,hbTestResults-method}
 \alias{locs,hbTestResults-method}
+\alias{show,hbTestResults-method}
+\alias{show,hbTestResultsOuter-method}
 
 \title{Class "hbTestResults" holds results of tests
   of association of expression levels with

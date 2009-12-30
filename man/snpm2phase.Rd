@@ -5,6 +5,7 @@
 \alias{personalHap}
 %\alias{invokePhase}
 \alias{phaseInput-class}
+\alias{show,phaseInput-method}
 %\alias{invokePhase,phaseInput,chrnum,character,character,character,logical-method}
 %\alias{invokePhase,snp.matrix,chrnum,character,character,character,logical-method}
 
