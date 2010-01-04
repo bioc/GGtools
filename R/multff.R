@@ -38,6 +38,7 @@ setMethod("[", c("multffManager", "rsid", "probeId"), function(x, i, j, ..., dro
 multffCT = function(listOfSms, gfmla, geneinds=1:10, harmonizeSNPs=FALSE, 
      targdir=".", runname="foo", overwriteFF=TRUE, fillNA=TRUE, ncores=2, mc.set.seed=TRUE, vmode="single", shortfac=100, ...) {
   theCall = match.call()
+  if (!file.exists(targdir)) stop("targdir must exist prior to invocation of multffCT")
   require(ff, quietly=TRUE)
   require(multicore, quietly=TRUE)
   .checkArgsMF( listOfSms, fgmla, geneinds, targdir, runname )
@@ -184,6 +185,7 @@ diagffCC = function (sms, gfmla, targdir = ".", runname = "foo", overwriteFF = T
     ncores = 2, vmode = "short", shortfac = 100, mc.set.seed=TRUE, fillNA=TRUE, ...) 
 {
     require(multicore)
+  if (!file.exists(targdir)) stop("targdir must exist prior to invocation of multffCT")
     theCall = match.call()
     if (!is(sms, "smlSet")) 
         stop("need smlSet as first arg")
