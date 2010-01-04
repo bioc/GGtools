@@ -48,6 +48,7 @@ multffCT = function(listOfSms, gfmla, geneinds=1:10, harmonizeSNPs=FALSE,
        fillNA=fillNA, write=TRUE, ncores=ncores, vmode=vmode, mc.set.seed=mc.set.seed, shortfac=shortfac, ... )
 }
 
+
 .checkArgsMF = function( listOfSms, gfmla, geneinds, targdir, runname ) {
   if (!inherits(listOfSms, "list")) stop("listOfSms must inherit from list")
   allc = sapply(listOfSms, function(x) inherits(x, "smlSet"))
@@ -143,7 +144,7 @@ sumScores2ff = function( listOfSms, gfmla, targdir, runname, theCall=call("1"),
 #    filename=paste(fnhead, "snpsOnChr", x, "_", generangetag, ".ff", sep=""),
 #    overwrite=overwriteFF)
 #  )
-  indmat = data.matrix(expand.grid( 1:nchr, 1:nsms ))[,c(2,1)]
+  indmat = data.matrix(expand.grid( 1:nchr, 1:nsms ))[,c(2,1),drop=FALSE]
   indlist = list()
   for (i in 1:nrow(indmat))
     indlist[[i]] = indmat[i,]
@@ -178,62 +179,69 @@ sumScores2ff = function( listOfSms, gfmla, targdir, runname, theCall=call("1"),
    invisible(get(runname))
 }
   
-#saveSums = function(sumout, filename="fullout.rda", overwriteFF=TRUE) {
-#  fflist = sumout$fflist
-#  chrnames = names(fflist)
-#  output = list()
-#  obname = gsub(".rda", "", filename)
-#  for (i in 1:length(fflist)) {
-#    obname = paste(sumout$runname, paste("chr", chrnames[i], sep=""), sumout$generangetag, sep="_")
-#    assign(obname, clone(fflist[[i]], filename=sumout$filenames[[i]], overwrite=overwriteFF))
-#    output[[i]] = get(obname)
-#    }
-#  names(output) = chrnames
-#  assign(obname, output)
-#  save(list=obname, file=filename)
-#}
-#
-	
-# nchroms = length(smList(sms))
-# if (inherits(geneinds, "numeric")) genenames = featureNames(sms)[geneinds]
-# else genenames = as(geneinds, "character")
-# smdims = sapply(smList(sms),dim)
-# ngenes = length(geneinds)
-# nsamps = length(sampleNames(sms))
-# smsname = deparse(substitute(sms))
-# sms = sms[ geneinds, ]
-# nsnpsPerChr = smdims[2,]
-# fns = obnames = rep(NA, nchroms)
-# chrnames = names(smList(sms))
-# for (i in 1:nchroms) {
-#   chunktag = paste(genenames[1], genenames[ngenes], sep="_")
-#   basefn = paste(targdir, "/", smsname, ".chr.", chrnames[i], ".", chunktag,
-#     sep="")
-#   obname = paste(runname, "chr", chrnames[i], chunktag, sep="_")
-#   obnames[i] = obname
-#   tmp = matrix(rep(0.0, nsnpsPerChr[i]*ngenes), nr=nsnpsPerChr[i])
-#   for (j in 1:ngenes) { 
-#      ex <<- exprs(sms)[j,]
-#      gfmla[[2]] = as.name("ex")
-#      ans = snp.rhs.tests( gfmla, snp.data=smList(sms)[[i]], data=pData(sms),
-#         family="gaussian", ...)
-#      tmp[,j] = ans@chisq
-#      gc()
-#      }
-#   fns[i] = paste(basefn, ".rda", sep="")
-#   assign(obname, 
-#     ff( initdata=tmp,
-#	 overwrite=TRUE,
-#         dim=c(nsnpsPerChr[i], ngenes),
-#         vmode="double", 
-#         dimnames=list( colnames(smList(sms)[[i]]), genenames),
-#         filename=paste(basefn, ".ff", sep="")))
-#   save(list=obname, file=fns[i])
-#   }
-#   metadata=data.frame(targdir=targdir, objs=obnames, filenames=fns)
-#   list(metadata=metadata, objs=obnames, targdir=targdir, 
-#		call=thecall, filenames=fns)
-#}
-#
-#
-#  
+
+diagffCC = function (sms, gfmla, targdir = ".", runname = "foo", overwriteFF = TRUE, 
+    ncores = 2, vmode = "short", shortfac = 100, mc.set.seed=TRUE, fillNA=TRUE, ...) 
+{
+    require(multicore)
+    theCall = match.call()
+    if (!is(sms, "smlSet")) 
+        stop("need smlSet as first arg")
+    fnhead = paste(targdir, "/", runname, "_", sep = "")
+    expd = experimentData(sms)
+    nchr = length(smList(sms))
+    nsnps = sapply(smList(sms), ncol)
+    chrnames = names(smList(sms))
+    require(annotation(sms), character.only = TRUE)
+    annlib = gsub(".db", "", annotation(sms))
+    rmap = revmap(get(paste(annlib, "CHR", sep = "")))
+    diaglist = list()
+    generangetags = list()
+    for (i in chrnames) {
+        gs = intersect(featureNames(sms), get(as.character(i), rmap))
+        diaglist[[i]] = sms[chrnum(i), ]
+        diaglist[[i]] = sms[probeId(gs), ]
+        generangetags[[i]] = paste(gs[1], "_", gs[length(gs)], 
+            sep = "")
+    }
+    genenamelist = lapply(diaglist, function(x) featureNames(x))
+    ngenelist = lapply(genenamelist, length)
+    rslist = lapply(smList(sms), colnames)
+    filenames = lapply(chrnames, function(x) paste(fnhead, "snpsOnChr", 
+        x, "_", generangetags[[x]], "_df", 1, ".ff", sep = ""))
+    fflist = lapply(1:nchr, function(x) ff(initdata = 0, dim = c(nsnps[x], 
+        ngenelist[[x]]), dimnames = list(rslist[[x]], genenamelist[[x]]), 
+        vmode = vmode, filename = filenames[[x]], overwrite = overwriteFF))
+    mclapply(1:nchr, function(curchr) {
+        cat("chr", curchr, "\n")
+        cursms = diaglist[[curchr]]
+        ngenes = length(featureNames(cursms))
+        for (k in 1:ngenelist[[curchr]]) {
+            ex <<- exprs(cursms)[k, ]
+            if (k < 2) {
+                  print(ex)
+                  print(smList(cursms)[[curchr]])
+            }
+            gfmla[[2]] = as.name("ex")
+            tmpc = snp.rhs.tests(gfmla, snp.data = smList(cursms)[[curchr]],
+                data = pData(cursms), family = "gaussian", ...)@chisq
+            if (k < 2) print(tmpc[1:10])
+            if (fillNA) {
+                isna = which(is.na(tmpc))
+                if (length(isna) > 0) 
+                  tmpc[isna] = rchisq(length(isna), 1)
+            }
+            if (vmode != "short") 
+                shortfac = 1
+            fflist[[curchr]][, k, add = TRUE] = tmpc * shortfac
+        }
+    }, mc.cores = ncores, mc.set.seed = mc.set.seed)
+    names(fflist) = chrnames
+    ans = list(fflist = fflist, call = theCall, runname = runname, 
+        targdir = targdir, generangetags = generangetags, filenames = filenames, 
+        df = 1, vmode = vmode, shortfac = shortfac, sessionInfo = sessionInfo(), 
+        wd = getwd(), expdataList = expd)
+    assign(runname, new("multffManager", ans))
+    save(list = runname, file = paste(runname, ".rda", sep = ""))
+    invisible(get(runname))
+}
