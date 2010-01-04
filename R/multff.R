@@ -218,14 +218,14 @@ diagffCC = function (sms, gfmla, targdir = ".", runname = "foo", overwriteFF = T
         ngenes = length(featureNames(cursms))
         for (k in 1:ngenelist[[curchr]]) {
             ex <<- exprs(cursms)[k, ]
-            if (k < 2) {
-                  print(ex)
-                  print(smList(cursms)[[curchr]])
-            }
+#            if (k < 2) {
+#                  print(ex)
+#                  print(smList(cursms)[[curchr]])
+#            }
             gfmla[[2]] = as.name("ex")
             tmpc = snp.rhs.tests(gfmla, snp.data = smList(cursms)[[curchr]],
                 data = pData(cursms), family = "gaussian", ...)@chisq
-            if (k < 2) print(tmpc[1:10])
+#            if (k < 2) print(tmpc[1:10])
             if (fillNA) {
                 isna = which(is.na(tmpc))
                 if (length(isna) > 0) 
