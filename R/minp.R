@@ -100,3 +100,12 @@ top4 = function (x, sms)
         3)))
 }
 
+
+maxchisq = function(mgr, nchr=length(mgr$fflist), ncores=2) {
+ require(multicore)
+ maxchisq = mclapply( mgr$fflist[1:nchr],  function(x) apply(x[], 1, max)/mgr$shortfac)
+ bestgenes = mclapply( mgr$fflist[1:nchr],  function(x) colnames(x)[apply(x[], 1, which.max)]) 
+ list(maxchisq=maxchisq, df=mgr$df, bestgenes=bestgenes)
+}
+
+
