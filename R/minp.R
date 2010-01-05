@@ -123,6 +123,7 @@ maxchisq = function(mgr, nchr=length(mgr$fflist), ncores=2) {
 setGeneric("min_p_vals", function(mcs, mtcorr, type) standardGeneric("min_p_vals"))
 setMethod("min_p_vals", c("maxchisq", "character", "character"), function(mcs, mtcorr, type) {
  pv = lapply(mcs$maxchisq, function(x) pmin(1, 2*(1-pchisq(x, mcs$df))))
+ npv = lapply(mcs$maxchisq, names)
  mtcorrp = function(x, mtcorr) {
    tmp = mt.rawp2adjp(x, mtcorr)
    tmp$adjp[ order(tmp$index), mtcorr ]
@@ -134,20 +135,17 @@ setMethod("min_p_vals", c("maxchisq", "character", "character"), function(mcs, m
      adjpv = lapply( pv, function(x) mtcorrp(x, mtcorr))
    else if (type=="global") {
      ulp = unlist(pv)
-     uln = unlist(mcs$bestgenes)
      adjpv = mtcorrp(ulp, mtcorr)
-     names(adjpv) = uln
-#     return(adjpv) # returns one named vector
      anslist = list()
-     for (i in 1:length(mcs$bestgenes)) {
-       anslist[[i]] = adjpv[ mcs$bestgenes[[i]] ] # restore chromosomal list structure
+     for (i in 1:length(npv)) {
+       anslist[[i]] = adjpv[ npv[[i]] ] # restore chromosomal list structure
+       names(anslist[[i]]) = npv[[i]]
      }
-     names(anslist) = names(mcs$bestgenes)
+     names(anslist) = names(npv)
      return(anslist)
    }  
  }
- for (i in 1:length(adjpv))
-   names(adjpv[[i]]) = mcs$bestgenes[[i]]
+ for (i in 1:length(adjpv)) names(adjpv[[i]]) = npv[[i]]
  adjpv
 })
 
