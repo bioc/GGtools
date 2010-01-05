@@ -100,12 +100,56 @@ top4 = function (x, sms)
         3)))
 }
 
+setClass("maxchisq", contains="list")
+setMethod("show", "maxchisq", function(object) {
+ cat("GGtools maxchisq structure.\n")
+ cat("The call was:\n") 
+ print(object$theCall)
+ cat("The original call in multffManager was:\n")
+ print(object$mgrcall)
+ cat("Excerpt:\n")
+ print(lapply(object[c("maxchisq", "bestgenes")], function(x) head(x[[1]])))
+})
 
 maxchisq = function(mgr, nchr=length(mgr$fflist), ncores=2) {
+ theCall = match.call()
+ mgrcall = mgr$call
  require(multicore)
  maxchisq = mclapply( mgr$fflist[1:nchr],  function(x) apply(x[], 1, max)/mgr$shortfac)
  bestgenes = mclapply( mgr$fflist[1:nchr],  function(x) colnames(x)[apply(x[], 1, which.max)]) 
- list(maxchisq=maxchisq, df=mgr$df, bestgenes=bestgenes)
+ new("maxchisq", list(maxchisq=maxchisq, df=mgr$df, bestgenes=bestgenes, theCall=theCall, mgrcall=mgrcall))
 }
+
+setGeneric("min_p_vals", function(mcs, mtcorr, type) standardGeneric("min_p_vals"))
+setMethod("min_p_vals", c("maxchisq", "character", "character"), function(mcs, mtcorr, type) {
+ pv = lapply(mcs$maxchisq, function(x) pmin(1, 2*(1-pchisq(x, mcs$df))))
+ mtcorrp = function(x, mtcorr) {
+   tmp = mt.rawp2adjp(x, mtcorr)
+   tmp$adjp[ order(tmp$index), mtcorr ]
+ }
+ if (mtcorr == "none") adjpv = pv
+ else {
+   require(multtest)
+   if (type == "chr_specific")
+     adjpv = lapply( pv, function(x) mtcorrp(x, mtcorr))
+   else if (type=="global") {
+     ulp = unlist(pv)
+     uln = unlist(mcs$bestgenes)
+     adjpv = mtcorrp(ulp, mtcorr)
+     names(adjpv) = uln
+#     return(adjpv) # returns one named vector
+     anslist = list()
+     for (i in 1:length(mcs$bestgenes)) {
+       anslist[[i]] = adjpv[ mcs$bestgenes[[i]] ] # restore chromosomal list structure
+     }
+     names(anslist) = names(mcs$bestgenes)
+     return(anslist)
+   }  
+ }
+ for (i in 1:length(adjpv))
+   names(adjpv[[i]]) = mcs$bestgenes[[i]]
+ adjpv
+})
+
 
 

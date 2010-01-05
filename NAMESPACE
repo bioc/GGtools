@@ -24,10 +24,11 @@ importFrom(stats,
            lm,
            resid)
 
-exportClasses(phaseInput, hbTestResults, chunksize, aafSNP, multffManager)
+exportClasses(phaseInput, hbTestResults, chunksize, aafSNP, multffManager, maxchisq)
 
 exportMethods(gwSnpTests, plot, topSnps, coerce, 
-   invokePhase, residTests, hbTests, pvals, locs, hscores, show, "[" )
+   invokePhase, residTests, hbTests, pvals, locs, hscores, show, "[",
+   min_p_vals )
 
 export(snpm2phase, personalHap,
  parsePh.out, snpm2mapLD, masterSnps, chunksize,

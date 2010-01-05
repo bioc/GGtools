@@ -89,6 +89,15 @@ ff = diagffCC( hh, gs~male, runname="test")
 ff
 # we know the following should have a score above 50
 ff[ rsid("rs6060535"), probeId(cpn) ]
+#
+# now compute (minimum over genes, snp-specific) p-values associated with maximal chi-squared statistics
+mm = maxchisq(ff)
+mm
+pvraw = min_p_vals( mm, "none", "" )
+length(pvraw)
+pvraw[[1]][1:10]
+pvadj = min_p_vals( mm, "BH", "chr_specific" )
+pvadj[[1]][1:10]
 setwd(owd)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
