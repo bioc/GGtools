@@ -9,30 +9,24 @@ importClassesFrom(IRanges,
                   RangedData)
 
 importFrom(graphics,
-           abline,
-           axis,
-           boxplot,
-           layout,
-           legend,
-           par,
-           plot,
-           points)
+           abline, axis, boxplot, layout, legend,
+           par, plot, points) 
 
 importFrom(stats,
-           as.formula,
-           formula,
-           lm,
-           resid)
+           as.formula, formula, lm, resid)
 
-exportClasses(phaseInput, hbTestResults, chunksize, aafSNP, multffManager, maxchisq)
+#exportClasses(phaseInput, hbTestResults, chunksize, aafSNP, 
+exportClasses( multffManager, maxchisq)
 
 exportMethods(gwSnpTests, plot, topSnps, coerce, 
-   invokePhase, residTests, hbTests, pvals, locs, hscores, show, "[",
-   min_p_vals )
+#   invokePhase, residTests, hbTests, 
+pvals, locs, hscores, show, "[", min_p_vals )
 
-export(snpm2phase, personalHap,
- parsePh.out, snpm2mapLD, masterSnps, chunksize,
- cisSnpTests, aafSNP, slimCisTrans,
- slimCTchr2SQLite, slimCTchr2flat, minp, locreport, 
-  wgtinfo2browser, top4, slimCTchr2ff, ffs2minp, #ffcistrans, 
-  multffCT, makeCommonSNPs, checkCommonSNPs, diagffCC, maxchisq) #, phaseHS)
+#export(snpm2phase, personalHap,
+# parsePh.out, snpm2mapLD, masterSnps, chunksize,
+# cisSnpTests, aafSNP, slimCisTrans,
+## slimCTchr2SQLite, slimCTchr2flat, minp, locreport, 
+#  wgtinfo2browser, top4, slimCTchr2ff, ffs2minp, #ffcistrans, 
+#  multffCT, makeCommonSNPs, checkCommonSNPs, diagffCC, maxchisq) #, phaseHS)
+
+export( multffCT, makeCommonsSNPs, checkCommonSNPs, diagffCC, maxchisq )

@@ -1,16 +1,16 @@
 \name{slimCTchr2SQLite}
-\alias{slimCTchr2SQLite}
-\alias{slimCTchr2flat}
+%\alias{slimCTchr2SQLite}
+%\alias{slimCTchr2flat}
 \alias{slimCTchr2ff}
-\alias{ffs2minp}
-\alias{minp}
-\alias{locreport}
+%\alias{ffs2minp}
+%\alias{minp}
+%\alias{locreport}
 \alias{wgtinfo2browser}
 \alias{top4}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 transform matrices of chromosome-wide cis/trans eQTL statistics to
-SQLite or flat text, and support extraction of minimum p per SNP,
+ff flat files, and support extraction of minimum p per SNP,
 with location information
 }
 \description{

@@ -1,4 +1,4 @@
-minp = function(path, BUFSIZE=100000, breakat=Inf, freqdump=10000,
+minpBAD = function(path, BUFSIZE=100000, breakat=Inf, freqdump=10000,
   filefun=gzfile) {
    owarn = options()$warn
    ans = rep(NA, BUFSIZE)
