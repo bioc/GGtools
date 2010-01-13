@@ -28,7 +28,7 @@ slimCTchr2ff = function (path, chr = 1, dbname = paste("chr", chr, sep = ""))
     NULL
 }
 
-ffs2minp = function(ffl, ...) {
+ffs2minpBAD = function(ffl, ...) {
  if (!(is(ffl, "list"))) stop("ffl must be a list of ff objects")
  nrs = sapply(ffl, nrow)
  ncs = sapply(ffl, ncol)
