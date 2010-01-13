@@ -15,11 +15,9 @@ importFrom(graphics,
 importFrom(stats,
            as.formula, formula, lm, resid)
 
-#exportClasses(phaseInput, hbTestResults, chunksize, aafSNP, 
 exportClasses( multffManager, maxchisq)
 
 exportMethods(gwSnpTests, plot, topSnps, coerce, 
-#   invokePhase, residTests, hbTests, 
 pvals, locs, hscores, show, "[", min_p_vals )
 
 #export(snpm2phase, personalHap,
@@ -29,4 +27,5 @@ pvals, locs, hscores, show, "[", min_p_vals )
 #  wgtinfo2browser, top4, slimCTchr2ff, ffs2minp, #ffcistrans, 
 #  multffCT, makeCommonSNPs, checkCommonSNPs, diagffCC, maxchisq) #, phaseHS)
 
-export( multffCT, makeCommonsSNPs, checkCommonSNPs, diagffCC, maxchisq )
+export( multffCT, makeCommonSNPs, checkCommonSNPs, diagffCC, maxchisq,
+ cisSnpTests, snpm2phase, snpm2mapLD )

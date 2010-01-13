@@ -1,4 +1,9 @@
 
+makeCommonSNPs = function( listOfSms ) {
+  rsidlist = intersectSnps( listOfSms )
+  trimSnps( listOfSms, rsidlist )
+}
+
 setClass("multffManager", contains="list")
 setMethod("show", "multffManager", function(object) {
  require(ff, quietly=TRUE)
@@ -66,11 +71,6 @@ multffCT = function(listOfSms, gfmla, geneinds=1:10, harmonizeSNPs=FALSE,
 
 reduceGenes = function( listOfSms, geneinds )
   lapply( listOfSms, function(x) x[ geneinds, ] )
-
-makeCommonSNPs = function( listOfSms ) {
-  rsidlist = intersectSnps( listOfSms )
-  trimSnps( listOfSms, rsidlist )
-}
 
 intersectSnps = function( listOfSms ) {
   nsms = length(listOfSms)
