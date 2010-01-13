@@ -18,7 +18,8 @@ importFrom(stats,
 exportClasses( multffManager, maxchisq)
 
 exportMethods(gwSnpTests, plot, topSnps, coerce, 
-pvals, locs, hscores, show, "[", min_p_vals )
+   show, "[", min_p_vals )
+#pvals, locs, hscores, 
 
 #export(snpm2phase, personalHap,
 # parsePh.out, snpm2mapLD, masterSnps, chunksize,
@@ -28,4 +29,5 @@ pvals, locs, hscores, show, "[", min_p_vals )
 #  multffCT, makeCommonSNPs, checkCommonSNPs, diagffCC, maxchisq) #, phaseHS)
 
 export( multffCT, makeCommonSNPs, checkCommonSNPs, diagffCC, maxchisq,
- cisSnpTests, snpm2phase, snpm2mapLD )
+   cisSnpTests )
+# snpm2phase, snpm2mapLD )
