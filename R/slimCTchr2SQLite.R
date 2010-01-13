@@ -1,5 +1,5 @@
 
-slimCTchr2SQLite = function(path,chr=1, dbname=paste("chr", chr, sep="")) {
+slimCTchr2SQLiteBAD = function(path,chr=1, dbname=paste("chr", chr, sep="")) {
  require(RSQLite, quietly=TRUE)
  if (!is.numeric(chr)) stop("chr must be numeric index (for Hs, in 1-24)")
  owd = getwd()
@@ -27,7 +27,7 @@ slimCTchr2SQLite = function(path,chr=1, dbname=paste("chr", chr, sep="")) {
  
 
 
-slimCTchr2flat = function(path,chr=1, dbname=paste("chr", chr, sep="")) {
+slimCTchr2flatBAD = function(path,chr=1, dbname=paste("chr", chr, sep="")) {
  if (!is.numeric(chr)) stop("chr must be numeric index (for Hs, in 1-24)")
  owd = getwd()
  on.exit(setwd(owd))
