@@ -88,21 +88,24 @@ VJ Carey <stvjc@channing.harvard.edu>
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
-data(smlSet.example)
-td = tempdir()
-od = getwd()
-on.exit(unlink(td))
-setwd(td)
-set.seed(1234)
-dem = multffCT( list(smlSet.example, smlSet.example), gs~male, 1:3, runname="dem1" )
-set.seed(1234)
-dems = multffCT( list(smlSet.example, smlSet.example), gs~male, 
-   1:3, vmode="short", shortfac=100, runname="dem2" )
-#
-# note that chisq fillin of missing snps make strict numerical reproducibility
-# nontrivial
-dem
-dems
-dir()
+# runs interactively but not in check on windows
+if (.Platform$OS.type != "windows") {
+ data(smlSet.example)
+ td = tempdir()
+ od = getwd()
+ on.exit(unlink(td))
+ setwd(td)
+ set.seed(1234)
+ dem = multffCT( list(smlSet.example, smlSet.example), gs~male, 1:3, runname="dem1" )
+ set.seed(1234)
+ dems = multffCT( list(smlSet.example, smlSet.example), gs~male, 
+    1:3, vmode="short", shortfac=100, runname="dem2" )
+ #
+ # note that chisq fillin of missing snps make strict numerical reproducibility
+ # nontrivial
+ dem
+ dems
+ dir()
+}
 }
 \keyword{ models }
