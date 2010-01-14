@@ -63,13 +63,18 @@ int can represent without too much coarsening}
 %	or \code{\linkS4class{CLASSNAME}} for links to other classes
 %}
 \examples{
-example("multffCT")
-dem
-getClass(class(dem))
-dem$fflist[[1]]
-dem$df
-dem$filenames
-dem$vmode
-dem$call
+#
+# seems to throw file error in CMD check on windows
+#
+if (.Platform$OS.type != "windows") {
+  example("multffCT")
+  dem
+  getClass(class(dem))
+  dem$fflist[[1]]
+  dem$df
+  dem$filenames
+  dem$vmode
+  dem$call
+  }
 }
 \keyword{classes}
