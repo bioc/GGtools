@@ -114,9 +114,14 @@ setMethod("show", "maxchisq", function(object) {
 maxchisq = function(mgr, nchr=length(mgr$fflist), ncores=2) {
  theCall = match.call()
  mgrcall = mgr$call
- require(multicore)
- maxchisq = mclapply( mgr$fflist[1:nchr],  function(x) apply(x[], 1, max)/mgr$shortfac)
- bestgenes = mclapply( mgr$fflist[1:nchr],  function(x) colnames(x)[apply(x[], 1, which.max)]) 
+ if (.Platform$OS.type != "windows") {
+   require("multicore", character.only=TRUE)
+   maxchisq = mclapply( mgr$fflist[1:nchr],  function(x) apply(x[], 1, max)/mgr$shortfac, mc.cores=ncores)
+   bestgenes = mclapply( mgr$fflist[1:nchr],  function(x) colnames(x)[apply(x[], 1, which.max)], mc.cores=ncores) 
+   } else {
+   maxchisq = lapply( mgr$fflist[1:nchr],  function(x) apply(x[], 1, max)/mgr$shortfac)
+   bestgenes = lapply( mgr$fflist[1:nchr],  function(x) colnames(x)[apply(x[], 1, which.max)])
+   }
  new("maxchisq", list(maxchisq=maxchisq, df=mgr$df, bestgenes=bestgenes, theCall=theCall, mgrcall=mgrcall))
 }
 

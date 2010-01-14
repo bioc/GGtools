@@ -45,8 +45,9 @@ multffCT = function(listOfSms, gfmla, geneinds=1:10, harmonizeSNPs=FALSE,
   theCall = match.call()
   if (!file.exists(targdir)) stop("targdir must exist prior to invocation of multffCT")
   require(ff, quietly=TRUE)
-  require(multicore, quietly=TRUE)
-  .checkArgsMF( listOfSms, fgmla, geneinds, targdir, runname )
+  if (.Platform$OS.type != "windows") require("multicore", character.only=TRUE) 
+  else stop("multicore not available on windows; try another platform")
+  .checkArgsMF( listOfSms, gfmla, geneinds, targdir, runname )
   listOfSms = reduceGenes( listOfSms, geneinds )
   if (harmonizeSNPs) listOfSms = makeCommonSNPs( listOfSms )
   else if(!isTRUE(checkCommonSNPs( listOfSms ))) stop("harmonizeSNPs = FALSE but SNPs not common across listOfSms, run makeCommonSNPs")
@@ -149,12 +150,11 @@ sumScores2ff = function( listOfSms, gfmla, targdir, runname, theCall=call("1"),
   indlist = list()
   for (i in 1:nrow(indmat))
     indlist[[i]] = indmat[i,]
-  #for (i in 1:nsms)
-  #  mclapply( 1:nchr, function(j) {
+ if (.Platform$OS.type != "windows") {
+  require("multicore", character.only=TRUE)
   mclapply( indlist, function(indvec) {
     i = indvec[1]
     j = indvec[2]
-    #for (j in 1:nchr) {
       cat("sms", i, "chr", j, "\n")
       for (k in 1:ngenes) {
        ex <<- exprs(listOfSms[[i]])[k,]
@@ -170,6 +170,27 @@ sumScores2ff = function( listOfSms, gfmla, targdir, runname, theCall=call("1"),
        fflist[[j]][,k,add=TRUE] = tmpc*shortfac
        }  # end k
       }, mc.cores=ncores, mc.set.seed=mc.set.seed)  # end j/mclapply
+   }
+   else {
+    lapply( indlist, function(indvec) {
+      i = indvec[1]
+      j = indvec[2]
+        cat("sms", i, "chr", j, "\n")
+        for (k in 1:ngenes) {
+         ex <<- exprs(listOfSms[[i]])[k,]
+         gfmla[[2]] = as.name("ex")
+         tmpc = snp.rhs.tests( gfmla, snp.data=smList(listOfSms[[i]])[[j]], 
+            data=pData(listOfSms[[i]]), family="gaussian", ...)@chisq
+         if (fillNA) {
+            isna = which(is.na(tmpc))
+            if (length(isna)>0) 
+               tmpc[isna] = rchisq(length(isna), 1)
+            }
+         if (vmode != "short") shortfac = 1.0
+         fflist[[j]][,k,add=TRUE] = tmpc*shortfac
+         }  # end k
+        })  # end j/mclapply
+   } # end windows adaptation
    names(fflist) = chrnames
    ans = list(fflist=fflist, call=theCall, runname=runname, targdir=targdir, 
      generangetag=generangetag,
@@ -184,7 +205,8 @@ sumScores2ff = function( listOfSms, gfmla, targdir, runname, theCall=call("1"),
 diagffCC = function (sms, gfmla, targdir = ".", runname = "foo", overwriteFF = TRUE, 
     ncores = 2, vmode = "short", shortfac = 100, mc.set.seed=TRUE, fillNA=TRUE, ...) 
 {
-    require(multicore)
+  if (.Platform$OS.type != "windows") require("multicore", character.only=TRUE)
+  else stop("multicore not available on windows, please try another platform")
   if (!file.exists(targdir)) stop("targdir must exist prior to invocation of multffCT")
     theCall = match.call()
     if (!is(sms, "smlSet")) 
@@ -214,20 +236,17 @@ diagffCC = function (sms, gfmla, targdir = ".", runname = "foo", overwriteFF = T
     fflist = lapply(1:nchr, function(x) ff(initdata = 0, dim = c(nsnps[x], 
         ngenelist[[x]]), dimnames = list(rslist[[x]], genenamelist[[x]]), 
         vmode = vmode, filename = filenames[[x]], overwrite = overwriteFF))
+  if (.Platform$OS.type != "windows") {
+    require("multicore", character.only=TRUE)
     mclapply(1:nchr, function(curchr) {
         cat("chr", curchr, "\n")
         cursms = diaglist[[curchr]]
         ngenes = length(featureNames(cursms))
         for (k in 1:ngenelist[[curchr]]) {
             ex <<- exprs(cursms)[k, ]
-#            if (k < 2) {
-#                  print(ex)
-#                  print(smList(cursms)[[curchr]])
-#            }
             gfmla[[2]] = as.name("ex")
             tmpc = snp.rhs.tests(gfmla, snp.data = smList(cursms)[[curchr]],
                 data = pData(cursms), family = "gaussian", ...)@chisq
-#            if (k < 2) print(tmpc[1:10])
             if (fillNA) {
                 isna = which(is.na(tmpc))
                 if (length(isna) > 0) 
@@ -238,6 +257,28 @@ diagffCC = function (sms, gfmla, targdir = ".", runname = "foo", overwriteFF = T
             fflist[[curchr]][, k, add = TRUE] = tmpc * shortfac
         }
     }, mc.cores = ncores, mc.set.seed = mc.set.seed)
+   }
+   else {
+    lapply(1:nchr, function(curchr) {
+        cat("chr", curchr, "\n")
+        cursms = diaglist[[curchr]]
+        ngenes = length(featureNames(cursms))
+        for (k in 1:ngenelist[[curchr]]) {
+            ex <<- exprs(cursms)[k, ]
+            gfmla[[2]] = as.name("ex")
+            tmpc = snp.rhs.tests(gfmla, snp.data = smList(cursms)[[curchr]],
+                data = pData(cursms), family = "gaussian", ...)@chisq
+            if (fillNA) {
+                isna = which(is.na(tmpc))
+                if (length(isna) > 0) 
+                  tmpc[isna] = rchisq(length(isna), 1)
+            }
+            if (vmode != "short") 
+                shortfac = 1
+            fflist[[curchr]][, k, add = TRUE] = tmpc * shortfac
+        }
+      })
+    }  # end windows adaptation
     names(fflist) = chrnames
     ans = list(fflist = fflist, call = theCall, runname = runname, 
         targdir = targdir, generangetags = generangetags, filenames = filenames, 
