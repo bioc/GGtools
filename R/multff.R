@@ -45,8 +45,6 @@ multffCT = function(listOfSms, gfmla, geneinds=1:10, harmonizeSNPs=FALSE,
   theCall = match.call()
   if (!file.exists(targdir)) stop("targdir must exist prior to invocation of multffCT")
   require(ff, quietly=TRUE)
-  if (.Platform$OS.type != "windows") require("multicore", character.only=TRUE) 
-  else stop("multicore not available on windows; try another platform")
   .checkArgsMF( listOfSms, gfmla, geneinds, targdir, runname )
   listOfSms = reduceGenes( listOfSms, geneinds )
   if (harmonizeSNPs) listOfSms = makeCommonSNPs( listOfSms )
@@ -150,8 +148,7 @@ sumScores2ff = function( listOfSms, gfmla, targdir, runname, theCall=call("1"),
   indlist = list()
   for (i in 1:nrow(indmat))
     indlist[[i]] = indmat[i,]
- if (.Platform$OS.type != "windows") {
-  require("multicore", character.only=TRUE)
+ if (.Platform$OS.type != "windows" && require("multicore", character.only=TRUE)) {
   mclapply( indlist, function(indvec) {
     i = indvec[1]
     j = indvec[2]
@@ -205,8 +202,6 @@ sumScores2ff = function( listOfSms, gfmla, targdir, runname, theCall=call("1"),
 diagffCC = function (sms, gfmla, targdir = ".", runname = "foo", overwriteFF = TRUE, 
     ncores = 2, vmode = "short", shortfac = 100, mc.set.seed=TRUE, fillNA=TRUE, ...) 
 {
-  if (.Platform$OS.type != "windows") require("multicore", character.only=TRUE)
-  else stop("multicore not available on windows, please try another platform")
   if (!file.exists(targdir)) stop("targdir must exist prior to invocation of multffCT")
     theCall = match.call()
     if (!is(sms, "smlSet")) 
@@ -236,8 +231,7 @@ diagffCC = function (sms, gfmla, targdir = ".", runname = "foo", overwriteFF = T
     fflist = lapply(1:nchr, function(x) ff(initdata = 0, dim = c(nsnps[x], 
         ngenelist[[x]]), dimnames = list(rslist[[x]], genenamelist[[x]]), 
         vmode = vmode, filename = filenames[[x]], overwrite = overwriteFF))
-  if (.Platform$OS.type != "windows") {
-    require("multicore", character.only=TRUE)
+  if (.Platform$OS.type != "windows" && require("multicore", character.only=TRUE) ) {
     mclapply(1:nchr, function(curchr) {
         cat("chr", curchr, "\n")
         cursms = diaglist[[curchr]]
