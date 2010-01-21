@@ -93,6 +93,25 @@ topSnps(f3b)
 # in interpreter
 f4 = gwSnpTests(gs1~male, hmFou, snpdepth(250), chunksize(1))
 f4
+#
   }
+# illustrate alternate approach to expression feature enumeration
+#
+data(smlSet.example)
+esml = as(smlSet.example, "ExpressionSet")
+library(genefilter)
+annotation(esml) = "illuminaHumanv1" # drop .db
+library(illuminaHumanv1.db)
+fesml = nsFilter(esml)[[1]] # unique entrez ids + other filters
+fn = featureNames(fesml)
+eids = unlist(mget(fn, illuminaHumanv1ENTREZID))
+featureNames(fesml) = as.character(eids)
+fesml = make_smlSet( fesml, smList(smlSet.example) )
+# now we have an smlSet with Entrez ID featureNames
+annotation(fesml) = "org.Hs.eg"
+mygs = GeneSet(c("ZNF253", "MRS2"), geneIdType = SymbolIdentifier())
+geneIdType(mygs) = AnnotationIdentifier("org.Hs.eg")
+tt = gwSnpTests(mygs~male, fesml)
+lapply(tt, topSnps)
 }
 \keyword{ models }
