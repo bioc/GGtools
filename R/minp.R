@@ -140,7 +140,10 @@ setMethod("min_p_vals", c("maxchisq", "character", "character"), function(mcs, m
      adjpv = lapply( pv, function(x) mtcorrp(x, mtcorr))
    else if (type=="global") {
      ulp = unlist(pv)
+     uln = unlist(npv)
+     names(ulp) = uln
      adjpv = mtcorrp(ulp, mtcorr)
+     names(adjpv) = uln
      anslist = list()
      for (i in 1:length(npv)) {
        anslist[[i]] = adjpv[ npv[[i]] ] # restore chromosomal list structure
