@@ -108,21 +108,24 @@ setMethod("show", "maxchisq", function(object) {
  cat("The original call in multffManager was:\n")
  print(object$mgrcall)
  cat("Excerpt:\n")
- print(lapply(object[c("maxchisq", "bestgenes")], function(x) head(x[[1]])))
+ print(lapply(object[c("maxchisq", "bestFeats")], function(x) head(x[[1]])))
 })
 
-maxchisq = function(mgr, nchr=length(mgr$fflist), ncores=2) {
+maxchisq = function(mgr, nchr=length(mgr$fflist), type=c("perSNP", "perGene")[1], ncores=2) {
  theCall = match.call()
+ if (type == "perSNP") {appmargin = 1; fnextract = colnames }
+ else if (type == "perGene") {appmargin = 2; fnextract = rownames }
+ else stop("check value of type parameter for this call")
  mgrcall = mgr$call
  if (.Platform$OS.type != "windows") {
    require("multicore", character.only=TRUE)
-   maxchisq = mclapply( mgr$fflist[1:nchr],  function(x) apply(x[], 1, max)/mgr$shortfac, mc.cores=ncores)
-   bestgenes = mclapply( mgr$fflist[1:nchr],  function(x) colnames(x)[apply(x[], 1, which.max)], mc.cores=ncores) 
+   maxchisq = mclapply( mgr$fflist[1:nchr],  function(x) apply(x[], appmargin, max)/mgr$shortfac, mc.cores=ncores)
+   bestFeats = mclapply( mgr$fflist[1:nchr],  function(x) fnextract(x)[apply(x[], appmargin, which.max)], mc.cores=ncores) 
    } else {
-   maxchisq = lapply( mgr$fflist[1:nchr],  function(x) apply(x[], 1, max)/mgr$shortfac)
-   bestgenes = lapply( mgr$fflist[1:nchr],  function(x) colnames(x)[apply(x[], 1, which.max)])
+   maxchisq = lapply( mgr$fflist[1:nchr],  function(x) apply(x[], appmargin, max)/mgr$shortfac)
+   bestFeats = lapply( mgr$fflist[1:nchr],  function(x) fnextract(x)[apply(x[], appmargin, which.max)])
    }
- new("maxchisq", list(maxchisq=maxchisq, df=mgr$df, bestgenes=bestgenes, theCall=theCall, mgrcall=mgrcall))
+ new("maxchisq", list(maxchisq=maxchisq, df=mgr$df, bestFeats=bestFeats, theCall=theCall, mgrcall=mgrcall))
 }
 
 setGeneric("min_p_vals", function(mcs, mtcorr, type) standardGeneric("min_p_vals"))

@@ -17,7 +17,8 @@ Objects can be created by calls of the form \code{new("maxchisq", ...)}.
     \item{\code{.Data}:}{Object of class \code{"list"} currently representation
 is simple -- a named list of named vectors of chisquared statistics corresponding to SNP,
 a value for the d.f. of the chisq stats, the gene for which chisq was maximized for each
-SNP, and some production metadata}
+SNP, and some production metadata.  Note that a type parameter allows computation of 
+max chisq stats per SNP (over genes) or per gene (over SNP)}
   }
 }
 \section{Extends}{
