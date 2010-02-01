@@ -4,7 +4,7 @@
 \alias{maxchisq-class}
 \alias{maxchisq}
 \alias{min_p_vals}
-\alias{min_p_vals,maxchisq,character,character-method}
+\alias{min_p_vals,maxchisq,character,character,numeric-method}
 \alias{show,maxchisq-method}
 
 \title{Class "maxchisq" }
