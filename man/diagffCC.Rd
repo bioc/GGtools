@@ -93,10 +93,10 @@ ff[ rsid("rs6060535"), probeId(cpn) ]
 # now compute (minimum over genes, snp-specific) p-values associated with maximal chi-squared statistics
 mm = maxchisq(ff)
 mm
-pvraw = min_p_vals( mm, "none", "" )
+pvraw = min_p_vals( mm, "none", "", 2 )
 length(pvraw)
 pvraw[[1]][1:10]
-pvadj = min_p_vals( mm, "BH", "chr_specific" )
+pvadj = min_p_vals( mm, "BH", "chr_specific", 2 )
 pvadj[[1]][1:10]
 mm2 = maxchisq(ff, type="perGene")
 mm2
