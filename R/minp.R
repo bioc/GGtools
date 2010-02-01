@@ -128,9 +128,11 @@ maxchisq = function(mgr, nchr=length(mgr$fflist), type=c("perSNP", "perGene")[1]
  new("maxchisq", list(maxchisq=maxchisq, df=mgr$df, bestFeats=bestFeats, theCall=theCall, mgrcall=mgrcall))
 }
 
-setGeneric("min_p_vals", function(mcs, mtcorr, type) standardGeneric("min_p_vals"))
-setMethod("min_p_vals", c("maxchisq", "character", "character"), function(mcs, mtcorr, type) {
- pv = lapply(mcs$maxchisq, function(x) pmin(1, 2*(1-pchisq(x, mcs$df))))
+setGeneric("min_p_vals", function(mcs, mtcorr, type, sidedness) standardGeneric("min_p_vals"))
+setMethod("min_p_vals", c("maxchisq", "character", "character", "numeric"), function(mcs, mtcorr, type, sidedness) {
+ sidedness = as.integer(sidedness)
+ if (sidedness != 1 & sidedness != 2) stop("sidedness must be 1 or 2")
+ pv = lapply(mcs$maxchisq, function(x) pmin(1, sidedness*(1-pchisq(x, mcs$df))))
  npv = lapply(mcs$maxchisq, names)
  mtcorrp = function(x, mtcorr) {
    tmp = mt.rawp2adjp(x, mtcorr)

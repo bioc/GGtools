@@ -29,7 +29,7 @@ Class \code{"\linkS4class{vectorORfactor}"}, by class "list", distance 3.
 }
 \section{Methods}{
   \describe{
-    \item{min_p_vals}{\code{signature(mcs = "maxchisq", mtcorr = "character", type = "character")}: 
+    \item{min_p_vals}{\code{signature(mcs = "maxchisq", mtcorr = "character", type = "character", sidedness="numeric")}: 
 \code{mtcorr} is the \code{proc} token for \code{\link[multtest]{mt.rawp2adjp}}.   Specifically,
 if mtcorr is set to \code{"BH"}, the Benjamini-Hochberg FDR transformation is applied.
 If mtcorr is set to \code{"none"}, nothing is done.
@@ -38,6 +38,9 @@ If mtcorr is set to \code{"none"}, nothing is done.
 used if \code{mtcorr} is \code{"none"}, \code{"chr_specific"}, with which the testing
 corrections are made within chromosomes, or \code{"global"}, with which
 the testing corrections are made over all tests over the whole genome.
+
+sidedness determines whether a 2 sided (2*(1-pchisq)) or 1 sided
+p-value is returned.  supply the factor 1 or 2 as desired.
 
  }
     \item{show}{\code{signature(object = "maxchisq")}: concise but informative report }
