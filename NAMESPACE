@@ -6,7 +6,7 @@ importFrom(annotate, "organism")
 importClassesFrom("GGBase", "cnumOrMissing")
 
 importClassesFrom(IRanges, RangedData)
-importFrom(IRanges, RangedData, space)
+importFrom(IRanges, RangedData, space, findOverlaps)
 
 importFrom(graphics,
            abline, axis, boxplot, layout, legend,
