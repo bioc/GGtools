@@ -12,6 +12,8 @@ importFrom(graphics,
            abline, axis, boxplot, layout, legend,
            par, plot, points) 
 
+importClassesFrom("GSEABase", "GeneSet")
+
 importFrom(stats,
            as.formula, formula, lm, resid)
 
@@ -29,5 +31,5 @@ exportMethods(gwSnpTests, plot, topSnps, coerce,
 #  multffCT, makeCommonSNPs, checkCommonSNPs, diagffCC, maxchisq) #, phaseHS)
 
 export( multffCT, makeCommonSNPs, checkCommonSNPs, diagffCC, maxchisq,
-   cisSnpTests, geneRanges, snp130locs )
+   cisSnpTests, geneRanges, snp130locs, bestCis )
 # snpm2phase, snpm2mapLD )

@@ -142,7 +142,7 @@ setMethod("gwSnpTests", c("formula", "smlSet", "snpdepth", "missing"),
 #
        require( sms@annotation, character.only=TRUE, quietly=TRUE )
     if (is(respObj, "phenoVar")) { pid = as.character(respObj@.Data) }
-       require( GSEABase, quietly=TRUE )
+       #require( GSEABase, quietly=TRUE )
        rmap = revmap(get(paste(gsub(".db", "", sms@annotation), "CHR", sep="")))
        allpid = get(as(respObj,"character"), rmap)
        allsym = unlist(mget(allpid, get(paste(gsub(".db", "", sms@annotation), "SYMBOL", sep=""))))

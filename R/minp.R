@@ -57,7 +57,6 @@ locreport = function (winfo, chr)
 {
     if (!is.numeric(chr)) 
         stop("chr must be in 1:24")
-    require(GGBase)
     locs = snpLocs.Hs(chrnum(chr), rsid(paste("rs", winfo[["rsid"]], 
         sep = "")))
     ldf = data.frame(reflocs = locs[2, ], rsid = paste("rs", 
