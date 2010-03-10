@@ -20,8 +20,15 @@ bestCis = function(ffmgr, slranges, radius=1e6, ffind=1, anno, ncores=10) {
  cisrs = mclapply(indPerGene, function(x) slranges$name[x], mc.cores=ncores)
    # get maxchisq of all cis SNP
  names(cisrs) = names(indPerGene)
- tmp = unlist(mclapply(names(cisrs), function(x) max(ffmgr[[1]][[ffind]][cisrs[[x]],x,drop=FALSE]/ffmgr$shortfac)))
- names(tmp) = gr$name[ unique(lk@matchMatrix[,1]) ] # some genes don't match to any cis SNP
- tmp
+ wmax = function(x) c(snpind=which.max(x), max=max(x), rsnum=rownames(x)[which.max(x)])
+ tmp = mclapply(names(cisrs), function(x) wmax(ffmgr[[1]][[ffind]][cisrs[[x]],x,drop=FALSE]/ffmgr$shortfac))
+ tmp = t(matrix(unlist(tmp),nr=3))
+ colnames(tmp) = c("snpind", paste("chisq(", ffmgr$df,")", sep=""), "rsnum")
+ rownames(tmp) = names(cisrs)  # mclapply does not preserve names
+ ans = tmp[match(allg, rownames(tmp) ),]
+ ans = data.frame(ans, stringsAsFactors=FALSE, check.names=FALSE)
+ ans[,1] = as.numeric(ans[,1])
+ ans[,2] = as.numeric(ans[,2])
+ ans[,c(3,2)]
 }
  
