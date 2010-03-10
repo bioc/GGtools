@@ -29,6 +29,14 @@ bestCis = function(ffmgr, slranges, radius=1e6, ffind=1, anno, ncores=10) {
  ans = data.frame(ans, stringsAsFactors=FALSE, check.names=FALSE)
  ans[,1] = as.numeric(ans[,1])
  ans[,2] = as.numeric(ans[,2])
- ans[,c(3,2)]
+ ans = ans[,c(3,2)]
+ #tmp = list(ans=ans[,c(3,2)], granges=gr, sloc=slranges)
+ gstarts = start(gr)
+ names(gstarts) = gr$name
+ sloc = start(slranges)
+ names(sloc) = slranges$name
+ snplocs = sloc[ans[,1]]
+ gstarts = gstarts[rownames(ans)]
+ data.frame(gstarts, ans, df=ffmgr$df, snplocs, check.names=FALSE, stringsAsFactors=FALSE)
 }
  

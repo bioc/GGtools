@@ -5,14 +5,15 @@ importFrom(annotate, "organism")
 
 importClassesFrom("GGBase", "cnumOrMissing")
 
-importClassesFrom(IRanges,
-                  RangedData)
+importClassesFrom(IRanges, RangedData)
+importFrom(IRanges, RangedData, space)
 
 importFrom(graphics,
            abline, axis, boxplot, layout, legend,
            par, plot, points) 
 
 importClassesFrom("GSEABase", "GeneSet")
+importFrom("GSEABase", "GeneSet")
 
 importFrom(stats,
            as.formula, formula, lm, resid)

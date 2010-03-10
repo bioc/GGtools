@@ -35,7 +35,8 @@ number of cores for mclapply to use
 %%  ~~ If necessary, more details than the description above ~~
 %}
 \value{
-data frame with genes as rows, rsnum and chisq(df) scores as columns.
+data frame with genes as rows, rsnum and chisq(df) scores,
+with df and gene and SNP locations as columns.
 }
 %\references{
 %% ~put references to the literature/web site here ~
