@@ -15,7 +15,7 @@ bestCis = function(ffmgr, slranges, radius=1e6, ffind=1, anno, ncores=10) {
    # find overlaps of gene regions and SNP
  lk = findOverlaps(gr, slranges)[[sspcs[1]]]
  querGnames = allg[ lk@matchMatrix[,1] ]
- indPerGene = split(lk@matchMatrix[,2], querGnames)
+ indPerGene = split(lk@matchMatrix[,2], querGnames)  # some genes will have no overlap
    # rs numbers of SNP cis to each gene
  cisrs = mclapply(indPerGene, function(x) slranges$name[x], mc.cores=ncores)
    # get maxchisq of all cis SNP
@@ -25,7 +25,7 @@ bestCis = function(ffmgr, slranges, radius=1e6, ffind=1, anno, ncores=10) {
  tmp = t(matrix(unlist(tmp),nr=3))
  colnames(tmp) = c("snpind", paste("chisq(", ffmgr$df,")", sep=""), "rsnum")
  rownames(tmp) = names(cisrs)  # mclapply does not preserve names
- ans = tmp[match(allg, rownames(tmp) ),]
+ ans = tmp[match(names(indPerGene), rownames(tmp) ),]
  ans = data.frame(ans, stringsAsFactors=FALSE, check.names=FALSE)
  ans[,1] = as.numeric(ans[,1])
  ans[,2] = as.numeric(ans[,2])
