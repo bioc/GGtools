@@ -61,8 +61,10 @@ multffCT = function(listOfSms, gfmla, geneinds=1:10, harmonizeSNPs=FALSE,
  allcsets = sapply(listOfSms, function(x) names(smList(x)))
  if(!is.atomic(allcsets)) stop("probably not all elements of listOfSms have same chromosome set")
  allfn = unique(unlist(fnlist <- lapply(listOfSms, featureNames)))
- for (i in 2:length(fnlist)) 
+ if (length(fnlist)>1) {
+  for (i in 2:length(fnlist)) 
      if (!isTRUE(all.equal(fnlist[[i]], fnlist[[1]]))) stop("all smlSets must have same feature set")
+ }
  allfi = sapply(lapply(listOfSms, featureNames), length)
  if (inherits(geneinds, "character") & !(all(geneinds %in% allfn)))
 	stop("some geneinds not in featureNames of listOfSms elements")
