@@ -114,7 +114,7 @@ for the diallelic call).
 
 Using the SNPlocs.Hsapiens.dbSNP.* package, we can get the
 nucleotides:
-<<gets>>=
+<<gets,eval=FALSE>>=
 library(SNPlocs.Hsapiens.dbSNP.20080617)
 s20 = getSNPlocs("chr20")
 s20[ s20[,1] == 4814683, ]
