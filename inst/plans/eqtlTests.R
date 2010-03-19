@@ -18,7 +18,7 @@ eqtlTests = function(smlSet, rhs=~1-1,
                  filename = targff )
    geneApply( geneNames, function(gene) {
      ex = exprs(smlSet)[gene,]
-     fmla = formula(paste("ex", as.character(rhs), collapse=" "))
+     fmla = formula(paste("ex", paste(as.character(rhs),collapse=""), collapse=" "))
      numans = snp.rhs.tests(fmla, snp.data=snpdata, data=pData(smlSet), family="gaussian", ...)@chisq
      miss = is.na(numans)
      if (any(miss)) numans[which(miss)] = rchisq(length(which(miss)), 1)
