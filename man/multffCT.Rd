@@ -8,7 +8,7 @@ parallelized multipopulation cis-trans eQTL searches
 run a parallelized cis-trans eQTL search
 }
 \usage{
-multffCT(listOfSms, gfmla, geneinds = 1:10, harmonizeSNPs = FALSE, targdir = ".", runname = "foo", overwriteFF = TRUE, fillNA = TRUE, 
+multffCT(listOfSms, gfmlaList, geneinds = 1:10, harmonizeSNPs = FALSE, targdir = ".", runname = "foo", overwriteFF = TRUE, fillNA = TRUE, 
    ncores = 2, mc.set.seed=TRUE, vmode = "single", shortfac=100, ...)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -16,8 +16,10 @@ multffCT(listOfSms, gfmla, geneinds = 1:10, harmonizeSNPs = FALSE, targdir = "."
   \item{listOfSms}{
 list of \code{\link{smlSet-class}} instances
 }
-  \item{gfmla}{
-formula with dummy dependent variable and variables on right-hand side drawn from
+  \item{gfmlaList}{
+list of formulas (associated one to one with components of
+\code{listOfSms}) with dummy dependent variable and variables on 
+right-hand side drawn from
 pData of listOfSms, to be passed to \code{\link[snpMatrix]{snp.rhs.tests}}
 }
   \item{geneinds}{
@@ -96,9 +98,9 @@ if (.Platform$OS.type != "windows") {
  on.exit(unlink(td))
  setwd(td)
  set.seed(1234)
- dem = multffCT( list(smlSet.example, smlSet.example), gs~male, 1:3, runname="dem1" )
+ dem = multffCT( list(smlSet.example, smlSet.example), list(gs~male, gs~male), 1:3, runname="dem1" )
  set.seed(1234)
- dems = multffCT( list(smlSet.example, smlSet.example), gs~male, 
+ dems = multffCT( list(smlSet.example, smlSet.example), list(gs~male, gs~male), 
     1:3, vmode="short", shortfac=100, runname="dem2" )
  #
  # note that chisq fillin of missing snps make strict numerical reproducibility

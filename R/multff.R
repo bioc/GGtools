@@ -40,22 +40,23 @@ setMethod("[", c("multffManager", "rsid", "probeId"), function(x, i, j, ..., dro
   lapply(tmp, function(z) z[, j, drop=FALSE])
 })
  
-multffCT = function(listOfSms, gfmla, geneinds=1:10, harmonizeSNPs=FALSE, 
+multffCT = function(listOfSms, gfmlaList, geneinds=1:10, harmonizeSNPs=FALSE, 
      targdir=".", runname="foo", overwriteFF=TRUE, fillNA=TRUE, ncores=2, mc.set.seed=TRUE, vmode="single", shortfac=100, ...) {
   theCall = match.call()
   if (!file.exists(targdir)) stop("targdir must exist prior to invocation of multffCT")
   require(ff, quietly=TRUE)
-  .checkArgsMF( listOfSms, gfmla, geneinds, targdir, runname )
+  .checkArgsMF( listOfSms, gfmlaList, geneinds, targdir, runname )
   listOfSms = reduceGenes( listOfSms, geneinds )
   if (harmonizeSNPs) listOfSms = makeCommonSNPs( listOfSms )
   else if(!isTRUE(checkCommonSNPs( listOfSms ))) stop("harmonizeSNPs = FALSE but SNPs not common across listOfSms, run makeCommonSNPs")
-  sumScores2ff( listOfSms, gfmla, targdir, runname, theCall, overwriteFF=overwriteFF,
+  sumScores2ff( listOfSms, gfmlaList, targdir, runname, theCall, overwriteFF=overwriteFF,
        fillNA=fillNA, write=TRUE, ncores=ncores, vmode=vmode, mc.set.seed=mc.set.seed, shortfac=shortfac, ... )
 }
 
 
-.checkArgsMF = function( listOfSms, gfmla, geneinds, targdir, runname ) {
+.checkArgsMF = function( listOfSms, gfmlaList, geneinds, targdir, runname ) {
   if (!inherits(listOfSms, "list")) stop("listOfSms must inherit from list")
+  if (length(listOfSms) != length(gfmlaList)) stop("gfmlaList must have same length as listOfSms")
   allc = sapply(listOfSms, function(x) inherits(x, "smlSet"))
   if (!isTRUE(all(allc))) stop("each element of listOfSms must inherit from GGtools smlSet")
  allcsets = sapply(listOfSms, function(x) names(smList(x)))
@@ -121,7 +122,7 @@ checkCommonSNPs = function( listOfSms ) {
   return(TRUE)
 }
 
-sumScores2ff = function( listOfSms, gfmla, targdir, runname, theCall=call("1"), 
+sumScores2ff = function( listOfSms, gfmlaList, targdir, runname, theCall=call("1"), 
       overwriteFF=FALSE, fillNA=TRUE, write=TRUE, ncores, vmode, mc.set.seed, shortfac, ... ) {
   fnhead = paste(targdir, "/", runname, "_", sep="")
   expd = lapply(listOfSms, experimentData)
@@ -159,8 +160,8 @@ sumScores2ff = function( listOfSms, gfmla, targdir, runname, theCall=call("1"),
       cat("sms", i, "chr", j, "\n")
       for (k in 1:ngenes) {
        ex <<- exprs(listOfSms[[i]])[k,]
-       gfmla[[2]] = as.name("ex")
-       tmpc = snp.rhs.tests( gfmla, snp.data=smList(listOfSms[[i]])[[j]], 
+       gfmlaList[[i]][[2]] = as.name("ex")
+       tmpc = snp.rhs.tests( gfmlaList[[i]], snp.data=smList(listOfSms[[i]])[[j]], 
           data=pData(listOfSms[[i]]), family="gaussian", ...)@chisq
        if (fillNA) {
           isna = which(is.na(tmpc))
@@ -179,8 +180,8 @@ sumScores2ff = function( listOfSms, gfmla, targdir, runname, theCall=call("1"),
         cat("sms", i, "chr", j, "\n")
         for (k in 1:ngenes) {
          ex <<- exprs(listOfSms[[i]])[k,]
-         gfmla[[2]] = as.name("ex")
-         tmpc = snp.rhs.tests( gfmla, snp.data=smList(listOfSms[[i]])[[j]], 
+         gfmlaList[[i]][[2]] = as.name("ex")
+         tmpc = snp.rhs.tests( gfmlaList[[i]], snp.data=smList(listOfSms[[i]])[[j]], 
             data=pData(listOfSms[[i]]), family="gaussian", ...)@chisq
          if (fillNA) {
             isna = which(is.na(tmpc))
