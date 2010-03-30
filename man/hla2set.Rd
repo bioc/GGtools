@@ -26,6 +26,8 @@ This set of 9 genes related to human HLA2 locus was used in the
 %}
 \examples{
 data(hla2set)
-geneIds(hla2set)
+if (require(GSEABase)) {
+ geneIds(hla2set)
+}
 }
 \keyword{datasets}
