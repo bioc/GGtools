@@ -34,5 +34,5 @@ exportMethods(gwSnpTests, plot, topSnps, coerce,
 #  multffCT, makeCommonSNPs, checkCommonSNPs, diagffCC, maxchisq) #, phaseHS)
 
 export( multffCT, makeCommonSNPs, checkCommonSNPs, diagffCC, maxchisq,
-   cisSnpTests, geneRanges, snp130locs, bestCis )
+   cisSnpTests, geneRanges, snp130locs, bestCis, geneTrack )
 # snpm2phase, snpm2mapLD )
