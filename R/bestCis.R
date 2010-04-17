@@ -42,6 +42,34 @@ bestCis = function(ffmgr, slranges, radius=1e6, ffind=1, anno, ncores=10) {
  names(sloc) = slranges$name
  snplocs = sloc[ans[,1]]
  gstarts = gstarts[rownames(ans)]
- data.frame(gstarts, ans, df=ffmgr$df, snplocs, check.names=FALSE, stringsAsFactors=FALSE)
+ pv1 = 1-pchisq(ans[,2], ffmgr$df)
+ pv2 =pmin(1,2*( 1-pchisq(ans[,2], ffmgr$df)))
+ data.frame(gstarts, ans, df=ffmgr$df, snplocs, pv1=pv1, pv2=pv2, check.names=FALSE, stringsAsFactors=FALSE)
 }
  
+allCisP_1sided = function (ffmgr, slranges, radius = 1e+06, ffind = 1, anno, ncores = 10)
+{
+    allg = colnames(ffmgr[[1]][[ffind]])
+    relevantRS = rownames(ffmgr[[1]][[ffind]])
+    slranges = slranges[which(slranges$name %in% relevantRS),
+        ]
+    gr = geneRanges(allg, anno, extend = radius)
+    maxgap <<- 0L
+    sspcs = unique(space(slranges))
+    if (length(sspcs) > 1)
+        warning(paste("slranges included multiple spaces; using",
+            sspcs[1]))
+    lk = findOverlaps(gr, slranges)[[sspcs[1]]]
+    querGnames = allg[lk@matchMatrix[, 1]]
+    indPerGene = split(lk@matchMatrix[, 2], querGnames)
+    cisrs = mclapply(indPerGene, function(x) slranges$name[x],
+        mc.cores = ncores)
+    names(cisrs) = names(indPerGene)
+    wmax = function(x) c(snpind = which.max(x), max = max(x),
+        rsnum = rownames(x)[which.max(x)])
+    ans = mclapply(names(cisrs), function(x) 1 - pchisq(ffmgr[[1]][[ffind]][cisrs[[x]],
+        x, drop = FALSE]/ffmgr$shortfac, ffmgr$df))
+    names(ans) = names(cisrs)
+    ans
+}
+

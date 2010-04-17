@@ -2,13 +2,14 @@
 \alias{bestCis}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-extract best cis-associated eQTL from a multffmgr instance
+extract best (or all) cis-associated eQTL from a multffmgr instance
 }
 \description{
-extract best cis-associated eQTL from a multffmgr instance
+extract best (or all) cis-associated eQTL from a multffmgr instance
 }
 \usage{
 bestCis(ffmgr, slranges, radius = 1e+06, ffind = 1, anno, ncores = 10)
+#allCisP_1sided(ffmgr, slranges, radius = 1e+06, ffind = 1, anno, ncores = 10)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -35,8 +36,9 @@ number of cores for mclapply to use
 %%  ~~ If necessary, more details than the description above ~~
 %}
 \value{
-data frame with genes as rows, rsnum and chisq(df) scores,
+for \code{bestCis}, data frame with genes as rows, rsnum and chisq(df) scores,
 with df and gene and SNP locations as columns.
+
 }
 %\references{
 %% ~put references to the literature/web site here ~
