@@ -8,11 +8,12 @@ importClassesFrom("GGBase", "cnumOrMissing")
 
 importClassesFrom(IRanges, RangedData)
 importFrom(IRanges, RangedData, space, findOverlaps)
-importFrom(multicore, mclapply)
 
 importFrom(graphics,
            abline, axis, boxplot, layout, legend,
-           par, plot, points) 
+           par, 
+    plot, 
+           points) 
 
 importClassesFrom("GSEABase", "GeneSet")
 importFrom("GSEABase", "GeneSet")

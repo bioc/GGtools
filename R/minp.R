@@ -116,8 +116,7 @@ maxchisq = function(mgr, nchr=length(mgr$fflist), type=c("perSNP", "perGene")[1]
  else if (type == "perGene") {appmargin = 2; fnextract = rownames }
  else stop("check value of type parameter for this call")
  mgrcall = mgr$call
- if (.Platform$OS.type != "windows") {
-   require("multicore", character.only=TRUE)
+ if (is.loaded("mc_fork", PACKAGE="multicore")) {
    maxchisq = mclapply( mgr$fflist[1:nchr],  function(x) apply(x[], appmargin, max)/mgr$shortfac, mc.cores=ncores)
    bestFeats = mclapply( mgr$fflist[1:nchr],  function(x) fnextract(x)[apply(x[], appmargin, which.max)], mc.cores=ncores) 
    } else {

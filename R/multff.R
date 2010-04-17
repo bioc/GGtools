@@ -153,7 +153,7 @@ sumScores2ff = function( listOfSms, gfmlaList, targdir, runname, theCall=call("1
   indlist = list()
   for (i in 1:nrow(indmat))
     indlist[[i]] = indmat[i,]
- if (.Platform$OS.type != "windows" && require("multicore", character.only=TRUE)) {
+  if (is.loaded("mc_fork", PACKAGE="multicore")) {
   mclapply( indlist, function(indvec) {
     i = indvec[1]
     j = indvec[2]
@@ -236,8 +236,8 @@ diagffCC = function (sms, gfmla, targdir = ".", runname = "foo", overwriteFF = T
     fflist = lapply(1:nchr, function(x) ff(initdata = 0, dim = c(nsnps[x], 
         ngenelist[[x]]), dimnames = list(rslist[[x]], genenamelist[[x]]), 
         vmode = vmode, filename = filenames[[x]], overwrite = overwriteFF))
-  if (.Platform$OS.type != "windows" && require("multicore", character.only=TRUE) ) {
-    mclapply(1:nchr, function(curchr) {
+    if (is.loaded("mc_fork", PACKAGE="multicore")) {
+     mclapply(1:nchr, function(curchr) {
         cat("chr", curchr, "\n")
         cursms = diaglist[[curchr]]
         ngenes = length(featureNames(cursms))
