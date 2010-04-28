@@ -21,3 +21,10 @@ geneRanges = function(ids, annopkg, extend=0) {
  RangedData(IRanges(st,en), space=chrs, name=ids)
 }
  
+geneSyms = function(ids, annopkg) {
+ require(annopkg, character.only=TRUE)
+ anbase = gsub(".db", "", annopkg)
+ symmap = get(paste(anbase, "SYMBOL", sep=""))
+ unlist(sapply(mget(ids, symmap, ifnotfound=NA), "[", 1))
+}
+ 
