@@ -9,7 +9,6 @@ bestCis = function(ffmgr, slranges, radius=1e6, ffind=1, anno, ncores=10) {
  slranges = slranges[ which(slranges$name %in% relevantRS), ]
    # obtain coordinates of genes in play
  gr = geneRanges(allg, anno, extend=radius)
- syms = geneSyms(allg, anno)
  maxgap <<- 0L
  sspcs = unique(space(slranges))
  if (length(sspcs)>1) warning(paste("slranges included multiple spaces; using", sspcs[1]))
@@ -43,6 +42,7 @@ bestCis = function(ffmgr, slranges, radius=1e6, ffind=1, anno, ncores=10) {
  names(sloc) = slranges$name
  snplocs = sloc[ans[,1]]
  gstarts = gstarts[rownames(ans)]
+ syms = geneSyms(rownames(ans), anno)
  pv = 1-pchisq(ans[,2], ffmgr$df)
 # pv2 =pmin(1,2*( 1-pchisq(ans[,2], ffmgr$df)))
  dist = abs(gstarts-snplocs)
