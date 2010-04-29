@@ -95,7 +95,6 @@ if (.Platform$OS.type != "windows") {
  data(smlSet.example)
  td = tempdir()
  od = getwd()
- on.exit(unlink(td))
  setwd(td)
  set.seed(1234)
  dem = multffCT( list(smlSet.example, smlSet.example), list(gs~male, gs~male), 1:3, runname="dem1" )
@@ -108,6 +107,7 @@ if (.Platform$OS.type != "windows") {
  dem
  dems
  dir()
+ setwd(od)
 }
 }
 \keyword{ models }
