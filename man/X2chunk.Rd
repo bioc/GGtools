@@ -1,20 +1,32 @@
 \name{X2chunk}
 \alias{X2chunk}
+\alias{topFeats}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-compute numerical matrix of chisq statistics in a genomic interval
+compute numerical matrix of chisq statistics in a genomic interval;
+extract features as requested
 }
 \description{
 compute numerical matrix of chisq statistics in a genomic interval
-(rows are SNP, columns are genes)
+(rows are SNP, columns are genes), or extract features
 }
 \usage{
 X2chunk(mgr, ffind, start, end, snplocs, anno, useSym)
+topFeats( probeid=NULL, sym=NULL, rsid=NULL, mgr, ffind, anno, n=10, useSym=TRUE )
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{mgr}{
 an instance of multffManager
+}
+  \item{probeid}{
+character string for a probeid
+}
+  \item{sym}{
+character string for a gene
+}
+  \item{rsid}{
+character string for a snp id
 }
   \item{ffind}{
 the index of the ff structure to use (typically chromosome number)
@@ -38,14 +50,10 @@ from \code{anno}
 }
 }
 \details{
-will obtain RAM resources for material on disk, so use with caution
-}
-\value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+X2chunk will obtain RAM resources for material on disk, so use with caution
+
+Note that gene symbols may map to multiple probes.  The first hit is used
+by topFeats when used with sym=.
 }
 \references{
 %% ~put references to the literature/web site here ~
@@ -79,6 +87,8 @@ dim(fc)
 fc[1:4,1:5]
 setwd(od)
 heatmap(fc[1:50,], Rowv=NA, Colv=NA, scale="none")
+topFeats(probeid=NULL, sym=NULL, rsid="rs6094162", mgr=dd, 1, "illuminaHumanv1.db")
+topFeats(probeid=NULL, sym="MKKS", rsid=NULL, mgr=dd, 1, "illuminaHumanv1.db")
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
