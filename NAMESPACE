@@ -36,7 +36,7 @@ exportMethods(gwSnpTests, plot, topSnps, coerce,
 
 export( multffCT, makeCommonSNPs, checkCommonSNPs, diagffCC, maxchisq,
    cisSnpTests, geneRanges, snp130locs, bestCis, geneTrack, X2chunk, topFeats,
-   eqtlTests )
+   eqtlTests, mkCisTransDirector )
 # snpm2phase, snpm2mapLD, eqtlTests )
 
 exportClass(eqtlTestsManager)

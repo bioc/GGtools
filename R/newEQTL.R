@@ -126,7 +126,78 @@ eqtlTests = function(smlSet, rhs=~1-1,
   names(cres) = chrNames
   exdate = date()
   new("eqtlTestsManager", fflist=cres, call=theCall, sess=sess, 
-        exdate=exdate, shortfac=shortfac, geneanno="character",
+        exdate=exdate, shortfac=shortfac, geneanno=annotation(smlSet),
         df=1)
 }
+
+# director for group of managers
+
+chkmgrs = function(object) {
+   mcl = sapply(mgrs(object), class)
+   chkc = sapply(mgrs(object), function(x) is(x, "eqtlTestsManager"))
+   if (!all(chkc)) return("mgrs slot must only contain list of entities inheriting from eqtlTestsManager")
+   annos = sapply(mgrs(object), function(x)x@geneanno)
+   if (!all(annos==annos[1])) return("managers do not have identical gene annotation source")
+   sids = lapply(mgrs(object), snpIdList)
+   slchk = sapply(sids, function(x) all.equal(x, sids[[1]]))
+   if (!all(sapply(slchk,isTRUE))) return("managers do not have identical SNP lists")
+   return(TRUE)
+}
+   
+setClass("cisTransDirector", representation(mgrs="list", indexdbname="character", 
+   shortfac="numeric", snptabname="character", probetabname="character", probeanno="character"),
+   validity=chkmgrs)
+
+setGeneric("mgrs", function(x) standardGeneric("mgrs"))
+setMethod("mgrs", "cisTransDirector", function(x) x@mgrs)
+
+mkCisTransDirector = function(dl, indexdbname, snptabname, probetabname, probeanno, commonSNPs=TRUE) {
+ if (length(grep("\\.sqlite$", indexdbname))==0) stop("indexdbname must have suffix .sqlite")
+ cat("creating SQLite database...")
+ cd = new("cisTransDirector", indexdbname=indexdbname, shortfac=shortfac(dl[[1]]), mgrs=dl,
+     snptabname=snptabname, probetabname=probetabname, probeanno=probeanno)
+ mkDirectorDb(cd, commonSNPs)
+ cat("...done\n")
+ cd
+}
+
+mkDirectorDb = function(cd, commonSNPs=TRUE) {
+#
+# this seems a painful approach because it build a data.frame in memory before writing
+# you will probably need to use inserts, iterating through managers
+#
+ alls = lapply(mgrs(cd), function(x)lapply(fflist(x), rownames)) #
+ allg = lapply(mgrs(cd), function(x) colnames(fflist(x)[[1]])) # assumes all chroms have common genes assayed
+ sdf = NULL
+ nsmgrs = length(cd)
+ if (commonSNPs) {
+   rsids = unlist(alls[[1]])
+   cn = names(alls[[1]])
+   chrs = rep(cn, sapply(alls[[1]], length))
+   mgr = rep(1, length(rsids))
+   sdf = data.frame(snpid=rsids, chr=chrs, mgr=as.integer(mgr),
+       stringsAsFactors=FALSE)
+ }
+ else stop("only handling managers with common SNP fields")
+
+ gdfs = lapply(1:length(allg), function(i) data.frame(probeid=allg[[i]],
+        mgr=i))
+ gdf = gdfs[[1]]
+ if (length(gdfs)>1) for (i in 2:length(gdfs)) gdf = rbind(gdf, gdfs[[i]])
+
+ library(RSQLite)
+ drv = dbDriver("SQLite")
+ con = dbConnect(drv, dbname=cd@indexdbname)
+ dbWriteTable(con, cd@snptabname, sdf, row.names=FALSE)
+ dbWriteTable(con, cd@probetabname, gdf, row.names=FALSE)
+ dbDisconnect(con)
+}
+
+
+setMethod("show", "cisTransDirector", function(object) {
+ cat("eqtlTools cisTransDirector instance.\n")
+ cat("there are", length(mgrs(object)), "managers.\n")
+ cat("First:\n")
+ show(mgrs(object)[[1]])
+})
 
