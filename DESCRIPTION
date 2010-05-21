@@ -13,3 +13,7 @@ Maintainer: Vince Carey <stvjc@channing.harvard.edu>
 Imports: AnnotationDbi, IRanges (>= 1.1.6), annaffy, GSEABase, rtracklayer
 Enhances: multicore
 License: Artistic-2.0
+Collate: allS4.R X2chunk.R cisSnpTests.R geneTrack.R multff.R topFeats.R
+	filterCode.R gwSnpScreen.R newEQTL.R topSnps.R
+	bestCis.R geneRanges.R minp.R snp130locs.R trackSet.R
+

@@ -7,7 +7,7 @@ GeneSet2LocInfo = function(gs) {
  if (annotate::organism(gs) == "") warning("organism missing from gene set object, assuming Homo sapiens")
  else if (annotate::organism(gs) != "Homo sapiens") stop("only functioning for gene sets satisfying organism(gs) %in% c('', 'Homo sapiens')")
  gst = geneIdType(gs)
- tags = geneIds(gs)
+ tags = GSEABase::geneIds(gs)
  if (gst@type == "Annotation") {
    anp = gst@annotation
    if (length(grep("\\.db", anp)) == 0) {
@@ -51,7 +51,7 @@ cisSnpTests = function(fmla, smls, radius, ...) {
        respObj = respObj[-kill]
        warning(paste(length(kill), "genes in response object dropped for lack of location info"))
        }
-   toks = geneIds(respObj)
+   toks = GSEABase::geneIds(respObj)
    lnames = lapply(geneLocList, names)
    lnl = lapply(lnames, nchar)
    for (i in 1:length(lnl))  # this is to get rid of chromosome annos with weird names

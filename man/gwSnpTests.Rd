@@ -63,13 +63,13 @@ f1 = gwSnpTests(genesym("CPNE1")~male, hmFou, chrnum(20))
 f1
 #The following code will create a view of the UCSC
 #genome browser:
-if (interactive()) {
-library(rtracklayer)
-f1d = as(f1, "RangedData")
-s1 = browserSession("UCSC")
-s1[["CPNE1"]] = f1d
-v1 = browserView(s1, GenomicRanges(30e6, 40e6, "chr20"), full="CPNE1")
-}
+#if (interactive()) {
+#library(rtracklayer)
+#f1d = as(f1, "RangedData")
+#s1 = browserSession("UCSC")
+#s1[["CPNE1"]] = f1d
+#v1 = browserView(s1, GenomicRanges(30e6, 40e6, "chr20"), full="CPNE1")
+#}
 # R-based visualization
 plot(f1)
 # show how to avoid adjusted fit

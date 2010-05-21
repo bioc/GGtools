@@ -99,24 +99,13 @@ top4 = function (x, sms)
         3)))
 }
 
-setClass("maxchisq", contains="list")
-setMethod("show", "maxchisq", function(object) {
- cat("GGtools maxchisq structure.\n")
- cat("The call was:\n") 
- print(object$theCall)
- cat("The original call in multffManager was:\n")
- print(object$mgrcall)
- cat("Excerpt:\n")
- print(lapply(object[c("maxchisq", "bestFeats")], function(x) head(x[[1]])))
-})
-
 maxchisq = function(mgr, nchr=length(mgr$fflist), type=c("perSNP", "perGene")[1], ncores=2) {
  theCall = match.call()
  if (type == "perSNP") {appmargin = 1; fnextract = colnames }
  else if (type == "perGene") {appmargin = 2; fnextract = rownames }
  else stop("check value of type parameter for this call")
  mgrcall = mgr$call
- if (is.loaded("mc_fork", PACKAGE="multicore")) {
+ if ("multicore" %in% search()) { # (is.loaded("mc_fork", PACKAGE="multicore")) {
    maxchisq = mclapply( mgr$fflist[1:nchr],  function(x) apply(x[], appmargin, max)/mgr$shortfac, mc.cores=ncores)
    bestFeats = mclapply( mgr$fflist[1:nchr],  function(x) fnextract(x)[apply(x[], appmargin, which.max)], mc.cores=ncores) 
    } else {
@@ -126,39 +115,6 @@ maxchisq = function(mgr, nchr=length(mgr$fflist), type=c("perSNP", "perGene")[1]
  new("maxchisq", list(maxchisq=maxchisq, df=mgr$df, bestFeats=bestFeats, theCall=theCall, mgrcall=mgrcall))
 }
 
-setGeneric("min_p_vals", function(mcs, mtcorr, type, sidedness) standardGeneric("min_p_vals"))
-setMethod("min_p_vals", c("maxchisq", "character", "character", "numeric"), function(mcs, mtcorr, type, sidedness) {
- sidedness = as.integer(sidedness)
- if (sidedness != 1 & sidedness != 2) stop("sidedness must be 1 or 2")
- pv = lapply(mcs$maxchisq, function(x) pmin(1, sidedness*(1-pchisq(x, mcs$df))))
- npv = lapply(mcs$maxchisq, names)
- mtcorrp = function(x, mtcorr) {
-   tmp = mt.rawp2adjp(x, mtcorr)
-   tmp$adjp[ order(tmp$index), mtcorr ]
- }
- if (mtcorr == "none") adjpv = pv
- else {
-   require(multtest)
-   if (type == "chr_specific")
-     adjpv = lapply( pv, function(x) mtcorrp(x, mtcorr))
-   else if (type=="global") {
-     ulp = unlist(pv)
-     uln = unlist(npv)
-     names(ulp) = uln
-     adjpv = mtcorrp(ulp, mtcorr)
-     names(adjpv) = uln
-     anslist = list()
-     for (i in 1:length(npv)) {
-       anslist[[i]] = adjpv[ npv[[i]] ] # restore chromosomal list structure
-       names(anslist[[i]]) = npv[[i]]
-     }
-     names(anslist) = names(npv)
-     return(anslist)
-   }  
- }
- for (i in 1:length(adjpv)) names(adjpv[[i]]) = npv[[i]]
- adjpv
-})
 
 
 

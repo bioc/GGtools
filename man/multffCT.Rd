@@ -93,6 +93,7 @@ VJ Carey <stvjc@channing.harvard.edu>
 # runs interactively but not in check on windows
 if (.Platform$OS.type != "windows") {
  data(smlSet.example)
+ sessionInfo()
  td = tempdir()
  od = getwd()
  setwd(td)

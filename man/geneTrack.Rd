@@ -64,6 +64,7 @@ VJ Carey <stvjc@channing.harvard.edu>
 \examples{
 # runs interactively but not in check on windows
 if (.Platform$OS.type != "windows") {
+sessionInfo()
 example(multffCT)
 dems
 g1 = colnames(dems$fflist[[1]])[1]

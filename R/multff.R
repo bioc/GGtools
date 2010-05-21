@@ -4,41 +4,8 @@ makeCommonSNPs = function( listOfSms ) {
   trimSnps( listOfSms, rsidlist )
 }
 
-setClass("multffManager", contains="list")
-setMethod("show", "multffManager", function(object) {
- require(ff, quietly=TRUE)
- cat("multffManager instance. The call was:\n")
- print(object$call)
- cat("There are ", length(object$filenames), " ff files.\n")
- cat("Excerpt from first file:\n")
- ngenes = ncol(object$fflist[[1]])
- print(object$fflist[[1]][1:4,1:min(4,ngenes)])
-})
-
 rsnum = function(x) lapply(x$fflist, rownames)
 
-setMethod("[", c("multffManager", "rsid", "missing"), function(x, i, j, ..., drop=TRUE) {
-  div = 1.0
-  if (x$vmode == "short") div = x$shortfac
-  rsn = rsnum(x)
-  pres = which(sapply(rsn, function(y) any(i %in% y)))
-  if (length(pres) < 1) stop("rsid not found in rownames of any ff matrix from multffCT")
-  ffl = x$fflist[pres]
-  tmp = lapply(ffl, function(y)y[intersect(rownames(y),as(i,"character")),,drop=FALSE])
-  lapply(tmp, function(z)z/div)
-})
-
-setMethod("[", c("multffManager", "missing", "probeId"), function(x, i, j, ..., drop=TRUE) {
-  div = x$shortfac
-  if (x$vmode != "short") div = 1.0
-  if (length(j) > 50 & !isTRUE(getOption("ggt_manyGenes"))) stop("to request more than 50 genes with [ please set option ggt_manyGenes to TRUE with options(ggt_manyGenes=TRUE)\nand recognize that you may be creating a large RAM image")
-  lapply(x$fflist, function(x)x[, as(j, "character"), drop=FALSE]/div)
-})
-
-setMethod("[", c("multffManager", "rsid", "probeId"), function(x, i, j, ..., drop=TRUE) {
-  tmp = x[ i, , drop=FALSE ]
-  lapply(tmp, function(z) z[, j, drop=FALSE])
-})
  
 multffCT = function(listOfSms, gfmlaList, geneinds=1:10, harmonizeSNPs=FALSE, 
      targdir=".", runname="foo", overwriteFF=TRUE, fillNA=TRUE, ncores=2, mc.set.seed=TRUE, vmode="single", shortfac=100, ...) {
@@ -153,7 +120,7 @@ sumScores2ff = function( listOfSms, gfmlaList, targdir, runname, theCall=call("1
   indlist = list()
   for (i in 1:nrow(indmat))
     indlist[[i]] = indmat[i,]
-  if (is.loaded("mc_fork", PACKAGE="multicore")) {
+  if ("multicore" %in% search()) { #(is.loaded("mc_fork", PACKAGE="multicore")) {
   mclapply( indlist, function(indvec) {
     i = indvec[1]
     j = indvec[2]
@@ -236,7 +203,7 @@ diagffCC = function (sms, gfmla, targdir = ".", runname = "foo", overwriteFF = T
     fflist = lapply(1:nchr, function(x) ff(initdata = 0, dim = c(nsnps[x], 
         ngenelist[[x]]), dimnames = list(rslist[[x]], genenamelist[[x]]), 
         vmode = vmode, filename = filenames[[x]], overwrite = overwriteFF))
-    if (is.loaded("mc_fork", PACKAGE="multicore")) {
+    if ("multicore" %in% search()) { #(is.loaded("mc_fork", PACKAGE="multicore")) {
      mclapply(1:nchr, function(curchr) {
         cat("chr", curchr, "\n")
         cursms = diaglist[[curchr]]

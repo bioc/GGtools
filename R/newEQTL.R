@@ -17,39 +17,21 @@
 #     a list of chisq statistics properly rescaled
 #
 
-chkeman = function(object){
+#chkeman = function(object){
 # eqtlTestsManager validity test
- allgn = lapply(fflist(object), colnames)
- n1 = allgn[[1]]
- chk = sapply(allgn[-1], function(x)all.equal(x,n1))
- if (!all(chk)) return("fflist colnames not common to all elements")
- if (is.null(names(fflist(object)))) return("fflist elements lack names")
- return(TRUE)
-}
+# allgn = lapply(fflist(object), colnames)
+# n1 = allgn[[1]]
+# chk = sapply(allgn[-1], function(x)all.equal(x,n1))
+# if (!all(chk)) return("fflist colnames not common to all elements")
+# if (is.null(names(fflist(object)))) return("fflist elements lack names")
+# return(TRUE)
+#}
 
-setClass("eqtlTestsManager",
- representation(fflist="list", call="call", sess="ANY",
-	exdate="ANY", shortfac="numeric", geneanno="character", df="numeric"),
-        validity=chkeman)
-
-
-setGeneric("shortfac", function(x)standardGeneric("shortfac"))
-setMethod("shortfac", "eqtlTestsManager", function(x)
-  x@shortfac)
-setGeneric("fflist", function(x)standardGeneric("fflist"))
-setMethod("fflist", "eqtlTestsManager", function(x)
-  x@fflist)
-setGeneric("exdate", function(x)standardGeneric("exdate"))
-setMethod("exdate", "eqtlTestsManager", function(x)
-  x@exdate)
-
-setMethod("show", "eqtlTestsManager", function(object) {
- cat("eqtlTools results manager, computed", exdate(object), "\n")
- cat("There are", length(fflist(object)), "chromosomes analyzed.\n")
-})
 
 snpIdList = function(x) lapply(fflist(x), rownames)
-geneIds = function(x) colnames(fflist[[1]])
+
+geneIds = function(x) colnames(fflist(x)[[1]])
+
 permuterm = function(l) {
  lens = sapply(l, length)
  eln = rep(names(l), lens)
@@ -70,19 +52,6 @@ snpIdMap = function(ids, x) {
  split(names(m2[ids]), m2[ids])
 }
 
-setMethod("[", c("eqtlTestsManager", "rsid", "probeId"),
- function(x, i, j, ..., drop=FALSE) {
-#
-# ultimately this may not be exposed, serving only for deep
-# testing, because a director database may be required for every
-# manager
-#
- m1 = snpIdMap( as(i, "character"), x )
- ans = lapply(1:length(m1), function(i) fflist(x)[[names(m1)[i]]][ m1[[i]], 
-    as(j, "character"), drop=FALSE]/shortfac(x))
- names(ans) = names(m1)
- ans
-})
  
 eqtlTests = function(smlSet, rhs=~1-1,
    runname="foo", targdir="foo", geneApply=lapply, chromApply=lapply,
@@ -131,25 +100,19 @@ eqtlTests = function(smlSet, rhs=~1-1,
 }
 
 # director for group of managers
-
-chkmgrs = function(object) {
-   mcl = sapply(mgrs(object), class)
-   chkc = sapply(mgrs(object), function(x) is(x, "eqtlTestsManager"))
-   if (!all(chkc)) return("mgrs slot must only contain list of entities inheriting from eqtlTestsManager")
-   annos = sapply(mgrs(object), function(x)x@geneanno)
-   if (!all(annos==annos[1])) return("managers do not have identical gene annotation source")
-   sids = lapply(mgrs(object), snpIdList)
-   slchk = sapply(sids, function(x) all.equal(x, sids[[1]]))
-   if (!all(sapply(slchk,isTRUE))) return("managers do not have identical SNP lists")
-   return(TRUE)
-}
-   
-setClass("cisTransDirector", representation(mgrs="list", indexdbname="character", 
-   shortfac="numeric", snptabname="character", probetabname="character", probeanno="character"),
-   validity=chkmgrs)
-
-setGeneric("mgrs", function(x) standardGeneric("mgrs"))
-setMethod("mgrs", "cisTransDirector", function(x) x@mgrs)
+#
+#chkmgrs = function(object) {
+#   mcl = sapply(mgrs(object), class)
+#   chkc = sapply(mgrs(object), function(x) is(x, "eqtlTestsManager"))
+#   if (!all(chkc)) return("mgrs slot must only contain list of entities inheriting from eqtlTestsManager")
+#   annos = sapply(mgrs(object), function(x)x@geneanno)
+#   if (!all(annos==annos[1])) return("managers do not have identical gene annotation source")
+#   sids = lapply(mgrs(object), snpIdList)
+#   slchk = sapply(sids, function(x) all.equal(x, sids[[1]]))
+#   if (!all(sapply(slchk,isTRUE))) return("managers do not have identical SNP lists")
+#   return(TRUE)
+#}
+#   
 
 mkCisTransDirector = function(dl, indexdbname, snptabname, probetabname, probeanno, commonSNPs=TRUE) {
  if (length(grep("\\.sqlite$", indexdbname))==0) stop("indexdbname must have suffix .sqlite")
@@ -163,41 +126,46 @@ mkCisTransDirector = function(dl, indexdbname, snptabname, probetabname, probean
 
 mkDirectorDb = function(cd, commonSNPs=TRUE) {
 #
-# this seems a painful approach because it build a data.frame in memory before writing
-# you will probably need to use inserts, iterating through managers
+# objective here is a small footprint dump to two SQLite tables
+# snpnames table will have all snp and their chromosome indices
+# probenames table will have all gene names and the manager indices
 #
- alls = lapply(mgrs(cd), function(x)lapply(fflist(x), rownames)) #
- allg = lapply(mgrs(cd), function(x) colnames(fflist(x)[[1]])) # assumes all chroms have common genes assayed
- sdf = NULL
- nsmgrs = length(cd)
- if (commonSNPs) {
-   rsids = unlist(alls[[1]])
-   cn = names(alls[[1]])
-   chrs = rep(cn, sapply(alls[[1]], length))
-   mgr = rep(1, length(rsids))
-   sdf = data.frame(snpid=rsids, chr=chrs, mgr=as.integer(mgr),
-       stringsAsFactors=FALSE)
- }
- else stop("only handling managers with common SNP fields")
-
- gdfs = lapply(1:length(allg), function(i) data.frame(probeid=allg[[i]],
-        mgr=i))
- gdf = gdfs[[1]]
- if (length(gdfs)>1) for (i in 2:length(gdfs)) gdf = rbind(gdf, gdfs[[i]])
-
  library(RSQLite)
  drv = dbDriver("SQLite")
  con = dbConnect(drv, dbname=cd@indexdbname)
- dbWriteTable(con, cd@snptabname, sdf, row.names=FALSE)
- dbWriteTable(con, cd@probetabname, gdf, row.names=FALSE)
+ dbGetQuery(con, "pragma page_size = 32768;")
+ dbGetQuery(con, "pragma synchronous = OFF;")
+#
+# following two are for side effects
+#
+ snptab = dbGetQuery(con, paste("create table ", cd@snptabname, " ( snpid text, chr text )"))
+ probetab = dbGetQuery(con, paste("create table ", cd@probetabname, " ( probeid text, mgr text )"))
+
+# following is the workhorse function to load rows of SQLite tables
+#
+ vecs2db = function(nmdlist, tablename, con) {
+  vlist = names(nmdlist)
+  targn = paste(paste(":", vlist, sep=""), collapse=",")
+  cmd = sprintf("insert into %s values (%s)", tablename, targn)
+  dbSendPreparedQuery(con, cmd, as.data.frame(nmdlist))
+ }
+
+#
+#
+ if (commonSNPs) {
+   f1 = fflist(mgrs(cd)[[1]])
+   rsids = unlist(lapply(fflist(mgrs(cd)[[1]]), rownames))
+   cn = names(f1)
+   chrs = rep(cn, sapply(f1, nrow))
+   mgr = rep(1, length(rsids))
+   vecs2db( list(snpid=rsids, chr=chrs),  cd@snptabname, con )
+ }
+ else stop("only handling managers with common SNP fields")
+
+ allg = lapply(mgrs(cd), function(x) colnames(fflist(x)[[1]])) # 
+ for (i in 1:length(allg))
+  vecs2db( list(probeid=allg[[i]], mgr=rep(i, length(allg[[i]]))), cd@probetabname, con )
+
  dbDisconnect(con)
 }
-
-
-setMethod("show", "cisTransDirector", function(object) {
- cat("eqtlTools cisTransDirector instance.\n")
- cat("there are", length(mgrs(object)), "managers.\n")
- cat("First:\n")
- show(mgrs(object)[[1]])
-})
 
