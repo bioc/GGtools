@@ -119,36 +119,30 @@ mkCisTransDirector = function(dl, indexdbname, snptabname, probetabname, probean
  cat("creating SQLite database...")
  cd = new("cisTransDirector", indexdbname=indexdbname, shortfac=shortfac(dl[[1]]), mgrs=dl,
      snptabname=snptabname, probetabname=probetabname, probeanno=probeanno)
- mkDirectorDb(cd, commonSNPs)
+ ffrefs = mkDirectorDb(cd, commonSNPs)
+ cd@snptabref = ffrefs$snptabref
+ cd@probetabref = ffrefs$probetabref
  cat("...done\n")
  cd
 }
 
 mkDirectorDb = function(cd, commonSNPs=TRUE) {
 #
-# objective here is a small footprint dump to two SQLite tables
-# snpnames table will have all snp and their chromosome indices
-# probenames table will have all gene names and the manager indices
+# objective here is a small footprint dump to two ff files that
+# will serve as indexes
+# [indexdbname]_snpnames.ff will map from snpids to chr
+# [indexdbname]_probenames.ff will have all gene names and the manager indices
 #
- library(RSQLite)
- drv = dbDriver("SQLite")
- con = dbConnect(drv, dbname=cd@indexdbname)
- dbGetQuery(con, "pragma page_size = 32768;")
- dbGetQuery(con, "pragma synchronous = OFF;")
-#
-# following two are for side effects
-#
- snptab = dbGetQuery(con, paste("create table ", cd@snptabname, " ( snpid text, chr text )"))
- probetab = dbGetQuery(con, paste("create table ", cd@probetabname, " ( probeid text, mgr text )"))
 
-# following is the workhorse function to load rows of SQLite tables
-#
- vecs2db = function(nmdlist, tablename, con) {
-  vlist = names(nmdlist)
-  targn = paste(paste(":", vlist, sep=""), collapse=",")
-  cmd = sprintf("insert into %s values (%s)", tablename, targn)
-  dbSendPreparedQuery(con, cmd, as.data.frame(nmdlist))
- }
+ vecs2ff = function(nmdlist, filename) {
+# support for dumping index data
+   vlist = names(nmdlist)
+   ref = ff(initdata=nmdlist[[2]], file=filename, dim=c(length(nmdlist[[1]]), length(nmdlist)-1),
+     vmode="short")
+   rownames(ref) = as.character(nmdlist[[1]])
+   ref
+  }
+
 
 #
 #
@@ -158,14 +152,21 @@ mkDirectorDb = function(cd, commonSNPs=TRUE) {
    cn = names(f1)
    chrs = rep(cn, sapply(f1, nrow))
    mgr = rep(1, length(rsids))
-   vecs2db( list(snpid=rsids, chr=chrs),  cd@snptabname, con )
+   snptabref = vecs2ff( list(snpid=rsids, chr=chrs),  
+       paste(cd@indexdbname, "_", cd@snptabname, ".ff", sep="") )
  }
  else stop("only handling managers with common SNP fields")
 
  allg = lapply(mgrs(cd), function(x) colnames(fflist(x)[[1]])) # 
- for (i in 1:length(allg))
-  vecs2db( list(probeid=allg[[i]], mgr=rep(i, length(allg[[i]]))), cd@probetabname, con )
-
- dbDisconnect(con)
+ pids = allg[[1]]
+ mgr = rep(1, length(pids))
+ if (length(allg) > 1) for (i in 2:length(allg)) {
+                           pids = c(pids, allg[[i]])
+                           mgr = c(mgr, rep(i, length(allg[[i]])))
+                       }
+  
+  probetabref = vecs2ff( list(probeid=pids, mgr=mgr), 
+            paste(cd@indexdbname, "_", cd@probetabname, ".ff", sep=""))
+  list(snptabref=snptabref, probetabref=probetabref)
 }
 

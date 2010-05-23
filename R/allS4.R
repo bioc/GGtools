@@ -461,8 +461,9 @@ chkmgrs = function(object) {
 
  
    
-setClass("cisTransDirector", representation(mgrs="list", indexdbname="character", 
-   shortfac="numeric", snptabname="character", probetabname="character", probeanno="character"),
+setClass("cisTransDirector", 
+  representation(mgrs="list", indexdbname="character", 
+   shortfac="numeric", snptabname="character", probetabname="character", probeanno="character", snptabref="ANY", probetabref="ANY"),
    validity=chkmgrs)
 
 setGeneric("mgrs", function(x) standardGeneric("mgrs"))
@@ -479,14 +480,10 @@ setMethod("show", "cisTransDirector", function(object) {
 
 setMethod("[", c("cisTransDirector", "character", "character"),
   function(x, i, j, ..., drop=FALSE) {
-    drv = dbDriver("SQLite")
-    con = dbConnect(drv, x@indexdbname)
-    on.exit(dbDisconnect(con))
-    snpListChr = as.character(dbGetQuery(con, paste("select * from snpnames where snpid ='",
-      i,"'", sep=""))$chr )
-
-    probeListEl = as.integer(dbGetQuery(con, paste("select * from probenames where probeid ='",
-      j,"'",sep="") )$mgr)
+    if (length(j)>1) stop("currently only handle single probe reference")
+    snpListChr = unique(as.character(x@snptabref[i,]))
+    if (length(snpListChr)>1) stop("currently only collecting scores for SNP on a single chromosome")
+    probeListEl = as.integer(x@probetabref[j,])
 #
 # following assumes common SNP over managers
 #
