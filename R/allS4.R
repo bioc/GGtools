@@ -480,15 +480,19 @@ setMethod("show", "cisTransDirector", function(object) {
 
 setMethod("[", c("cisTransDirector", "character", "character"),
   function(x, i, j, ..., drop=FALSE) {
-    if (length(j)>1) stop("currently only handle single probe reference")
+#    if (length(j)>1) stop("currently only handle single probe reference")
     snpListChr = unique(as.character(x@snptabref[i,]))
     if (length(snpListChr)>1) stop("currently only collecting scores for SNP on a single chromosome")
     probeListEl = as.integer(x@probetabref[j,])
 #
 # following assumes common SNP over managers
 #
-    mgr = mgrs(x)[[ probeListEl ]]
-    fflist(mgr)[[snpListChr]][ i, j ]/shortfac(mgr)
+    mgrlist = lapply(probeListEl, function(z) mgrs(x)[[ z ]])
+    names(mgrlist) = j
+    ans = lapply(1:length(mgrlist), 
+       function(z) fflist(mgrlist[[z]])[[snpListChr]][ i, j[z] ]/shortfac(mgrlist[[z]]))
+    names(ans) = j
+    ans
 })
 
 
