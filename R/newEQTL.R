@@ -115,14 +115,11 @@ eqtlTests = function(smlSet, rhs=~1-1,
 #   
 
 mkCisTransDirector = function(dl, indexdbname, snptabname, probetabname, probeanno, commonSNPs=TRUE) {
- if (length(grep("\\.sqlite$", indexdbname))==0) stop("indexdbname must have suffix .sqlite")
- cat("creating SQLite database...")
  cd = new("cisTransDirector", indexdbname=indexdbname, shortfac=shortfac(dl[[1]]), mgrs=dl,
      snptabname=snptabname, probetabname=probetabname, probeanno=probeanno)
  ffrefs = mkDirectorDb(cd, commonSNPs)
  cd@snptabref = ffrefs$snptabref
  cd@probetabref = ffrefs$probetabref
- cat("...done\n")
  cd
 }
 

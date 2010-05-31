@@ -32,9 +32,10 @@ logical indicating whether all managers cover the same collection of
 SNPs 
 }
 }
-%\details{
-%%  ~~ If necessary, more details than the description above ~~
-%}
+\details{
+Creates two ff files that serve as indexes: one for snp id to
+fflist element for managers, and one for gene id to manager.
+}
 \value{
 instance of cisTransDirector class
 %%  ~Describe the value returned
