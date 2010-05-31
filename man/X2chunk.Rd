@@ -40,6 +40,9 @@ right end of interval of interest
   \item{snplocs}{
 location structure for SNP (RangedData instance)
 }
+  \item{n}{
+for topFeats, the number of features to report
+}
   \item{anno}{
 name of a gene annotation package resolving the identifiers
 used in column names of ff matrix
@@ -55,9 +58,9 @@ X2chunk will obtain RAM resources for material on disk, so use with caution
 Note that gene symbols may map to multiple probes.  The first hit is used
 by topFeats when used with sym=.
 }
-\references{
+%\references{
 %% ~put references to the literature/web site here ~
-}
+%}
 \author{
 VJ Carey
 }

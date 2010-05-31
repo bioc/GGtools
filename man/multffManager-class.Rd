@@ -3,6 +3,7 @@
 \docType{class}
 \alias{multffManager-class}
 \alias{show,multffManager-method}
+\alias{coerce,multffManager,eqtlTestsManager-method}
 \alias{[,multffManager,missing,probeId,ANY-method}
 \alias{[,multffManager,rsid,probeId,ANY-method}
 \alias{[,multffManager,rsid,missing,ANY-method}

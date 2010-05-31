@@ -103,13 +103,13 @@ sumScores2ff = function( listOfSms, gfmlaList, targdir, runname, theCall=call("1
   rslist = lapply(smList(listOfSms[[1]]), colnames)
   filenames = lapply( chrnames, function(x) paste(fnhead, "snpsOnChr", 
       x, "_", generangetag, "_df", nsms, ".ff", sep=""))
-  if (write) fflist = lapply(1:nchr, function(x) ff(initdata=0.0, 
+  if (write) Fflist = lapply(1:nchr, function(x) ff(initdata=0.0, 
     dim=c(nsnps[x], ngenes), 
     dimnames = list(rslist[[x]], gnames),
     vmode=vmode,
     filename=filenames[[x]],
     overwrite=overwriteFF))
-  else  fflist = lapply(1:nchr, function(x) ff(initdata=0.0, 
+  else  Fflist = lapply(1:nchr, function(x) ff(initdata=0.0, 
     dim=c(nsnps[x], ngenes), 
     dimnames = list(rslist[[x]], gnames),
     vmode=vmode))
@@ -136,7 +136,7 @@ sumScores2ff = function( listOfSms, gfmlaList, targdir, runname, theCall=call("1
              tmpc[isna] = rchisq(length(isna), 1)
           }
        if (vmode != "short") shortfac = 1.0
-       fflist[[j]][,k,add=TRUE] = tmpc*shortfac
+       Fflist[[j]][,k,add=TRUE] = tmpc*shortfac
        }  # end k
       }, mc.cores=ncores, mc.set.seed=mc.set.seed)  # end j/mclapply
    }
@@ -156,12 +156,12 @@ sumScores2ff = function( listOfSms, gfmlaList, targdir, runname, theCall=call("1
                tmpc[isna] = rchisq(length(isna), 1)
             }
          if (vmode != "short") shortfac = 1.0
-         fflist[[j]][,k,add=TRUE] = tmpc*shortfac
+         Fflist[[j]][,k,add=TRUE] = tmpc*shortfac
          }  # end k
         })  # end j/mclapply
    } # end windows adaptation
-   names(fflist) = chrnames
-   ans = list(fflist=fflist, call=theCall, runname=runname, targdir=targdir, 
+   names(Fflist) = chrnames
+   ans = list(fflist=Fflist, call=theCall, runname=runname, targdir=targdir, 
      generangetag=generangetag,
      filenames=filenames, df=nsms, 
      vmode=vmode, shortfac=shortfac, sessionInfo=sessionInfo(), wd=getwd(), expdataList=expd)
@@ -200,7 +200,7 @@ diagffCC = function (sms, gfmla, targdir = ".", runname = "foo", overwriteFF = T
     rslist = lapply(smList(sms), colnames)
     filenames = lapply(chrnames, function(x) paste(fnhead, "snpsOnChr", 
         x, "_", generangetags[[x]], "_df", 1, ".ff", sep = ""))
-    fflist = lapply(1:nchr, function(x) ff(initdata = 0, dim = c(nsnps[x], 
+    Fflist = lapply(1:nchr, function(x) ff(initdata = 0, dim = c(nsnps[x], 
         ngenelist[[x]]), dimnames = list(rslist[[x]], genenamelist[[x]]), 
         vmode = vmode, filename = filenames[[x]], overwrite = overwriteFF))
     if ("multicore" %in% search()) { #(is.loaded("mc_fork", PACKAGE="multicore")) {
@@ -220,7 +220,7 @@ diagffCC = function (sms, gfmla, targdir = ".", runname = "foo", overwriteFF = T
             }
             if (vmode != "short") 
                 shortfac = 1
-            fflist[[curchr]][, k, add = TRUE] = tmpc * shortfac
+            Fflist[[curchr]][, k, add = TRUE] = tmpc * shortfac
         }
     }, mc.cores = ncores, mc.set.seed = mc.set.seed)
    }
@@ -241,12 +241,12 @@ diagffCC = function (sms, gfmla, targdir = ".", runname = "foo", overwriteFF = T
             }
             if (vmode != "short") 
                 shortfac = 1
-            fflist[[curchr]][, k, add = TRUE] = tmpc * shortfac
+            Fflist[[curchr]][, k, add = TRUE] = tmpc * shortfac
         }
       })
     }  # end windows adaptation
-    names(fflist) = chrnames
-    ans = list(fflist = fflist, call = theCall, runname = runname, 
+    names(Fflist) = chrnames
+    ans = list(fflist = Fflist, call = theCall, runname = runname, 
         targdir = targdir, generangetags = generangetags, filenames = filenames, 
         df = 1, vmode = vmode, shortfac = shortfac, sessionInfo = sessionInfo(), 
         wd = getwd(), expdataList = expd)

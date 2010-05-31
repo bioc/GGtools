@@ -52,9 +52,9 @@ VJ Carey
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-\seealso{
+%\seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
-}
+%}
 \examples{
 example(diagffCC)
 data(snpLocs20)

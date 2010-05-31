@@ -11,14 +11,16 @@ sym2id = function (syms, annopkg)
 topFeats = function(probeid=NULL, sym=NULL, rsid=NULL, mgr, ffind, anno, n=10, useSym=TRUE ) {
  if (is.null(probeid) & is.null(sym) & is.null(rsid)) 
        stop("must supply one of probeid, sym, rsid")
+ if (is(mgr, "multffManager")) fflist = function(x) x$fflist
  nnn = sum(!is.null(probeid), !is.null(sym), !is.null(rsid))
  if (nnn != 1) stop("only 1 of probeid, sym, rsid must be non-null")
  if (!is.null(sym)) {
   id = sym2id(sym, anno)
+  #sco = fflist(mgr)[[ffind]][, id]
   sco = mgr$fflist[[ffind]][, id]
   }
- else if (!is.null(rsid)) sco = mgr$fflist[[ffind]][ rsid, ]
- else if (!is.null(probeid)) sco = mgr$fflist[[ffind]][ ,probeid ]
+ else if (!is.null(rsid)) sco = fflist(mgr)[[ffind]][ rsid, ]
+ else if (!is.null(probeid)) sco = fflist(mgr)[[ffind]][ ,probeid ]
  inds = order(sco, decreasing=TRUE)[1:n]
  ans = sco[inds]/mgr$shortfac
  if (!is.null(rsid) & useSym) {

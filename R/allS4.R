@@ -407,12 +407,24 @@ chkeman = function(object){
  return(TRUE)
 }
 
+# elements of a multffManager list
+#> names(dem)
+# [1] "fflist"       "call"         "runname"      "targdir"      "generangetag"
+# [6] "filenames"    "df"           "vmode"        "shortfac"     "sessionInfo" 
+#[11] "wd"           "expdataList" 
+
 
 
 setClass("eqtlTestsManager",
  representation(fflist="list", call="call", sess="ANY",
 	exdate="ANY", shortfac="numeric", geneanno="character", df="numeric"),
         validity=chkeman)
+
+setAs("multffManager", "eqtlTestsManager", function(from) {
+ new("eqtlTestsManager", fflist=from$fflist, call=from$call,
+      sess=from$sessionInfo, shortfac=from$shortfac, df=from$df,
+      exdate=paste("converted:", date()), geneanno="please supply")
+})
 
 
 setGeneric("shortfac", function(x)standardGeneric("shortfac"))
@@ -495,6 +507,38 @@ setMethod("[", c("cisTransDirector", "character", "character"),
     ans
 })
 
+setMethod("[", c("cisTransDirector", "character", "missing"),
+  function(x, i, j, ..., drop=FALSE) {
+    snpListChr = unique(as.character(x@snptabref[i,]))
+    if (length(snpListChr)>1) stop("currently only collecting scores for SNP on a single chromosome")
+#
+# following assumes common SNP over managers
+#
+    mgrlist = mgrs(x)
+    ans = lapply(1:length(mgrlist), 
+       function(z) fflist(mgrlist[[z]])[[snpListChr]][ i, ]/shortfac(mgrlist[[z]]))
+    allsn = rownames(ans[[1]])
+    allgn = unlist(lapply(ans, colnames))
+    nans = t(sapply(ans, function(x)x))
+    rownames(nans) = allsn
+    colnames(nans) = allgn
+    nans
+})
+
+setMethod("[", c("cisTransDirector", "missing", "character"),
+  function(x, i, j, ..., drop=FALSE) {
+    probeListEl = as.integer(x@probetabref[j,])
+#
+# following assumes common SNP over managers
+#
+    mgrlist = lapply(probeListEl, function(z) mgrs(x)[[ z ]])
+    nsnps = length(fflist(mgrlist[[1]]))
+    names(mgrlist) = j
+    ans = lapply(1:length(mgrlist), 
+       function(z) lapply(1:nsnps, function(w) fflist(mgrlist[[z]])[[w]][ , j[z] ]/shortfac(mgrlist[[z]])))
+    names(ans) = j
+    ans
+})
 
 setGeneric("topSnps", function(x, ...) standardGeneric("topSnps"))
 setMethod("topSnps", "cwSnpScreenResult", function(x, n=10, which="p.1df") {

@@ -58,9 +58,9 @@ VJ Carey <stvjc@channing.harvard.edu>
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-\seealso{
+%\seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
-}
+%}
 \examples{
 # runs interactively but not in check on windows
 if (.Platform$OS.type != "windows") {
