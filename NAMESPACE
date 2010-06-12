@@ -24,7 +24,7 @@ importFrom(stats,
 exportClasses( multffManager, maxchisq)
 
 exportMethods(gwSnpTests, plot, topSnps, coerce, 
-   show, "[", min_p_vals )
+   show, "[", min_p_vals, probeNames )
 #pvals, locs, hscores, 
 
 #export(snpm2phase, personalHap,

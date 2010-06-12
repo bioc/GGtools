@@ -426,6 +426,11 @@ setAs("multffManager", "eqtlTestsManager", function(from) {
       exdate=paste("converted:", date()), geneanno="please supply")
 })
 
+setGeneric("probeNames", function(x) standardGeneric("probeNames"))
+setMethod("probeNames", "eqtlTestsManager", function(x) {
+ colnames(fflist(x)[[1]])  # assumes common gene set for fflist
+})
+
 
 setGeneric("shortfac", function(x)standardGeneric("shortfac"))
 setMethod("shortfac", "eqtlTestsManager", function(x)
@@ -440,6 +445,8 @@ setMethod("exdate", "eqtlTestsManager", function(x)
 setMethod("show", "eqtlTestsManager", function(object) {
  cat("eqtlTools results manager, computed", exdate(object), "\n")
  cat("There are", length(fflist(object)), "chromosomes analyzed.\n")
+ cat("some genes: ", selectSome(colnames(fflist(object)[[1]])), "\n")
+ cat("some snps: ", selectSome(rownames(fflist(object)[[1]])), "\n")
 })
 
 
@@ -480,6 +487,10 @@ setClass("cisTransDirector",
 
 setGeneric("mgrs", function(x) standardGeneric("mgrs"))
 setMethod("mgrs", "cisTransDirector", function(x) x@mgrs)
+setGeneric("nsnps", function(x) standardGeneric("nsnps"))
+setMethod("nsnps", "cisTransDirector", function(x) sum(sapply(fflist(mgrs(x)[[1]]), nrow)))
+setGeneric("ngenes", function(x) standardGeneric("ngenes"))
+setMethod("ngenes", "cisTransDirector", function(x) sum(sapply(mgrs(x), function(y) ncol(fflist(y)[[1]]))))
 
 
 setMethod("show", "cisTransDirector", function(object) {
@@ -490,53 +501,87 @@ setMethod("show", "cisTransDirector", function(object) {
 })
 
 
+#setMethod("[", c("cisTransDirector", "character", "character"),
+#  function(x, i, j, ..., drop=FALSE) {
+##    if (length(j)>1) stop("currently only handle single probe reference")
+#    snpListChr = unique(as.character(x@snptabref[i,]))
+#    if (length(snpListChr)>1) stop("currently only collecting scores for SNP on a single chromosome")
+#    probeListEl = sort(unique(as.integer(x@probetabref[j,])))
+##
+## following assumes common SNP over managers
+##
+#    mgrlist = lapply(probeListEl, function(z) mgrs(x)[[ z ]])
+##    names(mgrlist) = j
+#    ans = lapply(1:length(mgrlist), 
+#       function(z) fflist(mgrlist[[z]])[[snpListChr]][ i, j[z] ]/shortfac(mgrlist[[z]]))
+##    names(ans) = j
+#    ans
+#})
+#
+
+
 setMethod("[", c("cisTransDirector", "character", "character"),
-  function(x, i, j, ..., drop=FALSE) {
-#    if (length(j)>1) stop("currently only handle single probe reference")
-    snpListChr = unique(as.character(x@snptabref[i,]))
-    if (length(snpListChr)>1) stop("currently only collecting scores for SNP on a single chromosome")
-    probeListEl = as.integer(x@probetabref[j,])
-#
-# following assumes common SNP over managers
-#
-    mgrlist = lapply(probeListEl, function(z) mgrs(x)[[ z ]])
-    names(mgrlist) = j
-    ans = lapply(1:length(mgrlist), 
-       function(z) fflist(mgrlist[[z]])[[snpListChr]][ i, j[z] ]/shortfac(mgrlist[[z]]))
-    names(ans) = j
-    ans
-})
+ function (x, i, j, ..., drop = FALSE) 
+ {
+    snpListChr = unique(as.character(x@snptabref[i, ]))
+    if (length(snpListChr) > 1) 
+        stop("currently only collecting scores for SNP on a single chromosome")
+    prinds = as.integer(x@probetabref[j, ])
+    spids = split(j, prinds)
+    probeListEl = sort(unique(as.integer(x@probetabref[j, ])))
+    if (!all.equal(as.integer(names(spids)), probeListEl)) 
+		stop("split of gene names by director element indices has unexpected result")
+    mgrlist = lapply(probeListEl, function(z) GGtools:::mgrs(x)[[z]])
+    ans = lapply(1:length(mgrlist), function(z) GGtools:::fflist(mgrlist[[z]])[[snpListChr]][i, 
+        spids[[z]],drop=FALSE]/GGtools:::shortfac(mgrlist[[z]]))
+    if (length(ans) == 1) return(ans[[1]])
+    bans = ans[[1]]
+    for (i in 2:length(ans)) bans = cbind(bans, ans[[i]])
+    bans
+ }
+)
+
+
+#setMethod("[", c("cisTransDirector", "character", "missing"),
+#  function(x, i, j, ..., drop=FALSE) {
+#    snpListChr = unique(as.character(x@snptabref[i,]))
+#    if (length(snpListChr)>1) stop("currently only collecting scores for SNP on a single chromosome")
+##
+## following assumes common SNP over managers
+##
+#    mgrlist = mgrs(x)
+#    ans = lapply(1:length(mgrlist), 
+#       function(z) fflist(mgrlist[[z]])[[snpListChr]][ i, ]/shortfac(mgrlist[[z]]))
+#    allsn = rownames(ans[[1]])
+#    allgn = unlist(lapply(ans, colnames))
+#    nans = t(sapply(ans, function(x)x))
+#    rownames(nans) = allsn
+#    colnames(nans) = allgn
+#    nans
+#})
 
 setMethod("[", c("cisTransDirector", "character", "missing"),
   function(x, i, j, ..., drop=FALSE) {
-    snpListChr = unique(as.character(x@snptabref[i,]))
-    if (length(snpListChr)>1) stop("currently only collecting scores for SNP on a single chromosome")
-#
-# following assumes common SNP over managers
-#
-    mgrlist = mgrs(x)
-    ans = lapply(1:length(mgrlist), 
-       function(z) fflist(mgrlist[[z]])[[snpListChr]][ i, ]/shortfac(mgrlist[[z]]))
-    allsn = rownames(ans[[1]])
-    allgn = unlist(lapply(ans, colnames))
-    nans = t(sapply(ans, function(x)x))
-    rownames(nans) = allsn
-    colnames(nans) = allgn
-    nans
+  j = unlist(probeNames(x))
+  callGeneric(x, i, j, drop=drop)
+})
+
+setMethod("probeNames", "cisTransDirector", function(x) {
+ lapply(mgrs(x), probeNames) 
 })
 
 setMethod("[", c("cisTransDirector", "missing", "character"),
   function(x, i, j, ..., drop=FALSE) {
-    probeListEl = as.integer(x@probetabref[j,])
+    probeListEl = sort(unique(as.integer(x@probetabref[j,])))
 #
 # following assumes common SNP over managers
 #
     mgrlist = lapply(probeListEl, function(z) mgrs(x)[[ z ]])
-    nsnps = length(fflist(mgrlist[[1]]))
-    names(mgrlist) = j
+    nsnps = length(fflist(mgrlist[[1]]))  # nchr??
+#    names(mgrlist) = j
     ans = lapply(1:length(mgrlist), 
        function(z) lapply(1:nsnps, function(w) fflist(mgrlist[[z]])[[w]][ , j[z] ]/shortfac(mgrlist[[z]])))
-    names(ans) = j
+#    names(ans) = j
     ans
 })
 

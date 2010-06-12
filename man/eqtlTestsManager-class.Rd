@@ -9,6 +9,9 @@
 \alias{[,cisTransDirector,missing,character,ANY-method}
 \alias{show,eqtlTestsManager-method}
 \alias{show,cisTransDirector-method}
+\alias{probeNames,eqtlTestsManager-method}
+\alias{probeNames,cisTransDirector-method}
+\alias{probeNames}
 
 \title{Class "eqtlTestsManager"}
 \description{
@@ -47,6 +50,10 @@ archives for eQTL searches }
     \item{[}{\code{signature(x = "cisTransDirector", i = "character", j = "character", drop = "ANY")}: ... }
     \item{show}{\code{signature(object = "eqtlTestsManager")}: ... }
     \item{show}{\code{signature(object = "cisTransDirector")}: ... }
+    \item{probeNames}{\code{signature(object = "eqtlTestsManager")}: extract the probe names as
+a vector }
+    \item{probeNames}{\code{signature(object = "cisTransDirector")}: extract the probe names as a list
+with one element per manager }
 	 }
 }
 %\references{
