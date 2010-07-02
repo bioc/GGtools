@@ -40,16 +40,41 @@ permuterm = function(l) {
  eln
 }
  
-snpIdMap = function(ids, x) {
- silx = snpIdList(x)
- m1 = lapply(silx, function(y){ 
-         ans = match(y, ids)
-         names(ans) = y
-         ans
-         })
- m2 = permuterm(m1)
- names(m2) = unlist(silx)
- split(names(m2[ids]), m2[ids])
+#snpIdMap = function(ids, x) {
+#
+# use of match seems slow; want to break when find, see below
+#
+# silx = snpIdList(x)
+# m1 = lapply(silx, function(y){ 
+#         ans = match(y, ids)
+#         names(ans) = y
+#         ans
+#         })
+# m2 = permuterm(m1)
+# names(m2) = unlist(silx)
+# split(names(m2[ids]), m2[ids])
+#}
+
+snpIdMap = function (ids, x) 
+{
+    snpnames = lapply(GGtools:::fflist(x), rownames)
+    cnames = names(snpnames)
+    findchr = function(x) {
+        if (length(x) > 1) 
+            stop("need scalar input")
+        ind = NA
+        for (i in 1:length(snpnames)) {
+            if (x %in% snpnames[[i]]) {
+                ind = i
+                break
+            }
+        }
+        if (is.na(ind)) stop("an rsid was submitted that is not among the snp names in the smlSet for eqtlTests")
+        cnames[ind]
+    }
+    map = sapply(ids, findchr)
+    names(map) = ids
+    split(names(map), map)
 }
 
  
