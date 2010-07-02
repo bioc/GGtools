@@ -1,10 +1,18 @@
-
 X2chunk = function( mgr, ffind, start, end, snplocs, anno, useSym=TRUE ) {
   if (!is(ffind, "numeric")) stop("ffind must be numeric")
   if (length(start)>1) stop("start must be atomic")
   lim = IRanges(start,end)
-  snpNames = rownames(mgr$fflist[[ffind]])
-  gNames = colnames(mgr$fflist[[ffind]])
+  if (is(mgr, "multffManager")) {
+           FFL = mgr$fflist
+           SF = mgr$shortfac
+           }
+  else if (is(mgr, "eqtlTestsManager")) {
+           FFL = GGtools:::fflist(mgr)
+           SF = GGtools:::shortfac(mgr)
+           }
+  else stop("mgr must inherit from multffManager or eqtlTestsManager")
+  snpNames = rownames(FFL[[ffind]])
+  gNames = colnames(FFL[[ffind]])
     sn2keep_inds = IRanges::"%in%"(ranges(snplocs)[[1]], lim)
   if (length(sn2keep_inds)==0) stop("start:end too restrictive, no SNP")
   snpInRange = snplocs[ sn2keep_inds, ]
@@ -13,7 +21,7 @@ X2chunk = function( mgr, ffind, start, end, snplocs, anno, useSym=TRUE ) {
   gr = geneRanges( gNames, anno )
     g2keep_inds = IRanges::"%in%"(ranges(gr)[[1]], lim)
   g2get = gr[g2keep_inds, ]$name
-  ans = as.ram(mgr$fflist[[ffind]][snp2get, g2get])/mgr$shortfac
+  ans = as.ram(FFL[[ffind]][snp2get, g2get])/SF
   if (useSym) {
     gs = geneSyms(colnames(ans), anno)
     if (any(is.na(gs))) gs[which(is.na(gs))] = colnames(ans)[which(is.na(gs))]
@@ -22,4 +30,3 @@ X2chunk = function( mgr, ffind, start, end, snplocs, anno, useSym=TRUE ) {
   ans
 }
   
-
