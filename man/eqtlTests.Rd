@@ -1,5 +1,7 @@
 \name{eqtlTests}
 \alias{eqtlTests}
+\alias{ieqtlTests}
+\alias{R20}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 perform genome x transcriptome eQTL searches with high-performance options
@@ -9,6 +11,7 @@ perform genome x transcriptome eQTL searches with high-performance options
 }
 \usage{
 eqtlTests(smlSet, rhs = ~1 - 1, runname = "foo", targdir = "foo", geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, ...)
+ieqtlTests(smlSet, rhs = ~1 - 1, rules, runname = "foo", targdir = "foo", geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -17,6 +20,11 @@ instance of \code{\link[GGBase]{smlSet-class}}
 }
   \item{rhs}{
 standard formula without dependent variable; predictors must be found in \code{pData(smlSet)}
+}
+  \item{rules}{instance of \code{\link[snpMatrix]{snp.reg.imputation-class}} expressing
+rules by which unobserved SNP are `imputed' (that is, the value used is the
+conditional expectation of
+B copy number, which is real-valued and may lie outside [0,2])
 }
   \item{runname}{
 arbitrary character string that will identify a serialized object storing references to
@@ -50,6 +58,10 @@ adjusted for elements in \code{rhs}.  There are consequently \code{G*S} test res
 where \code{G} is the number of features in \code{exprs(smlSet)}, and \code{S} is the
 total number of SNP in \code{smlSet}.  These are stored in \code{ff} files in folder
 \code{targdir}.
+
+\code{R20} is a set of imputation rules for SNP on chromosome 20, where the
+1000 genomes genotypes distributed in `pilot1' VCF files are used to create
+imputations to loci not covered in the phase 2 hapmap data in \code{hmceuB36.2021}.
 }
 \value{
 instance of \code{eqtlTestsManager}
@@ -82,7 +94,8 @@ e1
 dir("foo")
 if (require(multicore)) {
  time.mclapply = unix.time(e2 <- eqtlTests(hm, ~male, targdir="bar", runname="bar",
-      geneApply = mclapply ) )
+#      geneApply = mclapply ) )
+      chromApply = mclapply ) )
  print(time.lapply)
  print(time.mclapply)
 }
@@ -111,6 +124,11 @@ cd[c("rs885550", "rs169757"),]
 #
 dem2 = cd[, "GI_10047099-S"]
 sapply(dem2[[1]], length)
+hmi = hm[ chrnum("20"), ]
+data(R20)
+e1i = ieqtlTests(hmi, ~male, rules=R20 )
+e1i
+topFeats( sym = "CPNE1", mgr=e1i, ffind=1, anno="illuminaHumanv1.db" )
 setwd(curd)
 }
 \keyword{ models }
