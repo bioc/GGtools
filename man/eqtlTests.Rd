@@ -11,7 +11,7 @@ perform genome x transcriptome eQTL searches with high-performance options
 }
 \usage{
 eqtlTests(smlSet, rhs = ~1 - 1, runname = "foo", targdir = "foo", geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, ...)
-ieqtlTests(smlSet, rhs = ~1 - 1, rules, runname = "foo", targdir = "foo", geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, ...)
+ieqtlTests(smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = "ifoo", geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
