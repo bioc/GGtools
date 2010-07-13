@@ -1,0 +1,341 @@
+%\VignetteIndexEntry{GGtools overview}
+%\VignetteDepends{}
+%\VignetteKeywords{Genetical genomics,SNP,expression}
+%\VignettePackage{GGtools}
+
+
+%
+% NOTE -- ONLY EDIT THE .Rnw FILE!!!  The .tex file is
+% likely to be overwritten.
+%
+\documentclass[12pt]{article}
+
+\usepackage{amsmath,pstricks}
+\usepackage[authoryear,round]{natbib}
+\usepackage{hyperref}
+
+
+\textwidth=6.2in
+\textheight=8.5in
+%\parskip=.3cm
+\oddsidemargin=.1in
+\evensidemargin=.1in
+\headheight=-.3in
+
+\newcommand{\scscst}{\scriptscriptstyle}
+\newcommand{\scst}{\scriptstyle}
+
+
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textit{#1}}}
+\newcommand{\Rmethod}[1]{{\texttt{#1}}}
+\newcommand{\Rfunarg}[1]{{\texttt{#1}}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+
+\textwidth=6.2in
+
+\bibliographystyle{plainnat} 
+ 
+\begin{document}
+%\setkeys{Gin}{width=0.55\textwidth}
+
+\title{Overview of GGtools for expression genetics: for 3.7.x}
+\author{VJ Carey stvjc at channing.harvard.edu}
+\maketitle
+
+\section{Introduction}
+
+The \Rpackage{GGtools} package contains infrastructure and
+demonstration data for joint analysis of transcriptome and
+genome through combination of DNA expression microarray
+and high-density SNP genotyping data.  For Bioconductor
+2.2 we adopted a representation of genotypes due to Clayton
+(in package \Rpackage{snpMatrix}) allowing reasonably
+convenient storage and manipulation of 4 megaSNP phase II
+HapMap genotypes on all the CEPH CEU samples.  This contrasts with
+the previous version of \Rpackage{GGtools} which was limited
+to 550 kiloSNP and 58 CEU founders.
+
+Note added 2010: GGtools 3.7.x is undergoing revisions to simplify
+management of the code to face the task of comprehensive eQTL
+searches.  Functions like \texttt{gwSnpTests} were created with
+highly flexible but very complex interface capabilities, and these
+seem very little used.  More important are facilities for concurrent
+computation and minimum-volume representation of results.  The
+\texttt{eqtlTests} function will be the main workhorse for material
+described in this document; some of the \texttt{gwSnpTests} functionalities
+will be retained for consistency with published work on this package,
+but the following broad changes to strategy are noted:
+\begin{itemize}
+\item gene symbol translations and gene set manipulation are not
+addressed in the recommended tools surrounding \texttt{eqtlTests};
+\item SNP and gene location metadata will not be maintained in the package
+except for demonstration purposes; location structures will need to
+be IRanges-based and are the responsibility of the user;
+\item to cope with volume of test results generated, the \texttt{ff}
+external matrix representation approaches are heavily used.
+\end{itemize}
+
+
+To give an immediate taste of the capabilities, we
+attach the package and load some test data.
+<<doini>>=
+library(GGtools)
+data(hmceuB36.2021)
+hmceuB36.2021
+@
+Expression data are recoverable in a familiar way:
+<<lkex>>=
+exprs(hmceuB36.2021)[1:5,1:5]
+@
+
+Genotype data have more complex representation.
+<<lksn>>=
+smList(hmceuB36.2021)
+class(smList(hmceuB36.2021)[["20"]])
+@
+This shows that we use a named list to hold items
+of the \Rclass{snp.matrix} class from \Rpackage{snpMatrix}.
+
+It will generally be unnecessary to probe to this level, but
+it is instructive to check the underlying representation:
+<<lkr>>=
+schunk = smList(hmceuB36.2021)[["20"]]
+schunk@.Data[1:4,1:4]
+@
+The leading zeroes show that a raw byte representation is used.
+We can convert to allele codes as follows:
+<<lkr2>>=
+as(schunk[1:4,1:4], "character")
+@
+[Note mapping to nucleotide codes is not directly supported
+at this time.  The extra baggage is voluminous and for most loci it
+will never be used.  When necessary, manual bioinformatics can be used to check the
+locus-specific allele frequency in a cohort against the
+allele count in the data to determine the code unambiguously.]
+
+The primary analysis of interest is the genome-wide
+association study, here applied with expression as the phenotype.
+Here we execute a founders-only analysis, adjusting for gender,
+confining attention to SNP on chromosome 20.  We isolate
+a single gene, CPNE1, for analysis.
+<<dod>>=
+pd = pData(hmceuB36.2021)
+hmFou = hmceuB36.2021[, which(pd$mothid == 0 & pd$fathid == 0)]
+library(illuminaHumanv1.db)
+pc = get("CPNE1", revmap(illuminaHumanv1SYMBOL))
+hmFouc = hmFou[probeId(pc),]
+hmFouc
+system("rm -rf foo")
+f1 = eqtlTests(hmFouc[chrnum(20),], ~male)
+f1
+@
+By default, test results are stored in a compact disk-based
+archive governed by facilities of the \textit{ff} package.
+<<lkd>>=
+dir("foo")
+@
+
+We can get a GRanges instance with the test results for a specific gene:
+<<getd>>=
+nn = getNamedLocs(chr="chr20")
+library(GenomicRanges)
+gg = getGRanges( f1, 1, 1, "chr20", nn )
+gg[1:3,]
+@
+
+We convert this to a RangedData instance for viewing on the UCSC genome browser.
+This code will work in a clean-enough R session; in the sequence
+of computations given in this vignette it
+can throw an infinite recursion.
+<<lkb,eval=FALSE>>=
+if (interactive()) {
+s1 = browserSession()
+rd = RangedData(gg)
+genome(rd) = "hg18"
+s1[["CPNE1"]] = rd
+v1 = browserView(s1, GenomicRanges(33.5e6,34.5e6, "chr20"), track=ucscTrackModes(hide="knownGene", full=c("refGene", "CPNE1")))
+}
+@
+
+\section{Using imputation to 1000 genomes loci}
+
+The \textit{snpMatrix} package defines methods for using
+linear and haplotype regression to estimate conditional
+expectations of allele counts for unobserved loci.  We used
+the pilot 1 calls from 1000 genomes (1KG) to define rules
+relating loci observed in phase II HapMap for CEU to
+1KG loci.
+Here are the first 10 rules for a version of the imputation that
+has a liberal approach to allowing LD computations.
+<<getr>>=
+data(imphm2_1KG_20_mA2)
+imphm2_1KG_20_mA2[1:10]
+@
+We can use these rules to obtain a richer
+collection of tests for eQTL for CPNE1:
+<<doi>>=
+try(system("rm -rf icpne1"))
+if1 = ieqtlTests(hmFouc[chrnum(20),], ~male, targdir="icpne1",
+     runname="icpne1",
+     rules=imphm2_1KG_20_mA2)
+length(GGtools:::snpIdList(f1)[[1]])
+length(GGtools:::snpIdList(if1)[[1]])
+@
+We need special metadata to get locations for the SNP in this run.
+<<getnm>>=
+library(ceu1kg)
+data(ceu1kgMeta_20)
+inn = start(ceu1kgMeta_20)
+names(inn) = names(ceu1kgMeta_20)
+igg = getGRanges( if1, 1, 1, "chr20", inn)
+@
+
+In the right environment we can use code like the following
+to see the impact of the imputation.
+<<lkd,eval=FALSE,keep.source=TRUE>>=
+library(rtracklayer)
+s1 = browserSession()
+genome(rd) = "hg18"
+s1[["CPNE1"]] = rd
+ird = RangedData(igg)
+genome(ird) = "hg18"
+s1[["ICPNE1"]] = ird
+v1 = browserView(s1, GenomicRanges(33.5e6,34.5e6, "chr20"), 
+   track=ucscTrackModes(hide="knownGene", 
+   full=c("refGene", "CPNE1", "ICPNE1")))
+@
+
+\setkeys{Gin}{width=0.95\textwidth}
+\includegraphics{CPNE1plusImp}
+
+We see the expected added density for the richer set of loci, but
+no qualitative impact of the imputation.
+
+\section{Assessing concordance of regression-based imputation with
+MACH}
+
+Blanca Himes of the Channing Laboratory, Boston, ran the MACH imputation
+program to compute imputed 'dose' measures.  The \textit{ceu1kg}
+experimental data package of Bioconductor includes the results
+for chromosome 20 of CEPH CEU.
+<<lkmach>>=
+library(ceu1kg)
+if (!exists("C20MLDOSE")) data(C20MLDOSE)
+dim(C20MLDOSE)
+C20MLDOSE[1:5,10:15]
+@
+Note that at this time we do not have any mechanism for high-performance
+testing using the dose representation in C20MLDOSE.
+
+The observed genotypes for CEU founders from HapMap phase II are
+<<getcc>>=
+c20obs = smList(hmFouc)[[1]]
+c20obs
+@
+We impute as follows:
+<<geti>>=
+unix.time(c20imp <- impute.snps( imphm2_1KG_20_mA2, c20obs ))
+c20imp[1:5,1:5]
+@
+The results need to be placed in compatible structures.
+We will use C20D to hold the allele dose measurements from 
+MACH and R20D to hold the snpMatrix regression-based expected allele counts.
+<<lkcom,keep.source=TRUE>>=
+tc20imp = t(c20imp)  # cols are samples
+                     # restrict to common samples
+C20D = C20MLDOSE[, intersect(colnames(C20MLDOSE), colnames(tc20imp))]
+R20D = tc20imp[, intersect(colnames(C20MLDOSE), colnames(tc20imp))]
+oksnp = intersect(rownames(C20D), rownames(R20D))
+length(oksnp)
+C20D = C20D[oksnp,]
+R20D = R20D[oksnp,]
+@
+
+Let's check the basic characteristics of these different imputations.
+First, how many loci are imputed by MACH?
+<<lkim>>=
+length(mimp <- setdiff(rownames(C20MLDOSE), colnames(c20obs)))
+@
+Of these, how many are monomorphic or close to monomorphic?
+<<domon>>=
+news = C20MLDOSE[ mimp, ]
+vn = apply(news, 1, var)
+sum(vn==0)
+sum(vn < 0.01)
+@
+The latter result shows that there are over 7000 SNP for which MACH
+is willing to impute a single het against 109 homozygous individuals.
+Let's look at an example:
+<<ex>>=
+table(news[ vn > 0 & vn < 0.01, ][1,])
+@
+This shows some of the subtlety of the imputations in this case.
+It would be very nice to reconstruct the imputation for this SNP in detail.
+
+Let's now consider loci imputed by MACH but not by snpMatrix.
+<<lkn>>=
+notreg = colnames(c20imp)[ which(apply(c20imp,2,function(x)all(is.na(x)))) ]
+inmachNR = intersect( mimp, notreg )
+length(inmachNR)
+C20MLDOSE[inmachNR[1:5],1:10]
+table(C20MLDOSE[inmachNR[1],])
+table(C20MLDOSE[inmachNR[2],])
+library(ceu1kg)
+if (!exists("ceu1KG.sml")) data(ceu1KG.sml)
+rawc20 = ceu1KG.sml[[20]]
+table(as(rawc20[,"chr20:35790"], "character"))
+table(as(rawc20[,"chr20:36155"], "character"))
+@
+So MACH is able to call 2 hets for each of these loci.
+We verify that snpMatrix regression does not
+<<lkm>>=
+MbutNR = c("chr20:35790", "chr20:36155")
+Y = rawc20[, MbutNR, drop=FALSE]
+X = rawc20[, -match(MbutNR, colnames(rawc20)), drop=FALSE]
+data(ceu1kgMeta_20)
+NL = start(ceu1kgMeta_20)
+names(NL) = names(ceu1kgMeta_20)
+LOCX = NL[ colnames(X) ]
+length(LOCX)
+LOCY = NL[ colnames(Y) ]
+imm = snp.imputation( X, Y, LOCX, LOCY, minA=2 )
+imm
+imm1 = snp.imputation( X, Y, LOCX, LOCY, minA=1 )
+imm1
+@
+How liberal are we willing to be with respect to estimation of LD in the
+presence of very limited genotype variation?
+The lower we set minA, the more liberal.
+
+
+
+
+%\section{Conversion to nucleotide codes}
+%
+%This is currently somewhat cumbersome.  Suppose we want to
+%know the specific nucleotide assignments for a given genotype call.
+%For example, rs4814683 for subject NA06985.
+%<<lkc>>=
+%schunk["NA06985", "rs4814683"]
+%@
+%We need to know a) that the A/B tokens map in lexical order to
+%the nucleotides (A will be the alphabetically first nucleotide
+%for the diallelic call).
+%
+%Using the SNPlocs.Hsapiens.dbSNP.* package, we can get the
+%nucleotides:
+%<<gets,eval=FALSE>>=
+%library(SNPlocs.Hsapiens.dbSNP.20080617)
+%s20 = getSNPlocs("chr20")
+%s20[ s20[,1] == 4814683, ]
+%@
+%
+%Now we need to translate the IUPAC code to the nucleotides:
+%<<dotr>>=
+%library(Biostrings)
+%IUPAC_CODE_MAP
+%@
+
+\end{document}
