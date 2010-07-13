@@ -492,12 +492,18 @@ setMethod("nsnps", "cisTransDirector", function(x) sum(sapply(fflist(mgrs(x)[[1]
 setGeneric("ngenes", function(x) standardGeneric("ngenes"))
 setMethod("ngenes", "cisTransDirector", function(x) sum(sapply(mgrs(x), function(y) ncol(fflist(y)[[1]]))))
 
+nsnp = function(cd) sum(sapply(cd@mgrs[[1]]@fflist, nrow))# function(x) sum(sapply(x@fflist, nrow)))
+ngenes = function(cd) sum(sapply(cd@mgrs, function(x)ncol(x@fflist[[1]])) )
+
 
 setMethod("show", "cisTransDirector", function(object) {
  cat("eqtlTools cisTransDirector instance.\n")
  cat("there are", length(mgrs(object)), "managers.\n")
+ cat("Total number of SNP: ", nsnp(object), "; total number of genes: ", ngenes(object), "\n")
  cat("First:\n")
  show(mgrs(object)[[1]])
+ cat("---\n")
+ cat("use [ (rsnumvec), (geneidvec) ] to obtain chisq stats; topFeats(), etc.\n")
 })
 
 

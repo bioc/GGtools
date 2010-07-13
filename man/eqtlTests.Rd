@@ -129,6 +129,8 @@ data(R20)
 e1i = ieqtlTests(hmi, ~male, rules=R20 )
 e1i
 topFeats( sym = "CPNE1", mgr=e1i, ffind=1, anno="illuminaHumanv1.db" )
+topFeats(probeid="GI_23397697-A", mgr=cd)  
+topFeats(rsid="rs6060535", mgr=cd)
 setwd(curd)
 }
 \keyword{ models }

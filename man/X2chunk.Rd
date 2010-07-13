@@ -12,12 +12,15 @@ compute numerical matrix of chisq statistics in a genomic interval
 }
 \usage{
 X2chunk(mgr, ffind, start, end, snplocs, anno, useSym)
-topFeats( probeid=NULL, sym=NULL, rsid=NULL, mgr, ffind, anno, n=10, useSym=TRUE )
+topFeats( probeid=NULL, sym=NULL, rsid=NULL, mgrOrCTD, ffind, anno, n=10, useSym=TRUE )
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{mgr}{
 an instance of multffManager
+}
+  \item{mgrOrCTD}{
+an instance of multffManager or a cisTransDirector instance
 }
   \item{probeid}{
 character string for a probeid

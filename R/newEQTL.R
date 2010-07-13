@@ -250,3 +250,30 @@ ieqtlTests = function (smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = 
         exdate = exdate, shortfac = shortfac, geneanno = annotation(smlSet), 
         df = 1)
 }
+
+getNamedLocs = function(slpack="SNPlocs.Hsapiens.dbSNP.20090506", chrtok) {
+ require(slpack, character.only=TRUE)
+ locdf = getSNPlocs(chrtok)
+ rsid = paste("rs", locdf$RefSNP_id, sep="")
+ locs = locdf$loc
+ names(locs) = rsid
+ locs
+}
+ 
+
+getGRanges = function(mgr, ffind, geneind, seqnames, namedlocs) {
+  if (length(geneind) != 1) stop("geneind must be scalar")
+  snpids = snpIdList(mgr)[[ffind]]
+  scores = fflist(mgr)[[ffind]][, geneind]/shortfac(mgr)
+  names(scores) = snpids
+  okids = intersect(names(namedlocs), snpids)
+  oklocs = namedlocs[okids]
+  okscores = scores[okids]
+  n = length(okids)
+  tmp = GRanges(IRanges(oklocs, width=1), seqnames=rep(seqnames,n), score=-log10(1-pchisq(okscores, mgr@df)),
+        chisq=okscores, df=rep(mgr@df, n))
+  names(tmp) = okids
+  tmp
+}
+
+
