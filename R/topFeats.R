@@ -16,7 +16,7 @@ topFeats = function(probeid=NULL, sym=NULL, rsid=NULL, mgrOrCTD, ffind, anno, n=
   }
  if (is(mgrOrCTD, "cisTransDirector")) {
   if (!is.null(sym)) return(sort(mgrOrCTD[, id], decreasing=TRUE)[1:n])
-  if (!is.null(rsid)) { tmp = mgrOrCTD[rsid,]; names(tmp)=sapply(mgrs(mgrOrCTD), function(x)colnames(fflist(x)[[1]])); return(sort(tmp, decreasing=TRUE)[1:n] ) }
+  if (!is.null(rsid)) { tmp = mgrOrCTD[rsid,]; names(tmp)=unlist(sapply(mgrs(mgrOrCTD), function(x)colnames(fflist(x)[[1]]))); return(sort(tmp, decreasing=TRUE)[1:n] ) }
   if (!is.null(probeid)) return(sort(unlist(mgrOrCTD[,probeid ]), decreasing=TRUE)[1:n])
   }
  if (is(mgrOrCTD, "multffManager")) {
