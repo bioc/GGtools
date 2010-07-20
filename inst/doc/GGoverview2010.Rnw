@@ -217,8 +217,10 @@ no qualitative impact of the imputation.
 MACH}
 
 Blanca Himes of the Channing Laboratory, Boston, ran the MACH imputation
-program to compute imputed 'dose' measures.  The \textit{ceu1kg}
+program to compute imputed 'dose' measures based on a
+certain set of calls for CEU, perhaps HapMap phase III.  The \textit{ceu1kg}
 experimental data package of Bioconductor includes the results
+of this application of MACH
 for chromosome 20 of CEPH CEU.
 <<lkmach>>=
 library(ceu1kg)
