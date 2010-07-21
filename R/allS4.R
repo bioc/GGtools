@@ -637,6 +637,6 @@ setAs("cwSnpScreenResult", "RangedData", function(from) {
   rd
 })
 
-setMethod("annotation", "eqtlTestsManager", function(x, ...) {
- x@geneanno
-})
+#setMethod("annotation", "eqtlTestsManager", function(x, ...) {
+# x@geneanno
+#})

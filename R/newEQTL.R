@@ -270,8 +270,9 @@ getGRanges = function(mgr, ffind, geneind, seqnames, namedlocs) {
   oklocs = namedlocs[okids]
   okscores = scores[okids]
   n = length(okids)
-  tmp = GRanges(IRanges(oklocs, width=1), seqnames=rep(seqnames,n), score=-log10(1-pchisq(okscores, mgr@df)),
-        chisq=okscores, df=rep(mgr@df, n))
+  tmp = GRanges(IRanges(oklocs, width=1), seqnames=rep(seqnames,n), 
+        score=as.numeric(-log10(1-pchisq(okscores, mgr@df))),
+        chisq=as.numeric(okscores), df=rep(mgr@df, n))
   names(tmp) = okids
   tmp
 }
