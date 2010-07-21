@@ -414,7 +414,6 @@ chkeman = function(object){
 #[11] "wd"           "expdataList" 
 
 
-
 setClass("eqtlTestsManager",
  representation(fflist="list", call="call", sess="ANY",
 	exdate="ANY", shortfac="numeric", geneanno="character", df="numeric"),
@@ -636,4 +635,8 @@ setAs("cwSnpScreenResult", "RangedData", function(from) {
   if (any(bad))
     rd = rd[!bad,]
   rd
+})
+
+setMethod("annotation", "eqtlTestsManager", function(x, ...) {
+ x@geneanno
 })

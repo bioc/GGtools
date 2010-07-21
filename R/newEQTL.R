@@ -285,3 +285,4 @@ cisRanges = function(probeids, chr, anno, radius=5e5) {
  names(ans) = probeids
  ans
 }
+
