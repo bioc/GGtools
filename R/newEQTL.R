@@ -276,4 +276,12 @@ getGRanges = function(mgr, ffind, geneind, seqnames, namedlocs) {
   tmp
 }
 
-
+cisRanges = function(probeids, chr, anno, radius=5e5) {
+ require(GenomicRanges)
+ require(anno, character.only=TRUE)
+ tss = mget( probeids, get(paste(gsub(".db", "", anno), "CHRLOC", sep="")), ifnotfound=NA)
+ tss = sapply(tss, "[", 1)
+ ans = GRanges(IRanges(start=abs(tss)-radius, end=abs(tss)+radius), seqnames=chr)
+ names(ans) = probeids
+ ans
+}
