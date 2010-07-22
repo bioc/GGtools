@@ -282,8 +282,36 @@ cisRanges = function(probeids, chr, anno, radius=5e5) {
  require(anno, character.only=TRUE)
  tss = mget( probeids, get(paste(gsub(".db", "", anno), "CHRLOC", sep="")), ifnotfound=NA)
  tss = sapply(tss, "[", 1)
+ if (any(isn <- is.na(tss))) {
+    tss = tss[-which(isn)]
+    probeids = probeids[-which(isn)]
+ }
  ans = GRanges(IRanges(start=abs(tss)-radius, end=abs(tss)+radius), seqnames=chr)
  names(ans) = probeids
+ ans
+}
+
+snpIdsCisToGenes = function( mgr, chr, snpGR, radius=5e5 ) {
+ allgenes = colnames(mgr@fflist[[1]])
+ CR = cisRanges(allgenes, chr=chr, anno=mgr@geneanno, radius=radius)
+ FF = findOverlaps(snpGR, CR )
+ allrs = names(snpGR)
+ cisinds = split(FF@matchMatrix[,1], FF@matchMatrix[,2])
+ cisrs = lapply(cisinds, function(x) allrs[x] )
+ names(cisrs) = names(CR)[ FF@matchMatrix[,2][-which(duplicated(FF@matchMatrix[,2])) ]]
+ cisrs
+}
+
+cisScores = function( mgr, ffind=1, chr, snpGR, radius=5e5, applier=lapply ) {
+ cisrs = snpIdsCisToGenes( mgr, chr, snpGR, radius )
+ onboard = rownames(mgr@fflist[[ffind]])
+ cisrs = lapply(cisrs, function(x) intersect(onboard, x))
+ ans = applier(1:length(cisrs), function(x) {
+      scores = as.ram(mgr@fflist[[ffind]][ cisrs[[x]], names(cisrs)[x] ] )/mgr@shortfac
+      names(scores) = cisrs[[x]]
+      scores
+      })
+ names(ans) = names(cisrs)
  ans
 }
 

@@ -1,6 +1,7 @@
 \name{eqtlTests}
 \alias{eqtlTests}
 \alias{ieqtlTests}
+\alias{cisScores}
 \alias{R20}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -12,6 +13,7 @@ perform genome x transcriptome eQTL searches with high-performance options
 \usage{
 eqtlTests(smlSet, rhs = ~1 - 1, runname = "foo", targdir = "foo", geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, ...)
 ieqtlTests(smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = "ifoo", geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, ...)
+cisScores( mgr, ffind=1, chr, snpGR, radius=5e5, applier=lapply ) 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -49,6 +51,13 @@ logical to direct calculation of Zscore instead of X2
   \item{\dots}{
 parameters passed to \code{\link[snpMatrix]{snp.rhs.tests}}
 }
+  \item{mgr}{an instance of \code{eqtlTestsManager}}
+  \item{ffind}{index into the list of ff files managed by \code{mgr} to be used for
+obtaining scores}
+  \item{chr}{token identifying chromosome of interest}
+  \item{snpGR}{instance of \code{\link[GenomicRanges]{GRanges-class}} with SNP location}
+  \item{applier}{function, typically either \code{lapply} or \code{mclapply} if multicore
+services are desired}
 }
 \details{
 \code{\link[snpMatrix]{snp.rhs.tests}} is run for all genes enumerated in
@@ -131,6 +140,15 @@ e1i
 topFeats( sym = "CPNE1", mgr=e1i, ffind=1, anno="illuminaHumanv1.db" )
 topFeats(probeid="GI_23397697-A", mgr=cd)  
 topFeats(rsid="rs6060535", mgr=cd)
+#
+library(ceu1kg)
+data(ceu1kgMeta_20)
+library(multicore)
+cc = cisScores( e1i, 1, "chr20", ceu1kgMeta_20, applier=mclapply, radius=5e5)
+lapply(cc, function(x) sort(x,decreasing=TRUE)[1:3]) # now check scores obtained under permutation
+e1ip = ieqtlTests(permEx(hmi), ~male, rules=R20, targdir="p1", runname="p1" )
+cc2 = cisScores( e1ip, 1, "chr20", ceu1kgMeta_20, applier=mclapply, radius=5e5)
+lapply(cc2, function(x) sort(x,decreasing=TRUE)[1:3])
 setwd(curd)
 }
 \keyword{ models }
