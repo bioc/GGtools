@@ -183,11 +183,12 @@ and allele copy number for the best result for CPNE1 shown above.
 \textbf{Question 2:}  Create a new \texttt{smlSet} \texttt{hmff} limited to CEU founders
 and with genotypes having minimum genotype frequency at least 5\%.  
 
-\textbf{Question 3:}  Test for eQTL for CPNE1 in the filtered structure.  Create relevant visualizations.
+\textbf{Question 3:}  Test for eQTL for CPNE1 in the filtered structure,
+saving the result in \texttt{f1f} for later conversions.  Create relevant visualizations.
 
 
-<<sol1,eval=FALSE,echo=FALSE>>=
-plot_EvG(genesym("CPNE1"), rsid("rs17093026"), hmceuB36.2021[chrnum(20),])
+<<sol1,eval=TRUE,echo=FALSE>>=
+#plot_EvG(genesym("CPNE1"), rsid("rs17093026"), hmceuB36.2021[chrnum(20),])
 hmff = hmceuB36.2021[, which(hmceuB36.2021$isFounder)]
 hmfg = GTFfilter( hmff, .05 )
 f1f = gwSnpTests(genesym("CPNE1")~male, hmfg, chrnum(20))
@@ -227,6 +228,14 @@ Mtests = sapply(1:100,  function(x) topSnps(gwSnpTests(genesym("CPNE1")~male,
 @
 
 \subsubsection{Context: \textit{GenomicRanges} and \textit{rtracklayer}}
+
+A major response to the transition to high-throughput sequencing assays is the \textit{IRanges}
+infrastructure.  The \textit{GenomicRanges} package defines the \texttt{GRanges} class, to which
+we can convert results of an eQTL search:
+<<lk2>>=
+gr1 = as(f1, "GRanges")
+gr2 = as(f1f, "GRanges")
+@
 
 
 \section{Session information}
