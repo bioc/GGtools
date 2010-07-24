@@ -1,5 +1,6 @@
 \name{imphm2_1KG_20}
-\alias{imphm2_1KG_20}
+\alias{imphm2_1KG_20_mA2}
+\alias{imphm2_1KG_20_mA5}
 \docType{data}
 \title{
 snpMatrix-generated rules from imputing from HapMap phase II loci to 1000 genomes loci -- for chromosome 20 only
@@ -7,7 +8,7 @@ snpMatrix-generated rules from imputing from HapMap phase II loci to 1000 genome
 \description{
 snpMatrix-generated rules from imputing from HapMap phase II loci to 1000 genomes loci -- for chromosome 20 only
 }
-\usage{data(imphm2_1KG_20)}
+\usage{data(imphm2_1KG_20_mA2)}
 \format{
   The format is:
 Formal class 'snp.reg.imputation' [package "snpMatrix"] with 1 slots \cr
@@ -27,7 +28,10 @@ Formal class 'snp.reg.imputation' [package "snpMatrix"] with 1 slots \cr
 \details{
 Generated with snpMatrix 1.13.1, rules that use the ceu1kg package to
 define loci and calls for 1000 genomes genotypes for CEU, to allow imputation
-from the hapmap phase II loci for CEU.
+from the hapmap phase II loci for CEU.  The data object with suffix mA2 was generated with
+setting mA=2; for suffix mA5, mA was set at 5; see \code{\link[snpMatrix]{snp.imputation}}
+for details on this parameter, which sets the minimum number of observations required for
+an LD determination to be made for SNP tagging or haplotype modeling.
 }
 \source{
 GGtools hmceuB36.2021 was used to define the hapmap phase II loci; locations
@@ -39,7 +43,7 @@ for CEU.
 %%  ~~ possibly secondary sources and usages ~~
 %}
 \examples{
-data(imphm2_1KG_20)
-imphm2_1KG_20[1:10]
+data(imphm2_1KG_20_mA2)
+imphm2_1KG_20_mA2[1:10]
 }
 \keyword{datasets}

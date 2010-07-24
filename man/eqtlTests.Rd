@@ -56,6 +56,7 @@ parameters passed to \code{\link[snpMatrix]{snp.rhs.tests}}
 obtaining scores}
   \item{chr}{token identifying chromosome of interest}
   \item{snpGR}{instance of \code{\link[GenomicRanges]{GRanges-class}} with SNP location}
+  \item{radius}{numeric: number of basepairs up and downstream of TSS to be used for cis filtering}
   \item{applier}{function, typically either \code{lapply} or \code{mclapply} if multicore
 services are desired}
 }

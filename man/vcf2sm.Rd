@@ -1,5 +1,6 @@
 \name{vcf2sm}
 \alias{vcf2sm}
+\alias{show,metaVCF-method}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 generate a snp.matrix instance on the basis of a VCF (4.0) file

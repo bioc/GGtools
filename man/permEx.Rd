@@ -46,7 +46,7 @@ hm = hmceuB36.2021[c(indc,1:19),]  # reduce problem
 td = tempdir()
 curd = getwd()
 setwd(td)
-time.lapply = unix.time(e1 <- eqtlTests( hm, ~male ))
+time.lapply = unix.time(e1 <- eqtlTests( hm, ~male, targdir="pex" ))
 e1
 hmp = permEx(hm)
 e1perm = eqtlTests(hmp, ~male, targdir="permfoo", runname="permrun")

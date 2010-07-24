@@ -64,7 +64,7 @@ if (require("SNPlocs.Hsapiens.dbSNP.20090506")) {
  td = tempdir()
  curd = getwd()
  setwd(td)
- time.lapply = unix.time(e1 <- eqtlTests( hm, ~male ))
+ time.lapply = unix.time(e1 <- eqtlTests( hm, ~male, targdir="ggr" ))
  ggg = getGRanges(e1, 1, cptag, "chr20", getNamedLocs(chr="chr20"))
  ggg
 # now combine with cis ranges for a set of genes

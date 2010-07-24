@@ -10,7 +10,7 @@ bestCis = function(ffmgr, slranges, radius=1e6, ffind=1, anno, ncores=10) {
    # obtain coordinates of genes in play
  gr = geneRanges(allg, anno, extend=radius)
  maxgap <<- 0L
- sspcs = unique(space(slranges))
+ sspcs = as.character(unique(space(slranges)))  # coercion added late july 2010
  if (length(sspcs)>1) warning(paste("slranges included multiple spaces; using", sspcs[1]))
    # find overlaps of gene regions and SNP
  lk = findOverlaps(gr, slranges)[[sspcs[1]]]

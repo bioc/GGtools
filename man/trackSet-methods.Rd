@@ -1,6 +1,7 @@
 \name{GGtools-RangedData}
 \docType{methods}
 \alias{coerce,cwSnpScreenResult,RangedData-method}
+\alias{coerce,cwSnpScreenResult,GRanges-method}
 \title{Transform results of gwSnpTests to browser tracks}
 \description{Create a browser track from a chromosome-wide SNP screen}
 \section{Coercion}{
