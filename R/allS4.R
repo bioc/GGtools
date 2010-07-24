@@ -651,6 +651,7 @@ setAs("cwSnpScreenResult", "GRanges", function(from) {
 
   rd = GRanges(IRanges(loc, loc), type = "snpeff", group = "gws",
     score = as.numeric(-log10(allp)), seqnames = ch, universe = "hg18")
+  names(rd) = names(allp)
   allp = elementMetadata(rd)$score # order probably has changed
   bad = is.na(allp) | !is.finite(allp)
   if (any(bad))

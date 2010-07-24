@@ -1,0 +1,243 @@
+
+%
+% NOTE -- ONLY EDIT THE .Rnw FILE!!!  The .tex file is
+% likely to be overwritten.
+%
+
+%\VignetteIndexEntry{}
+%\VignetteDepends{}
+%\VignetteKeywords{}
+%\VignettePackage{}
+
+\documentclass[12pt]{article}
+
+\usepackage{amsmath,pstricks}
+\usepackage[authoryear,round]{natbib}
+\usepackage{hyperref}
+
+
+\textwidth=6.2in
+\textheight=8.5in
+%\parskip=.3cm
+\oddsidemargin=.1in
+\evensidemargin=.1in
+\headheight=-.3in
+
+\newcommand{\scscst}{\scriptscriptstyle}
+\newcommand{\scst}{\scriptstyle}
+
+
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textit{#1}}}
+\newcommand{\Rmethod}[1]{{\texttt{#1}}}
+\newcommand{\Rfunarg}[1]{{\texttt{#1}}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+
+\textwidth=6.2in
+
+\bibliographystyle{plainnat} 
+ 
+\begin{document}
+%\setkeys{Gin}{width=0.55\textwidth}
+
+\title{Genetics of gene expression: 2010 lab}
+\author{VJ Carey}
+\maketitle
+
+\tableofcontents
+
+\section{eQTL concepts and discovery tools}
+
+The basic concern in the lab is the relationship between
+structural variation in DNA and variation in mRNA abundance.
+DNA variants of interest are primarily SNP as identified
+through
+\begin{itemize}
+\item direct genotyping in the Sanger sequencing paradigm 
+(yielding HapMap phase II genotypes, for example)
+\item array-based genotyping (yielding HapMap phase III)
+\item NGS-based variant calling (as provided for 1000 genomes (1KG))
+\item hybrids of array-based and imputed genotypes (imputation to
+the 1KG panel)
+\end{itemize}
+mRNA variation is typically characterized using gene expression microarrays,
+but RNA-seq can also be considered.
+
+A helpful schematic indicating possible impacts of structural variation
+on gene transcription is given in \citet{Williams:2007p21}; see Figure \ref{schem}.
+
+\begin{figure}
+\begin{center}
+\includegraphics{williamsSchem}
+\end{center}
+\caption{A schematic illustrating various nonexclusive mechanisms by which DNA
+variants can affect transcript abundance \citep{Williams:2007p21}.}
+\label{schem}
+\end{figure}
+
+\clearpage
+
+To elucidate impacts of DNA variations on regulation of gene transcription
+we need to be able to
+\begin{itemize}
+\item represent mRNA abundance and SNP genotypes (both observed
+and imputed) in a coordinated way
+for many samples
+\item perform suitably focused and calibrated tests of association between mRNA
+levels and genotype (e.g., allele count for a SNP)
+\item provide significance assessments and functional contexts for
+observed associations.
+\end{itemize}
+On the basis of excellent algorithms and software
+in the \textit{snpMatrix} package of Clayton and Leung \citep{clayton2007}), the
+\textit{GGtools} package provides tools to address all of these concerns.
+
+\subsection{Checking for informative variants for a specified gene}
+
+The following is a simple illustration of a focused workflow.
+<<wk1>>=
+library(GGtools)
+if (!exists("hmceuB36.2021")) data(hmceuB36.2021)
+f1 = gwSnpTests(genesym("CPNE1")~male, hmceuB36.2021, chrnum(20))
+topSnps(f1)
+@
+
+
+These findings can be visualized in the context of the chromosome in a
+so-called Manhattan plot; see Figure \ref{manh}.
+
+\begin{figure}
+\begin{center}
+<<f2,fig=TRUE>>=
+plot(f1)
+@
+\end{center}
+\caption{Manhattan plot for chromosome 20 eQTL for CPNE1.}
+\label{manh}
+\end{figure}
+
+\subsection{Components of the workflow; refinements}
+
+The primary workhorse thus far is \texttt{gwSnpTests}.  We need to understand
+its interface and its return values.
+<<lkgws>>=
+showMethods("gwSnpTests")
+@
+<<lkf1>>=
+f1
+class(f1)
+getClass(class(f1))
+@
+
+\subsubsection{Data representation: \texttt{smlSet}}
+
+The \texttt{smlSet} container provides coordinated management of expression, genotype,
+phenotype, and other metadata in a fashion broadly consistent with the \texttt{ExpressionSet}
+class.  If \texttt{X} is an \texttt{smlSet} instance then
+\begin{itemize}
+\item \texttt{exprs(X)} and \texttt{pData(X)} have familiar roles of extracting a matrix of
+expression values, and a \texttt{data.frame} of sample-level data
+\item \texttt{X[,S]} subsets the samples according to predicate \texttt{S}
+\item \texttt{X[probeId(P),]} subsets the expression data to probes enumerated in predicate \texttt{P}
+\item \texttt{X[chrnum(C),]} subsets the genotype data to chromosome \texttt{C}
+\item \texttt{annotation(X)} returns the annotation package used for mapping expression probe identifiers
+\end{itemize}
+Clearly there are two kinds of feature in use here: expression probes and SNPs.  The ambiguous
+handling of the \texttt{X[G,]} idiom has not posed a problem thus far.  As the structure gains wider
+use, more features may be added to simplify filtering through bracket-based operations.
+
+Operations targeted on the genotype data component include:
+\begin{itemize}
+\item \texttt{smList(X)} returns a list of \texttt{snp.matrix} objects, using a byte to encode
+each genotype
+\item \texttt{MAFfilter(X,...)} will remove SNP that fail to meet a minor allele frequency criterion
+\item \texttt{GTFfilter(X,...)} will remove SNP that fail to meet a minimum genotype frequency criterion
+\end{itemize}
+
+The \textit{GGtools} package provides \texttt{hmceuB36.2021} as a modest-sized exemplar of the
+\texttt{smlSet} structure, with HapMap phase II genotype data from chromosomes 20 and 21, and GENEVAR
+expression data for 90 CEU individuals.
+
+<<lkhm>>=
+hmceuB36.2021
+names(pData(hmceuB36.2021))
+table(hmceuB36.2021$isFounder)
+@
+
+The expression data is managed exactly as in an \texttt{ExpressionSet} from \textit{Biobase}.
+The genotype data has a concise representation.
+It and its coercions are defined in the \textit{snpMatrix} package.
+<<lkg,keep.source=TRUE>>=
+s20 = smList(hmceuB36.2021)[["20"]]
+s20
+as(s20, "matrix")[1:4,1:4]  # show raw
+as(s20, "character")[1:4,1:4]
+as(s20, "numeric")[1:4,1:4]
+@
+
+
+\textbf{Question 1:}  Use \verb+plot_EvG+ to visualize the specific relationship between expression
+and allele copy number for the best result for CPNE1 shown above.
+
+\textbf{Question 2:}  Create a new \texttt{smlSet} \texttt{hmff} limited to CEU founders
+and with genotypes having minimum genotype frequency at least 5\%.  
+
+\textbf{Question 3:}  Test for eQTL for CPNE1 in the filtered structure.  Create relevant visualizations.
+
+
+<<sol1,eval=FALSE,echo=FALSE>>=
+plot_EvG(genesym("CPNE1"), rsid("rs17093026"), hmceuB36.2021[chrnum(20),])
+hmff = hmceuB36.2021[, which(hmceuB36.2021$isFounder)]
+hmfg = GTFfilter( hmff, .05 )
+f1f = gwSnpTests(genesym("CPNE1")~male, hmfg, chrnum(20))
+plot_EvG(genesym("CPNE1"), rsid("rs11698601"), hmfg[chrnum(20),])
+@
+
+\subsubsection{Analysis: \texttt{snp.rhs.tests}; permutation testing}
+
+The \textit{snpMatrix} package supplied various utilities for general analysis of
+genome-wide association studies.  \texttt{gwSnpTests} is just a wrapper for the \texttt{snp.rhs.tests}
+function.  To see it in action,
+<<dosrs>>=
+SS = snp.rhs.tests(exprs(hmceuB36.2021)["GI_23397697-A",]~male, data=pData(hmceuB36.2021),
+   snp.data=s20, family="gaussian") -> SS
+class(SS)
+length(names(SS))
+sum(is.na(p.value(SS)))
+SS[1:4,]
+SS["rs6060535",]
+@
+This shows that for a given phenotypic response, large numbers of GWAS tests can be performed
+rapidly.
+
+\textbf{Question 4:}  Why do so many tests have p-value NA?
+
+<<lk,eval=FALSE,echo=FALSE>>=
+table(as(smList(hmceuB36.2021)[[1]][,10], "character"))
+@
+
+Which of our findings are significant in the context of so many tests?  We can permute the expression
+data, keeping the genotype data fixed.  Here is one way to obtain a sample from the permutation distribution
+of the smallest p-value for a specific gene.
+
+<<dot,eval=FALSE>>=
+Mtests = sapply(1:100,  function(x) topSnps(gwSnpTests(genesym("CPNE1")~male, 
+        sms=permEx(hmceuB36.2021), cnum=chrnum(20)))[[1]][1])
+@
+
+\subsubsection{Context: \textit{GenomicRanges} and \textit{rtracklayer}}
+
+
+\section{Session information}
+
+<<dos,results=tex>>=
+toLatex(sessionInfo())
+@
+
+\bibliography{jsm2010}
+
+\end{document}
+
+
+
