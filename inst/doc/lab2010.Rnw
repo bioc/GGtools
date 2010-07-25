@@ -4,10 +4,10 @@
 % likely to be overwritten.
 %
 
-%\VignetteIndexEntry{}
+%\VignetteIndexEntry{genetics of expression lab, 2010}
 %\VignetteDepends{}
-%\VignetteKeywords{}
-%\VignettePackage{}
+%\VignetteKeywords{genetics, gene expression, RNA-seq}
+%\VignettePackage{GGtools}
 
 \documentclass[12pt]{article}
 
