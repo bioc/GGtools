@@ -113,7 +113,11 @@ so-called Manhattan plot; see Figure \ref{manh}.
 plot(f1)
 @
 \end{center}
-\caption{Manhattan plot for chromosome 20 eQTL for CPNE1.}
+\caption{Manhattan plot for chromosome 20 eQTL for CPNE1.  The $y$ axis
+measures the significance of association of SNP allele copy number with
+expression for this gene.  The association is measured by a $\chi^2(1)$
+statistic transformed to a $p$-value, which is logarithmically transformed
+and then multiplied by $-10$.}
 \label{manh}
 \end{figure}
 
@@ -234,8 +238,109 @@ infrastructure.  The \textit{GenomicRanges} package defines the \texttt{GRanges}
 we can convert results of an eQTL search:
 <<lk2>>=
 gr1 = as(f1, "GRanges")
+gr1[1:4,]
 gr2 = as(f1f, "GRanges")
 @
+
+\textbf{Question 5:}  Export these GRanges instances as wig files and add to a UCSC browser
+session as custom tracks.  You could do this with \textit{rtracklayer} if your searchlist had
+a particular form.  You should see something like Figure \ref{trks}; R Track 1 is the search
+on all SNP; R Track 2 follows the restriction to minimum genotype frequency 5\%.
+
+\begin{figure}
+\includegraphics{full20browseX2}
+\caption{Browser tracks associated with eQTL screens \texttt{f1} and \texttt{f1f}.}
+\label{trks}
+\end{figure}
+
+\section{Comprehensive eQTL surveys: performance issues}
+
+A comprehensive survey of eQTL would consider possible relationships between 20000 or so
+genes and 8 million or more SNP (the latter is the approximate size of the 1000 genomes
+SNP panel).  Creating, storing, and interrogating the family of 160 billion results is
+a significant undertaking.  We now illustrate a strategy for conducting comprehensive
+surveys.  
+
+\subsection{A study of genes coresident on chromosome 20}
+
+We will select 50 genes at random from chromosome 20 and compute
+all tests for association with SNP on chromosome 20.
+
+First we select the genes and filter the \texttt{smlSet}:
+<<getg>>=
+set.seed(1234)
+library(illuminaHumanv1.db)
+g20 = get("20", revmap(illuminaHumanv1CHR))
+samp = sample(g20, size=50, replace=FALSE)
+hlit = hmceuB36.2021[ probeId(samp), ]
+@
+
+If you are using a POSIX-compliant system, you can speed up
+this process by distributing over cores.  We will be writing data
+to a folder called \texttt{dem50}.
+<<domc>>=
+try(system("rm -rf dem50"))
+if (try(require(multicore))) {
+ unix.time(e1 <- eqtlTests(hlit, ~male, geneApply = mclapply, targdir="dem50" ))
+}
+@
+If you do not have \textit{multicore}, alter the code to:
+<<dom2,eval=FALSE>>=
+ unix.time(e1 <- eqtlTests(hlit, ~male, geneApply = lapply, targdir="dem50" ))
+@
+The resulting object is:
+<<aaa>>=
+e1
+class(e1)
+getClass(class(e1))
+@
+We are using the \textit{ff} package to use disk to maintain extremely
+voluminous outputs.
+<<lkff>>=
+e1@fflist[[1]][1:4,1:4]
+e1@shortfac
+@
+The information shown above is not intended for public consumption.
+Instead we perform focused interrogation using brackets and casting:
+<<doi>>=
+e1[rsid("rs4814683"), probeId("GI_26051259-I")]
+@
+Typical use case: finding a collection of strongest associations:
+<<lku>>=
+topFeats(probeid="GI_26051259-I", mgr=e1, ffind=1, anno="illuminaHumanv1.db")
+topFeats(rsid="rs708954", mgr=e1, ffind=1, anno="illuminaHumanv1.db")
+topFeats(sym="SRC", mgr=e1, ffind=1, anno="illuminaHumanv1.db")
+@
+
+\subsection{Expanding to genes on multiple chromosomes}
+
+The analysis conducted just above uses genes on chromosome 20.  We
+repeat with some genes on chromosome 21.  First sample the genes:
+<<getg21>>=
+g21 = get("21", revmap(illuminaHumanv1CHR))
+samp21 = sample(g21, size=50, replace=FALSE)
+hlit21 = hmceuB36.2021[ probeId(samp21), ]
+@
+Now perform the tests, using a different target folder:
+<<dot>>=
+try(system("rm -rf dem50.21"))
+unix.time(e2 <- eqtlTests(hlit21, ~male, geneApply = mclapply, targdir="dem50.21" ))
+e2
+@
+To facilitate interrogation of the two sets of results simultaneously, the
+\texttt{eqtlTestsManager} instances need to be coordinated by a
+\texttt{cisTransDirector} instance.
+<<lkdir>>=
+try(system("rm -rf d2021_probetab.ff"))
+try(system("rm -rf d2021_snptab.ff"))
+d1 = mkCisTransDirector(list(e1,e2), "d2021", "snptab", "probetab", "illuminaHumanv1.db" )
+d1
+d1[ "rs6090120", "GI_42734342-S" ]
+@
+You are now managing and interrogating 170 million test results.  By increasing
+the numbers of genes and SNP held in the \texttt{smlSet} instances
+passed to \texttt{eqtlTests} you can increase this.  Interfaces need
+further refinement.
 
 
 \section{Session information}
