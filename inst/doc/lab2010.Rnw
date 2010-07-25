@@ -342,6 +342,270 @@ the numbers of genes and SNP held in the \texttt{smlSet} instances
 passed to \texttt{eqtlTests} you can increase this.  Interfaces need
 further refinement.
 
+\subsection{Exercises}
+
+\textbf{Question 6.}  You can use \texttt{as.ram} to work directly with
+data in \texttt{ff} arrays.  You have to be careful or you will create large
+objects and defeat the purpose of \texttt{ff}.
+Show that the gene/SNP combination shown here has a special status in
+this series of tests.
+<<lkdd,fig=TRUE>>=
+plot_EvG(probeId("GI_25777639-A"), rsid("rs2057073"), hlit21)
+topFeats(probeid="GI_25777639-A", mgr=d1, ffind=1, anno="illuminaHumanv1.db")
+@
+
+\textbf{Question 7.}  Use \texttt{getGRanges} to obtain a Manhattan plot
+for the gene identified in question 6, displayed in the browser.  You should see
+something like
+
+\includegraphics{maxscan}
+
+<<lkgg,eval=FALSE,echo=FALSE>>=
+ggg = getGRanges(e2, 1, "GI_25777639-A", "chr20", getNamedLocs(chr="chr20"))
+@
+
+\section{Investigating allele-specific expression with 
+RNA-seq data}
+
+We consider a study of read mapping bias in RNA-seq
+\citep{Degner:2009p1333}.  We will consider how to identify
+SNPs located in exons, how to analyze allele frequencies
+for such SNP, and how to check findings against existing sequencing data
+and eQTL statistics for a single individual and a HapMap population.
+
+\subsection{The data}
+
+We will use a samtools pileup representation of RNA-seq data that
+were aligned using MAQ and distributed by Degner and colleagues through GEO.
+We confine attention to chromosome 6 for individual NA19238,
+and use the ``unmasked'' alignment files.  Data from two sequencing
+runs was combined using samtools merge, and then the pileup was
+generated against hg18.
+<<rpup>>=
+library(GGtools)
+library(Rsamtools)
+pup238_6 = readPileup(system.file("pup/combn238_chr6.pup", package="GGtools"), 
+    variant="SNP")
+pup238_6[1:4,]
+@
+It will be useful to have the specific pileup of calls as well.
+<<getc>>=
+getPupCalls = function(pupfn) {
+ tmp = strsplit(readLines(pupfn), "\t")
+ sapply(tmp, "[", 9)
+}
+callp = getPupCalls( system.file("pup/combn238_chr6.pup", package="GGtools") )
+elementMetadata(pup238_6)$callp = callp
+pup238_6[144:148,]
+@
+
+\subsection{Filtering to ``coding SNP''; checking for de novo variants}
+
+We have derived a \texttt{GRanges} instance with addresses
+of exons on chromosome 6, using the \textit{GenomicFeatures}
+facilities for extracting feature data from UCSC tables.
+<<getd>>=
+#hg18.txdb = loadFeatures(system.file("extdata/hg18.txdb.sqlite",
+#  package="anno4NGS"))
+#if (.Platform$OS.type == "windows") 
+#  data(ex6) else 
+library(GenomicFeatures)
+data(ex6)
+ex6[1:4,]
+#ex6 = exons(hg18.txdb, vals=list(exon_chrom="chr6"))
+exp_6 = pup238_6[ which( ranges(pup238_6) %in% ranges(ex6) ) , ]
+@
+
+How many of the SNP variants in this individual reside in exons?
+Restrict the pileup data to these.
+<<lkmsnp>>=
+sum( ranges(pup238_6) %in% ranges(ex6) )
+isExonic = which( ranges(pup238_6) %in% ranges(ex6) )
+pup238_6x = pup238_6[ isExonic, ]
+@
+
+How many of these exonic variants are already catalogued in
+the June 2008 dnSNP database?
+<<lkdb>>=
+library(SNPlocs.Hsapiens.dbSNP.20080617)
+s6 = getSNPlocs("chr6")
+s6[1:5,]
+knownLocs = IRanges(s6$loc, s6$loc)
+indbsnp = ranges(pup238_6x) %in% knownLocs
+sum(indbsnp)
+@
+
+What are the heterozygosity frequencies at known and potentially novel SNP
+locations?
+
+<<lkhz>>=
+p6xknown = pup238_6x[ which( indbsnp ), ] 
+p6xnovel = pup238_6x[ -which( indbsnp ), ]
+nKnown = length(p6xknown)
+nhetKnown = sum( !(elementMetadata(p6xknown)$consensusBase %in% c("A", "C", "G", "T") ) )
+nhetKnown/nKnown
+nNovel = length(p6xnovel)
+nhetNovel = sum( !(elementMetadata(p6xnovel)$consensusBase %in% c("A", "C", "G", "T") ) )
+nhetNovel/nNovel
+@
+
+\subsection{Assessing allelic imbalance in transcripts harboring SNPs}
+
+What exactly are we looking for?  A guide is available through the table
+published by Degner et al.  
+<<lktab>>=
+data(degnerASE01)
+antab = with(degnerASE01, degnerASE01[ chr=="chr6" & indiv=="GM19238", 1:8] )
+antab
+@
+This shows 5 loci related to 4 genes for which there is evidence of
+allele-specific expression, in that the individual is heterozygous
+at the locus, but the transcript abundance measures are skewed towards
+one of the two alleles present.
+
+To check for this on the basis of our pileup data, we have a little
+tabulation function:
+<<mkta>>=
+tabCalls = function (pup, ind) 
+{
+    ac = as.character
+    empup = elementMetadata(pup)
+    ref = ac(empup$referenceBase[ind])
+    maqcall = ac(empup$consensusBase[ind])
+    puptag = gsub("\\^.", "", empup$callp[ind])
+    list(ref = ref, maqcall = maqcall, calls = table(strsplit(puptag, 
+        "")))
+}
+
+@
+
+In the following, we
+tind overlaps between our exonic loci and the tabulated locations, and
+tabulate the available calls.  First we build a little utility that
+returns nucleotides given an ambiguous code.
+<<zzz>>=
+library(Biostrings) # has IUPAC_CODE_MAP
+decodeIU = function(x) {
+ if(length(x)>1) warning("only handling first entry")
+ strsplit(IUPAC_CODE_MAP[toupper(x)], "")[[1]]
+}
+@
+
+Now we identify those locations from the Degner table
+that coincide with our pileup-based ranges.  There is
+an idiosyncratic but intuitive matrix result wrapped
+in S4.
+<<lkra>>=
+ol = findOverlaps(IRanges(antab$loc, width=1), ranges(pup238_6x) )
+ol
+@
+
+In the following, we generate a little report to summarize
+the comparisons.
+<<lkcomp,keep.source=TRUE>>=
+for (i in 1:nrow(ol@matchMatrix)) {  # ONEOFF
+ cat("query", i, "\n")
+ print(t1 <- antab[ ol@matchMatrix[i, "query"], ])
+ t2 <- tabCalls( pup238_6x, ol@matchMatrix[i, "subject"])
+ print(t2[["calls"]])
+ dpref = t1[1,2]/(t1[1,2]+t1[1,3])
+ cat("Degner refFreq =", round(dpref,4),"\n")
+ dpuprefinds = which(toupper(names(t2[["calls"]])) %in% c(",", "."))
+ targcodes = decodeIU( t2[["maqcall"]] )
+ altcode = setdiff(targcodes, t2[["ref"]])
+ dpupaltinds = which(toupper(names(t2[["calls"]])) == altcode)
+ dpuppref = sum(t2[["calls"]][dpuprefinds])/(sum(t2[["calls"]][dpuprefinds])+
+    sum(t2[["calls"]][dpupaltinds]))
+ cat("Pileup refFreq =", round(dpuppref,4),"\n")
+ cat("---\n")
+}
+@
+The correspondence is very close.  Unfortunately there is relatively low
+coverage for the most extreme imbalances.
+
+\subsection{Checking consistency of findings with GENEVAR expression arrays}
+
+The hmyriB36 package of Bioconductor's experimental data archive includes
+expression and genotyping data on 90 YRI individuals including NA19238.
+The expression data are distributed by the GENEVAR project \citep{Stranger:2007p1342}.
+<<lkd>>=
+library(hmyriB36)
+if (!exists("hmyriB36")) data(hmyriB36)
+library(illuminaHumanv1.db)
+pidVEGFA = get("VEGFA", revmap(illuminaHumanv1SYMBOL))
+ve = exprs(hmyriB36)[ pidVEGFA, "NA19238"]
+@
+The following code can be used to check for relationship between allele
+copy number for a SNP and array-based expression values:
+<<lkgev,fig=TRUE>>=
+plot_EvG(genesym("VEGFA"), rsid("rs3025040"), hmyriB36)
+abline(h=ve)
+@
+
+
+\subsection{Exercises}
+
+\textbf{Question 8.}  Check the array-based expression configurations
+for the other four genes with potential allele-specific expression.
+
+\textbf{Question 9.}
+Write code that scans all the exonic SNP on chr6 and identifies
+loci with potential imbalance.  You might modify the
+code snippet marked \texttt{ONEOFF} above.  What statistical tests and
+multiple testing corrections should you use?
+
+\textbf{Question 10.}  Acquire the data on NA19239 and reproduce some of the key
+entries of the Degner table.
+
+
+\section{Appendix: samtools pileup format, from samtools distribution site}
+
+{\small
+\begin{verbatim}
+Pileup Format
+
+Pileup format is first used by Tony Cox and Zemin Ning at the Sanger 
+Institute. It describes the base-pair information at each chromosomal 
+position. This format facilitates SNP/indel calling and brief alignment 
+viewing by eyes.
+
+The pileup format has several variants. The default output by SAMtools looks like this:
+
+      seq1 272 T 24  ,.$.....,,.,.,...,,,.,..^+. <<<+;<<<<<<<<<<<=<;<;7<&
+      seq1 273 T 23  ,.....,,.,.,...,,,.,..A <<<;<<<<<<<<<3<=<<<;<<+
+      seq1 274 T 23  ,.$....,,.,.,...,,,.,...    7<7;<;<<<<<<<<<=<;<;<<6
+      seq1 275 A 23  ,$....,,.,.,...,,,.,...^l.  <+;9*<<<<<<<<<=<<:;<<<<
+      seq1 276 G 22  ...T,,.,.,...,,,.,....  33;+<<7=7<<7<&<<1;<<6<
+      seq1 277 T 22  ....,,.,.,.C.,,,.,..G.  +7<;<<<<<<<&<=<<:;<<&<
+      seq1 278 G 23  ....,,.,.,...,,,.,....^k.   %38*<<;<7<<7<=<<<;<<<<<
+      seq1 279 C 23  A..T,,.,.,...,,,.,..... ;75&<<<<<<<<<=<<<9<<:<<
+
+where each line consists of chromosome, 1-based coordinate, reference base, the number 
+of reads covering the site, read bases and base qualities. At the read base 
+column, a dot stands for a match to the reference base on the forward strand, a 
+comma for a match on the reverse strand, `ACGTN' for a mismatch on the forward 
+strand and `acgtn' for a mismatch on the reverse strand. A pattern `\+[0-9]+[ACGTNacgtn]+' 
+indicates there is an insertion between this reference position and the next reference 
+position.  The length of the insertion is given by the integer in the pattern, followed 
+by the inserted sequence. Here is an example of 2bp insertions on three reads:
+
+      seq2 156 A 11  .$......+2AG.+2AG.+2AGGG    <975;:<<<<<
+
+Similarly, a pattern `-[0-9]+[ACGTNacgtn]+' represents a deletion from the reference. 
+Here is an exmaple of a 4bp deletions from the reference, supported by two reads:
+
+      seq3 200 A 20 ,,,,,..,.-4CACC.-4CACC....,.,,.^~. ==<<<<<<<<<<<::<;2<<
+
+Also at the read base column, a symbol `^' marks the start of a read segment which is 
+a contiguous subsequence 
+on the read separated by `N/S/H' CIGAR operations. The ASCII of the character 
+following `^' minus 33 gives the mapping quality. A symbol `$' marks the end of a read 
+segment. Start and end markers of a read are largely inspired by Phil Green's CALF 
+format. These markers make it possible to reconstruct the read sequences from pileup. 
+ 
+\end{verbatim}
+}
+
 
 \section{Session information}
 
