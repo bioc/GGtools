@@ -315,3 +315,51 @@ cisScores = function( mgr, ffind=1, chr, snpGR, radius=5e5, applier=lapply ) {
  ans
 }
 
+ 
+eqtlTestsMACH = function(smlSet, machmat, rhs=~1-1,
+   runname="foo", targdir="foo", geneApply=lapply, chromApply=lapply,
+   shortfac = 100, computeZ=FALSE, ... ) {
+ theCall = match.call()
+ sess = sessionInfo()
+ fnhead = paste(targdir, "/", runname, "_", sep="")
+ geneNames = featureNames(smlSet)
+ chrNames = names(smList(smlSet))
+ ngenes = length(geneNames)
+ nchr = length(chrNames)
+ system(paste("mkdir", targdir))
+ cres = chromApply( chrNames, function(chr) {
+   snpdata = machmat # smList(smlSet)[[chr]]
+   #targff = paste( fnhead, "chr", chr, "_", "g", gene, ".ff" , sep="" )
+   targff = paste( fnhead, "chr", chr, ".ff" , sep="" )
+   snpnames = rownames(snpdata) #colnames(snpdata)
+   nsnps = nrow(snpdata) #ncol(snpdata)
+   store = ff( initdata=0, dim=c(nsnps, ngenes), dimnames=list(snpnames, geneNames), vmode="short",
+                 filename = targff )
+   geneApply( geneNames, function(gene) {
+     ex = exprs(smlSet)[gene,]
+     fmla = formula(paste("ex", paste(as.character(rhs),collapse=""), collapse=" "))
+     numans = snp.rhs.testsMACH(fmla, snp.data=snpdata, data=pData(smlSet), family="gaussian", ...)@chisq
+     if (computeZ) {
+       stop("not handled")
+       numans = sqrt(numans)
+       signl = snp.rhs.estimates( fmla, snp.data=snpdata, data=pData(smlSet), family="gaussian", ... )
+       bad = which(unlist(lapply(signl, is.null)))
+       if (length(bad)>0) signl[bad] = list(beta=NA)
+       ifelse(unlist(signl)>=0, 1, -1)
+       numans = numans*signl
+     }
+     miss = is.na(numans)
+     if (any(miss) & !computeZ) numans[which(miss)] = rchisq(length(which(miss)), 1)
+     if (any(miss) & computeZ) numans[which(miss)] = rnorm(length(which(miss)))
+     store[, gene, add=TRUE] = shortfac*numans
+     NULL
+     }) # end gene apply
+  store
+  })  # end chr apply
+  names(cres) = chrNames
+  exdate = date()
+  new("eqtlTestsManager", fflist=cres, call=theCall, sess=sess, 
+        exdate=exdate, shortfac=shortfac, geneanno=annotation(smlSet),
+        df=1)
+}
+
