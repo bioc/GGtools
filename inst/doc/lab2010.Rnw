@@ -47,6 +47,7 @@
 
 \tableofcontents
 
+\clearpage
 \section{eQTL concepts and discovery tools}
 
 The basic concern in the lab is the relationship between
@@ -253,6 +254,7 @@ on all SNP; R Track 2 follows the restriction to minimum genotype frequency 5\%.
 \label{trks}
 \end{figure}
 
+\clearpage
 \section{Comprehensive eQTL surveys: performance issues}
 
 A comprehensive survey of eQTL would consider possible relationships between 20000 or so
@@ -392,6 +394,7 @@ something like
 ggg = getGRanges(e2, 1, "GI_25777639-A", "chr20", getNamedLocs(chr="chr20"))
 @
 
+\clearpage
 \section{Investigating allele-specific expression with 
 RNA-seq data}
 
@@ -573,6 +576,7 @@ abline(h=ve)
 
 \subsection{Exercises}
 
+\indent
 \textbf{Question 8.}  Check the array-based expression configurations
 for the other four genes with potential allele-specific expression.
 
@@ -586,6 +590,7 @@ multiple testing corrections should you use?
 entries of the Degner table.
 
 
+\clearpage
 \section{Appendix: samtools pileup format, from samtools distribution site}
 
 {\small
@@ -641,6 +646,7 @@ format. These markers make it possible to reconstruct the read sequences from pi
 toLatex(sessionInfo())
 @
 
+\clearpage
 \bibliography{jsm2010}
 
 \end{document}
