@@ -456,9 +456,10 @@ pup238_6x = pup238_6[ isExonic, ]
 @
 
 How many of these exonic variants are already catalogued in
-the June 2008 dnSNP database?
+%the June 2008 dnSNP database?
+the May 2009 dnSNP database?
 <<lkdb>>=
-library(SNPlocs.Hsapiens.dbSNP.20080617)
+library(SNPlocs.Hsapiens.dbSNP.20090506)
 s6 = getSNPlocs("chr6")
 s6[1:5,]
 knownLocs = IRanges(s6$loc, s6$loc)
