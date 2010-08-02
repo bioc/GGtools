@@ -463,6 +463,31 @@ setMethod("[", c("eqtlTestsManager", "rsid", "probeId"),
  ans
 })
 
+setMethod("[", c("eqtlTestsManager", "missing", "probeId"),
+ function(x, i, j, ..., drop=FALSE) {
+#
+#
+ ll = length(fflist(x))
+ ans = lapply(1:ll, function(i) fflist(x)[[i]][ , 
+    as(j, "character"), drop=FALSE]/shortfac(x))
+ names(ans) = names(fflist(x))
+ ans
+})
+
+setMethod("[", c("eqtlTestsManager", "rsid", "missing"),
+ function(x, i, j, ..., drop=FALSE) {
+ m1 = snpIdMap( as(i, "character"), x )
+ ans = lapply(1:length(m1), function(i) fflist(x)[[names(m1)[i]]][ m1[[i]], 
+    , drop=FALSE]/shortfac(x))
+ names(ans) = names(m1)
+ ans
+})
+
+setMethod("[", c("eqtlTestsManager", "ANY", "ANY"),
+ function(x, i, j, ..., drop=FALSE) {
+ stop("[ for eqtlTestsManager only defined for signature ('rsid', 'probeId') [one may be omitted]")
+ })
+
 # director for group of managers
 
 chkmgrs = function(object) {

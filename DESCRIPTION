@@ -1,12 +1,12 @@
 Package: GGtools
 Title: software and data for genetics of gene expression (c) 2006 VJ Carey
-Version: 3.7.33
+Version: 3.7.34
 Author: Vince Carey <stvjc@channing.harvard.edu>
 Description: dealing with hapmap SNP reports, GWAS, etc.
 Depends: R (>= 2.7.0), methods, Biobase (>= 1.11.26), GGBase (>= 3.7.5),
 	snpMatrix(>= 1.7.3), annotate, ff, IRanges, rtracklayer, multtest, org.Hs.eg.db,
 	GenomicRanges
-Suggests: illuminaHumanv1.db, org.Hs.eg.db, 
+Suggests: illuminaHumanv1.db, org.Hs.eg.db, SNPlocs.Hsapiens.dbSNP.20100427,
 	rpart, multtest, multicore, rtracklayer, GSEABase
 LazyData: no
 biocViews: SNP, GeneticVariability, Genetics, Bioinformatics
