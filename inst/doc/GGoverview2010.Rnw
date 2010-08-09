@@ -139,9 +139,9 @@ dir("foo")
 
 We can get a GRanges instance with the test results for a specific gene:
 <<getd>>=
-nn = getNamedLocs(chr="chr20")
+nn = getNamedLocs(slpack= "SNPlocs.Hsapiens.dbSNP.20100427", chr="ch20")
 library(GenomicRanges)
-gg = getGRanges( f1, 1, 1, "chr20", nn )
+gg = getGRanges( f1, 1, 1, "ch20", nn )
 gg[1:3,]
 @
 
@@ -329,7 +329,7 @@ The lower we set minA, the more liberal.
 %Using the SNPlocs.Hsapiens.dbSNP.* package, we can get the
 %nucleotides:
 %<<gets,eval=FALSE>>=
-%library(SNPlocs.Hsapiens.dbSNP.20080617)
+%library(SNPlocs.Hsapiens.dbSNP.20100427)
 %s20 = getSNPlocs("chr20")
 %s20[ s20[,1] == 4814683, ]
 %@

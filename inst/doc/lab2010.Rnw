@@ -339,7 +339,7 @@ d1 = mkCisTransDirector(list(e1,e2), "d2021", "snptab", "probetab", "illuminaHum
 d1
 d1[ "rs6090120", "GI_42734342-S" ]
 @
-You are now managing and interrogating 170 million test results.  By increasing
+You are now managing and interrogating 17 million test results.  By increasing
 the numbers of genes and SNP held in the \texttt{smlSet} instances
 passed to \texttt{eqtlTests} you can increase this.  Interfaces need
 further refinement.
@@ -391,7 +391,8 @@ something like
 \includegraphics{maxscan}
 
 <<lkgg,eval=FALSE,echo=FALSE>>=
-ggg = getGRanges(e2, 1, "GI_25777639-A", "chr20", getNamedLocs(chr="chr20"))
+ggg = getGRanges(e2, 1, "GI_25777639-A", "chr20", 
+   getNamedLocs(slpack="SNPlocs.Hsapiens.dbSNP.20100427", chr="ch20"))
 @
 
 \clearpage
@@ -459,8 +460,8 @@ How many of these exonic variants are already catalogued in
 %the June 2008 dnSNP database?
 the May 2009 dnSNP database?
 <<lkdb>>=
-library(SNPlocs.Hsapiens.dbSNP.20090506)
-s6 = getSNPlocs("chr6")
+library(SNPlocs.Hsapiens.dbSNP.20100427)
+s6 = getSNPlocs("ch6")
 s6[1:5,]
 knownLocs = IRanges(s6$loc, s6$loc)
 indbsnp = ranges(pup238_6x) %in% knownLocs
