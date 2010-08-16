@@ -1,6 +1,7 @@
 \name{eqtlTests}
 \alias{eqtlTests}
 \alias{ieqtlTests}
+\alias{meqtlTests}
 \alias{cisScores}
 \alias{R20}
 %- Also NEED an '\alias' for EACH other topic documented here.
@@ -13,6 +14,7 @@ perform genome x transcriptome eQTL searches with high-performance options
 \usage{
 eqtlTests(smlSet, rhs = ~1 - 1, runname = "foo", targdir = "foo", geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, ...)
 ieqtlTests(smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = "ifoo", geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, ...)
+meqtlTests(listOfSmls, rhslist, runname = "mfoo", targdir = "mfoo", geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, harmonizeSNPs = FALSE, ...)
 cisScores( mgr, ffind=1, chr, snpGR, radius=5e5, applier=lapply ) 
 }
 %- maybe also 'usage' for other objects documented here.
@@ -20,8 +22,16 @@ cisScores( mgr, ffind=1, chr, snpGR, radius=5e5, applier=lapply )
   \item{smlSet}{
 instance of \code{\link[GGBase]{smlSet-class}}
 }
+  \item{listOfSmls}{
+list of instances of \code{\link[GGBase]{smlSet-class}}
+}
   \item{rhs}{
 standard formula without dependent variable; predictors must be found in \code{pData(smlSet)}
+}
+  \item{rhslist}{
+List of standard formulae without dependent variable; predictors for each formula must be found in \code{pData(smlSet)} associated
+with each rhslist element.  In other words, the pData of the kth smlSet in listOfSmls provides the
+data to resolve the symbols in the kth formula of rhslist
 }
   \item{rules}{instance of \code{\link[snpMatrix]{snp.reg.imputation-class}} expressing
 rules by which unobserved SNP are `imputed' (that is, the value used is the
@@ -47,6 +57,11 @@ quantity by which chisquared tests will be inflated before coercion to short int
 }
   \item{computeZ}{
 logical to direct calculation of Zscore instead of X2
+}
+  \item{harmonizeSNPs}{
+logical: it can be time consuming to harmonize SNPs across a long listOfSmls, so you can
+do this outside of the function and set harmonizeSNPs=FALSE; if TRUE, it will be done
+before statistical processing of the data in this function.
 }
   \item{\dots}{
 parameters passed to \code{\link[snpMatrix]{snp.rhs.tests}}
@@ -109,6 +124,10 @@ if (require(multicore)) {
  print(time.lapply)
  print(time.mclapply)
 }
+mm = meqtlTests( list(hm, hm), list(~male, ~male))
+mm
+mm@fflist[[1]][1:4,1:4]
+e1@fflist[[1]][1:4,1:4]  # for nonmissing tests, mm = 2xe1
 #e3 = eqtlTests(hm, ~male, targdir="barz", runname="barz",
 #      geneApply = mclapply, computeZ = TRUE)
 e4 = eqtlTests(hm[1:5,], ~male, runname="abc")

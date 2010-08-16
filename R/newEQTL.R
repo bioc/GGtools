@@ -394,3 +394,68 @@ manhPlot = function( probeid, mgr, ffind, namedlocvec=NULL, locGRanges=NULL,
  invisible(NULL)
 }
  
+meqtlTests = function(listOfSmls, rhslist,
+   runname="mfoo", targdir="mfoo", geneApply=lapply, chromApply=lapply,
+   shortfac = 100, computeZ=FALSE, harmonizeSNPs = FALSE, ... ) {
+ theCall = match.call()
+ sess = sessionInfo()
+ allfeat = lapply(listOfSmls, featureNames)
+ smlSet1 = listOfSmls[[1]]
+ fint = allfeat[[1]]
+ for (i in 2:length(allfeat)) fint = intersect(fint, allfeat[[i]])
+ if (length(fint)==0) stop("null intersection of featureNames for smlSet list elements")
+ listOfSmls = reduceGenes( listOfSmls, probeId(fint) )
+ if (harmonizeSNPs) listOfSmls = makeCommonSNPs( listOfSmls )
+  else if(!isTRUE(checkCommonSNPs( listOfSmls ))) stop("harmonizeSNPs = FALSE but SNPs not common across listOfSmls, run makeCommonSNPs")
+
+ smlSet1 = listOfSmls[[1]]
+ fnhead = paste(targdir, "/", runname, "_", sep="")
+ geneNames = featureNames(smlSet1)
+ chrNames = names(smList(smlSet1))
+ ngenes = length(geneNames)
+ nchr = length(chrNames)
+ system(paste("mkdir", targdir))
+#
+# there will be one ff file per chromosome which will accumulate
+# all information across smlSets
+#
+ targffs = paste( fnhead, "chr", chrNames, ".ff", sep="" )
+ allSnpnames = lapply(smList(listOfSmls[[1]]), colnames)
+ ffRefList = lapply( 1:nchr, function(chr)
+    ff( initdata = 0, dim=c( length(allSnpnames[[chr]]), ngenes),
+        dimnames = list(allSnpnames[[chr]], geneNames), vmode="short",
+        filename=targffs[chr] ))
+ names(ffRefList) = chrNames
+ 
+ cres = chromApply( chrNames, function(chr) {
+  for (theSS in 1:length(listOfSmls)) {
+   smlSet = listOfSmls[[theSS]]
+   store = ffRefList[[chr]]
+   snpdata = smList(smlSet)[[chr]]
+   geneApply( geneNames, function(gene) {
+     ex = exprs(smlSet)[gene,]
+     fmla = formula(paste("ex", paste(as.character(rhslist[[theSS]]),collapse=""), collapse=" "))
+     numans = snp.rhs.tests(fmla, snp.data=snpdata, data=pData(smlSet), family="gaussian", ...)@chisq
+     if (computeZ) {
+       numans = sqrt(numans)
+       signl = snp.rhs.estimates( fmla, snp.data=snpdata, data=pData(smlSet), family="gaussian", ... )
+       bad = which(unlist(lapply(signl, is.null)))
+       if (length(bad)>0) signl[bad] = list(beta=NA)
+       ifelse(unlist(signl)>=0, 1, -1)
+       numans = numans*signl
+     }
+     miss = is.na(numans)
+     if (any(miss) & !computeZ) numans[which(miss)] = rchisq(length(which(miss)), 1)
+     if (any(miss) & computeZ) numans[which(miss)] = rnorm(length(which(miss)))
+     store[, gene, add=TRUE] = shortfac*numans
+     NULL
+     }) # end gene apply
+   } # end iterate over smlSet list
+   store
+  })  # end chr apply
+  names(cres) = chrNames
+  exdate = date()
+  new("eqtlTestsManager", fflist=cres, call=theCall, sess=sess, 
+        exdate=exdate, shortfac=shortfac, geneanno=annotation(smlSet1),
+        df=length(listOfSmls))
+}
