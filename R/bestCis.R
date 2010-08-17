@@ -13,7 +13,7 @@ bestCis = function(ffmgr, slranges, radius=1e6, ffind=1, anno, ncores=10) {
  sspcs = unique(space(slranges))
  if (length(sspcs)>1) warning(paste("slranges included multiple spaces; using", sspcs[1]))
    # find overlaps of gene regions and SNP
- lk = findOverlaps(gr, slranges)[[sspcs[1]]]
+ lk = findOverlaps(gr, slranges)[[as.character(sspcs[1])]]
  querGnames = allg[ lk@matchMatrix[,1] ]
  indPerGene = split(lk@matchMatrix[,2], querGnames)  # some genes will have no overlap
    # rs numbers of SNP cis to each gene
