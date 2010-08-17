@@ -178,7 +178,7 @@ We can use these rules to obtain a richer
 collection of tests for eQTL for CPNE1:
 <<doi>>=
 try(system("rm -rf icpne1"))
-if1 = ieqtlTests(hmFouc[chrnum(20),], ~male, targdir="icpne1",
+if1 = ieqtlTests(hmFouc[chrnum("chr20"),], ~male, targdir="icpne1",
      runname="icpne1",
      rules=imphm3_1KG_20_mA2)
 length(GGtools:::snpIdList(f1)[[1]])
@@ -234,7 +234,7 @@ testing using the dose representation in C20MLDOSE.
 
 The observed genotypes for CEU founders from HapMap phase III are
 <<getcc>>=
-c20obs = smList(hmFouc)[[1]]
+c20obs = smList(hmFouc)[[20]]
 c20obs
 @
 We impute as follows:

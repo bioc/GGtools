@@ -160,7 +160,7 @@ e1i = ieqtlTests(hmi, ~male, rules=imphm3_1KG_20_mA2 )
 e1i
 topFeats( sym = "CPNE1", mgr=e1i, ffind=1, anno="illuminaHumanv1.db" )
 topFeats(probeid="GI_23397697-A", mgr=cd)  
-topFeats(rsid="rs6060535", mgr=cd)
+topFeats(rsid="rs6060632", mgr=cd)
 #
 library(ceu1kg)
 data(ceu1kgMeta_20)
