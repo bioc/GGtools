@@ -3,7 +3,7 @@
 \alias{ieqtlTests}
 \alias{meqtlTests}
 \alias{cisScores}
-\alias{R20}
+\alias{imphm3_1KG_20_mA2}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 perform genome x transcriptome eQTL searches with high-performance options
@@ -84,9 +84,9 @@ where \code{G} is the number of features in \code{exprs(smlSet)}, and \code{S} i
 total number of SNP in \code{smlSet}.  These are stored in \code{ff} files in folder
 \code{targdir}.
 
-\code{R20} is a set of imputation rules for SNP on chromosome 20, where the
+\code{imphm3_1KG_20_mA2} is a set of imputation rules for SNP on chromosome 20, where the
 1000 genomes genotypes distributed in `pilot1' VCF files are used to create
-imputations to loci not covered in the phase 2 hapmap data in \code{hmceuB36.2021}.
+imputations to loci not covered in the phase 3 hapmap data in \code{hm3ceuSMS}.
 }
 \value{
 instance of \code{eqtlTestsManager}
@@ -106,11 +106,12 @@ VJ Carey <stvjc@channing.harvard.edu>
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
-if (!exists("hmceuB36.2021")) data(hmceuB36.2021)
+library(ceuhm3)
+if (!exists("hm3ceuSMS")) data(hm3ceuSMS)
 library(illuminaHumanv1.db)
 cptag = get("CPNE1", revmap(illuminaHumanv1SYMBOL))
-indc = which(featureNames(hmceuB36.2021) == cptag[1])
-hm = hmceuB36.2021[c(indc,1:19),]  # reduce problem
+indc = which(featureNames(hm3ceuSMS) == cptag[1])
+hm = hm3ceuSMS[c(indc,1:19),]  # reduce problem
 td = tempdir()
 curd = getwd()
 setwd(td)
@@ -142,20 +143,20 @@ cd = mkCisTransDirector(list(e4,e5), "demo2x5.sqlite", snptabname="snpnames",
 #
 # first we have specific snp-gene queries
 #
-cd[c("rs885550", "rs169757"), "GI_10047099-S"]
+cd[c("rs6650104", "rs11510103"), "GI_10047091-S"]
 #
 # now we want values for two SNP over all genes 
 #  there were only a few genes so we can look at all
 #
-cd[c("rs885550", "rs169757"),]
+cd[c("rs6650104", "rs11510103"),]
 #
 # now get all SNP for a given gene -- this is a large request
 #
-dem2 = cd[, "GI_10047099-S"]
+dem2 = cd[, "GI_10047091-S"]
 sapply(dem2[[1]], length)
-hmi = hm[ chrnum("20"), ]
-data(R20)
-e1i = ieqtlTests(hmi, ~male, rules=R20 )
+hmi = hm[ chrnum("chr20"), ]
+data(imphm3_1KG_20_mA2)
+e1i = ieqtlTests(hmi, ~male, rules=imphm3_1KG_20_mA2 )
 e1i
 topFeats( sym = "CPNE1", mgr=e1i, ffind=1, anno="illuminaHumanv1.db" )
 topFeats(probeid="GI_23397697-A", mgr=cd)  
@@ -166,7 +167,7 @@ data(ceu1kgMeta_20)
 library(multicore)
 cc = cisScores( e1i, 1, "chr20", ceu1kgMeta_20, applier=mclapply, radius=5e5)
 lapply(cc, function(x) sort(x,decreasing=TRUE)[1:3]) # now check scores obtained under permutation
-e1ip = ieqtlTests(permEx(hmi), ~male, rules=R20, targdir="p1", runname="p1" )
+e1ip = ieqtlTests(permEx(hmi), ~male, rules=imphm3_1KG_20_mA2, targdir="p1", runname="p1" )
 cc2 = cisScores( e1ip, 1, "chr20", ceu1kgMeta_20, applier=mclapply, radius=5e5)
 lapply(cc2, function(x) sort(x,decreasing=TRUE)[1:3])
 setwd(curd)

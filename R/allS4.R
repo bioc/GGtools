@@ -553,7 +553,8 @@ setMethod("show", "cisTransDirector", function(object) {
 setMethod("[", c("cisTransDirector", "character", "character"),
  function (x, i, j, ..., drop = FALSE) 
  {
-    snpListChr = unique(as.character(x@snptabref[i, ]))
+    # following will be an index, so numeric
+    snpListChr = unique(x@snptabref[i, ])
     if (length(snpListChr) > 1) 
         stop("currently only collecting scores for SNP on a single chromosome")
     prinds = as.integer(x@probetabref[j, ])

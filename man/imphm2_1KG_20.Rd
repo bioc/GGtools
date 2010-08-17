@@ -1,14 +1,14 @@
-\name{imphm2_1KG_20}
-\alias{imphm2_1KG_20_mA2}
-\alias{imphm2_1KG_20_mA5}
+\name{imphm3_1KG_20}
+\alias{imphm3_1KG_20_mA2}
+\alias{imphm3_1KG_20_mA5}
 \docType{data}
 \title{
-snpMatrix-generated rules from imputing from HapMap phase II loci to 1000 genomes loci -- for chromosome 20 only
+snpMatrix-generated rules from imputing from HapMap phase III loci to 1000 genomes loci -- for chromosome 20 only
 }
 \description{
-snpMatrix-generated rules from imputing from HapMap phase II loci to 1000 genomes loci -- for chromosome 20 only
+snpMatrix-generated rules from imputing from HapMap phase III loci to 1000 genomes loci -- for chromosome 20 only
 }
-\usage{data(imphm2_1KG_20_mA2)}
+\usage{data(imphm3_1KG_20_mA2)}
 \format{
   The format is:
 Formal class 'snp.reg.imputation' [package "snpMatrix"] with 1 slots \cr
@@ -26,15 +26,15 @@ Formal class 'snp.reg.imputation' [package "snpMatrix"] with 1 slots \cr
   .. ..$ : NULL
 }
 \details{
-Generated with snpMatrix 1.13.1, rules that use the ceu1kg package to
+Generated with snpMatrix 1.13.3, rules that use the ceu1kg package to
 define loci and calls for 1000 genomes genotypes for CEU, to allow imputation
-from the hapmap phase II loci for CEU.  The data object with suffix mA2 was generated with
+from the hapmap phase III loci for CEU.  The data object with suffix mA2 was generated with
 setting mA=2; for suffix mA5, mA was set at 5; see \code{\link[snpMatrix]{snp.imputation}}
 for details on this parameter, which sets the minimum number of observations required for
 an LD determination to be made for SNP tagging or haplotype modeling.
 }
 \source{
-GGtools hmceuB36.2021 was used to define the hapmap phase II loci; locations
+ceuhm3 package was used to define the hapmap phase III loci; locations
 derived from SNPlocs.Hsapiens.dbSNP.20090506; ceu1kg package includes
 metadata and calls derived from the 1000 genomes pilot phase 1 VCF file
 for CEU.
@@ -43,7 +43,7 @@ for CEU.
 %%  ~~ possibly secondary sources and usages ~~
 %}
 \examples{
-data(imphm2_1KG_20_mA2)
-imphm2_1KG_20_mA2[1:10]
+data(imphm3_1KG_20_mA2)
+imphm3_1KG_20_mA2[1:10]
 }
 \keyword{datasets}

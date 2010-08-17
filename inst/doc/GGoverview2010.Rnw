@@ -52,7 +52,7 @@ genome through combination of DNA expression microarray
 and high-density SNP genotyping data.  For Bioconductor
 2.2 we adopted a representation of genotypes due to Clayton
 (in package \Rpackage{snpMatrix}) allowing reasonably
-convenient storage and manipulation of 4 megaSNP phase II
+convenient storage and manipulation of 4 megaSNP phase III
 HapMap genotypes on all the CEPH CEU samples.  This contrasts with
 the previous version of \Rpackage{GGtools} which was limited
 to 550 kiloSNP and 58 CEU founders.
@@ -82,18 +82,19 @@ To give an immediate taste of the capabilities, we
 attach the package and load some test data.
 <<doini>>=
 library(GGtools)
-data(hmceuB36.2021)
-hmceuB36.2021
+library(ceuhm3)
+data(hm3ceuSMS)
+hm3ceuSMS
 @
 Expression data are recoverable in a familiar way:
 <<lkex>>=
-exprs(hmceuB36.2021)[1:5,1:5]
+exprs(hm3ceuSMS)[1:5,1:5]
 @
 
 Genotype data have more complex representation.
 <<lksn>>=
-smList(hmceuB36.2021)
-class(smList(hmceuB36.2021)[["20"]])
+smList(hm3ceuSMS)
+class(smList(hm3ceuSMS)[["chr20"]])
 @
 This shows that we use a named list to hold items
 of the \Rclass{snp.matrix} class from \Rpackage{snpMatrix}.
@@ -101,7 +102,7 @@ of the \Rclass{snp.matrix} class from \Rpackage{snpMatrix}.
 It will generally be unnecessary to probe to this level, but
 it is instructive to check the underlying representation:
 <<lkr>>=
-schunk = smList(hmceuB36.2021)[["20"]]
+schunk = smList(hm3ceuSMS)[["chr20"]]
 schunk@.Data[1:4,1:4]
 @
 The leading zeroes show that a raw byte representation is used.
@@ -121,14 +122,14 @@ Here we execute a founders-only analysis, adjusting for gender,
 confining attention to SNP on chromosome 20.  We isolate
 a single gene, CPNE1, for analysis.
 <<dod>>=
-pd = pData(hmceuB36.2021)
-hmFou = hmceuB36.2021[, which(pd$mothid == 0 & pd$fathid == 0)]
+pd = pData(hm3ceuSMS)
+hmFou = hm3ceuSMS[, which(pd$mothid == 0 & pd$fathid == 0)]
 library(illuminaHumanv1.db)
 pc = get("CPNE1", revmap(illuminaHumanv1SYMBOL))
 hmFouc = hmFou[probeId(pc),]
 hmFouc
 system("rm -rf foo")
-f1 = eqtlTests(hmFouc[chrnum(20),], ~male)
+f1 = eqtlTests(hmFouc[chrnum("chr20"),], ~male)
 f1
 @
 By default, test results are stored in a compact disk-based
@@ -165,13 +166,13 @@ The \textit{snpMatrix} package defines methods for using
 linear and haplotype regression to estimate conditional
 expectations of allele counts for unobserved loci.  We used
 the pilot 1 calls from 1000 genomes (1KG) to define rules
-relating loci observed in phase II HapMap for CEU to
+relating loci observed in phase III HapMap for CEU to
 1KG loci.
 Here are the first 10 rules for a version of the imputation that
 has a liberal approach to allowing LD computations.
 <<getr>>=
-data(imphm2_1KG_20_mA2)
-imphm2_1KG_20_mA2[1:10]
+data(imphm3_1KG_20_mA2)
+imphm3_1KG_20_mA2[1:10]
 @
 We can use these rules to obtain a richer
 collection of tests for eQTL for CPNE1:
@@ -179,7 +180,7 @@ collection of tests for eQTL for CPNE1:
 try(system("rm -rf icpne1"))
 if1 = ieqtlTests(hmFouc[chrnum(20),], ~male, targdir="icpne1",
      runname="icpne1",
-     rules=imphm2_1KG_20_mA2)
+     rules=imphm3_1KG_20_mA2)
 length(GGtools:::snpIdList(f1)[[1]])
 length(GGtools:::snpIdList(if1)[[1]])
 @
@@ -231,14 +232,14 @@ C20MLDOSE[1:5,10:15]
 Note that at this time we do not have any mechanism for high-performance
 testing using the dose representation in C20MLDOSE.
 
-The observed genotypes for CEU founders from HapMap phase II are
+The observed genotypes for CEU founders from HapMap phase III are
 <<getcc>>=
 c20obs = smList(hmFouc)[[1]]
 c20obs
 @
 We impute as follows:
 <<geti>>=
-unix.time(c20imp <- impute.snps( imphm2_1KG_20_mA2, c20obs ))
+unix.time(c20imp <- impute.snps( imphm3_1KG_20_mA2, c20obs ))
 c20imp[1:5,1:5]
 @
 The results need to be placed in compatible structures.

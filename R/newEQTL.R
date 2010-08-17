@@ -171,7 +171,10 @@ mkDirectorDb = function(cd, commonSNPs=TRUE) {
  if (commonSNPs) {
    f1 = fflist(mgrs(cd)[[1]])
    rsids = unlist(lapply(fflist(mgrs(cd)[[1]]), rownames))
-   cn = names(f1)
+# cn here denotes chromosome names.  but we want our
+# ff to be populated with short ints as indices.  so we
+# will use integers ... should work with fflist indexing
+   cn = 1:length(names(f1)) #names(f1)
    chrs = rep(cn, sapply(f1, nrow))
    mgr = rep(1, length(rsids))
    snptabref = vecs2ff( list(snpid=rsids, chr=chrs),  
