@@ -416,7 +416,8 @@ chkeman = function(object){
 
 setClass("eqtlTestsManager",
  representation(fflist="list", call="call", sess="ANY",
-	exdate="ANY", shortfac="numeric", geneanno="character", df="numeric"),
+	exdate="ANY", shortfac="numeric", geneanno="character", df="numeric",
+        summaryList="list"),
         validity=chkeman)
 
 setAs("multffManager", "eqtlTestsManager", function(from) {

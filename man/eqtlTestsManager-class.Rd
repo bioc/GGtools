@@ -2,6 +2,9 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{eqtlTestsManager-class}
+\alias{[,eqtlTestsManager,ANY,ANY,ANY-method}
+\alias{[,eqtlTestsManager,missing,probeId,ANY-method}
+\alias{[,eqtlTestsManager,rsid,missing,ANY,ANY-method}
 \alias{cisTransDirector-class}
 \alias{[,eqtlTestsManager,rsid,probeId,ANY-method}
 \alias{[,cisTransDirector,character,character,ANY-method}
@@ -33,13 +36,17 @@ specified set of managers.
 }
 \section{Slots}{
   \describe{
-    \item{\code{fflist}:}{Object of class \code{"list"} ~~ }
-    \item{\code{call}:}{Object of class \code{"call"} ~~ }
-    \item{\code{sess}:}{Object of class \code{"ANY"} ~~ }
-    \item{\code{exdate}:}{Object of class \code{"ANY"} ~~ }
-    \item{\code{shortfac}:}{Object of class \code{"numeric"} ~~ }
-    \item{\code{geneanno}:}{Object of class \code{"character"} ~~ }
-    \item{\code{df}:}{Object of class \code{"numeric"} ~~ }
+    \item{\code{fflist}:}{Object of class \code{"list"} collection of serialized
+references to ff objects generated per chromosome }
+    \item{\code{call}:}{Object of class \code{"call"} call for auditing }
+    \item{\code{sess}:}{Object of class \code{"ANY"} sessionInfo() result }
+    \item{\code{exdate}:}{Object of class \code{"ANY"} execution date }
+    \item{\code{shortfac}:}{Object of class \code{"numeric"} factor by which short int data are
+inflated for increased resolution }
+    \item{\code{geneanno}:}{Object of class \code{"character"} name of annotation package documenting
+featureNames of expression data }
+    \item{\code{df}:}{Object of class \code{"numeric"} number of degrees of freedom of chi-square
+tests under null hypothesis }
   }
 }
 \section{Methods}{
@@ -64,7 +71,9 @@ VJ Carey <stvjc@channing.harvard.edu>
 }
 \note{
 Instances of this class can be coerced to instances of eqtlTestsManager to facilitate management
-by a cisTransDirector
+by a cisTransDirector.  Objects of class eqtlTestsManager include references to pathnames on the
+system on which the objects are created.  These can be modified if serialized objects are moved along
+with the folder of ff-formatted outputs.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~

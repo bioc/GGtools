@@ -77,11 +77,23 @@ snpIdMap = function (ids, x)
     split(names(map), map)
 }
 
+ffSnpSummary = function(sm,fn,fac=100) {
+ dat = col.summary(sm)
+ maf = fac*dat[,"MAF"]
+ mingtf = fac*apply(dat[,c(5:7)],1,min,na.rm=TRUE)
+ ff(initdata=cbind(maf,mingtf), vmode="short", dim=c(length(maf),2),filename=fn,
+     dimnames=list(colnames(sm), c("MAF", "mGTF")))
+}
+
+
  
 eqtlTests = function(smlSet, rhs=~1-1,
    runname="foo", targdir="foo", geneApply=lapply, chromApply=lapply,
-   shortfac = 100, computeZ=FALSE, ... ) {
+   shortfac = 100, computeZ=FALSE, checkValid=TRUE, saveSummaries=TRUE, ... ) {
  theCall = match.call()
+ if (checkValid) {
+   tmp = validObject(smlSet)
+   }
  sess = sessionInfo()
  fnhead = paste(targdir, "/", runname, "_", sep="")
  geneNames = featureNames(smlSet)
@@ -89,6 +101,19 @@ eqtlTests = function(smlSet, rhs=~1-1,
  ngenes = length(geneNames)
  nchr = length(chrNames)
  system(paste("mkdir", targdir))
+ summfflist = list()
+ if (saveSummaries) {
+  # get MAF and minGTF for all SNP
+  sumfn = paste(fnhead, chrNames, "_summ.ff", sep="")
+  if (require(multicore)) {
+    summfflist = mclapply( 1:length(chrNames), function(i) ffSnpSummary(smList(smlSet)[[i]], sumfn[i], 
+         fac=shortfac)) 
+    } else {
+          for (i in 1:length(sumfn))
+              summfflist[[chrNames[i]]] = ffSnpSummary(smList(smlSet)[[i]], sumfn[i])
+          }
+  # ok, now just save references in object
+  }
  cres = chromApply( chrNames, function(chr) {
    snpdata = smList(smlSet)[[chr]]
    #targff = paste( fnhead, "chr", chr, "_", "g", gene, ".ff" , sep="" )
@@ -121,7 +146,7 @@ eqtlTests = function(smlSet, rhs=~1-1,
   exdate = date()
   new("eqtlTestsManager", fflist=cres, call=theCall, sess=sess, 
         exdate=exdate, shortfac=shortfac, geneanno=annotation(smlSet),
-        df=1)
+        df=1, summaryList=summfflist)
 }
 
 # director for group of managers
@@ -305,7 +330,7 @@ snpIdsCisToGenes = function( mgr, chr, snpGR, radius=5e5 ) {
  cisrs
 }
 
-cisScores = function( mgr, ffind=1, chr, snpGR, radius=5e5, applier=lapply ) {
+OLDcisScores = function( mgr, ffind=1, chr, snpGR, radius=5e5, applier=lapply ) {
  cisrs = snpIdsCisToGenes( mgr, chr, snpGR, radius )
  onboard = rownames(mgr@fflist[[ffind]])
  cisrs = lapply(cisrs, function(x) intersect(onboard, x))
@@ -318,7 +343,37 @@ cisScores = function( mgr, ffind=1, chr, snpGR, radius=5e5, applier=lapply ) {
  ans
 }
 
- 
+cisScores = function (mgr, ffind = 1, chr, snpGR, radius = 5e+05, applier = lapply, 
+    minMAF = 0, minGTF = 0) 
+{
+    cisrs = snpIdsCisToGenes(mgr, chr, snpGR, radius)
+    onboard = rownames(mgr@fflist[[ffind]])
+    cisrs = lapply(cisrs, function(x) intersect(onboard, x))
+    ans = applier(1:length(cisrs), function(x) {
+        scores = as.ram(mgr@fflist[[ffind]][cisrs[[x]], names(cisrs)[x]])/mgr@shortfac
+        names(scores) = cisrs[[x]]
+        scores
+    })
+    okinds = NULL
+    if (minMAF > 0) {
+        maf = as.numeric(mgr@summaryList[[ffind]][, "MAF"])
+        okinds = which(maf >= minMAF)
+    }
+    if (minGTF > 0) {
+        mgtf = as.numeric(mgr@summaryList[[ffind]][, "mGTF"])
+        tmp = which(mgtf >= minGTF)
+        if (!is.null(okinds)) 
+            okinds = intersect(tmp, okinds)
+        else okinds = tmp
+    }
+    if (!is.null(okinds)) {
+        okrs = rownames(mgr@summaryList[[ffind]])[okinds]
+        ans = lapply(ans, function(x) x[intersect(okrs, names(x))])
+    }
+    names(ans) = names(cisrs)
+    ans
+}
+
 eqtlTestsMACH = function(smlSet, machmat, rhs=~1-1,
    runname="foo", targdir="foo", geneApply=lapply, chromApply=lapply,
    shortfac = 100, computeZ=FALSE, ... ) {
