@@ -356,11 +356,11 @@ cisScores = function (mgr, ffind = 1, chr, snpGR, radius = 5e+05, applier = lapp
     })
     okinds = NULL
     if (minMAF > 0) {
-        maf = as.numeric(mgr@summaryList[[ffind]][, "MAF"])
+        maf = as.numeric(mgr@summaryList[[ffind]][, "MAF"])/mgr@shortfac
         okinds = which(maf >= minMAF)
     }
     if (minGTF > 0) {
-        mgtf = as.numeric(mgr@summaryList[[ffind]][, "mGTF"])
+        mgtf = as.numeric(mgr@summaryList[[ffind]][, "mGTF"])/mgr@shortfac
         tmp = which(mgtf >= minGTF)
         if (!is.null(okinds)) 
             okinds = intersect(tmp, okinds)
