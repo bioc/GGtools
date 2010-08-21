@@ -12,7 +12,7 @@ compute numerical matrix of chisq statistics in a genomic interval
 }
 \usage{
 X2chunk(mgr, ffind, start, end, snplocs, anno, useSym)
-topFeats( probeid=NULL, sym=NULL, rsid=NULL, mgrOrCTD, ffind, anno, n=10, useSym=TRUE )
+topFeats( probeid=NULL, sym=NULL, rsid=NULL, mgrOrCTD, ffind, anno, n=10, useSym=TRUE, minMAF=0, minGTF=0 )
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -53,6 +53,12 @@ used in column names of ff matrix
   \item{useSym}{
 logical indicating whether colnames of return should be gene symbols derived
 from \code{anno}
+}
+  \item{minMAF}{
+numeric lower bound on minor allele frequency of SNPs to be considered
+}
+  \item{minGTF}{
+numeric lower bound on minimum genotype frequency of SNPs to be considered
 }
 }
 \details{

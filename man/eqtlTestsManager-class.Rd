@@ -5,6 +5,7 @@
 \alias{[,eqtlTestsManager,ANY,ANY,ANY-method}
 \alias{[,eqtlTestsManager,missing,probeId,ANY-method}
 \alias{[,eqtlTestsManager,rsid,missing,ANY,ANY-method}
+\alias{[,eqtlTestsManager,rsid,missing,ANY-method}
 \alias{cisTransDirector-class}
 \alias{[,eqtlTestsManager,rsid,probeId,ANY-method}
 \alias{[,cisTransDirector,character,character,ANY-method}

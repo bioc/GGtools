@@ -38,11 +38,11 @@ topFeats = function(probeid=NULL, sym=NULL, rsid=NULL, mgrOrCTD, ffind, anno, n=
 # deal with posthoc filtering
  okinds = NULL
      if (minMAF > 0) {
-         maf = as.numeric(mgrOrCTD@summaryList[[ffind]][, "MAF"])/mgr@shortfac
+         maf = as.numeric(mgrOrCTD@summaryList[[ffind]][, "MAF"])/mgrOrCTD@shortfac
          okinds = which(maf >= minMAF)
      }
      if (minGTF > 0) {
-         mgtf = as.numeric(mgrOrCTD@summaryList[[ffind]][, "mGTF"])/mgr@shortfac
+         mgtf = as.numeric(mgrOrCTD@summaryList[[ffind]][, "mGTF"])/mgrOrCTD@shortfac
          tmp = which(mgtf >= minGTF)
          if (!is.null(okinds)) 
              okinds = intersect(tmp, okinds)
