@@ -77,7 +77,7 @@ do this outside of the function and set harmonizeSNPs=FALSE; if TRUE, it will be
 before statistical processing of the data in this function.
 }
   \item{\dots}{
-parameters passed to \code{\link[snpMatrix]{snp.rhs.tests}}
+parameters passed to \code{\link[snpMatrix]{snp.rhs.tests}}; see note below.
 }
   \item{mgr}{an instance of \code{eqtlTestsManager}}
   \item{ffind}{index into the list of ff files managed by \code{mgr} to be used for
@@ -110,7 +110,11 @@ instance of \code{eqtlTestsManager}
 VJ Carey <stvjc@channing.harvard.edu>
 }
 \note{
-If minMAF and minGTF are both zero, all SNP are reported.
+If minMAF and minGTF are both zero, cisScores
+will report on all SNP cis to the genes in the manager instance.
+
+The ... for \code{[i,m]eqtlTests} can include a setting of the family parameter.  If none
+is specified, family for \code{\link[snpMatrix]{snp.rhs.tests}} will be set to "gaussian".
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~

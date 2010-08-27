@@ -94,6 +94,7 @@ eqtlTests = function(smlSet, rhs=~1-1,
  if (checkValid) {
    tmp = validObject(smlSet)
    }
+ if (missing(family)) family="gaussian"
  sess = sessionInfo()
  fnhead = paste(targdir, "/", runname, "_", sep="")
  geneNames = featureNames(smlSet)
@@ -125,10 +126,10 @@ eqtlTests = function(smlSet, rhs=~1-1,
    geneApply( geneNames, function(gene) {
      ex = exprs(smlSet)[gene,]
      fmla = formula(paste("ex", paste(as.character(rhs),collapse=""), collapse=" "))
-     numans = snp.rhs.tests(fmla, snp.data=snpdata, data=pData(smlSet), family="gaussian", ...)@chisq
+     numans = snp.rhs.tests(fmla, snp.data=snpdata, data=pData(smlSet), family=family, ...)@chisq
      if (computeZ) {
        numans = sqrt(numans)
-       signl = snp.rhs.estimates( fmla, snp.data=snpdata, data=pData(smlSet), family="gaussian", ... )
+       signl = snp.rhs.estimates( fmla, snp.data=snpdata, data=pData(smlSet), family=family, ... )
        bad = which(unlist(lapply(signl, is.null)))
        if (length(bad)>0) signl[bad] = list(beta=NA)
        ifelse(unlist(signl)>=0, 1, -1)
@@ -226,6 +227,7 @@ ieqtlTests = function (smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = 
     computeZ = FALSE, ...) 
 {
     theCall = match.call()
+    if (missing(family)) family="gaussian"
     sess = sessionInfo()
     fnhead = paste(targdir, "/", runname, "_", sep = "")
     geneNames = featureNames(smlSet)
@@ -245,15 +247,15 @@ ieqtlTests = function (smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = 
             fmla = formula(paste("ex", paste(as.character(rhs), 
                 collapse = ""), collapse = " "))
             numans = snp.rhs.tests(fmla, snp.data = snpdata, 
-                data = pData(smlSet), family = "gaussian", ...)@chisq
+                data = pData(smlSet), family = family, ...)@chisq
             numansi = snp.rhs.tests(fmla, snp.data = snpdata, 
-                data = pData(smlSet), family = "gaussian", rules = rules, 
+                data = pData(smlSet), family = family, rules = rules, 
                 ...)@chisq
             numans = c(numans, numansi)
             if (computeZ) {
                 numans = sqrt(numans)
                 signl = snp.rhs.estimates(fmla, snp.data = snpdata, 
-                  data = pData(smlSet), family = "gaussian", 
+                  data = pData(smlSet), family = family, 
                   ...)
                 bad = which(unlist(lapply(signl, is.null)))
                 if (length(bad) > 0) 
@@ -379,6 +381,7 @@ eqtlTestsMACH = function(smlSet, machmat, rhs=~1-1,
    shortfac = 100, computeZ=FALSE, ... ) {
  theCall = match.call()
  sess = sessionInfo()
+ if (missing(family)) family="gaussian"
  fnhead = paste(targdir, "/", runname, "_", sep="")
  geneNames = featureNames(smlSet)
  chrNames = names(smList(smlSet))
@@ -396,7 +399,7 @@ eqtlTestsMACH = function(smlSet, machmat, rhs=~1-1,
    geneApply( geneNames, function(gene) {
      ex = exprs(smlSet)[gene,]
      fmla = formula(paste("ex", paste(as.character(rhs),collapse=""), collapse=" "))
-     numans = snp.rhs.testsMACH(fmla, snp.data=snpdata, data=pData(smlSet), family="gaussian", ...)@chisq
+     numans = snp.rhs.testsMACH(fmla, snp.data=snpdata, data=pData(smlSet), family=family, ...)@chisq
      if (computeZ) {
        stop("not handled")
        numans = sqrt(numans)
@@ -457,6 +460,7 @@ meqtlTests = function(listOfSmls, rhslist,
    shortfac = 100, computeZ=FALSE, harmonizeSNPs = FALSE, ... ) {
  theCall = match.call()
  sess = sessionInfo()
+ if (missing(family)) family="gaussian"
  allfeat = lapply(listOfSmls, featureNames)
  smlSet1 = listOfSmls[[1]]
  fint = allfeat[[1]]
@@ -493,10 +497,10 @@ meqtlTests = function(listOfSmls, rhslist,
    geneApply( geneNames, function(gene) {
      ex = exprs(smlSet)[gene,]
      fmla = formula(paste("ex", paste(as.character(rhslist[[theSS]]),collapse=""), collapse=" "))
-     numans = snp.rhs.tests(fmla, snp.data=snpdata, data=pData(smlSet), family="gaussian", ...)@chisq
+     numans = snp.rhs.tests(fmla, snp.data=snpdata, data=pData(smlSet), family=family, ...)@chisq
      if (computeZ) {
        numans = sqrt(numans)
-       signl = snp.rhs.estimates( fmla, snp.data=snpdata, data=pData(smlSet), family="gaussian", ... )
+       signl = snp.rhs.estimates( fmla, snp.data=snpdata, data=pData(smlSet), family=family, ... )
        bad = which(unlist(lapply(signl, is.null)))
        if (length(bad)>0) signl[bad] = list(beta=NA)
        ifelse(unlist(signl)>=0, 1, -1)
