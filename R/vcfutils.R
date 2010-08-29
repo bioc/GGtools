@@ -78,3 +78,28 @@ gran=10000) {
  colnames(mat) = rsid
  new("snp.matrix", mat)
 }
+
+vcf2smTXT = function (txtpath, meta, nmetacol = 9, verbose = FALSE) 
+{
+    require(snpMatrix)
+    mm = meta
+    sampids = sampleIDs(mm, ndrop = nmetacol)
+    on.exit(close(fpipe))
+    fpipe = pipe(paste("cat", txtpath))#  filterVCF(gzpath, chrom, return.pipe = TRUE, tabixcmd = tabixcmd)
+    out = list()
+    i = 1
+    while (length(tmp <- readLines(fpipe, n = 1)) > 0) {
+        out[[i]] = parseVCFrec(tmp, nmetacol = nmetacol)
+        if (verbose & (i%%1000) == 0)
+            cat(i)
+        i = i + 1
+    }
+    rsid = sapply(out, "[[", "id")
+    nsnp = length(out)
+    mat = matrix(as.raw(0), nr = length(sampids), ncol = nsnp)
+    for (i in 1:nsnp) mat[, i] = out[[i]]$calls
+    rownames(mat) = sampids
+    colnames(mat) = rsid
+    new("snp.matrix", mat)
+}
+
