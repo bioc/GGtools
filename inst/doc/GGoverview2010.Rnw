@@ -43,6 +43,7 @@
 \title{Overview of GGtools for expression genetics: for 3.7.x}
 \author{VJ Carey stvjc at channing.harvard.edu}
 \maketitle
+\tableofcontents
 
 \section{Introduction}
 
@@ -219,18 +220,14 @@ MACH}
 
 Blanca Himes of the Channing Laboratory, Boston, ran the MACH imputation
 program to compute imputed 'dose' measures based on a
-certain set of calls for CEU, perhaps HapMap phase III.  The \textit{ceu1kg}
-experimental data package of Bioconductor includes the results
-of this application of MACH
-for chromosome 20 of CEPH CEU.
+certain set of calls for CEU, perhaps HapMap phase III.  The \code{m20}
+data object for this package includes the results of importing
+the \texttt{mlprob} MACH output for chromosome 20 after imputing
+to the 1000 genomes loci.
 <<lkmach>>=
-library(ceu1kg)
-if (!exists("C20MLDOSE")) data(C20MLDOSE)
-dim(C20MLDOSE)
-C20MLDOSE[1:5,10:15]
+data(m20)
+as(m20, "numeric")[1:10,1:8]
 @
-Note that at this time we do not have any mechanism for high-performance
-testing using the dose representation in C20MLDOSE.
 
 The observed genotypes for CEU founders from HapMap phase III are
 <<getcc>>=
@@ -246,10 +243,8 @@ The results need to be placed in compatible structures.
 We will use C20D to hold the allele dose measurements from 
 MACH and R20D to hold the snpMatrix regression-based expected allele counts.
 <<lkcom,keep.source=TRUE>>=
-tc20imp = t(c20imp)  # cols are samples
-                     # restrict to common samples
-C20D = C20MLDOSE[, intersect(colnames(C20MLDOSE), colnames(tc20imp))]
-R20D = tc20imp[, intersect(colnames(C20MLDOSE), colnames(tc20imp))]
+C20D = m20[, intersect(colnames(m20), colnames(c20imp))]
+R20D = c20imp[, intersect(colnames(m20), colnames(c20imp))]
 oksnp = intersect(rownames(C20D), rownames(R20D))
 length(oksnp)
 C20D = C20D[oksnp,]
@@ -259,16 +254,16 @@ R20D = R20D[oksnp,]
 Let's check the basic characteristics of these different imputations.
 First, how many loci are imputed by MACH?
 <<lkim>>=
-length(mimp <- setdiff(rownames(C20MLDOSE), colnames(c20obs)))
+length(mimp <- setdiff(colnames(m20), colnames(c20obs)))
 @
 Of these, how many are monomorphic or close to monomorphic?
 <<domon>>=
-news = C20MLDOSE[ mimp, ]
-vn = apply(news, 1, var)
+news = m20[, mimp ]
+vn = apply(news, 2, var)
 sum(vn==0)
 sum(vn < 0.01)
 @
-The latter result shows that there are over 7000 SNP for which MACH
+The latter result shows that there are over 2000 SNP for which MACH
 is willing to impute a single het against 109 homozygous individuals.
 Let's look at an example:
 <<ex>>=
@@ -282,9 +277,9 @@ Let's now consider loci imputed by MACH but not by snpMatrix.
 notreg = colnames(c20imp)[ which(apply(c20imp,2,function(x)all(is.na(x)))) ]
 inmachNR = intersect( mimp, notreg )
 length(inmachNR)
-C20MLDOSE[inmachNR[1:5],1:10]
-table(C20MLDOSE[inmachNR[1],])
-table(C20MLDOSE[inmachNR[2],])
+m20[inmachNR[1:5],1:10]
+table(m20[inmachNR[1],])
+table(m20[inmachNR[2],])
 library(ceu1kg)
 if (!exists("ceu1KG.sml")) data(ceu1KG.sml)
 rawc20 = ceu1KG.sml[[20]]
