@@ -79,18 +79,18 @@ gran=10000) {
  new("snp.matrix", mat)
 }
 
-vcf2smTXT = function (txtpath, meta, nmetacol = 9, verbose = FALSE) 
+vcf2smTXT = function (txtpath, meta, nmetacol = 9, verbose = FALSE, gran=10000) 
 {
     require(snpMatrix)
     mm = meta
     sampids = sampleIDs(mm, ndrop = nmetacol)
     on.exit(close(fpipe))
-    fpipe = pipe(paste("cat", txtpath))#  filterVCF(gzpath, chrom, return.pipe = TRUE, tabixcmd = tabixcmd)
+    fpipe = pipe(paste("cat", txtpath), open="r")#  filterVCF(gzpath, chrom, return.pipe = TRUE, tabixcmd = tabixcmd)
     out = list()
     i = 1
     while (length(tmp <- readLines(fpipe, n = 1)) > 0) {
         out[[i]] = parseVCFrec(tmp, nmetacol = nmetacol)
-        if (verbose & (i%%1000) == 0)
+        if (verbose & (i%%gran) == 0)
             cat(i)
         i = i + 1
     }
