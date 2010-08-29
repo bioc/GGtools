@@ -56,7 +56,8 @@ parseVCFrec = function(rec, nmetacol=9 ) {
    calls=as.raw(nalt))
 }
 
-vcf2sm = function(gzpath, chrom, tabixcmd = "tabix", nmetacol=9, verbose=FALSE) {
+vcf2sm = function(gzpath, chrom, tabixcmd = "tabix", nmetacol=9, verbose=FALSE,
+gran=10000) {
  require(snpMatrix)
  mm = getMetaVCF( gzfile(gzpath, "r") )
  sampids = sampleIDs(mm, ndrop=nmetacol)
@@ -66,7 +67,7 @@ vcf2sm = function(gzpath, chrom, tabixcmd = "tabix", nmetacol=9, verbose=FALSE) 
  i = 1
  while ( length(tmp <- readLines(fpipe, n=1))>0) {
   out[[i]] = parseVCFrec( tmp, nmetacol=nmetacol )
-  if (verbose & (i%%1000)==0) cat(i)
+  if (verbose & (i%%gran)==0) cat(i)
   i = i+1
   }
  rsid = sapply(out, "[[", "id")
