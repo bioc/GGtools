@@ -89,7 +89,7 @@ ffSnpSummary = function(sm,fn,fac=100) {
  
 eqtlTests = function(smlSet, rhs=~1-1,
    runname="foo", targdir="foo", geneApply=lapply, chromApply=lapply,
-   shortfac = 100, computeZ=FALSE, checkValid=TRUE, saveSummaries=TRUE, ... ) {
+   shortfac = 100, computeZ=FALSE, checkValid=TRUE, saveSummaries=TRUE, family, ... ) {
  theCall = match.call()
  if (checkValid) {
    tmp = validObject(smlSet)
@@ -224,7 +224,7 @@ mkDirectorDb = function(cd, commonSNPs=TRUE) {
 
 ieqtlTests = function (smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = "ifoo", 
     geneApply = lapply, chromApply = lapply, shortfac = 100, 
-    computeZ = FALSE, ...) 
+    computeZ = FALSE, family, ...) 
 {
     theCall = match.call()
     if (missing(family)) family="gaussian"
@@ -378,7 +378,7 @@ cisScores = function (mgr, ffind = 1, chr, snpGR, radius = 5e+05, applier = lapp
 
 eqtlTestsMACH = function(smlSet, machmat, rhs=~1-1,
    runname="foo", targdir="foo", geneApply=lapply, chromApply=lapply,
-   shortfac = 100, computeZ=FALSE, ... ) {
+   shortfac = 100, computeZ=FALSE, family, ... ) {
  theCall = match.call()
  sess = sessionInfo()
  if (missing(family)) family="gaussian"
@@ -457,7 +457,7 @@ manhPlot = function( probeid, mgr, ffind, namedlocvec=NULL, locGRanges=NULL,
  
 meqtlTests = function(listOfSmls, rhslist,
    runname="mfoo", targdir="mfoo", geneApply=lapply, chromApply=lapply,
-   shortfac = 100, computeZ=FALSE, harmonizeSNPs = FALSE, ... ) {
+   shortfac = 100, computeZ=FALSE, harmonizeSNPs = FALSE, family, ... ) {
  theCall = match.call()
  sess = sessionInfo()
  if (missing(family)) family="gaussian"
