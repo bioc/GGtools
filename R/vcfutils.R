@@ -103,3 +103,30 @@ vcf2smTXT = function (txtpath, meta, nmetacol = 9, verbose = FALSE, gran=10000)
     new("snp.matrix", mat)
 }
 
+vcf2metaloc = function(gzpath, chrom, tabixcmd = "tabix", nmetacol=9, verbose=FALSE,
+gran=10000) {
+ require(snpMatrix)
+ mm = getMetaVCF( gzfile(gzpath, "r") )
+ sampids = sampleIDs(mm, ndrop=nmetacol)
+ on.exit(close(fpipe))
+ fpipe = filterVCF( gzpath, chrom, return.pipe = TRUE, tabixcmd = tabixcmd )
+ out = list()
+ i = 1
+ while ( length(tmp <- readLines(fpipe, n=1))>0) {
+  out[[i]] = parseVCFrec( tmp, nmetacol=nmetacol )
+  if (verbose & (i%%gran)==0) cat(i)
+  i = i+1
+  }
+ rsid = sapply(out, "[[", "id")
+ locs = as.numeric(sapply(out, "[[", "loc"))
+ ref = sapply(out, "[[", "ref")
+ alt = sapply(out, "[[", "alt")
+ depth = sapply(out, "[[", "depth")
+ depth = gsub(".*DP=", "", depth)
+ depth = as.numeric(depth)
+ require(GenomicRanges)
+ rng = GRanges(seqnames=paste("chr", chrom, sep=""), IRanges(start=locs, width=1))
+ names(rng) = rsid
+ elementMetadata(rng) = DataFrame(ref=ref, alt=alt, depth=depth)
+ rng
+}
