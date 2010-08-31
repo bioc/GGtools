@@ -3,7 +3,7 @@
 \alias{ieqtlTests}
 \alias{meqtlTests}
 \alias{cisScores}
-%\alias{imphm3_1KG_20_mA2}
+\alias{imphm3_1KG_20_mA2}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 perform genome x transcriptome eQTL searches with high-performance options
@@ -12,10 +12,13 @@ perform genome x transcriptome eQTL searches with high-performance options
 perform genome x transcriptome eQTL searches with high-performance options
 }
 \usage{
-eqtlTests(smlSet, rhs = ~1 - 1, runname = "foo", targdir = "foo", geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, checkValid = TRUE, saveSummaries=TRUE, ...)
-ieqtlTests(smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = "ifoo", geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, ...)
-meqtlTests(listOfSmls, rhslist, runname = "mfoo", targdir = "mfoo", geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, harmonizeSNPs = FALSE, ...)
-cisScores( mgr, ffind=1, chr, snpGR, radius=5e5, applier=lapply, minMAF=0, minGTF=0 ) 
+eqtlTests(smlSet, rhs = ~1 - 1, runname = "foo", targdir = "foo", 
+	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, family, ...)
+ieqtlTests(smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = "ifoo", 
+	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, family, ...)
+meqtlTests(listOfSmls, rhslist, runname = "mfoo", targdir = "mfoo", 
+	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, harmonizeSNPs = FALSE, family, ...)
+cisScores( mgr, ffind=1, chr, snpGR, radius=5e5, applier=lapply ) 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -58,26 +61,14 @@ quantity by which chisquared tests will be inflated before coercion to short int
   \item{computeZ}{
 logical to direct calculation of Zscore instead of X2
 }
- \item{checkValid}{
-logical to request run of validObject on input smlSet instance before
-further processing
-}
-  \item{saveSummaries}{
-logical to save ff data on minor allele and genotype frequencies for later filtering
-}
-  \item{minMAF}{
-numeric lower bound on minor allele frequency for SNP to be used in reporting
-}
-  \item{minGTF}{
-numeric lower bound on minimum genotype frequency for SNP to be used in reporting
-}
   \item{harmonizeSNPs}{
 logical: it can be time consuming to harmonize SNPs across a long listOfSmls, so you can
 do this outside of the function and set harmonizeSNPs=FALSE; if TRUE, it will be done
 before statistical processing of the data in this function.
 }
+  \item{family}{specify the GLM family to use; defaults to 'gaussian' if left missing}
   \item{\dots}{
-parameters passed to \code{\link[snpMatrix]{snp.rhs.tests}}; see note below.
+parameters passed to \code{\link[snpMatrix]{snp.rhs.tests}}
 }
   \item{mgr}{an instance of \code{eqtlTestsManager}}
   \item{ffind}{index into the list of ff files managed by \code{mgr} to be used for
@@ -109,13 +100,9 @@ instance of \code{eqtlTestsManager}
 \author{
 VJ Carey <stvjc@channing.harvard.edu>
 }
-\note{
-If minMAF and minGTF are both zero, cisScores
-will report on all SNP cis to the genes in the manager instance.
-
-The ... for \code{[i,m]eqtlTests} can include a setting of the family parameter.  If none
-is specified, family for \code{\link[snpMatrix]{snp.rhs.tests}} will be set to "gaussian".
-}
+%\note{
+%%%  ~~further notes~~
+%}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
@@ -129,37 +116,23 @@ library(illuminaHumanv1.db)
 cptag = get("CPNE1", revmap(illuminaHumanv1SYMBOL))
 indc = which(featureNames(hm3ceuSMS) == cptag[1])
 hm = hm3ceuSMS[c(indc,1:19),]  # reduce problem
-hm = hm[ chrnum(c("chr20", "chr21")), ]
 td = tempdir()
 curd = getwd()
 setwd(td)
 time.lapply = unix.time(e1 <- eqtlTests( hm, ~male ))
 e1
-# demonstrate late filtering with minGTF
-library(ceu1kg)
-data(ceu1kgMeta_20)
+dir("foo")
 if (require(multicore)) {
-cc1 = cisScores( e1, 1, "chr20", ceu1kgMeta_20, applier=mclapply, radius=5e5)
-cc2 = cisScores( e1, 1, "chr20", ceu1kgMeta_20, applier=mclapply, radius=5e5, minGTF=.15)
-sapply(cc1,length)
-sapply(cc2,length)
-}
-#dir("foo")
-\dontrun{
- if (require(multicore)) {
-  time.mclapply = unix.time(e2 <- eqtlTests(hm, ~male, targdir="bar", runname="bar",
- #      geneApply = mclapply ) )
-       chromApply = mclapply ) )
-  print(time.lapply)
-  print(time.mclapply)
- }
+ time.mclapply = unix.time(e2 <- eqtlTests(hm, ~male, targdir="bar", runname="bar",
+#      geneApply = mclapply ) )
+      chromApply = mclapply ) )
+ print(time.lapply)
+ print(time.mclapply)
 }
 mm = meqtlTests( list(hm, hm), list(~male, ~male))
 mm
 mm@fflist[[1]][1:4,1:4]
 e1@fflist[[1]][1:4,1:4]  # for nonmissing tests, mm = 2xe1
-#e3 = eqtlTests(hm, ~male, targdir="barz", runname="barz",
-#      geneApply = mclapply, computeZ = TRUE)
 e4 = eqtlTests(hm[1:5,], ~male, runname="abc")
 e5 = eqtlTests(hm[6:10,], ~male, runname="def")
 #
@@ -167,17 +140,18 @@ e5 = eqtlTests(hm[6:10,], ~male, runname="def")
 #  here we take the managers for two gene sets (1:5, 6:10)
 #  and create the director that allows queries across them
 #
-cd = mkCisTransDirector(list(e4,e5), "demo2x5.sqlite", snptabname="snpnames", 
-       probetabname="probenames", probeanno=hm@annotation, commonSNPs=TRUE)
+cd = mkCisTransDirector(list(e4,e5), "demo2x5.sqlite", 
+	snptabname="snpnames", probetabname="probenames", 
+	probeanno=hm@annotation, commonSNPs=TRUE)
 #
 # first we have specific snp-gene queries
 #
-cd[c("rs4814683", "rs6139074"), "GI_10047091-S"]
+cd[c("rs6650104", "rs11510103"), "GI_10047091-S"]
 #
 # now we want values for two SNP over all genes 
 #  there were only a few genes so we can look at all
 #
-cd[c("rs4814683", "rs6139074"),]
+cd[c("rs6650104", "rs11510103"),]
 #
 # now get all SNP for a given gene -- this is a large request
 #
@@ -191,15 +165,14 @@ topFeats( sym = "CPNE1", mgr=e1i, ffind=1, anno="illuminaHumanv1.db" )
 topFeats(probeid="GI_23397697-A", mgr=cd)  
 topFeats(rsid="rs6060632", mgr=cd)
 #
-\dontrun{
-# illustration of cisScores functionality
- library(multicore)
- cc = cisScores( e1i, 1, "chr20", ceu1kgMeta_20, applier=mclapply, radius=5e5)
- lapply(cc, function(x) sort(x,decreasing=TRUE)[1:3]) # now check scores obtained under permutation
- e1ip = ieqtlTests(permEx(hmi), ~male, rules=imphm3_1KG_20_mA2, targdir="p1", runname="p1" )
- cc2 = cisScores( e1ip, 1, "chr20", ceu1kgMeta_20, applier=mclapply, radius=5e5)
- lapply(cc2, function(x) sort(x,decreasing=TRUE)[1:3])
-}
- setwd(curd)
+library(ceu1kg)
+data(ceu1kgMeta_20)
+library(multicore)
+cc = cisScores( e1i, 1, "chr20", ceu1kgMeta_20, applier=mclapply, radius=5e5)
+lapply(cc, function(x) sort(x,decreasing=TRUE)[1:3]) # now check scores obtained under permutation
+e1ip = ieqtlTests(permEx(hmi), ~male, rules=imphm3_1KG_20_mA2, targdir="p1", runname="p1" )
+cc2 = cisScores( e1ip, 1, "chr20", ceu1kgMeta_20, applier=mclapply, radius=5e5)
+lapply(cc2, function(x) sort(x,decreasing=TRUE)[1:3])
+setwd(curd)
 }
 \keyword{ models }
