@@ -25,7 +25,7 @@ max chisq stats per SNP (over genes) or per gene (over SNP)}
 Class \code{"\linkS4class{list}"}, from data part.
 Class \code{"\linkS4class{vector}"}, by class "list", distance 2.
 Class \code{"\linkS4class{AssayData}"}, by class "list", distance 2.
-Class \code{"\link[IRanges]{vectorORfactor-class}"}, by class "list", distance 3.
+Class vectorORfactor, by class "list", distance 3.
 }
 \section{Methods}{
   \describe{

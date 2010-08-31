@@ -281,8 +281,12 @@ ieqtlTests = function (smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = 
         df = 1)
 }
 
-getNamedLocs = function(slpack="SNPlocs.Hsapiens.dbSNP.20090506", chrtok) {
+getNamedLocs = function(slpack="SNPlocs.Hsapiens.dbSNP.20100427", chrtok) {
  require(slpack, character.only=TRUE)
+ if (slpack == "SNPlocs.Hsapiens.dbSNP.20100427" && length(grep("chr", chrtok))>0) {
+    chrtok = gsub("chr", "ch", chrtok)
+    warning("don't use chrNN with 20100427 snplocs package ... trying chNN ...")
+    }
  locdf = getSNPlocs(chrtok)
  rsid = paste("rs", locdf$RefSNP_id, sep="")
  locs = locdf$loc

@@ -8,7 +8,7 @@ get a named vector of SNP locations
 get a named vector of SNP locations
 }
 \usage{
-getNamedLocs(slpack = "SNPlocs.Hsapiens.dbSNP.20090506", chrtok)
+getNamedLocs(slpack = "SNPlocs.Hsapiens.dbSNP.20100427", chrtok)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -45,7 +45,7 @@ should eventually give way to GRanges processing
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
-nn = getNamedLocs(chr="chr20")
+nn = getNamedLocs(chr="ch20")
 length(nn)
 nn[1:5]
 }
