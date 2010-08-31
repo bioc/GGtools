@@ -1,5 +1,5 @@
 %\VignetteIndexEntry{GGtools overview}
-%\VignetteDepends{}
+%\VignetteDepends{ceu1kg, ceuhm3, GenomicRanges, illuminaHumanv1.db}
 %\VignetteKeywords{Genetical genomics,SNP,expression}
 %\VignettePackage{GGtools}
 
