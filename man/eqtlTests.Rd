@@ -3,7 +3,7 @@
 \alias{ieqtlTests}
 \alias{meqtlTests}
 \alias{cisScores}
-\alias{imphm3_1KG_20_mA2}
+%\alias{imphm3_1KG_20_mA2}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 perform genome x transcriptome eQTL searches with high-performance options

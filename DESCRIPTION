@@ -7,7 +7,8 @@ Depends: R (>= 2.7.0), methods, Biobase (>= 1.11.26), GGBase (>= 3.7.5),
 	snpMatrix(>= 1.7.3), annotate, ff, IRanges, rtracklayer, multtest, org.Hs.eg.db,
 	GenomicRanges
 Suggests: illuminaHumanv1.db, org.Hs.eg.db, SNPlocs.Hsapiens.dbSNP.20100427,
-	rpart, multtest, multicore, rtracklayer, GSEABase, ceu1kg, ceuhm3
+	rpart, multtest, multicore, rtracklayer, GSEABase, ceu1kg, ceuhm3,
+	genefilter
 LazyData: no
 biocViews: SNP, GeneticVariability, Genetics, Bioinformatics
 Maintainer: Vince Carey <stvjc@channing.harvard.edu>
