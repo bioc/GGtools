@@ -19,7 +19,7 @@ ieqtlTests(smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = "ifoo",
 	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, family, ...)
 meqtlTests(listOfSmls, rhslist, runname = "mfoo", targdir = "mfoo", 
 	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, harmonizeSNPs = FALSE, family, ...)
-cisScores( mgr, ffind=1, chr, snpGR, radius=5e5, minMAF = 0, minGTF = 0, applier=lapply ) 
+cisScores( mgr, ffind=1, chr, snpGR, radius=5e5, applier=lapply, minMAF = 0, minGTF = 0 ) 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
