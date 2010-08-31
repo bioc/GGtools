@@ -9,7 +9,7 @@ generate a snp.matrix instance on the basis of a VCF (4.0) file
 generate a snp.matrix instance on the basis of a VCF (4.0) file
 }
 \usage{
-vcf2sm(gzpath, chrom, tabixcmd = "tabix", nmetacol = 9, verbose = FALSE)
+vcf2sm(gzpath, chrom, tabixcmd = "tabix", nmetacol = 9, verbose = FALSE, gran=10000)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -29,6 +29,9 @@ numeric: tells number of columns used in each record as locus-level metadata
 }
   \item{verbose}{
 logical: if TRUE, provide processing info
+}
+  \item{gran}{
+numeric: a report is given once every gran snp are traversed to show progress
 }
 }
 %\details{

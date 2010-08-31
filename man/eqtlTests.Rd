@@ -13,12 +13,13 @@ perform genome x transcriptome eQTL searches with high-performance options
 }
 \usage{
 eqtlTests(smlSet, rhs = ~1 - 1, runname = "foo", targdir = "foo", 
-	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, family, ...)
+	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, 
+        checkValid = TRUE, saveSummaries = TRUE, family, ...)
 ieqtlTests(smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = "ifoo", 
 	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, family, ...)
 meqtlTests(listOfSmls, rhslist, runname = "mfoo", targdir = "mfoo", 
 	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, harmonizeSNPs = FALSE, family, ...)
-cisScores( mgr, ffind=1, chr, snpGR, radius=5e5, applier=lapply ) 
+cisScores( mgr, ffind=1, chr, snpGR, radius=5e5, minMAF = 0, minGTF = 0, applier=lapply ) 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -66,6 +67,9 @@ logical: it can be time consuming to harmonize SNPs across a long listOfSmls, so
 do this outside of the function and set harmonizeSNPs=FALSE; if TRUE, it will be done
 before statistical processing of the data in this function.
 }
+  \item{checkValid}{logical: shall the function run validObject on input smlSet?}
+  \item{saveSummaries}{logical: shall a set of ff files be stored that includes genotype
+and allele frequency data for downstream filtering?}
   \item{family}{specify the GLM family to use; defaults to 'gaussian' if left missing}
   \item{\dots}{
 parameters passed to \code{\link[snpMatrix]{snp.rhs.tests}}
@@ -76,6 +80,8 @@ obtaining scores}
   \item{chr}{token identifying chromosome of interest}
   \item{snpGR}{instance of \code{\link[GenomicRanges]{GRanges-class}} with SNP location}
   \item{radius}{numeric: number of basepairs up and downstream of TSS to be used for cis filtering}
+  \item{minMAF}{numeric: minimum minor allele frequency for inclusion of SNP in reporting}
+  \item{minGTF}{numeric: minimum genotype frequency for inclusion of SNP in reporting}
   \item{applier}{function, typically either \code{lapply} or \code{mclapply} if multicore
 services are desired}
 }
