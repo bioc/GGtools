@@ -94,7 +94,8 @@ exprs(hm3ceuSMS)[1:5,1:5]
 
 Genotype data have more complex representation.
 <<lksn>>=
-smList(hm3ceuSMS)
+names(smList(hm3ceuSMS))
+smList(hm3ceuSMS)[1:2]
 class(smList(hm3ceuSMS)[["chr20"]])
 @
 This shows that we use a named list to hold items
@@ -115,7 +116,9 @@ as(schunk[1:4,1:4], "character")
 at this time.  The extra baggage is voluminous and for most loci it
 will never be used.  When necessary, manual bioinformatics can be used to check the
 locus-specific allele frequency in a cohort against the
-allele count in the data to determine the code unambiguously.]
+allele count in the data to determine the code unambiguously; the
+SNP metadata resources in SNPlocs.Hsapiens.* packages, or in ceu1kg,
+are also relevant.]
 
 The primary analysis of interest is the genome-wide
 association study, here applied with expression as the phenotype.
@@ -182,7 +185,13 @@ try(system("rm -rf icpne1"))
 if1 = ieqtlTests(hmFouc[chrnum("chr20"),], ~male, targdir="icpne1",
      runname="icpne1",
      rules=imphm3_1KG_20_mA2)
+@
+The number of tests on the original data:
+<<lkn1>>=
 length(GGtools:::snpIdList(f1)[[1]])
+@
+and on the imputed data:
+<<lki1>>=
 length(GGtools:::snpIdList(if1)[[1]])
 @
 We need special metadata to get locations for the SNP in this run.
@@ -220,7 +229,7 @@ MACH}
 
 Blanca Himes of the Channing Laboratory, Boston, ran the MACH imputation
 program to compute imputed 'dose' measures based on a
-certain set of calls for CEU, perhaps HapMap phase III.  The \code{m20}
+certain set of calls for CEU, perhaps HapMap phase III.  The \texttt{m20}
 data object for this package includes the results of importing
 the \texttt{mlprob} MACH output for chromosome 20 after imputing
 to the 1000 genomes loci.
@@ -267,7 +276,7 @@ The latter result shows that there are over 2000 SNP for which MACH
 is willing to impute a single het against 109 homozygous individuals.
 Let's look at an example:
 <<ex>>=
-table(news[ vn > 0 & vn < 0.01, ][1,])
+table(as(news[ ,vn > 0 & vn < 0.01 ][,1], "character"))
 @
 This shows some of the subtlety of the imputations in this case.
 It would be very nice to reconstruct the imputation for this SNP in detail.
@@ -277,16 +286,16 @@ Let's now consider loci imputed by MACH but not by snpMatrix.
 notreg = colnames(c20imp)[ which(apply(c20imp,2,function(x)all(is.na(x)))) ]
 inmachNR = intersect( mimp, notreg )
 length(inmachNR)
-m20[inmachNR[1:5],1:10]
-table(m20[inmachNR[1],])
-table(m20[inmachNR[2],])
+m20[1:10,inmachNR[1:5]]
+table(as(m20[,inmachNR[1]],"character"))
+table(as(m20[,inmachNR[2]],"character"))
 library(ceu1kg)
-if (!exists("ceu1KG.sml")) data(ceu1KG.sml)
-rawc20 = ceu1KG.sml[[20]]
+if (!exists("ceu1kg.sml")) data(ceu1kg.sml)
+rawc20 = ceu1kg.sml[[20]]
 table(as(rawc20[,"chr20:35790"], "character"))
 table(as(rawc20[,"chr20:36155"], "character"))
 @
-So MACH is able to call 2 hets for each of these loci.
+So MACH is able to call 3 hets for each of these loci.
 We verify that snpMatrix regression does not
 <<lkm>>=
 MbutNR = c("chr20:35790", "chr20:36155")
@@ -306,6 +315,20 @@ imm1
 How liberal are we willing to be with respect to estimation of LD in the
 presence of very limited genotype variation?
 The lower we set minA, the more liberal.
+We can see what the regression procedure does in this case as follows:
+
+<<lkimm1>>=
+ii = impute.snps(imm1, rawc20)
+apply(ii,2,table)
+@
+More uncertainty is evident with the
+regression imputations, and a very liberal
+criterion is used to make these calls. 
+It is possible to show that two of the
+individuals receiving an allele score of .66 with the
+regression method are called A/B by MACH; the matching
+between individuals is spotty.
+
 
 
 
