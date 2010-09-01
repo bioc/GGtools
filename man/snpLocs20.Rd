@@ -1,5 +1,6 @@
 \name{snpLocs20}
 \alias{snpLocs20}
+\alias{snpLocs_21}
 \docType{data}
 \title{
 prototype SNP location instance for use with GGtools
@@ -72,6 +73,8 @@ Formal class 'UCSCData' [package "rtracklayer"] with 6 slots
 }
 \details{
 derived from UCSC table for snp130
+
+snpLocs\_21 is in a different format for chromosome 21
 }
 \source{
 snp130 table in hg19 UCSC table set
