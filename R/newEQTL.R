@@ -434,9 +434,9 @@ manhPlot = function( probeid, mgr, ffind, namedlocvec=NULL, locGRanges=NULL,
    ylab = "-log10 p", ... ) {
  if (!(is(mgr, "eqtlTestsManager"))) stop("mgr must inherit from eqtlTestsManager")
  if (is.null(namedlocvec) & is.null(locGRanges)) stop("one of namedlocvec and locGRanges must be non-null")
- if (is.null(names(locGRanges))) stop("locGRanges must have non-null names")
+ if (is.null(namedlocvec) & is.null(names(locGRanges))) stop("locGRanges must have non-null names")
  vals = mgr[,  probeId(probeid), drop=FALSE]
- vals = vals[[1]][,]
+ vals = vals[[ffind]][,]
  rsidInVals = names(vals)
  if (!is.null(locGRanges)) {
    rsidInLocs = names(locGRanges)
