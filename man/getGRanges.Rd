@@ -71,6 +71,7 @@ if (require("SNPlocs.Hsapiens.dbSNP.20100427")) {
 # now combine with cis ranges for a set of genes
  example(cisRanges)
  cc = cisRanges(m1[1:10], "chr20", "illuminaHumanv1.db")
+ seqnames(cc) = "ch20"
  FF = findOverlaps(ggg, cc) 
  GG = split(FF@matchMatrix[,1], FF@matchMatrix[,2]) 
  names(GG) = m1[1:10]
