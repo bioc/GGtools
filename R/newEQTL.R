@@ -89,7 +89,7 @@ ffSnpSummary = function(sm,fn,fac=100) {
  
 eqtlTests = function(smlSet, rhs=~1-1,
    runname="foo", targdir="foo", geneApply=lapply, chromApply=lapply,
-   shortfac = 100, computeZ=FALSE, checkValid=TRUE, saveSummaries=TRUE, family, ... ) {
+   shortfac = 100, computeZ=FALSE, checkValid=TRUE, saveSummaries=TRUE, uncert=TRUE, family, ... ) {
  theCall = match.call()
  if (checkValid) {
    tmp = validObject(smlSet)
@@ -126,7 +126,7 @@ eqtlTests = function(smlSet, rhs=~1-1,
    geneApply( geneNames, function(gene) {
      ex = exprs(smlSet)[gene,]
      fmla = formula(paste("ex", paste(as.character(rhs),collapse=""), collapse=" "))
-     numans = snp.rhs.tests(fmla, snp.data=snpdata, data=pData(smlSet), family=family, ...)@chisq
+     numans = snp.rhs.tests(fmla, snp.data=snpdata, data=pData(smlSet), family=family, uncertain=uncert, ...)@chisq
      if (computeZ) {
        numans = sqrt(numans)
        signl = snp.rhs.estimates( fmla, snp.data=snpdata, data=pData(smlSet), family=family, ... )
@@ -224,7 +224,7 @@ mkDirectorDb = function(cd, commonSNPs=TRUE) {
 
 ieqtlTests = function (smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = "ifoo", 
     geneApply = lapply, chromApply = lapply, shortfac = 100, 
-    computeZ = FALSE, family, ...) 
+    computeZ = FALSE, uncert=TRUE, family, ...) 
 {
     theCall = match.call()
     if (missing(family)) family="gaussian"
@@ -247,8 +247,8 @@ ieqtlTests = function (smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = 
             fmla = formula(paste("ex", paste(as.character(rhs), 
                 collapse = ""), collapse = " "))
             numans = snp.rhs.tests(fmla, snp.data = snpdata, 
-                data = pData(smlSet), family = family, ...)@chisq
-            numansi = snp.rhs.tests(fmla, snp.data = snpdata, 
+                data = pData(smlSet), family = family, uncertain=uncert, ...)@chisq
+            numansi = snp.rhs.tests(fmla, snp.data = snpdata, uncertain=uncert,
                 data = pData(smlSet), family = family, rules = rules, 
                 ...)@chisq
             numans = c(numans, numansi)
@@ -461,7 +461,7 @@ manhPlot = function( probeid, mgr, ffind, namedlocvec=NULL, locGRanges=NULL,
  
 meqtlTests = function(listOfSmls, rhslist,
    runname="mfoo", targdir="mfoo", geneApply=lapply, chromApply=lapply,
-   shortfac = 100, computeZ=FALSE, harmonizeSNPs = FALSE, family, ... ) {
+   shortfac = 100, computeZ=FALSE, harmonizeSNPs = FALSE, uncert=TRUE, family, ... ) {
  theCall = match.call()
  sess = sessionInfo()
  if (missing(family)) family="gaussian"
@@ -501,7 +501,7 @@ meqtlTests = function(listOfSmls, rhslist,
    geneApply( geneNames, function(gene) {
      ex = exprs(smlSet)[gene,]
      fmla = formula(paste("ex", paste(as.character(rhslist[[theSS]]),collapse=""), collapse=" "))
-     numans = snp.rhs.tests(fmla, snp.data=snpdata, data=pData(smlSet), family=family, ...)@chisq
+     numans = snp.rhs.tests(fmla, snp.data=snpdata, data=pData(smlSet), family=family, uncertain=uncert, ...)@chisq
      if (computeZ) {
        numans = sqrt(numans)
        signl = snp.rhs.estimates( fmla, snp.data=snpdata, data=pData(smlSet), family=family, ... )

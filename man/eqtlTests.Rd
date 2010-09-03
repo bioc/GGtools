@@ -14,11 +14,11 @@ perform genome x transcriptome eQTL searches with high-performance options
 \usage{
 eqtlTests(smlSet, rhs = ~1 - 1, runname = "foo", targdir = "foo", 
 	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, 
-        checkValid = TRUE, saveSummaries = TRUE, family, ...)
+        checkValid = TRUE, saveSummaries = TRUE, uncert=TRUE, family, ...)
 ieqtlTests(smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = "ifoo", 
-	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, family, ...)
+	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, uncert=TRUE, family, ...)
 meqtlTests(listOfSmls, rhslist, runname = "mfoo", targdir = "mfoo", 
-	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, harmonizeSNPs = FALSE, family, ...)
+	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, harmonizeSNPs = FALSE, uncert=TRUE, family, ...)
 cisScores( mgr, ffind=1, chr, snpGR, radius=5e5, applier=lapply, minMAF = 0, minGTF = 0 ) 
 }
 %- maybe also 'usage' for other objects documented here.
@@ -70,6 +70,7 @@ before statistical processing of the data in this function.
   \item{checkValid}{logical: shall the function run validObject on input smlSet?}
   \item{saveSummaries}{logical: shall a set of ff files be stored that includes genotype
 and allele frequency data for downstream filtering?}
+  \item{uncert}{setting for value of \code{uncertain} argument in \code{\link[snpMatrix]{snp.rhs.tests}}}
   \item{family}{specify the GLM family to use; defaults to 'gaussian' if left missing}
   \item{\dots}{
 parameters passed to \code{\link[snpMatrix]{snp.rhs.tests}}
