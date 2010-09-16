@@ -12,7 +12,7 @@ of SNPs associated with genes or exons governs organization of
 tests, and minimum p-value per gene or exon is all that is required
 }
 \usage{
-exome_minp(smlSet, fmla, targdir, runname, snpl, mgr = NULL, ...)
+exome_minp(smlSet, fmla, targdir, runname, snpl, feat=NULL, mgr = NULL, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -35,6 +35,8 @@ a named list, with one element per gene or exon, each element is name
 of snps assayed for the associated gene or exon; names of list elements are the gene
 or exon names
 }
+  \item{feat}{ name of feature for focused reporting; important if names
+of features of original smlSet don't agree with names of snpl}
   \item{mgr}{
 if an eqtlTestsManager (with fflist of length 1) is already available, this can
 be used instead of constructing one from the smlSet
