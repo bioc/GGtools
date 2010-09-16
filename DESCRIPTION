@@ -18,5 +18,5 @@ License: Artistic-2.0
 Collate: allS4.R X2chunk.R cisSnpTests.R geneTrack.R multff.R topFeats.R
 	filterCode.R gwSnpScreen.R newEQTL.R topSnps.R
 	bestCis.R geneRanges.R minp.R snp130locs.R trackSet.R
-	permEx.R vcfutils.R snp.rhs.testsMACH.R shiftRight.R
+	permEx.R vcfutils.R snp.rhs.testsMACH.R shiftRight.R exome_minp.R
 
