@@ -12,7 +12,7 @@ of SNPs associated with genes or exons governs organization of
 tests, and minimum p-value per gene or exon is all that is required
 }
 \usage{
-exome_minp(smlSet, fmla, targdir, runname, snpl, feat=NULL, mgr = NULL, ...)
+exome_minp(smlSet, fmla, targdir, runname, snpl, feat=NULL, mgr = NULL, scoreApply=lapply, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -41,6 +41,8 @@ of features of original smlSet don't agree with names of snpl}
 if an eqtlTestsManager (with fflist of length 1) is already available, this can
 be used instead of constructing one from the smlSet
 }
+  \item{scoreApply}{ lapply-like function to be used to
+compute scores -- use mclapply for multicore deployment }
   \item{\dots}{
 parameters passed to eqtlTests
 }
