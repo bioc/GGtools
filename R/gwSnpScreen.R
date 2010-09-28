@@ -3,6 +3,7 @@ gsetFmla2FmlaList = function(fm) {
 # this function takes a formula with a GeneSet on the lhs
 # and returns a list of gene-specific formulas
 #
+.Deprecated("eqtlTests", , msg="please use eqtlTests for all GGtools analyses")
  flist = as.list(fm)
  gs = eval(flist[[2]])
  if (length(flist[[3]]) > 1) pred = paste(flist[[3]][-1], collapse="+")

@@ -96,11 +96,11 @@ mm
 pvraw = min_p_vals( mm, "none", "", 2 )
 length(pvraw)
 pvraw[[1]][1:10]
-pvadj = min_p_vals( mm, "BH", "chr_specific", 2 )
-pvadj[[1]][1:10]
+# pvadj = min_p_vals( mm, "BH", "chr_specific", 2 )
+# pvadj[[1]][1:10]
 mm2 = maxchisq(ff, type="perGene")
 mm2
-min_p_vals(mm2, "BH", "global", sidedness=2)[[1]][1:5]
+# min_p_vals(mm2, "BH", "global", sidedness=2)[[1]][1:5]
 setwd(owd)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

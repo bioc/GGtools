@@ -325,7 +325,8 @@ setMethod("min_p_vals", c("maxchisq", "character", "character", "numeric"), func
  }
  if (mtcorr == "none") adjpv = pv
  else {
-   require(multtest)
+   stop("owing to a namespace complication, please use mtcorr = 'none' and compute corrections on your own.")
+   #require(multtest)
    if (type == "chr_specific")
      adjpv = lapply( pv, function(x) mtcorrp(x, mtcorr))
    else if (type=="global") {

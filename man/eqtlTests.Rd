@@ -123,6 +123,7 @@ library(illuminaHumanv1.db)
 cptag = get("CPNE1", revmap(illuminaHumanv1SYMBOL))
 indc = which(featureNames(hm3ceuSMS) == cptag[1])
 hm = hm3ceuSMS[c(indc,1:19),]  # reduce problem
+hm = hm[ chrnum(c("chr20", "chr21")), ]
 td = tempdir()
 curd = getwd()
 setwd(td)
@@ -131,8 +132,7 @@ e1
 dir("foo")
 if (require(multicore)) {
  time.mclapply = unix.time(e2 <- eqtlTests(hm, ~male, targdir="bar", runname="bar",
-#      geneApply = mclapply ) )
-      chromApply = mclapply ) )
+      geneApply = mclapply ) )
  print(time.lapply)
  print(time.mclapply)
 }

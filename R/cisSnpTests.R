@@ -4,6 +4,8 @@ GeneSet2LocInfo = function(gs) {
 # id as name and a vector of signed locations on chromosomes
 # the names of the location elements are the chromosome names
 #
+.Deprecated("eqtlTests", , msg="please use eqtlTests for all GGtools analyses")
+
  if (annotate::organism(gs) == "") warning("organism missing from gene set object, assuming Homo sapiens")
  else if (annotate::organism(gs) != "Homo sapiens") stop("only functioning for gene sets satisfying organism(gs) %in% c('', 'Homo sapiens')")
  gst = geneIdType(gs)
@@ -29,6 +31,7 @@ GeneSet2LocInfo = function(gs) {
  
 
 cisSnpTests = function(fmla, smls, radius, ...) {
+ .Deprecated("eqtlTests",,msg="Please use eqtlTests for all GGtools analyses")
  mc = match.call()
  wrapg = function(x) paste("genesym(\"", x, "\")", sep="")
  wrapex = function(x) paste("probeId(\"", x, "\")", sep="")

@@ -30,6 +30,9 @@ Class vectorORfactor, by class "list", distance 3.
 \section{Methods}{
   \describe{
     \item{min_p_vals}{\code{signature(mcs = "maxchisq", mtcorr = "character", type = "character", sidedness="numeric")}: 
+Note: owing to a namespace complication with 'update' in multtest package, the mtcorr parameter
+is ignored; corrections to p-values generated with this tool need to be computed 'manually' at this time.
+
 \code{mtcorr} is the \code{proc} token for \code{\link[multtest]{mt.rawp2adjp}}.   Specifically,
 if mtcorr is set to \code{"BH"}, the Benjamini-Hochberg FDR transformation is applied.
 If mtcorr is set to \code{"none"}, nothing is done.

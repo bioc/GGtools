@@ -1,4 +1,4 @@
-import(tools, AnnotationDbi)
+import(tools, AnnotationDbi, ff)
 importFrom(annaffy, "getURL")
 importFrom(annaffy, "getHTML")
 importFrom(annotate, "organism")
