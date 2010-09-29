@@ -1,0 +1,62 @@
+%\VignetteIndexEntry{Notes for eSet developers}
+%\VignetteDepends{}
+%\VignetteKeywords{Expression Analysis}
+%\VignettePackage{Biobase}
+
+
+%
+% NOTE -- ONLY EDIT THE .Rnw FILE!!!  The .tex file is
+% likely to be overwritten.
+%
+\documentclass[12pt]{article}
+
+\usepackage{amsmath,pstricks}
+\usepackage[authoryear,round]{natbib}
+\usepackage{hyperref}
+
+
+\textwidth=6.2in
+\textheight=8.5in
+%\parskip=.3cm
+\oddsidemargin=.1in
+\evensidemargin=.1in
+\headheight=-.3in
+
+\newcommand{\scscst}{\scriptscriptstyle}
+\newcommand{\scst}{\scriptstyle}
+
+
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textit{#1}}}
+\newcommand{\Rmethod}[1]{{\texttt{#1}}}
+\newcommand{\Rfunarg}[1]{{\texttt{#1}}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+
+\textwidth=6.2in
+
+\bibliographystyle{plainnat} 
+ 
+\begin{document}
+%\setkeys{Gin}{width=0.55\textwidth}
+
+\title{Analysis of association of gene expression with rare variants}
+\author{VJ Carey et al}
+
+\section{Data}
+
+We will use the CEU thousand genomes data, and focus on chromosome 15.
+<<getd>>=
+library(ceu1kg)
+if (!exists("ceu1kg.sml")) data(ceu1kg.sml)
+c15 = ceu1kg.sml[15]
+c15
+c15 = c15[[1]]
+@
+We will characterize the distribution of MAF.
+<<lkdD>>=
+csum = col.summary(c15)
+dim(csum)
+@
+
+\end{document}
