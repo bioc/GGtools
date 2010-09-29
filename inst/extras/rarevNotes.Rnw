@@ -49,14 +49,57 @@ We will use the CEU thousand genomes data, and focus on chromosome 15.
 <<getd>>=
 library(ceu1kg)
 if (!exists("ceu1kg.sml")) data(ceu1kg.sml)
-c15 = ceu1kg.sml[15]
-c15
-c15 = c15[[1]]
+c6 = ceu1kg.sml[6]
+c6
+c6 = c6[[1]]
 @
 We will characterize the distribution of MAF.
 <<lkdD>>=
-csum = col.summary(c15)
+csum = col.summary(c6)
 dim(csum)
 @
+
+We have metadata on the locations of the chr6 SNP:
+<<getm>>=
+data(ceu1kgMeta_6)
+ceu1kgMeta_6 = updateObject(ceu1kgMeta_6)
+ceu1kgMeta_6[1:2]
+all.equal(names(ceu1kgMeta_6), colnames(c6))
+@
+
+We will use MAF = 2.5\% as the threshold for rare variant declaration.
+<<lkr>>=
+isRare = which(csum[,"MAF"] > 0 & csum[,"MAF"] <= 0.025)
+rareSNP_6 = c6[, isRare]
+rareLocs_6 = ceu1kgMeta_6[ colnames(rareSNP_6) ]
+@
+The exons possessing rare variants are found via
+<<lkfo>>=
+exwr = findOverlaps( rareLocs_6, ex6 )
+dim(exwr@matchMatrix)
+@
+The frequency of rare variants within exons is
+<<lkfrr>>=
+tt = table(table(exwr@matchMatrix[,2]))
+tt
+@
+We can check these claims:
+<<lkcla>>=
+numr = max(tt)
+ind = as.numeric(names(which(table(exwr@matchMatrix[,2])==numr)))[1]
+snin = which(ranges(rareLocs_6) %in% ranges(ex6[ind]))
+ex6[ind]
+rareLocs_6[snin]
+@
+So we have a (somewhat longwinded) mechanism for isolating the exons with rare variants.
+<<getex>>=
+exWithRareInd = unique(exwr@matchMatrix[,2])
+exWithRare = ex6[ exWithRareInd ]
+@
+
+
+
+
+
 
 \end{document}
