@@ -153,18 +153,26 @@ cd = mkCisTransDirector(list(e4,e5), "demo2x5.sqlite",
 #
 # first we have specific snp-gene queries
 #
-cd[c("rs6650104", "rs11510103"), "GI_10047091-S"]
+rs2 = GGtools:::snpIdList(cd@mgrs[[1]])[[1]][1:2]
+cd[rs2, "GI_10047091-S"]
 #
 # now we want values for two SNP over all genes 
 #  there were only a few genes so we can look at all
 #
-cd[c("rs6650104", "rs11510103"),]
+cd[rs2,]
 #
 # now get all SNP for a given gene -- this is a large request
 #
 dem2 = cd[, "GI_10047091-S"]
 sapply(dem2[[1]], length)
+#
+# now illustrate regression-based imputation
+#
 hmi = hm[ chrnum("chr20"), ]
+#
+# here are stored imputation rules built to impute from hapmap phase 3
+# panel to 1KG
+#
 data(imphm3_1KG_20_mA2)
 e1i = ieqtlTests(hmi, ~male, rules=imphm3_1KG_20_mA2 )
 e1i
@@ -172,14 +180,20 @@ topFeats( sym = "CPNE1", mgr=e1i, ffind=1, anno="illuminaHumanv1.db" )
 topFeats(probeid="GI_23397697-A", mgr=cd)  
 topFeats(rsid="rs6060632", mgr=cd)
 #
-library(ceu1kg)
-data(ceu1kgMeta_20)
-library(multicore)
-cc = cisScores( e1i, 1, "chr20", ceu1kgMeta_20, applier=mclapply, radius=5e5)
-lapply(cc, function(x) sort(x,decreasing=TRUE)[1:3]) # now check scores obtained under permutation
-e1ip = ieqtlTests(permEx(hmi), ~male, rules=imphm3_1KG_20_mA2, targdir="p1", runname="p1" )
-cc2 = cisScores( e1ip, 1, "chr20", ceu1kgMeta_20, applier=mclapply, radius=5e5)
-lapply(cc2, function(x) sort(x,decreasing=TRUE)[1:3])
+# now illustrate how scores can be obtained after permuting samples
+# the permEx function must be used because snpMatrix testing facilities
+# try hard to match sampleIds of phenotype and genotype; the X[,S] idiom
+# does not work
+#
+if (require(multicore)) {
+ library(ceu1kg)
+ data(ceu1kgMeta_20)
+ cc = cisScores( e1i, 1, "chr20", ceu1kgMeta_20, applier=mclapply, radius=5e5)
+ lapply(cc, function(x) sort(x,decreasing=TRUE)[1:3]) # now check scores obtained under permutation
+ e1ip = ieqtlTests(permEx(hmi), ~male, rules=imphm3_1KG_20_mA2, targdir="p1", runname="p1" )
+ cc2 = cisScores( e1ip, 1, "chr20", ceu1kgMeta_20, applier=mclapply, radius=5e5)
+ lapply(cc2, function(x) sort(x,decreasing=TRUE)[1:3])
+}
 setwd(curd)
 }
 \keyword{ models }
