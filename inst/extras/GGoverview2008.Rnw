@@ -1,0 +1,129 @@
+%\VignetteIndexEntry{GGtools overview}
+%\VignetteDepends{}
+%\VignetteKeywords{Genetical genomics,SNP,expression}
+%\VignettePackage{GGtools}
+
+
+%
+% NOTE -- ONLY EDIT THE .Rnw FILE!!!  The .tex file is
+% likely to be overwritten.
+%
+\documentclass[12pt]{article}
+
+\usepackage{amsmath,pstricks}
+\usepackage[authoryear,round]{natbib}
+\usepackage{hyperref}
+
+
+\textwidth=6.2in
+\textheight=8.5in
+%\parskip=.3cm
+\oddsidemargin=.1in
+\evensidemargin=.1in
+\headheight=-.3in
+
+\newcommand{\scscst}{\scriptscriptstyle}
+\newcommand{\scst}{\scriptstyle}
+
+
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textit{#1}}}
+\newcommand{\Rmethod}[1]{{\texttt{#1}}}
+\newcommand{\Rfunarg}[1]{{\texttt{#1}}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+
+\textwidth=6.2in
+
+\bibliographystyle{plainnat} 
+ 
+\begin{document}
+%\setkeys{Gin}{width=0.55\textwidth}
+
+\title{Overview of GGtools for expression genetics}
+\author{VJ Carey stvjc at channing.harvard.edu}
+\maketitle
+
+\section{Introduction}
+
+The \Rpackage{GGtools} package contains infrastructure and
+demonstration data for joint analysis of transcriptome and
+genome through combination of DNA expression microarray
+and high-density SNP genotyping data.  For Bioconductor
+2.2 we adopted a representation of genotypes due to Clayton
+(in package \Rpackage{snpMatrix}) allowing reasonably
+convenient storage and manipulation of 4 megaSNP phase II
+HapMap genotypes on all the CEPH CEU samples.  This contrasts with
+the previous version of \Rpackage{GGtools} which was limited
+to 550 kiloSNP and 58 CEU founders.
+
+
+To give an immediate taste of the capabilities, we
+attach the package and load some test data.
+<<doini>>=
+library(GGtools)
+data(hmceuB36.2021)
+hmceuB36.2021
+@
+Expression data are recoverable in a familiar way:
+<<lkex>>=
+exprs(hmceuB36.2021)[1:5,1:5]
+@
+
+Genotype data have more complex representation.
+<<lksn>>=
+smList(hmceuB36.2021)
+class(smList(hmceuB36.2021)[["20"]])
+@
+This shows that we use a named list to hold items
+of the \Rclass{snp.matrix} class from \Rpackage{snpMatrix}.
+
+It will generally be unnecessary to probe to this level, but
+it is instructive to check the underlying representation:
+<<lkr>>=
+schunk = smList(hmceuB36.2021)[["20"]]
+schunk@.Data[1:4,1:4]
+@
+The leading zeroes show that a raw byte representation is used.
+We can convert to allele codes as follows:
+<<lkr2>>=
+as(schunk[1:4,1:4], "character")
+@
+
+The primary method of interest is the genome-wide
+association study, here applied with expression as the phenotype.
+Here we execute a founders-only analysis, adjusting for gender,
+confining attention to chromosome 20:
+<<dod>>=
+pd = pData(hmceuB36.2021)
+hmFou = hmceuB36.2021[, which(pd$mothid == 0 & pd$fathid == 0)]
+f1 = gwSnpTests(genesym("CPNE1")~male, hmFou, chrnum(20))
+@
+
+\section{Conversion to nucleotide codes}
+
+This is currently somewhat cumbersome.  Suppose we want to
+know the specific nucleotide assignments for a given genotype call.
+For example, rs4814683 for subject NA06985.
+<<lkc>>=
+schunk["NA06985", "rs4814683"]
+@
+We need to know a) that the A/B tokens map in lexical order to
+the nucleotides (A will be the alphabetically first nucleotide
+for the diallelic call).
+
+Using the SNPlocs.Hsapiens.dbSNP.* package, we can get the
+nucleotides:
+<<gets,eval=FALSE>>=
+library(SNPlocs.Hsapiens.dbSNP.20080617)
+s20 = getSNPlocs("chr20")
+s20[ s20[,1] == 4814683, ]
+@
+
+Now we need to translate the IUPAC code to the nucleotides:
+<<dotr>>=
+library(Biostrings)
+IUPAC_CODE_MAP
+@
+
+\end{document}
