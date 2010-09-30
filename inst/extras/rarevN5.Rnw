@@ -177,6 +177,13 @@ rc = lapply(vbygi, function(sn) apply(gt[,sn,drop=FALSE],1,sum))
 rcs = sapply(rc, sum)
 rc = rc[which(rcs>0)]
 @
+We also drop genes with relatively low variation.
+<<filt>>=
+ex = exprs(ceu6)[names(rc),]
+mads = apply(ex,1,mad)
+ok = which(mads>median(mads))
+rc = rc[ ok ]
+@
 We can test the specific linear models as follows:
 <<lklm>>=
 lms = list()

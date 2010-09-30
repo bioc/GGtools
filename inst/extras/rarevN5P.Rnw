@@ -1,4 +1,3 @@
-
 %\VignetteIndexEntry{Notes for eSet developers}
 %\VignetteDepends{}
 %\VignetteKeywords{Expression Analysis}
@@ -132,7 +131,6 @@ relevant chromosome and genes.
 <<doex,keep.source=TRUE>>=
 if (!exists("ceu1kg")) data(ceu1kg)
 ceu6 = ceu1kg[ chrnum("chr6"), ] # focus on chr6 snp
-ceu6 = permEx(ceu6)
 library(illuminaHumanv1.db)
 ginplay = names(vbyg)
 probes = mget(ginplay, revmap(illuminaHumanv1ENTREZID))
@@ -179,10 +177,19 @@ rc = lapply(vbygi, function(sn) apply(gt[,sn,drop=FALSE],1,sum))
 rcs = sapply(rc, sum)
 rc = rc[which(rcs>0)]
 @
+We also drop genes with relatively low variation.
+<<filt>>=
+ex = exprs(ceu6)[names(rc),]
+mads = apply(ex,1,mad)
+ok = which(mads>median(mads))
+rc = rc[ ok ]
+@
 We can test the specific linear models as follows:
 <<lklm>>=
 lms = list()
 gn = names(rc)
+set.seed(1234)
+ceu6 = permEx(ceu6)
 for (i in 1:length(rc)) {
   lms[[i]] = lm(exprs(ceu6)[gn[i],]~rc[[i]])
 }
