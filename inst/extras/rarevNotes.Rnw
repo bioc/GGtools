@@ -73,8 +73,9 @@ isRare = which(csum[,"MAF"] > 0 & csum[,"MAF"] <= 0.025)
 rareSNP_6 = c6[, isRare]
 rareLocs_6 = ceu1kgMeta_6[ colnames(rareSNP_6) ]
 @
-The exons possessing rare variants are found via
-<<lkfo>>=
+The exons in chromosome 6 possessing rare variants are found via
+<<lkfo,keep.source=TRUE>>=
+data(ex6)  # excerpt from hg19 transcriptDb via exons(), saved for GGtools demos
 exwr = findOverlaps( rareLocs_6, ex6 )
 dim(exwr@matchMatrix)
 @
@@ -84,8 +85,8 @@ tt = table(table(exwr@matchMatrix[,2]))
 tt
 @
 We can check these claims:
-<<lkcla>>=
-numr = max(tt)
+<<lkcla,keep.source=TRUE>>=
+numr = max(as.numeric(names(tt))) # only names of the table is relevant
 ind = as.numeric(names(which(table(exwr@matchMatrix[,2])==numr)))[1]
 snin = which(ranges(rareLocs_6) %in% ranges(ex6[ind]))
 ex6[ind]
@@ -96,6 +97,99 @@ So we have a (somewhat longwinded) mechanism for isolating the exons with rare v
 exWithRareInd = unique(exwr@matchMatrix[,2])
 exWithRare = ex6[ exWithRareInd ]
 @
+Now we want to split up the variants by exons harboring them in an identifiable way.
+
+<<getspl>>=
+vine = findOverlaps(exWithRare, rareLocs_6) 
+enames = elementMetadata(exWithRare)$exon_id[ vine@matchMatrix[,1] ]
+snames = names(rareLocs_6)[ vine@matchMatrix[,2] ]
+vbye = split(snames,enames)
+@
+This would be useful if we had exon-targeting probes for phenotype
+measurement.  We don't, so we'll aggregate by 'genes'.  Linking the
+exon ids to genes is tedious.  This code assumes availability of the
+hg19 transcript database, so is not evaluated in this vignette.
+<<getlink,eval=TRUE>>=
+library(GenomicFeatures)
+#hg19.txdb = makeTranscriptDbFromUCSC("hg19")
+#saveFeatures(hg19.txdb, "hg19.txdb.sqlite")
+hg19.txdb = loadFeatures("~/hg19.txdb.sqlite")
+exb = exonsBy(hg19.txdb, "gene")
+library(org.Hs.eg.db)
+egG6 = get("6", revmap(org.Hs.egCHR)) 
+exb6 = exb[ names(exb) %in% egG6 ]
+exb6namesByGenes = lapply(exb6, function(x) elementMetadata(x)$exon_id)
+exb6namesByGenes[1:10]
+ebg6 = lapply(exb6namesByGenes, as.character)
+vbyg = lapply(ebg6, function(x) unlist(vbye[x]))
+table(lens <- sapply(vbyg,length))
+vbyg = vbyg[ lens > 0 ]
+@
+We have now grouped rare SNP by genes.  We can subset
+our expression plus genotype data to include only the
+relevant chromosome and genes.
+<<doex,keep.source=TRUE>>=
+if (!exists("ceu1kg")) data(ceu1kg)
+ceu6 = ceu1kg[ chrnum("chr6"), ] # focus on chr6 snp
+library(illuminaHumanv1.db)
+ginplay = names(vbyg)
+probes = mget(ginplay, revmap(illuminaHumanv1ENTREZID))
+probes = unique(unlist(probes))
+fn = featureNames(ceu6)
+ceu6 = ceu6[ probeId(intersect(fn, probes)), ]
+ceu6
+@
+We like to recode the genotype data so that the individuals
+homozygous for the common allele have code 0.
+<<dor>>=
+remap = function(x) {
+        n2 = sum(x==2);
+         if (n2 > sum(x==0)) {
+            tmp = x;
+            tmp[x==0] = 2;
+            tmp[x==2] = 0;
+            return(tmp)
+         } else x
+   }
+gt = as(smList(ceu6)[[1]], "numeric")
+gt = gt[, as.character(unlist(vbyg)) ]
+gt = apply(gt, 2, remap)
+gt[1:5,1:5]
+table(apply(gt,2,sum))
+@
+Finally, we want to accumulate within genes, the count of
+rare alleles in the rare SNPs, for each individual.
+Our groups are formed using entrez gene identifiers; need
+to map to probe ids:
+<<domo>>=
+en = mget(names(vbyg), revmap(illuminaHumanv1ENTREZID))
+table(sapply(en, length))
+en1 = sapply(en, "[", 1)
+vbygi = vbyg
+names(vbygi) = en1
+nn = which(is.na(names(vbygi)))
+vbygi = vbygi[-nn]
+@
+Now we simply form vectors of accumulated rare allele counts,
+and exclude genes with no variation in counts over individuals.
+<<getrc>>=
+rc = lapply(vbygi, function(sn) apply(gt[,sn,drop=FALSE],1,sum))
+rcs = sapply(rc, sum)
+rc = rc[which(rcs>0)]
+@
+We can test the specific linear models as follows:
+<<lklm>>=
+lms = list()
+gn = names(rc)
+for (i in 1:length(rc)) {
+  lms[[i]] = lm(exprs(ceu6)[gn[i],]~rc[[i]])
+}
+plms = sapply(lms, function(x)summary(x)$coef[2,4])
+@
+
+ 
+
+
 
 
 
