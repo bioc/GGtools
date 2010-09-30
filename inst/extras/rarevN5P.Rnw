@@ -1,3 +1,4 @@
+
 %\VignetteIndexEntry{Notes for eSet developers}
 %\VignetteDepends{}
 %\VignetteKeywords{Expression Analysis}
@@ -67,9 +68,9 @@ ceu1kgMeta_6[1:2]
 all.equal(names(ceu1kgMeta_6), colnames(c6))
 @
 
-We will use MAF = 2.5\% as the threshold for rare variant declaration.
+We will use MAF = 5\% as the threshold for rare variant declaration.
 <<lkr>>=
-isRare = which(csum[,"MAF"] > 0 & csum[,"MAF"] <= 0.025)
+isRare = which(csum[,"MAF"] > 0 & csum[,"MAF"] <= 0.05)
 rareSNP_6 = c6[, isRare]
 rareLocs_6 = ceu1kgMeta_6[ colnames(rareSNP_6) ]
 @
@@ -131,6 +132,7 @@ relevant chromosome and genes.
 <<doex,keep.source=TRUE>>=
 if (!exists("ceu1kg")) data(ceu1kg)
 ceu6 = ceu1kg[ chrnum("chr6"), ] # focus on chr6 snp
+ceu6 = permEx(ceu6)
 library(illuminaHumanv1.db)
 ginplay = names(vbyg)
 probes = mget(ginplay, revmap(illuminaHumanv1ENTREZID))

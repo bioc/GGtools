@@ -67,9 +67,9 @@ ceu1kgMeta_6[1:2]
 all.equal(names(ceu1kgMeta_6), colnames(c6))
 @
 
-We will use MAF = 2.5\% as the threshold for rare variant declaration.
+We will use MAF = 5\% as the threshold for rare variant declaration.
 <<lkr>>=
-isRare = which(csum[,"MAF"] > 0 & csum[,"MAF"] <= 0.025)
+isRare = which(csum[,"MAF"] > 0 & csum[,"MAF"] <= 0.05)
 rareSNP_6 = c6[, isRare]
 rareLocs_6 = ceu1kgMeta_6[ colnames(rareSNP_6) ]
 @
