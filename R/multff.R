@@ -9,9 +9,11 @@ rsnum = function(x) lapply(x$fflist, rownames)
  
 multffCT = function(listOfSms, gfmlaList, geneinds=1:10, harmonizeSNPs=FALSE, 
      targdir=".", runname="foo", overwriteFF=TRUE, fillNA=TRUE, ncores=2, mc.set.seed=TRUE, vmode="single", shortfac=100, ...) {
+ .Deprecated("eqtlTests", , msg="please use eqtlTests function for GGtools analyses")
   theCall = match.call()
   if (!file.exists(targdir)) stop("targdir must exist prior to invocation of multffCT")
-  require(ff, quietly=TRUE)
+#  require(ff, quietly=TRUE)
+  if (!("package:ff" %in% search())) stop("please manually load ff package")
   .checkArgsMF( listOfSms, gfmlaList, geneinds, targdir, runname )
   listOfSms = reduceGenes( listOfSms, geneinds )
   if (harmonizeSNPs) listOfSms = makeCommonSNPs( listOfSms )
@@ -174,7 +176,9 @@ sumScores2ff = function( listOfSms, gfmlaList, targdir, runname, theCall=call("1
 diagffCC = function (sms, gfmla, targdir = ".", runname = "foo", overwriteFF = TRUE, 
     ncores = 2, vmode = "short", shortfac = 100, mc.set.seed=TRUE, fillNA=TRUE, ...) 
 {
-  if (!file.exists(targdir)) stop("targdir must exist prior to invocation of multffCT")
+  .Deprecated("eqtlTests",,msg="use eqtlTests for GGtools analyses")
+  if (!("package:ff" %in% search())) stop("please manually load ff package")
+  if (!file.exists(targdir)) stop("targdir must exist prior to invocation of diagffCC")
     theCall = match.call()
     if (!is(sms, "smlSet")) 
         stop("need smlSet as first arg")

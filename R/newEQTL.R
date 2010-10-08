@@ -311,23 +311,27 @@ getGRanges = function(mgr, ffind, geneind, seqnames, namedlocs) {
   tmp
 }
 
-cisRanges = function(probeids, chr, anno, radius=5e5) {
+cisRanges = function(probeids, chr, anno, radius=5e5, useEnd=FALSE) {
  require(GenomicRanges)
  require(anno, character.only=TRUE)
  tss = mget( probeids, get(paste(gsub(".db", "", anno), "CHRLOC", sep="")), ifnotfound=NA)
+ ends = mget( probeids, get(paste(gsub(".db", "", anno), "CHRLOCEND", sep="")), ifnotfound=NA)
  tss = sapply(tss, "[", 1)
- if (any(isn <- is.na(tss))) {
+ ends = sapply(ends, "[", 1)
+ if (any(isn <- (is.na(tss) | is.na(ends)))) {
     tss = tss[-which(isn)]
+    ends = ends[-which(isn)]
     probeids = probeids[-which(isn)]
  }
- ans = GRanges(IRanges(start=abs(tss)-radius, end=abs(tss)+radius), seqnames=chr)
+ if (!useEnd) ends = tss
+ ans = GRanges(IRanges(start=abs(tss)-radius, end=abs(ends)+radius), seqnames=chr)
  names(ans) = probeids
  ans
 }
 
-snpIdsCisToGenes = function( mgr, chr, snpGR, radius=5e5 ) {
+snpIdsCisToGenes = function( mgr, chr, snpGR, radius=5e5, useEnd=FALSE ) {
  allgenes = colnames(mgr@fflist[[1]])
- CR = cisRanges(allgenes, chr=chr, anno=mgr@geneanno, radius=radius)
+ CR = cisRanges(allgenes, chr=chr, anno=mgr@geneanno, radius=radius, useEnd=useEnd)
  FF = findOverlaps(snpGR, CR )
  allrs = names(snpGR)
  cisinds = split(FF@matchMatrix[,1], FF@matchMatrix[,2])
@@ -336,23 +340,23 @@ snpIdsCisToGenes = function( mgr, chr, snpGR, radius=5e5 ) {
  cisrs
 }
 
-OLDcisScores = function( mgr, ffind=1, chr, snpGR, radius=5e5, applier=lapply ) {
- cisrs = snpIdsCisToGenes( mgr, chr, snpGR, radius )
- onboard = rownames(mgr@fflist[[ffind]])
- cisrs = lapply(cisrs, function(x) intersect(onboard, x))
- ans = applier(1:length(cisrs), function(x) {
-      scores = as.ram(mgr@fflist[[ffind]][ cisrs[[x]], names(cisrs)[x] ] )/mgr@shortfac
-      names(scores) = cisrs[[x]]
-      scores
-      })
- names(ans) = names(cisrs)
- ans
-}
+#OLDcisScores = function( mgr, ffind=1, chr, snpGR, radius=5e5, applier=lapply ) {
+# cisrs = snpIdsCisToGenes( mgr, chr, snpGR, radius )
+# onboard = rownames(mgr@fflist[[ffind]])
+# cisrs = lapply(cisrs, function(x) intersect(onboard, x))
+# ans = applier(1:length(cisrs), function(x) {
+#      scores = as.ram(mgr@fflist[[ffind]][ cisrs[[x]], names(cisrs)[x] ] )/mgr@shortfac
+#      names(scores) = cisrs[[x]]
+#      scores
+#      })
+# names(ans) = names(cisrs)
+# ans
+#}
 
 cisScores = function (mgr, ffind = 1, chr, snpGR, radius = 5e+05, applier = lapply, 
-    minMAF = 0, minGTF = 0) 
+    minMAF = 0, minGTF = 0, useEnd=FALSE) 
 {
-    cisrs = snpIdsCisToGenes(mgr, chr, snpGR, radius)
+    cisrs = snpIdsCisToGenes(mgr, chr, snpGR, radius, useEnd=useEnd)
     onboard = rownames(mgr@fflist[[ffind]])
     cisrs = lapply(cisrs, function(x) intersect(onboard, x))
     ans = applier(1:length(cisrs), function(x) {
