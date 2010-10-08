@@ -19,7 +19,7 @@ ieqtlTests(smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = "ifoo",
 	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, uncert=TRUE, family, ...)
 meqtlTests(listOfSmls, rhslist, runname = "mfoo", targdir = "mfoo", 
 	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, harmonizeSNPs = FALSE, uncert=TRUE, family, ...)
-cisScores( mgr, ffind=1, chr, snpGR, radius=5e5, applier=lapply, minMAF = 0, minGTF = 0 ) 
+cisScores( mgr, ffind=1, chr, snpGR, radius=5e5, applier=lapply, minMAF = 0, minGTF = 0, useEnd=FALSE ) 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -85,6 +85,9 @@ obtaining scores}
   \item{minGTF}{numeric: minimum genotype frequency for inclusion of SNP in reporting}
   \item{applier}{function, typically either \code{lapply} or \code{mclapply} if multicore
 services are desired}
+\item{useEnd}{logical to request cis relative to radius
+past entire gene sequence
+as opposed to local to TSS}
 }
 \details{
 \code{\link[snpMatrix]{snp.rhs.tests}} is run for all genes enumerated in

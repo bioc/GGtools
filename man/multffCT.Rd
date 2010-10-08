@@ -92,6 +92,7 @@ VJ Carey <stvjc@channing.harvard.edu>
 \examples{
 # runs interactively but not in check on windows
 if (.Platform$OS.type != "windows") {
+if (require(ff)) {
  data(smlSet.example)
  sessionInfo()
  td = tempdir()
@@ -109,6 +110,7 @@ if (.Platform$OS.type != "windows") {
  dems
  dir()
  setwd(od)
+}
 }
 }
 \keyword{ models }

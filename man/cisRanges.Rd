@@ -8,7 +8,7 @@ create GRanges instance for intervals cis to a set of genes
 create GRanges instance for intervals cis to a set of genes
 }
 \usage{
-cisRanges(probeids, chr, anno, radius = 5e+05)
+cisRanges(probeids, chr, anno, radius = 5e+05, useEnd=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -28,6 +28,9 @@ locations will be derived
 count of basepairs upstream and downstream of (first) CHRLOC
 entry defining the range
 }
+  \item{useEnd}{logical to request cis relative to radius
+past entire gene sequence
+as opposed to local to TSS}
 }
 %\details{
 %%%  ~~ If necessary, more details than the description above ~~
