@@ -101,9 +101,16 @@ total number of SNP in \code{smlSet}.  These are stored in \code{ff} files in fo
 \code{imphm3_1KG_20_mA2} is a set of imputation rules for SNP on chromosome 20, where the
 1000 genomes genotypes distributed in `pilot1' VCF files are used to create
 imputations to loci not covered in the phase 3 hapmap data in \code{hm3ceuSMS}.
+
+cisScores will fail if genes are present that are not on the chromosome
+for which scores are requested.
 }
 \value{
-instance of \code{eqtlTestsManager}
+(i,m)eqtlTests returns instance of \code{eqtlTestsManager}
+
+cisScores returns list with elements for each gene consisting of
+chi-squared statistics for SNP cis to the genes according to settings
+of radius and useEnd
 }
 %\references{
 %}
@@ -138,9 +145,17 @@ setwd(td)
 time.lapply = unix.time(e1 <- eqtlTests( hm, ~male ))
 e1
 dir("foo")
+#
+# now show how to extract scores cis to genes
+#
+if (require(ceu1kg)) {
+ data(ceu1kgMeta_20)
+ chkcc = cisScores(e1, 1, "chr20", ceu1kgMeta_20, radius=2e6) 
+ sapply(chkcc, max)
+}
 setwd(curd)
 #
-# additional examples are in the 'extras' folder
+# additional examples are in the 'extras' folder, extrExt.txt
 # 
 }
 \keyword{ models }
