@@ -106,7 +106,7 @@ eqtlTests = function(smlSet, rhs=~1-1,
  if (saveSummaries) {
   # get MAF and minGTF for all SNP
   sumfn = paste(fnhead, chrNames, "_summ.ff", sep="")
-  if (require(multicore)) {
+  if ("multicore" %in% search()) {
     summfflist = mclapply( 1:length(chrNames), function(i) ffSnpSummary(smList(smlSet)[[i]], sumfn[i], 
          fac=shortfac)) 
     } else {
@@ -314,6 +314,11 @@ getGRanges = function(mgr, ffind, geneind, seqnames, namedlocs) {
 cisRanges = function(probeids, chr, anno, radius=5e5, useEnd=FALSE) {
  require(GenomicRanges)
  require(anno, character.only=TRUE)
+ goodchr = gsub("chr", "", chr)
+ chrs = mget( probeids, get(paste(gsub(".db", "", anno), "CHR", sep="")), ifnotfound=NA)
+ thechrs = unique(unlist(na.omit(chrs)))
+ if (length(thechrs)>1) stop("probeids supplied are from multiple chromosomes")
+ if (thechrs != goodchr) stop(paste("probeids requested not all on chr", chr))
  tss = mget( probeids, get(paste(gsub(".db", "", anno), "CHRLOC", sep="")), ifnotfound=NA)
  ends = mget( probeids, get(paste(gsub(".db", "", anno), "CHRLOCEND", sep="")), ifnotfound=NA)
  tss = sapply(tss, "[", 1)

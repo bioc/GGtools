@@ -280,14 +280,15 @@ hlit = hmceuB36.2021[ probeId(samp), ]
 If you are using a POSIX-compliant system, you can speed up
 this process by distributing over cores.  We will be writing data
 to a folder called \texttt{dem50}.
-<<domc>>=
+<<domc,eval=FALSE>>=
 try(system("rm -rf dem50"))
 if (try(require(multicore))) {
  unix.time(e1 <- eqtlTests(hlit, ~male, geneApply = mclapply, targdir="dem50" ))
 }
 @
 If you do not have \textit{multicore}, alter the code to:
-<<dom2,eval=FALSE>>=
+<<dom2,eval=TRUE>>=
+ try(system("rm -rf dem50"))
  unix.time(e1 <- eqtlTests(hlit, ~male, geneApply = lapply, targdir="dem50" ))
 @
 The resulting object is:
@@ -326,7 +327,7 @@ hlit21 = hmceuB36.2021[ probeId(samp21), ]
 Now perform the tests, using a different target folder:
 <<dot>>=
 try(system("rm -rf dem50.21"))
-unix.time(e2 <- eqtlTests(hlit21, ~male, geneApply = mclapply, targdir="dem50.21" ))
+unix.time(e2 <- eqtlTests(hlit21, ~male, geneApply = lapply, targdir="dem50.21" ))
 e2
 @
 To facilitate interrogation of the two sets of results simultaneously, the

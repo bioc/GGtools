@@ -200,9 +200,16 @@ Let's look at some 'good hits':
 <<lkda,fig=TRUE>>=
 par(mfrow=c(3,3))
 gd = names(top)
-for (i in 1:9)
- plot( exprs(ceu6)[gd[i], ] ~ rc[[gd[i]]], main=gd[i],
+library(MASS)
+for (i in 1:9) {
+ plot( exprs(ceu6)[gd[i], ] ~ jitter(rc[[gd[i]]]), main=gd[i],
    ylab = get(gd[i], illuminaHumanv1SYMBOL), xlab="# rare SNP minor alleles in gene" ) 
+ rlmout = lqs(exprs(ceu6)[gd[i], ] ~ rc[[gd[i]]])$coef
+ co = lms[[ gd[i] ]]
+ rco = rlmout
+ abline(co[1], co[2], lty=2, col="gray", lwd=2)
+ abline(rco[1], rco[2], lty=4, col="gray", lwd=2)
+}
 @
 
 

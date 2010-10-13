@@ -92,6 +92,7 @@ sn2use_inds = which(ranges(snpLocs20)$chr20 \%in\% IRanges(start,end))
 od = getwd()
 setwd(tempdir())
 # create the ff manager instance
+library(ff)
 dd = diagffCC(h20, gs~male)
 # extract the matrix
 fc = X2chunk(dd, 1, start, end, snpLocs20, "illuminaHumanv1.db")

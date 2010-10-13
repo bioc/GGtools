@@ -125,7 +125,12 @@ if (!exists("hm3ceuSMS")) data(hm3ceuSMS)
 library(illuminaHumanv1.db)
 cptag = get("CPNE1", revmap(illuminaHumanv1SYMBOL))
 indc = which(featureNames(hm3ceuSMS) == cptag[1])
-hm = hm3ceuSMS[c(indc,1:19),]  # reduce problem
+#
+# get a set of additional genes on chr20
+all20 = get("20", revmap(illuminaHumanv1CHR))
+g20 = unique(c(all20[1:10], cptag))
+#
+hm = hm3ceuSMS[probeId(g20),]  # reduce problem
 hm = hm[ chrnum(c("chr20", "chr21")), ]
 td = tempdir()
 curd = getwd()
@@ -133,70 +138,9 @@ setwd(td)
 time.lapply = unix.time(e1 <- eqtlTests( hm, ~male ))
 e1
 dir("foo")
-if (require(multicore)) {
- time.mclapply = unix.time(e2 <- eqtlTests(hm, ~male, targdir="bar", runname="bar",
-      geneApply = mclapply ) )
- print(time.lapply)
- print(time.mclapply)
-}
-mm = meqtlTests( list(hm, hm), list(~male, ~male))
-mm
-mm@fflist[[1]][1:4,1:4]
-e1@fflist[[1]][1:4,1:4]  # for nonmissing tests, mm = 2xe1
-e4 = eqtlTests(hm[1:5,], ~male, runname="abc")
-e5 = eqtlTests(hm[6:10,], ~male, runname="def")
-#
-# create and illustrate use of the director concept 
-#  here we take the managers for two gene sets (1:5, 6:10)
-#  and create the director that allows queries across them
-#
-cd = mkCisTransDirector(list(e4,e5), "demo2x5.sqlite", 
-	snptabname="snpnames", probetabname="probenames", 
-	probeanno=hm@annotation, commonSNPs=TRUE)
-#
-# first we have specific snp-gene queries
-#
-rs2 = GGtools:::snpIdList(cd@mgrs[[1]])[[1]][1:2]
-cd[rs2, "GI_10047091-S"]
-#
-# now we want values for two SNP over all genes 
-#  there were only a few genes so we can look at all
-#
-cd[rs2,]
-#
-# now get all SNP for a given gene -- this is a large request
-#
-dem2 = cd[, "GI_10047091-S"]
-sapply(dem2[[1]], length)
-#
-# now illustrate regression-based imputation
-#
-hmi = hm[ chrnum("chr20"), ]
-#
-# here are stored imputation rules built to impute from hapmap phase 3
-# panel to 1KG
-#
-data(imphm3_1KG_20_mA2)
-e1i = ieqtlTests(hmi, ~male, rules=imphm3_1KG_20_mA2 )
-e1i
-topFeats( sym = "CPNE1", mgr=e1i, ffind=1, anno="illuminaHumanv1.db" )
-topFeats(probeid="GI_23397697-A", mgr=cd)  
-topFeats(rsid="rs6060632", mgr=cd)
-#
-# now illustrate how scores can be obtained after permuting samples
-# the permEx function must be used because snpMatrix testing facilities
-# try hard to match sampleIds of phenotype and genotype; the X[,S] idiom
-# does not work
-#
-if (require(multicore)) {
- library(ceu1kg)
- data(ceu1kgMeta_20)
- cc = cisScores( e1i, 1, "chr20", ceu1kgMeta_20, applier=mclapply, radius=5e5)
- lapply(cc, function(x) sort(x,decreasing=TRUE)[1:3]) # now check scores obtained under permutation
- e1ip = ieqtlTests(permEx(hmi), ~male, rules=imphm3_1KG_20_mA2, targdir="p1", runname="p1" )
- cc2 = cisScores( e1ip, 1, "chr20", ceu1kgMeta_20, applier=mclapply, radius=5e5)
- lapply(cc2, function(x) sort(x,decreasing=TRUE)[1:3])
-}
 setwd(curd)
+#
+# additional examples are in the 'extras' folder
+# 
 }
 \keyword{ models }
