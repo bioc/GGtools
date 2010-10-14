@@ -8,7 +8,18 @@ sym2id = function (syms, annopkg)
         "[", 1))
 }
 
-topFeats = function(probeid=NULL, sym=NULL, rsid=NULL, mgrOrCTD, ffind, anno, n=10, useSym=TRUE, minMAF=0, minGTF=0 ) {
+setGeneric("topFeats", function(x, ...)standardGeneric("topFeats"))
+setMethod("topFeats", c("rsid"), function(x, ...) {
+ .topFeats(probeid=NULL, sym=NULL, rsid=x, ...)
+})
+setMethod("topFeats", c("genesym"), function(x, ...) {
+ .topFeats(probeid=NULL, sym=x, rsid=NULL, ...)
+})
+setMethod("topFeats", c("probeId"), function(x, ...) {
+ .topFeats(probeid=x, sym=NULL, rsid=NULL, ...)
+})
+
+.topFeats = function(probeid=NULL, sym=NULL, rsid=NULL, mgrOrCTD, ffind, anno, n=10, useSym=TRUE, minMAF=0, minGTF=0 ) {
  if (is.null(probeid) & is.null(sym) & is.null(rsid)) 
        stop("must supply one of probeid, sym, rsid")
  if (!is.null(sym)) {

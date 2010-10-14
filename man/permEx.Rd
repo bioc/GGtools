@@ -50,8 +50,8 @@ time.lapply = unix.time(e1 <- eqtlTests( hm, ~male, targdir="pex" ))
 e1
 hmp = permEx(hm)
 e1perm = eqtlTests(hmp, ~male, targdir="permfoo", runname="permrun")
-topFeats(probeid=cptag, mgr=e1, ffind=1, anno="illuminaHumanv1.db", useSym=FALSE)
-topFeats(probeid=cptag, mgr=e1perm, ffind=1, anno="illuminaHumanv1.db", useSym=FALSE)
+topFeats(probeId(cptag), mgr=e1, ffind=1, anno="illuminaHumanv1.db", useSym=FALSE)
+topFeats(probeId(cptag), mgr=e1perm, ffind=1, anno="illuminaHumanv1.db", useSym=FALSE)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -1,6 +1,9 @@
 \name{X2chunk}
 \alias{X2chunk}
 \alias{topFeats}
+\alias{topFeats,genesym-method}
+\alias{topFeats,probeId-method}
+\alias{topFeats,rsid-method}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 compute numerical matrix of chisq statistics in a genomic interval;
@@ -12,24 +15,21 @@ compute numerical matrix of chisq statistics in a genomic interval
 }
 \usage{
 X2chunk(mgr, ffind, start, end, snplocs, anno, useSym)
-topFeats( probeid=NULL, sym=NULL, rsid=NULL, mgrOrCTD, ffind, anno, n=10, useSym=TRUE, minMAF=0, minGTF=0 )
+topFeats( x, ... )
+# additional potential args include 
+#      mgrOrCTD, ffind, anno, n=10, useSym=TRUE, minMAF=0, minGTF=0 )
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
+  \item{x}{for topFeats, an instance of \code{\link[GGBase]{probeId-class}} or 
+\code{\link[GGBase]{rsid-class}} or \code{\link[GGBase]{genesym}} classes;
+this is an API change because of odd logic of old function; to use old
+behavior, call GGtools:::.topFeats}
   \item{mgr}{
 an instance of multffManager
 }
   \item{mgrOrCTD}{
 an instance of multffManager or a cisTransDirector instance
-}
-  \item{probeid}{
-character string for a probeid
-}
-  \item{sym}{
-character string for a gene
-}
-  \item{rsid}{
-character string for a snp id
 }
   \item{ffind}{
 the index of the ff structure to use (typically chromosome number)
@@ -60,6 +60,7 @@ numeric lower bound on minor allele frequency of SNPs to be considered
   \item{minGTF}{
 numeric lower bound on minimum genotype frequency of SNPs to be considered
 }
+  \item{\dots}{ see comment in USAGE and entries above }
 }
 \details{
 X2chunk will obtain RAM resources for material on disk, so use with caution
@@ -100,8 +101,8 @@ dim(fc)
 fc[1:4,1:5]
 setwd(od)
 heatmap(fc[1:50,], Rowv=NA, Colv=NA, scale="none")
-topFeats(probeid=NULL, sym=NULL, rsid="rs6094162", mgr=dd, 1, "illuminaHumanv1.db")
-topFeats(probeid=NULL, sym="MKKS", rsid=NULL, mgr=dd, 1, "illuminaHumanv1.db")
+topFeats( rsid("rs6094162"), mgr=dd, 1, "illuminaHumanv1.db")
+topFeats( genesym("MKKS"), mgr=dd, 1, "illuminaHumanv1.db")
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
