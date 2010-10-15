@@ -1,6 +1,4 @@
 
-library(ceu1kg)
-data(ceu1kgMeta_20)
 geneLimits = function( anno="org.Hs.eg.db", chr="20" ) {
  require(anno, character.only=TRUE)
  clnanno = gsub(".db", "", anno)
@@ -14,13 +12,9 @@ geneLimits = function( anno="org.Hs.eg.db", chr="20" ) {
  names(ans) = gna[-bad]
  ans
 }
-gl = geneLimits( anno="illuminaHumanv1.db" )
 
 extendGR = function( gr, siz=1e6 )
   punion(shift(gr, -siz), shift(gr, siz), fill.gap=TRUE)
-
-egl = extendGR(gl)
-save(egl, file="egl.rda")
 
 containedSnps = function(geneRanges, snpRanges) {
  #
@@ -36,7 +30,12 @@ containedSnps = function(geneRanges, snpRanges) {
   ans
 }
 
-cisScores2 = function( mgr, geneRanges, snpRanges, applier=lapply ) {
+scoresInRanges = function( mgr, geneRanges, snpRanges, applier=lapply ) {
+ #
+ # mgr is an eqtlTestsManager instance
+ # geneRanges will typically be a GRanges extended for 'cis'
+ # snpRanges can be a general snp metadata GRanges
+ #
  snm = unlist(lapply(mgr@fflist, rownames))
  snpRanges = snpRanges[ intersect(snm, names(snpRanges)) ]
  snps = containedSnps( geneRanges, snpRanges )
@@ -44,11 +43,3 @@ cisScores2 = function( mgr, geneRanges, snpRanges, applier=lapply ) {
  applier( 1:length(snps), function(x) mgr[ rsid(snps[[x]]), probeId(gn[x]) ])
 }
  
-library(GGtools)
-data(hmceuB36.2021)
-gl20 = names(egl[ which(seqnames(egl) == "chr20") ] )[1:20]
-p2 = intersect( gl20, featureNames(hmceuB36.2021) )
-system("rm -rf foo")
-ee = eqtlTests( hmceuB36.2021[ probeId(p2), ], ~1 )
-save(ee, file="ee.rda")
-cisScores2( ee, egl[1:10], ceu1kgMeta_20 )

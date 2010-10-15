@@ -57,25 +57,43 @@ permuterm = function(l) {
 
 snpIdMap = function (ids, x) 
 {
+    chrn = names(x@fflist)
     snpnames = lapply(GGtools:::fflist(x), rownames)
-    cnames = names(snpnames)
-    findchr = function(x) {
-        if (length(x) > 1) 
-            stop("need scalar input")
-        ind = NA
-        for (i in 1:length(snpnames)) {
-            if (x %in% snpnames[[i]]) {
-                ind = i
-                break
-            }
-        }
-        if (is.na(ind)) stop("an rsid was submitted that is not among the snp names in the smlSet for eqtlTests")
-        cnames[ind]
-    }
-    map = sapply(ids, findchr)
-    names(map) = ids
-    split(names(map), map)
+#    cnames = names(snpnames)
+#    findchr = function(x) {
+#        if (length(x) > 1) 
+#            stop("need scalar input")
+#        ind = NA
+#        for (i in 1:length(snpnames)) {
+#            if (x %in% snpnames[[i]]) {
+#                ind = i
+#                break
+#            }
+#        }
+#        if (is.na(ind)) stop("an rsid was submitted that is not among the snp names in the smlSet for eqtlTests")
+#        cnames[ind]
+#    }
+#    map = sapply(ids, findchr)
+#    names(map) = ids
+    map = findchr2( ids, snpnames )
+    ans = split(names(map), map)  # names of this list will be cardinal numbers
+    names(ans) = chrn[ as.numeric(names(ans)) ]
+    ans
 }
+
+findchr2 = function(snpnvec, listOfSnpn) {
+  # determine element in listOfSnpn which matches snpnvec
+  # return named vector of element numbers with snpnames as names
+  ans = rep(NA, length(snpnvec))
+  names(ans) = snpnvec
+  for (i in 1:length(listOfSnpn)) {
+    mm = match( listOfSnpn[[i]], snpnvec, nomatch=NA )
+    if (sum(!is.na(mm))>0) ans[mm] = i
+  }
+  if (any(is.na(ans))) stop("an rsid was submitted that is not among the snp names in the smlSet for eqtlTests")
+  ans
+}
+
 
 ffSnpSummary = function(sm,fn,fac=100) {
  dat = col.summary(sm)
@@ -126,7 +144,9 @@ eqtlTests = function(smlSet, rhs=~1-1,
    geneApply( geneNames, function(gene) {
      ex = exprs(smlSet)[gene,]
      fmla = formula(paste("ex", paste(as.character(rhs),collapse=""), collapse=" "))
-     numans = snp.rhs.tests(fmla, snp.data=snpdata, data=pData(smlSet), family=family, uncertain=uncert, ...)@chisq
+     numans = snp.rhs.tests(fmla, snp.data=snpdata, data=pData(smlSet), 
+         family=family , ...)@chisq
+#uncertain=uncert
      if (computeZ) {
        numans = sqrt(numans)
        signl = snp.rhs.estimates( fmla, snp.data=snpdata, data=pData(smlSet), family=family, ... )
@@ -224,7 +244,8 @@ mkDirectorDb = function(cd, commonSNPs=TRUE) {
 
 ieqtlTests = function (smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = "ifoo", 
     geneApply = lapply, chromApply = lapply, shortfac = 100, 
-    computeZ = FALSE, uncert=TRUE, family, ...) 
+    computeZ = FALSE, uncert=TRUE, 
+    family, ...) 
 {
     theCall = match.call()
     if (missing(family)) family="gaussian"
@@ -247,8 +268,9 @@ ieqtlTests = function (smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = 
             fmla = formula(paste("ex", paste(as.character(rhs), 
                 collapse = ""), collapse = " "))
             numans = snp.rhs.tests(fmla, snp.data = snpdata, 
-                data = pData(smlSet), family = family, uncertain=uncert, ...)@chisq
-            numansi = snp.rhs.tests(fmla, snp.data = snpdata, uncertain=uncert,
+                data = pData(smlSet), family = family, #uncertain=uncert, 
+                ...)@chisq
+            numansi = snp.rhs.tests(fmla, snp.data = snpdata, #uncertain=uncert,
                 data = pData(smlSet), family = family, rules = rules, 
                 ...)@chisq
             numans = c(numans, numansi)
@@ -510,7 +532,9 @@ meqtlTests = function(listOfSmls, rhslist,
    geneApply( geneNames, function(gene) {
      ex = exprs(smlSet)[gene,]
      fmla = formula(paste("ex", paste(as.character(rhslist[[theSS]]),collapse=""), collapse=" "))
-     numans = snp.rhs.tests(fmla, snp.data=snpdata, data=pData(smlSet), family=family, uncertain=uncert, ...)@chisq
+     numans = snp.rhs.tests(fmla, snp.data=snpdata, 
+         data=pData(smlSet), family=family, ...)@chisq
+#uncertain=uncert, 
      if (computeZ) {
        numans = sqrt(numans)
        signl = snp.rhs.estimates( fmla, snp.data=snpdata, data=pData(smlSet), family=family, ... )

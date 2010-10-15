@@ -306,12 +306,14 @@ e1@shortfac
 The information shown above is not intended for public consumption.
 Instead we perform focused interrogation using brackets and casting:
 <<doi>>=
-e1[rsid("rs4814683"), probeId("GI_26051259-I")]
+g1 = probeNames(e1)[1]
+r1 = rownames(e1@fflist[[1]])[1]
+e1[rsid(r1), probeId(g1)]
 @
 Typical use case: finding a collection of strongest associations:
 <<lku>>=
-topFeats(probeId("GI_26051259-I"), mgr=e1, ffind=1, anno="illuminaHumanv1.db")
-topFeats(rsid("rs708954"), mgr=e1, ffind=1, anno="illuminaHumanv1.db")
+topFeats(probeId(g1), mgr=e1, ffind=1, anno="illuminaHumanv1.db")
+topFeats(rsid(r1), mgr=e1, ffind=1, anno="illuminaHumanv1.db")
 topFeats(genesym("SRC"), mgr=e1, ffind=1, anno="illuminaHumanv1.db")
 @
 
@@ -340,7 +342,9 @@ d1 = mkCisTransDirector(list(e1,e2), "d2021", "snptab", "probetab", "illuminaHum
 d1
 d1[ "rs6090120", "GI_42734342-S" ]
 @
-You are now managing and interrogating 17 million test results.  By increasing
+You are now managing and interrogating 
+\Sexpr{ sum(sapply(d1@mgrs, function(x) sapply(x@fflist,length))) }
+test results.  By increasing
 the numbers of genes and SNP held in the \texttt{smlSet} instances
 passed to \texttt{eqtlTests} you can increase this.  Interfaces need
 further refinement.
