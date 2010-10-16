@@ -24,16 +24,16 @@ genes with allele-specific expression discovered by RNA-seq
     \item{\code{imprint}}{a logical vector}
   }
 }
-\details{
+%\details{
 %%  ~~ If necessary, more details than the __description__ above ~~
-}
+%}
 \source{
 Effect of read-mapping biases on detecting allele-specific expression from RNA-sequencing data.
 Jacob F. Degner 1,3,, John C. Marioni 1,, Athma A. Pai 1, Joseph K. Pickrell 1, Everlyne Nkadori 1,2, Yoav Gilad 1, and Jonathan K. Pritchard 1,2, Bioinformatics 2009.
 }
-\references{
+%\references{
 %%  ~~ possibly secondary sources and usages ~~
-}
+%}
 \examples{
 data(degnerASE01)
 degnerASE01[1:4,]

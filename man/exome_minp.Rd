@@ -69,9 +69,9 @@ parameters passed to eqtlTests
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-\seealso{
+%\seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
-}
+%}
 \examples{
 data(hmceuB36.2021)
 hmlit = hmceuB36.2021[ chrnum(20), ]

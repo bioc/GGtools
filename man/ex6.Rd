@@ -43,17 +43,18 @@ Formal class 'GRanges' [package "GenomicRanges"] with 7 slots
   ..@ elementType    : chr "ANY"
   ..@ metadata       : list()
 }
-\details{
+%\details{
 %%  ~~ If necessary, more details than the __description__ above ~~
-}
-\source{
+%}
+%\source{
 %%  ~~ reference to a publication or URL from which the data were obtained ~~
-}
-\references{
+%}
+%\references{
 %%  ~~ possibly secondary sources and usages ~~
-}
+%}
 \examples{
 data(ex6)
+ex6[1:4]
 ## maybe str(ex6) ; plot(ex6) ...
 }
 \keyword{datasets}

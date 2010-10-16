@@ -29,9 +29,9 @@ SNP locations
 lapply or mclapply if relevant
 }
 }
-#\details{
-#%%  ~~ If necessary, more details than the description above ~~
-#}
+%\details{
+%#%%  ~~ If necessary, more details than the description above ~~
+%#}
 \value{
 a list of lists, one element per gene range, with matrix of chisq scores
 for SNP
