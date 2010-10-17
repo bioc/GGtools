@@ -283,6 +283,7 @@ It would be very nice to reconstruct the imputation for this SNP in detail.
 
 Let's now consider loci imputed by MACH but not by snpMatrix.
 <<lkn>>=
+if (.Platform$OS.type != "windows" ) {
 notreg = colnames(c20imp)[ which(apply(c20imp,2,function(x)all(is.na(x)))) ]
 inmachNR = intersect( mimp, notreg )
 length(inmachNR)
@@ -294,10 +295,12 @@ if (!exists("ceu1kg.sml")) data(ceu1kg.sml)
 rawc20 = ceu1kg.sml[[20]]
 table(as(rawc20[,"chr20:35790"], "character"))
 table(as(rawc20[,"chr20:36155"], "character"))
+}
 @
 So MACH is able to call 3 hets for each of these loci.
 We verify that snpMatrix regression does not
 <<lkm>>=
+if (.Platform$OS.type != "windows" ) {
 MbutNR = c("chr20:35790", "chr20:36155")
 Y = rawc20[, MbutNR, drop=FALSE]
 X = rawc20[, -match(MbutNR, colnames(rawc20)), drop=FALSE]
@@ -311,6 +314,7 @@ imm = snp.imputation( X, Y, LOCX, LOCY, minA=2 )
 imm
 imm1 = snp.imputation( X, Y, LOCX, LOCY, minA=1 )
 imm1
+}
 @
 How liberal are we willing to be with respect to estimation of LD in the
 presence of very limited genotype variation?
@@ -318,8 +322,10 @@ The lower we set minA, the more liberal.
 We can see what the regression procedure does in this case as follows:
 
 <<lkimm1>>=
+if (.Platform$OS.type != "windows" ) {
 ii = impute.snps(imm1, rawc20)
 apply(ii,2,table)
+}
 @
 More uncertainty is evident with the
 regression imputations, and a very liberal
