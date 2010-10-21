@@ -61,7 +61,14 @@ data(ceu1kgMeta_20)
 ceu1kgMeta_20 = updateObject(ceu1kgMeta_20)
 cc = scoresInRanges( ee, egl[1:10], ceu1kgMeta_20 )
 sapply(cc, sapply, length)
-sapply(cc, sapply, max)
+maxs = sapply(cc, sapply, max)
+maxs
+# this is impoverished from a metadata perspective, but
+# it is good to keep the code of scoresInRange simple
+# let's get the snp names of the best hits
+rsnhits = sapply(cc, sapply, function(x) rownames(x)[which.max(x)])
+# combine with gene names
+data.frame( probe=names(egl[1:10]), bestSNP=rsnhits, maxchisq=maxs )
 setwd(curd)
 }
 
