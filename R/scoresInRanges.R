@@ -37,7 +37,10 @@ scoresInRanges = function( mgr, geneRanges, snpRanges, applier=lapply ) {
  # snpRanges can be a general snp metadata GRanges
  #
  snm = unlist(lapply(mgr@fflist, rownames))
- snpRanges = snpRanges[ intersect(snm, names(snpRanges)) ]
+ iniRangeNames = names(snpRanges)
+ onboard = intersect(snm, iniRangeNames)
+ mm = match(onboard, iniRangeNames)
+ snpRanges = snpRanges[ mm ] # shld be faster than intersect(snm, names(snpRanges)) ]
  snps = containedSnps( geneRanges, snpRanges )
  gn = names(geneRanges)
  applier( 1:length(snps), function(x) mgr[ rsid(snps[[x]]), probeId(gn[x]) ])
