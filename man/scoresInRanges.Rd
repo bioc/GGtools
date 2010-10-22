@@ -9,7 +9,7 @@ structured survey of eqtlTestsManager to retrieve scores cis to genes
 defined through ranges
 }
 \usage{
-scoresInRanges(mgr, geneRanges, snpRanges, applier = lapply)
+scoresInRanges(mgr, geneRanges, snpRanges, applier = lapply, ffind=NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -27,6 +27,10 @@ SNP locations
 }
   \item{applier}{
 lapply or mclapply if relevant
+}
+  \item{ffind}{
+can be specified to pick a specific ff element of \code{mgr}; useful if \code{geneRanges}
+are drawn from only one chromosome, for example, so the scope of SNPs to be searched can be reduced
 }
 }
 %\details{

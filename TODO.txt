@@ -1,3 +1,6 @@
+Oct 2010 -- need to allow the eqtlTestsManagers to be "indexed" by GenomicRanges instances
+	so that lookups can be more driven by genomic contexts, less by
+        character matching
 Aug 2008 -- removed SQLite snp location metadata, substituting a
     structure based on the SNPlocs.Hsapiens package
 ---
