@@ -1,0 +1,3 @@
+
+wget http://malachite.genetics.utah.edu/10Gen/10Gen_NA19240_SOLiD_SNV.gvf.gz
+
