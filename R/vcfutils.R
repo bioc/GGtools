@@ -58,7 +58,7 @@ parseVCFrec = function(rec, nmetacol=9 ) {
 
 vcf2sm = function(gzpath, chrom, tabixcmd = "tabix", nmetacol=9, verbose=FALSE,
 gran=10000) {
- require(snpMatrix)
+ #require(snpMatrix)
  mm = getMetaVCF( gzfile(gzpath, "r") )
  sampids = sampleIDs(mm, ndrop=nmetacol)
  on.exit(close(fpipe))
@@ -81,7 +81,7 @@ gran=10000) {
 
 vcf2smTXT = function (txtpath, meta, nmetacol = 9, verbose = FALSE, gran=10000) 
 {
-    require(snpMatrix)
+    #require(snpMatrix)
     mm = meta
     sampids = sampleIDs(mm, ndrop = nmetacol)
     on.exit(close(fpipe))
@@ -105,7 +105,7 @@ vcf2smTXT = function (txtpath, meta, nmetacol = 9, verbose = FALSE, gran=10000)
 
 vcf2metaloc = function(gzpath, chrom, tabixcmd = "tabix", nmetacol=9, verbose=FALSE,
 gran=10000) {
- require(snpMatrix)
+ #require(snpMatrix)
  mm = getMetaVCF( gzfile(gzpath, "r") )
  sampids = sampleIDs(mm, ndrop=nmetacol)
  on.exit(close(fpipe))
