@@ -244,7 +244,7 @@ mkDirectorDb = function(cd, commonSNPs=TRUE) {
 
 ieqtlTests = function (smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = "ifoo", 
     geneApply = lapply, chromApply = lapply, shortfac = 100, 
-    computeZ = FALSE, uncert=TRUE, 
+    computeZ = FALSE, uncert=TRUE, saveSummaries=TRUE,
     family, ...) 
 {
     theCall = match.call()
@@ -256,6 +256,23 @@ ieqtlTests = function (smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = 
     ngenes = length(geneNames)
     nchr = length(chrNames)
     system(paste("mkdir", targdir))
+#
+# following just grabbed from eqtlTests
+#
+ summfflist = list()
+if (saveSummaries) {
+  # get MAF and minGTF for all SNP
+  sumfn = paste(fnhead, chrNames, "_summ.ff", sep="")
+  if ("multicore" %in% search()) {
+    summfflist = mclapply( 1:length(chrNames), function(i) ffSnpSummary(smList(smlSet)[[i]], sumfn[i],
+         fac=shortfac))
+    } else {
+          for (i in 1:length(sumfn))
+              summfflist[[chrNames[i]]] = ffSnpSummary(smList(smlSet)[[i]], sumfn[i])
+          }
+  # ok, now just save references in object
+  }
+
     cres = chromApply(chrNames, function(chr) {
         snpdata = smList(smlSet)[[chr]]
         targff = paste(fnhead, "chr", chr, ".ff", sep = "")
@@ -268,9 +285,9 @@ ieqtlTests = function (smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = 
             fmla = formula(paste("ex", paste(as.character(rhs), 
                 collapse = ""), collapse = " "))
             numans = snp.rhs.tests(fmla, snp.data = snpdata, 
-                data = pData(smlSet), family = family, #uncertain=uncert, 
+                data = pData(smlSet), family = family, uncertain=uncert, 
                 ...)@chisq
-            numansi = snp.rhs.tests(fmla, snp.data = snpdata, #uncertain=uncert,
+            numansi = snp.rhs.tests(fmla, snp.data = snpdata, uncertain=uncert,
                 data = pData(smlSet), family = family, rules = rules, 
                 ...)@chisq
             numans = c(numans, numansi)
@@ -300,7 +317,7 @@ ieqtlTests = function (smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = 
     exdate = date()
     new("eqtlTestsManager", fflist = cres, call = theCall, sess = sess, 
         exdate = exdate, shortfac = shortfac, geneanno = annotation(smlSet), 
-        df = 1)
+        df=1, summaryList=summfflist)
 }
 
 getNamedLocs = function(slpack="SNPlocs.Hsapiens.dbSNP.20100427", chrtok) {
@@ -492,7 +509,8 @@ manhPlot = function( probeid, mgr, ffind, namedlocvec=NULL, locGRanges=NULL,
  
 meqtlTests = function(listOfSmls, rhslist,
    runname="mfoo", targdir="mfoo", geneApply=lapply, chromApply=lapply,
-   shortfac = 100, computeZ=FALSE, harmonizeSNPs = FALSE, uncert=TRUE, family, ... ) {
+   shortfac = 100, computeZ=FALSE, harmonizeSNPs = FALSE, uncert=TRUE, 
+   saveSummaries=TRUE, family, ... ) {
  theCall = match.call()
  sess = sessionInfo()
  if (missing(family)) family="gaussian"
@@ -524,6 +542,21 @@ meqtlTests = function(listOfSmls, rhslist,
         filename=targffs[chr] ))
  names(ffRefList) = chrNames
  
+# chopped from eqtlTests
+ summfflist = list()
+ if (saveSummaries) {
+  # get MAF and minGTF for all SNP
+  sumfn = paste(fnhead, chrNames, "_summ.ff", sep="")
+  if ("multicore" %in% search()) {
+    summfflist = mclapply( 1:length(chrNames), function(i) ffSnpSummary(smList(smlSet)[[i]], sumfn[i],
+         fac=shortfac))
+    } else {
+          for (i in 1:length(sumfn))
+              summfflist[[chrNames[i]]] = ffSnpSummary(smList(smlSet)[[i]], sumfn[i])
+          }
+  # ok, now just save references in object
+  }
+
  cres = chromApply( chrNames, function(chr) {
   for (theSS in 1:length(listOfSmls)) {
    smlSet = listOfSmls[[theSS]]
@@ -533,8 +566,7 @@ meqtlTests = function(listOfSmls, rhslist,
      ex = exprs(smlSet)[gene,]
      fmla = formula(paste("ex", paste(as.character(rhslist[[theSS]]),collapse=""), collapse=" "))
      numans = snp.rhs.tests(fmla, snp.data=snpdata, 
-         data=pData(smlSet), family=family, ...)@chisq
-#uncertain=uncert, 
+         data=pData(smlSet), family=family, uncertain=uncert, ...)@chisq
      if (computeZ) {
        numans = sqrt(numans)
        signl = snp.rhs.estimates( fmla, snp.data=snpdata, data=pData(smlSet), family=family, ... )
@@ -556,5 +588,5 @@ meqtlTests = function(listOfSmls, rhslist,
   exdate = date()
   new("eqtlTestsManager", fflist=cres, call=theCall, sess=sess, 
         exdate=exdate, shortfac=shortfac, geneanno=annotation(smlSet1),
-        df=length(listOfSmls))
+        df=length(listOfSmls), summaryList=summfflist)
 }

@@ -26,8 +26,8 @@ gwSnpTests(sym, sms, cnum, cs, ...)
   \item{\dots}{ \dots}
 }
 \details{
-invokes \code{snpMatrix} package test procedures 
-(e.g., \code{\link[snpMatrix]{snp.rhs.tests}} as appropriate
+invokes \code{snpMatrix2} package test procedures 
+(e.g., \code{\link[snpMatrix2]{snp.rhs.tests}} as appropriate
 
 
 \code{chunksize} can be specified to divide

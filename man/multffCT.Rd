@@ -20,7 +20,7 @@ list of \code{\link{smlSet-class}} instances
 list of formulas (associated one to one with components of
 \code{listOfSms}) with dummy dependent variable and variables on 
 right-hand side drawn from
-pData of listOfSms, to be passed to \code{\link[snpMatrix]{snp.rhs.tests}}
+pData of listOfSms, to be passed to \code{\link[snpMatrix2]{snp.rhs.tests}}
 }
   \item{geneinds}{
 object inheriting from numeric or \code{\link[GGBase]{probeId-class}} to enumerate
@@ -62,7 +62,7 @@ of the short representation, but it seems worthwhile.
   \item{shortfac}{quantity by which short ints will be inflated for storage to allow
 more precision in usage}
   \item{\dots}{
-additional arguments for passage to \code{\link[snpMatrix]{snp.rhs.tests}}
+additional arguments for passage to \code{\link[snpMatrix2]{snp.rhs.tests}}
 }
 }
 \details{

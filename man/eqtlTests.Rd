@@ -16,9 +16,10 @@ eqtlTests(smlSet, rhs = ~1 - 1, runname = "foo", targdir = "foo",
 	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, 
         checkValid = TRUE, saveSummaries = TRUE, uncert=TRUE, family, ...)
 ieqtlTests(smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = "ifoo", 
-	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, uncert=TRUE, family, ...)
+	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, uncert=TRUE, saveSummaries=TRUE,
+        family, ...)
 meqtlTests(listOfSmls, rhslist, runname = "mfoo", targdir = "mfoo", 
-	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, harmonizeSNPs = FALSE, uncert=TRUE, family, ...)
+	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, harmonizeSNPs = FALSE, uncert=TRUE, saveSummaries=TRUE, family, ...)
 cisScores( mgr, ffind=1, chr, snpGR, radius=5e5, applier=lapply, minMAF = 0, minGTF = 0, useEnd=FALSE ) 
 }
 %- maybe also 'usage' for other objects documented here.
@@ -37,7 +38,7 @@ List of standard formulae without dependent variable; predictors for each formul
 with each rhslist element.  In other words, the pData of the kth smlSet in listOfSmls provides the
 data to resolve the symbols in the kth formula of rhslist
 }
-  \item{rules}{instance of \code{\link[snpMatrix]{snp.reg.imputation-class}} expressing
+  \item{rules}{instance of \code{\link[snpMatrix2]{snp.reg.imputation-class}} expressing
 rules by which unobserved SNP are `imputed' (that is, the value used is the
 conditional expectation of
 B copy number, which is real-valued and may lie outside [0,2])
@@ -70,10 +71,10 @@ before statistical processing of the data in this function.
   \item{checkValid}{logical: shall the function run validObject on input smlSet?}
   \item{saveSummaries}{logical: shall a set of ff files be stored that includes genotype
 and allele frequency data for downstream filtering?}
-  \item{uncert}{setting for value of \code{uncertain} argument in \code{\link[snpMatrix]{snp.rhs.tests}}}
+  \item{uncert}{setting for value of \code{uncertain} argument in \code{\link[snpMatrix2]{snp.rhs.tests}}}
   \item{family}{specify the GLM family to use; defaults to 'gaussian' if left missing}
   \item{\dots}{
-parameters passed to \code{\link[snpMatrix]{snp.rhs.tests}}
+parameters passed to \code{\link[snpMatrix2]{snp.rhs.tests}}
 }
   \item{mgr}{an instance of \code{eqtlTestsManager}}
   \item{ffind}{index into the list of ff files managed by \code{mgr} to be used for
@@ -90,7 +91,7 @@ past entire gene sequence
 as opposed to local to TSS}
 }
 \details{
-\code{\link[snpMatrix]{snp.rhs.tests}} is run for all genes enumerated in
+\code{\link[snpMatrix2]{snp.rhs.tests}} is run for all genes enumerated in
 \code{featureNames(smlSet)} individually as dependent variables, and all SNP  in \code{smList(smlSet)}
 as predictors, one by one.  Each model fitted for SNP genotype is additionally
 adjusted for elements in \code{rhs}.  There are consequently \code{G*S} test results
