@@ -38,7 +38,7 @@ numeric: a report is given once every gran snp are traversed to show progress
 %%%  ~~ If necessary, more details than the description above ~~
 %}
 \value{
-an instance of \code{\link[snpMatrix]{snp.matrix-class}}
+an instance of \code{\link[snpMatrix2]{snp.matrix-class}}
 }
 \references{
 \url{http://www.1000genomes.org/wiki/doku.php?id=1000_genomes:analysis:vcf4.0}
