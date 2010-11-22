@@ -9,7 +9,7 @@ structured survey of eqtlTestsManager to retrieve scores cis to genes
 defined through ranges
 }
 \usage{
-scoresInRanges(mgr, geneRanges, snpRanges, applier = lapply, ffind=NULL)
+scoresInRanges(mgr, geneRanges, snpRanges, applier = lapply, ffind=NULL, matchProbNames=TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -32,10 +32,14 @@ lapply or mclapply if relevant
 can be specified to pick a specific ff element of \code{mgr}; useful if \code{geneRanges}
 are drawn from only one chromosome, for example, so the scope of SNPs to be searched can be reduced
 }
+  \item{matchProbeNames}{logical telling us to restrict attention to
+genes in geneRanges that match some probeid in mgr}
 }
-%\details{
-%#%%  ~~ If necessary, more details than the description above ~~
-%#}
+\details{
+To handle more general items in geneRanges parameter (such as ranges
+of TFBS, for example) we require that geneRanges inherit from GRanges 
+and that it has unique names.
+}
 \value{
 a list of lists, one element per gene range, with matrix of chisq scores
 for SNP

@@ -42,7 +42,8 @@ containedSnps = function(geneRanges, snpRanges) {
 #}
  
 
-scoresInRanges = function (mgr, geneRanges, snpRanges, applier = lapply, ffind=NULL) 
+scoresInRanges = function (mgr, geneRanges, snpRanges, applier = lapply, 
+   ffind=NULL, matchProbeNames=TRUE) 
 {
  #
  # mgr is an eqtlTestsManager instance
@@ -50,12 +51,20 @@ scoresInRanges = function (mgr, geneRanges, snpRanges, applier = lapply, ffind=N
  # snpRanges can be a general snp metadata GRanges
  #  oct 22-- introduced ffind to reduce scope of mgr to be examined if geneRanges is limited to one chr
  #           also added filtering of geneRanges to genes available in mgr
+ # ffind is a detail telling which piece of the mgr (typically chrom) is in use
+ # matchProbeNames tells us to restrict attention to ranges in GRanges that
+ #   have a name matching a probe in the mgr
  #
-    pn = probeNames(mgr)
+    if (!is(geneRanges, "GRanges")) stop("geneRanges must inherit from GRanges")
     gonboard = names(geneRanges)
-    gok = match(pn, gonboard, nomatch=0 )
-    gok = gok[gok>0]
-    geneRanges = geneRanges[ gok ]
+    if (matchProbeNames) {
+     pn = probeNames(mgr)
+     gok = match(pn, gonboard, nomatch=0 )
+     gok = gok[gok>0]
+     geneRanges = geneRanges[ gok ]
+     }
+    if (length(gonboard)==0) stop("geneRanges must have non-null names")
+    if (any(duplicated(gonboard))) stop("names of geneRanges must be unique")
     if (is.null(ffind)) snm = unlist(lapply(mgr@fflist, rownames))
     else snm = unlist(lapply(mgr@fflist[ffind], rownames))
     iniRangeNames = names(snpRanges)
