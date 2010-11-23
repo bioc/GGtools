@@ -65,17 +65,28 @@ scoresInRanges = function (mgr, geneRanges, snpRanges, applier = lapply,
      }
     if (length(gonboard)==0) stop("geneRanges must have non-null names")
     if (any(duplicated(gonboard))) stop("names of geneRanges must be unique")
-    if (is.null(ffind)) snm = unlist(lapply(mgr@fflist, rownames))
-    else snm = unlist(lapply(mgr@fflist[ffind], rownames))
+#    if (is.null(ffind)) snm = unlist(lapply(mgr@fflist, rownames))
+#    else snm = unlist(lapply(mgr@fflist[ffind], rownames))
+    if (is(mgr, "eqtlTestsManager")) {
+        snm = unlist(lapply(mgr@fflist, rownames))
+     } else if (is(mgr, "cisTransDirector")) {
+       snm = unlist(snpIdList(mgrs(mgr)[[1]]))
+     }
+
     iniRangeNames = names(snpRanges)
     onboard = intersect(snm, iniRangeNames)
     mm = match(onboard, iniRangeNames)
     snpRanges = snpRanges[mm]
     snps = containedSnps(geneRanges, snpRanges)
     gn = names(geneRanges)
-    ans = applier(1:length(snps), function(x) mgr[rsid(snps[[x]]), 
+    if (matchProbeNames) {
+      ans = applier(1:length(snps), function(x) mgr[rsid(snps[[x]]), 
         probeId(gn[x])])
-    names(ans) = names(geneRanges)
+      names(ans) = names(geneRanges)
+      } else {
+      ans = applier(1:length(snps), function(x) mgr[rsid(snps[[x]]), ])
+      names(ans) = names(snps)  # containedSnps propagated suitable range names
+      }
     ans
 }
 

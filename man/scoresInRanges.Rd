@@ -9,7 +9,7 @@ structured survey of eqtlTestsManager to retrieve scores cis to genes
 defined through ranges
 }
 \usage{
-scoresInRanges(mgr, geneRanges, snpRanges, applier = lapply, ffind=NULL, matchProbNames=TRUE)
+scoresInRanges(mgr, geneRanges, snpRanges, applier = lapply, ffind=NULL, matchProbeNames=TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

@@ -565,7 +565,9 @@ setMethod("[", c("cisTransDirector", "character", "character"),
     if (!all.equal(as.integer(names(spids)), probeListEl)) 
 		stop("split of gene names by director element indices has unexpected result")
     mgrlist = lapply(probeListEl, function(z) GGtools:::mgrs(x)[[z]])
-    ans = lapply(1:length(mgrlist), function(z) GGtools:::fflist(mgrlist[[z]])[[snpListChr]][i, 
+    applier = lapply
+    if ("multicore" %in% search()) applier = mclapply
+    ans = applier(1:length(mgrlist), function(z) GGtools:::fflist(mgrlist[[z]])[[snpListChr]][i, 
         spids[[z]],drop=FALSE]/GGtools:::shortfac(mgrlist[[z]]))
     if (length(ans) == 1) return(ans[[1]])
     bans = ans[[1]]
@@ -612,7 +614,9 @@ setMethod("[", c("cisTransDirector", "missing", "character"),
     mgrlist = lapply(probeListEl, function(z) mgrs(x)[[ z ]])
     nsnps = length(fflist(mgrlist[[1]]))  # nchr??
 #    names(mgrlist) = j
-    ans = lapply(1:length(mgrlist), 
+    applier = lapply
+    if ("multicore" %in% search()) applier = mclapply
+    ans = applier(1:length(mgrlist), 
        function(z) lapply(1:nsnps, function(w) fflist(mgrlist[[z]])[[w]][ , j[z] ]/shortfac(mgrlist[[z]])))
 #    names(ans) = j
     ans
