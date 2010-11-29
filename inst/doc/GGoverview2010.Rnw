@@ -52,7 +52,7 @@ demonstration data for joint analysis of transcriptome and
 genome through combination of DNA expression microarray
 and high-density SNP genotyping data.  For Bioconductor
 2.2 we adopted a representation of genotypes due to Clayton
-(in package \Rpackage{snpMatrix}) allowing reasonably
+(in package \Rpackage{snpMatrix2}) allowing reasonably
 convenient storage and manipulation of 4 megaSNP phase III
 HapMap genotypes on all the CEPH CEU samples.  This contrasts with
 the previous version of \Rpackage{GGtools} which was limited
@@ -99,7 +99,7 @@ smList(hm3ceuSMS)[1:2]
 class(smList(hm3ceuSMS)[["chr20"]])
 @
 This shows that we use a named list to hold items
-of the \Rclass{snp.matrix} class from \Rpackage{snpMatrix}.
+of the \Rclass{SnpMatrix} class from \Rpackage{snpMatrix2}.
 
 It will generally be unnecessary to probe to this level, but
 it is instructive to check the underlying representation:
@@ -166,7 +166,7 @@ v1 = browserView(s1, GenomicRanges(33.5e6,34.5e6, "chr20"), track=ucscTrackModes
 
 \section{Using imputation to 1000 genomes loci}
 
-The \textit{snpMatrix} package defines methods for using
+The \textit{snpMatrix2} package defines methods for using
 linear and haplotype regression to estimate conditional
 expectations of allele counts for unobserved loci.  We used
 the pilot 1 calls from 1000 genomes (1KG) to define rules
@@ -250,7 +250,7 @@ c20imp[1:5,1:5]
 @
 The results need to be placed in compatible structures.
 We will use C20D to hold the allele dose measurements from 
-MACH and R20D to hold the snpMatrix regression-based expected allele counts.
+MACH and R20D to hold the snpMatrix2 regression-based expected allele counts.
 <<lkcom,keep.source=TRUE>>=
 C20D = m20[, intersect(colnames(m20), colnames(c20imp))]
 R20D = c20imp[, intersect(colnames(m20), colnames(c20imp))]
@@ -281,7 +281,7 @@ table(as(news[ ,vn > 0 & vn < 0.01 ][,1], "character"))
 This shows some of the subtlety of the imputations in this case.
 It would be very nice to reconstruct the imputation for this SNP in detail.
 
-Let's now consider loci imputed by MACH but not by snpMatrix.
+Let's now consider loci imputed by MACH but not by snpMatrix2.
 <<lkn>>=
 if (.Platform$OS.type != "windows" ) {
 notreg = colnames(c20imp)[ which(apply(c20imp,2,function(x)all(is.na(x)))) ]
@@ -298,7 +298,7 @@ table(as(rawc20[,"chr20:36155"], "character"))
 }
 @
 So MACH is able to call 3 hets for each of these loci.
-We verify that snpMatrix regression does not
+We verify that snpMatrix2 regression does not
 <<lkm>>=
 if (.Platform$OS.type != "windows" ) {
 MbutNR = c("chr20:35790", "chr20:36155")

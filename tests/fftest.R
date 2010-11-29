@@ -10,7 +10,7 @@ library(illuminaHumanv1.db)
 pid = get("CPNE1", revmap(illuminaHumanv1SYMBOL))
 pid2 = get("PRND", revmap(illuminaHumanv1SYMBOL))[1]
 pid3 = get("DUSP15", revmap(illuminaHumanv1SYMBOL))[1]
-dd = multffCT( list(lith, lith), list(gs~male, gs~male), probeId(c(pid,pid2,pid3)))
+dd = multffCT( list(lith, lith), list(gs~male, gs~male), probeId(c(pid,pid2,pid3)),runname="dd")
 ddsh = multffCT( list(lith, lith), list(gs~male, gs~male), probeId(c(pid,pid2,pid3)), vmode="short", runname="foosh")
 getChisq = function(rsid, gene, ctmgr) {
  allrs = lapply(ctmgr$fflist, rownames)

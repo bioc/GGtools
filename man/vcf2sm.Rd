@@ -3,10 +3,10 @@
 \alias{show,metaVCF-method}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-generate a snp.matrix instance on the basis of a VCF (4.0) file
+generate a SnpMatrix instance on the basis of a VCF (4.0) file
 }
 \description{
-generate a snp.matrix instance on the basis of a VCF (4.0) file
+generate a SnpMatrix instance on the basis of a VCF (4.0) file
 }
 \usage{
 vcf2sm(gzpath, chrom, tabixcmd = "tabix", nmetacol = 9, verbose = FALSE, gran=10000)
@@ -38,7 +38,7 @@ numeric: a report is given once every gran snp are traversed to show progress
 %%%  ~~ If necessary, more details than the description above ~~
 %}
 \value{
-an instance of \code{\link[snpMatrix2]{snp.matrix-class}}
+an instance of \code{\link[snpMatrix2]{SnpMatrix-class}}
 }
 \references{
 \url{http://www.1000genomes.org/wiki/doku.php?id=1000_genomes:analysis:vcf4.0}

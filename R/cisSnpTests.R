@@ -89,6 +89,7 @@ cisSnpTests = function(fmla, smls, radius, ...) {
      else {
         smat = smat[, intersect(onc,keepSnps[[i]]), drop=FALSE ]
         tmp = list(smat)
+        tmp = lapply(tmp, function(z) new("SnpMatrix", z))
         names(tmp) = chroms[i]
         assign("smList", tmp, cursm@smlEnv)
         outl[[i]] = gwSnpTests(curfmla, cursm, chrnum(chroms[i]))

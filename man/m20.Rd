@@ -12,7 +12,7 @@ HapMap phase III samples from CEU population
 \usage{data(m20)}
 \format{
   The format is:
-Formal class 'snp.matrix' [package "snpMatrix2"] with 1 slots \cr
+Formal class 'SnpMatrix' [package "snpMatrix2"] with 1 slots \cr
   ..@ .Data: raw [1:110, 1:190473] 03 03 03 03 ... \cr
   .. ..- attr(*, "dimnames")=List of 2 \cr
   .. .. ..$ : chr [1:110] "NA06984" "NA06989" "NA12340" "NA12341" ... \cr

@@ -18,7 +18,7 @@ exome_minp(smlSet, fmla, targdir, runname, snpl, feat=NULL, mgr = NULL, scoreApp
 \arguments{
   \item{smlSet}{
 basic genotype plus expression structure; this must have an smList() result of length 1
-(all SNP in one snp.matrix regardless of number of chromosomes)
+(all SNP in one SnpMatrix regardless of number of chromosomes)
 }
   \item{fmla}{
 formula expressing covariates to be found in phenoData of smlSet

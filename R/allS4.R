@@ -17,7 +17,7 @@ setMethod("filterSnpTests",
 
 
 setMethod("plot", "filteredGwSnpScreenResult", function(x, y, ...) {
- pp = lapply(x@.Data, p.value) #, 1)
+ pp = lapply(x@.Data, p.value) 
  boxplot(lapply(pp, function(x)-log10(x)), main=x@gene, xlab="chromosome",
    ylab="-log10 p [GLM]")
  xx = try(require(org.Hs.eg.db, quietly=TRUE))
@@ -623,34 +623,32 @@ setMethod("[", c("cisTransDirector", "missing", "character"),
 })
 
 setGeneric("topSnps", function(x, ...) standardGeneric("topSnps"))
-setMethod("topSnps", "cwSnpScreenResult", function(x, n=10, which="p.1df") {
-   DF = 1
-   if (which == "p.2df") DF = 2
-   else if (which  != "p.1df") warning("chisq df assumed to be 1, 'which' not recognized")
-   pp = p.value(x@.Data[[1]]) #, DF) -- snpMatrix 1.7.3 new API
-   spp = pp[ order(pp, decreasing=FALSE) ]
+setMethod("topSnps", "cwSnpScreenResult", function(x, n=10) {
+   pp = p.value(x@.Data[[1]])
+   sn = x@.Data[[1]]@snp.names  # no accessor...
+   opp = order(pp, decreasing=FALSE) 
+   spp = pp[ opp ]
    df = data.frame(p.val=spp)
-   rownames(df) = names(spp)
+   rownames(df) = sn[ opp ]
    df[1:n,,drop=FALSE]
 })
 
-setMethod("topSnps", "gwSnpScreenResult", function(x, n=10, which="p.1df") {
-  ts.df = function (w, n = 10, which = "p.1df") {
-   DF = 1
-   if (which == "p.2df") DF = 2
-   else if (which  != "p.1df") warning("chisq df assumed to be 1, 'which' not recognized")
-   pp = p.value(w) #, DF)
-   spp = pp[ order(pp, decreasing=FALSE) ]
+setMethod("topSnps", "gwSnpScreenResult", function(x, n=10) {
+  ts.df = function (w, n = 10) {
+   pp = p.value(w)
+   sn = w@.Data[[1]]@snp.names  # no accessor...
+   opp = order(pp, decreasing=FALSE)
+   spp = pp[ opp ]
    df = data.frame(p.val=spp)
-   rownames(df) = names(spp)
+   rownames(df) = sn[ opp ]
    df[1:n,,drop=FALSE]
    }
-  lapply(x, ts.df, n=n, which=which)
+  lapply(x, ts.df, n=n)
 })
 
 setAs("cwSnpScreenResult", "RangedData", function(from) {
-  allp = p.value(from@.Data[[1]]) # , 1) # assume 1df -- must improve
-  rs = names(allp)
+  allp = p.value(from@.Data[[1]]) 
+  rs = from@.Data[[1]]@snp.names
   locstr = snpLocs.Hs(chrnum(from@chrnum), rsid(rs))
   loc = locstr["loc",]
   locrs = paste("rs", locstr["rsid",], sep="")
@@ -671,7 +669,7 @@ setAs("cwSnpScreenResult", "RangedData", function(from) {
 
 setAs("cwSnpScreenResult", "GRanges", function(from) {
   allp = p.value(from@.Data[[1]]) # , 1) # assume 1df -- must improve
-  rs = names(allp)
+  rs = from@.Data[[1]]@snp.names
   locstr = snpLocs.Hs(chrnum(from@chrnum), rsid(rs))
   loc = locstr["loc",]
   locrs = paste("rs", locstr["rsid",], sep="")
