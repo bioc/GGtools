@@ -2,7 +2,7 @@ library(GGtools)
 if (!exists("hmceuB36.2021")) data(hmceuB36.2021)
 f1 = gwSnpTests(genesym("CPNE1")~male, hmceuB36.2021, chrnum(20))
 f2 = gwSnpTests(genesym("PRND")~male, hmceuB36.2021, chrnum(20))
-ind = which(f1@.Data[[1]]@test.names == "rs6060535")
+ind = which(f1@.Data[[1]]@snp.names == "rs6060535")
 sco = f1@.Data[[1]]@chisq[ ind ]
 sco2 = f2@.Data[[1]]@chisq[ ind ]
 lith = hmceuB36.2021[chrnum(20),]

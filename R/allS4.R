@@ -636,7 +636,7 @@ setMethod("topSnps", "cwSnpScreenResult", function(x, n=10) {
 setMethod("topSnps", "gwSnpScreenResult", function(x, n=10) {
   ts.df = function (w, n = 10) {
    pp = p.value(w)
-   sn = w@.Data[[1]]@snp.names  # no accessor...
+   sn = w@snp.names  # no accessor...  # don't need list access here
    opp = order(pp, decreasing=FALSE)
    spp = pp[ opp ]
    df = data.frame(p.val=spp)
