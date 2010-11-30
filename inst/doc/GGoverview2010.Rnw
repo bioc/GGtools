@@ -302,8 +302,8 @@ We verify that snpMatrix2 regression does not
 <<lkm>>=
 if (.Platform$OS.type != "windows" ) {
 MbutNR = c("chr20:35790", "chr20:36155")
-Y = rawc20[, MbutNR, drop=FALSE]
-X = rawc20[, -match(MbutNR, colnames(rawc20)), drop=FALSE]
+Y = rawc20[, MbutNR]#, drop=FALSE]
+X = rawc20[, -match(MbutNR, colnames(rawc20))] #, drop=FALSE]
 data(ceu1kgMeta_20)
 NL = start(ceu1kgMeta_20)
 names(NL) = names(ceu1kgMeta_20)
