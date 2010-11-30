@@ -44,4 +44,4 @@ export( multffCT, makeCommonSNPs, checkCommonSNPs, diagffCC, maxchisq,
 
 exportClass(eqtlTestsManager)
 
-exportMethod("topFeats")
+exportMethods("topFeats")
