@@ -38,7 +38,7 @@ List of standard formulae without dependent variable; predictors for each formul
 with each rhslist element.  In other words, the pData of the kth smlSet in listOfSmls provides the
 data to resolve the symbols in the kth formula of rhslist
 }
-  \item{rules}{instance of \code{\link[snpMatrix2]{imputation.rules-class}} expressing
+  \item{rules}{instance of \code{\link[snpMatrix2]{ImputationRules-class}} expressing
 rules by which unobserved SNP are `imputed' (that is, the value used is the
 conditional expectation of
 B copy number, which is real-valued and may lie outside [0,2])
