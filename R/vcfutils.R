@@ -76,7 +76,7 @@ gran=10000) {
  for (i in 1:nsnp) mat[,i] = out[[i]]$calls
  rownames(mat) = sampids
  colnames(mat) = rsid
- new("snp.matrix", mat)
+ new("SnpMatrix", mat)
 }
 
 vcf2smTXT = function (txtpath, meta, nmetacol = 9, verbose = FALSE, gran=10000) 
