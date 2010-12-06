@@ -1,0 +1,4 @@
+
+Retrieved 5 Dec 2010.
+
+ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/pilot_data/paper_data_sets/a_map_of_human_variation/exon/snps/CEU.exon.2010_09.genotypes.vcf.gz

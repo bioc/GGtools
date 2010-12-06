@@ -6,7 +6,8 @@
 generate a SnpMatrix instance on the basis of a VCF (4.0) file
 }
 \description{
-generate a SnpMatrix instance on the basis of a VCF (4.0) file
+generate a SnpMatrix instance on the basis of a VCF (4.0) file. NOTE: the
+tabix utility must be installed and be invocable via system().
 }
 \usage{
 vcf2sm(gzpath, chrom, tabixcmd = "tabix", nmetacol = 9, verbose = FALSE, gran=10000)
@@ -57,9 +58,10 @@ VJ Carey <stvjc@channing.harvard.edu>
 %}
 \examples{
 # requires tabix
-\dontrun{
- vref = system.file("vcf/ex.vcf.gz", package="GGtools")
- vcf2sm( vref, "20" )
+chkTabix = try(system("tabix 2>&1", intern=TRUE))
+if (!inherits(chkTabix, "try-error") && length(grep("Option", chkTabix))>0) {
+ vref = system.file("vcf/CEU.exon.2010_09.genotypes.vcf.gz", package="GGtools")
+ vcf2sm( vref, "1" )
  }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
