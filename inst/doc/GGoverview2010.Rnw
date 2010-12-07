@@ -1,5 +1,5 @@
 %\VignetteIndexEntry{GGtools overview}
-%\VignetteDepends{ceu1kg, ceuhm3, GenomicRanges, illuminaHumanv1.db}
+%\VignetteDepends{GenomicRanges, illuminaHumanv1.db}
 %\VignetteKeywords{Genetical genomics,SNP,expression}
 %\VignettePackage{GGtools}
 
@@ -81,22 +81,26 @@ external matrix representation approaches are heavily used.
 
 To give an immediate taste of the capabilities, we
 attach the package and load some test data.
+
+Originally we used a HapMap3 representation to demonstrate in 
+this vignette, but changes to snpMatrix package made this impractical
+for development.  The devel branch (2.8) of Bioconductor should be
+consulted, in which snpMatrix2 package is used.
 <<doini>>=
 library(GGtools)
-library(ceuhm3)
-data(hm3ceuSMS)
-hm3ceuSMS
+data(hmceuB36.2021)
+hmceuB36.2021
 @
 Expression data are recoverable in a familiar way:
 <<lkex>>=
-exprs(hm3ceuSMS)[1:5,1:5]
+exprs(hmceuB36.2021)[1:5,1:5]
 @
 
 Genotype data have more complex representation.
 <<lksn>>=
-names(smList(hm3ceuSMS))
-smList(hm3ceuSMS)[1:2]
-class(smList(hm3ceuSMS)[["chr20"]])
+names(smList(hmceuB36.2021))
+smList(hmceuB36.2021)[1:2]
+class(smList(hmceuB36.2021)[["20"]])
 @
 This shows that we use a named list to hold items
 of the \Rclass{snp.matrix} class from \Rpackage{snpMatrix}.
@@ -104,7 +108,7 @@ of the \Rclass{snp.matrix} class from \Rpackage{snpMatrix}.
 It will generally be unnecessary to probe to this level, but
 it is instructive to check the underlying representation:
 <<lkr>>=
-schunk = smList(hm3ceuSMS)[["chr20"]]
+schunk = smList(hmceuB36.2021)[["20"]]
 schunk@.Data[1:4,1:4]
 @
 The leading zeroes show that a raw byte representation is used.
@@ -126,14 +130,14 @@ Here we execute a founders-only analysis, adjusting for gender,
 confining attention to SNP on chromosome 20.  We isolate
 a single gene, CPNE1, for analysis.
 <<dod>>=
-pd = pData(hm3ceuSMS)
-hmFou = hm3ceuSMS[, which(pd$mothid == 0 & pd$fathid == 0)]
+pd = pData(hmceuB36.2021)
+hmFou = hmceuB36.2021[, which(pd$mothid == 0 & pd$fathid == 0)]
 library(illuminaHumanv1.db)
 pc = get("CPNE1", revmap(illuminaHumanv1SYMBOL))
 hmFouc = hmFou[probeId(pc),]
 hmFouc
 system("rm -rf foo")
-f1 = eqtlTests(hmFouc[chrnum("chr20"),], ~male)
+f1 = eqtlTests(hmFouc[chrnum("20"),], ~male)
 f1
 @
 By default, test results are stored in a compact disk-based
@@ -166,6 +170,10 @@ v1 = browserView(s1, GenomicRanges(33.5e6,34.5e6, "chr20"), track=ucscTrackModes
 
 \section{Using imputation to 1000 genomes loci}
 
+The following code ceased to function after last minute changes
+to snpMatrix by H-T Leung; to check the behavior of codes
+related to these, please use R2.13+ and Bioc 2.8+ versions of GGtools.
+
 The \textit{snpMatrix} package defines methods for using
 linear and haplotype regression to estimate conditional
 expectations of allele counts for unobserved loci.  We used
@@ -174,28 +182,28 @@ relating loci observed in phase III HapMap for CEU to
 1KG loci.
 Here are the first 10 rules for a version of the imputation that
 has a liberal approach to allowing LD computations.
-<<getr>>=
+<<getr,eval=FALSE>>=
 data(imphm3_1KG_20_mA2)
 imphm3_1KG_20_mA2[1:10]
 @
 We can use these rules to obtain a richer
 collection of tests for eQTL for CPNE1:
-<<doi>>=
+<<doi,eval=FALSE>>=
 try(system("rm -rf icpne1"))
 if1 = ieqtlTests(hmFouc[chrnum("chr20"),], ~male, targdir="icpne1",
      runname="icpne1",
      rules=imphm3_1KG_20_mA2)
 @
 The number of tests on the original data:
-<<lkn1>>=
+<<lkn1,eval=FALSE>>=
 length(GGtools:::snpIdList(f1)[[1]])
 @
 and on the imputed data:
-<<lki1>>=
+<<lki1,eval=FALSE>>=
 length(GGtools:::snpIdList(if1)[[1]])
 @
 We need special metadata to get locations for the SNP in this run.
-<<getnm>>=
+<<getnm,eval=FALSE>>=
 library(ceu1kg)
 data(ceu1kgMeta_20)
 inn = start(ceu1kgMeta_20)
@@ -227,31 +235,34 @@ no qualitative impact of the imputation.
 \section{Assessing concordance of regression-based imputation with
 MACH}
 
+Again this material cannot be illustrated with snpMatrix; Bioc 2.8 and
+snpMatrix2 must be used.
+
 Blanca Himes of the Channing Laboratory, Boston, ran the MACH imputation
 program to compute imputed 'dose' measures based on a
 certain set of calls for CEU, perhaps HapMap phase III.  The \texttt{m20}
 data object for this package includes the results of importing
 the \texttt{mlprob} MACH output for chromosome 20 after imputing
 to the 1000 genomes loci.
-<<lkmach>>=
+<<lkmach,eval=FALSE>>=
 data(m20)
 as(m20, "numeric")[1:10,1:8]
 @
 
 The observed genotypes for CEU founders from HapMap phase III are
-<<getcc>>=
+<<getcc,eval=FALSE>>=
 c20obs = smList(hmFouc)[[20]]
 c20obs
 @
 We impute as follows:
-<<geti>>=
+<<geti,eval=FALSE>>=
 unix.time(c20imp <- impute.snps( imphm3_1KG_20_mA2, c20obs ))
 c20imp[1:5,1:5]
 @
 The results need to be placed in compatible structures.
 We will use C20D to hold the allele dose measurements from 
 MACH and R20D to hold the snpMatrix regression-based expected allele counts.
-<<lkcom,keep.source=TRUE>>=
+<<lkcom,keep.source=TRUE,eval=FALSE>>=
 C20D = m20[, intersect(colnames(m20), colnames(c20imp))]
 R20D = c20imp[, intersect(colnames(m20), colnames(c20imp))]
 oksnp = intersect(rownames(C20D), rownames(R20D))
@@ -262,11 +273,11 @@ R20D = R20D[oksnp,]
 
 Let's check the basic characteristics of these different imputations.
 First, how many loci are imputed by MACH?
-<<lkim>>=
+<<lkim,eval=FALSE>>=
 length(mimp <- setdiff(colnames(m20), colnames(c20obs)))
 @
 Of these, how many are monomorphic or close to monomorphic?
-<<domon>>=
+<<domon,eval=FALSE>>=
 news = m20[, mimp ]
 vn = apply(news, 2, var)
 sum(vn==0)
@@ -275,14 +286,14 @@ sum(vn < 0.01)
 The latter result shows that there are over 2000 SNP for which MACH
 is willing to impute a single het against 109 homozygous individuals.
 Let's look at an example:
-<<ex>>=
+<<ex,eval=FALSE>>=
 table(as(news[ ,vn > 0 & vn < 0.01 ][,1], "character"))
 @
 This shows some of the subtlety of the imputations in this case.
 It would be very nice to reconstruct the imputation for this SNP in detail.
 
 Let's now consider loci imputed by MACH but not by snpMatrix.
-<<lkn>>=
+<<lkn,eval=FALSE>>=
 if (.Platform$OS.type != "windows" ) {
 notreg = colnames(c20imp)[ which(apply(c20imp,2,function(x)all(is.na(x)))) ]
 inmachNR = intersect( mimp, notreg )
@@ -299,7 +310,7 @@ table(as(rawc20[,"chr20:36155"], "character"))
 @
 So MACH is able to call 3 hets for each of these loci.
 We verify that snpMatrix regression does not
-<<lkm>>=
+<<lkm,eval=FALSE>>=
 if (.Platform$OS.type != "windows" ) {
 MbutNR = c("chr20:35790", "chr20:36155")
 Y = rawc20[, MbutNR, drop=FALSE]
@@ -321,7 +332,7 @@ presence of very limited genotype variation?
 The lower we set minA, the more liberal.
 We can see what the regression procedure does in this case as follows:
 
-<<lkimm1>>=
+<<lkimm1,eval=FALSE>>=
 if (.Platform$OS.type != "windows" ) {
 ii = impute.snps(imm1, rawc20)
 apply(ii,2,table)
@@ -344,7 +355,7 @@ between individuals is spotty.
 %This is currently somewhat cumbersome.  Suppose we want to
 %know the specific nucleotide assignments for a given genotype call.
 %For example, rs4814683 for subject NA06985.
-%<<lkc>>=
+%<<lkc,eval=FALSE>>=
 %schunk["NA06985", "rs4814683"]
 %@
 %We need to know a) that the A/B tokens map in lexical order to
@@ -353,14 +364,14 @@ between individuals is spotty.
 %
 %Using the SNPlocs.Hsapiens.dbSNP.* package, we can get the
 %nucleotides:
-%<<gets,eval=FALSE>>=
+%<<gets,eval=FALSE,eval=FALSE>>=
 %library(SNPlocs.Hsapiens.dbSNP.20100427)
 %s20 = getSNPlocs("chr20")
 %s20[ s20[,1] == 4814683, ]
 %@
 %
 %Now we need to translate the IUPAC code to the nucleotides:
-%<<dotr>>=
+%<<dotr,eval=FALSE>>=
 %library(Biostrings)
 %IUPAC_CODE_MAP
 %@
