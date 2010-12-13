@@ -14,7 +14,7 @@ perform genome x transcriptome eQTL searches with high-performance options
 \usage{
 eqtlTests(smlSet, rhs = ~1 - 1, runname = "foo", targdir = "foo", 
 	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, 
-        checkValid = TRUE, saveSummaries = TRUE, uncert=TRUE, family, ...)
+        checkValid = TRUE, saveSummaries = TRUE, uncert=TRUE, family, genegran=50, ...)
 ieqtlTests(smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = "ifoo", 
 	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, uncert=TRUE, saveSummaries=TRUE,
         family, ...)
@@ -89,6 +89,8 @@ services are desired}
 \item{useEnd}{logical to request cis relative to radius
 past entire gene sequence
 as opposed to local to TSS}
+ \item{genegran}{numeric value of frequency at which gene names will be catted to stdout in case
+  \code{options()$verbose == TRUE}}
 }
 \details{
 \code{\link[snpMatrix2]{snp.rhs.tests}} is run for all genes enumerated in

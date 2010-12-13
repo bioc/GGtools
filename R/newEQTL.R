@@ -107,12 +107,13 @@ ffSnpSummary = function(sm,fn,fac=100) {
  
 eqtlTests = function(smlSet, rhs=~1-1,
    runname="foo", targdir="foo", geneApply=lapply, chromApply=lapply,
-   shortfac = 100, computeZ=FALSE, checkValid=TRUE, saveSummaries=TRUE, uncert=TRUE, family, ... ) {
+   shortfac = 100, computeZ=FALSE, checkValid=TRUE, saveSummaries=TRUE, uncert=TRUE, family, genegran=50, ... ) {
  theCall = match.call()
  if (checkValid) {
    tmp = validObject(smlSet)
    }
  if (missing(family)) family="gaussian"
+ geneindex <<- 1
  sess = sessionInfo()
  fnhead = paste(targdir, "/", runname, "_", sep="")
  geneNames = featureNames(smlSet)
@@ -142,6 +143,9 @@ eqtlTests = function(smlSet, rhs=~1-1,
    store = ff( initdata=0, dim=c(nsnps, ngenes), dimnames=list(snpnames, geneNames), vmode="short",
                  filename = targff )
    geneApply( geneNames, function(gene) {
+     if (options()$verbose & geneindex %% genegran == 0) cat(gene, "..")
+     geneindex <<- geneindex + 1
+     if (options()$verbose & geneindex %% 8 == 0) cat("\n")
      ex = exprs(smlSet)[gene,]
      fmla = formula(paste("ex", paste(as.character(rhs),collapse=""), collapse=" "))
      numans = snp.rhs.tests(fmla, snp.data=snpdata, data=pData(smlSet), 
