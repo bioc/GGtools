@@ -71,20 +71,12 @@ VJ Carey <stvjc@channing.harvard.edu>
 %%% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
-library(ceuhm3)
-if (!exists("hm3ceuSMS")) data(hm3ceuSMS)
-library(illuminaHumanv1.db)
-cptag = get("CPNE1", revmap(illuminaHumanv1SYMBOL))
-indc = which(featureNames(hm3ceuSMS) == cptag[1])
-hm = hm3ceuSMS[c(indc,1:19),]  # reduce problem
-hm = hm[chrnum("chr20"),]
-td = tempdir()
-curd = getwd()
-setwd(td)
-e1 <- eqtlTests( hm, ~male, targdir="mplex" )
+\dontrun{
+if (!exists("e1")) example(eqtlTests)  # creates e1, cptag, c20r
 # use ffind=1 below because you have confined attention to chr20
-manhPlot( cptag, e1, ffind=1, namedlocvec= getNamedLocs(chr="ch20"), cex=3)
+manhPlot( cptag, e1, ffind=1, locGRanges=c20r, cex=3)
 setwd(curd)
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

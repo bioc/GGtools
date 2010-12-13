@@ -100,7 +100,9 @@ total number of SNP in \code{smlSet}.  These are stored in \code{ff} files in fo
 
 \code{imphm3_1KG_20_mA2} is a set of imputation rules for SNP on chromosome 20, where the
 1000 genomes genotypes distributed in `pilot1' VCF files are used to create
-imputations to loci not covered in the phase 3 hapmap data in \code{hm3ceuSMS}.
+imputations to loci not covered in the phase 3 hapmap data in \code{hm3ceuSMS}.  Not useful
+in Bioconductor 2.7 as snpMatrix package lost its imputation facilities just prior to release;
+use snpMatrix2 in Bioconductor 2.8.
 
 cisScores will fail if genes are present that are not on the chromosome
 for which scores are requested.
@@ -127,18 +129,17 @@ VJ Carey <stvjc@channing.harvard.edu>
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
-library(ceuhm3)
-if (!exists("hm3ceuSMS")) data(hm3ceuSMS)
+if (!exists("hmceuB36.2021")) data(hmceuB36.2021)
 library(illuminaHumanv1.db)
 cptag = get("CPNE1", revmap(illuminaHumanv1SYMBOL))
-indc = which(featureNames(hm3ceuSMS) == cptag[1])
+indc = which(featureNames(hmceuB36.2021) == cptag[1])
 #
 # get a set of additional genes on chr20
 all20 = get("20", revmap(illuminaHumanv1CHR))
 g20 = unique(c(all20[1:10], cptag))
 #
-hm = hm3ceuSMS[probeId(g20),]  # reduce problem
-hm = hm[ chrnum(c("chr20", "chr21")), ]
+hm = hmceuB36.2021[probeId(g20),]  # reduce problem
+hm = hm[chrnum(c("20", "21")),]
 td = tempdir()
 curd = getwd()
 setwd(td)
@@ -148,9 +149,12 @@ dir("foo")
 #
 # now show how to extract scores cis to genes
 #
-if (require(ceu1kg)) {
- data(ceu1kgMeta_20)
- chkcc = cisScores(e1, 1, "chr20", ceu1kgMeta_20, radius=2e6) 
+ if (require(SNPlocs.Hsapiens.dbSNP.20100427)) {
+ c20 = getSNPlocs("ch20")
+ library(GenomicRanges)
+ c20r = GRanges(seqnames="chr20", IRanges(c20$loc, width=1))
+ names(c20r) = paste("rs", c20$RefSNP_id, sep="")
+ chkcc = cisScores(e1, 1, "chr20", c20r, radius=2e6) 
  sapply(chkcc, max)
 }
 setwd(curd)
