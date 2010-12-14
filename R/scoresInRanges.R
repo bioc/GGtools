@@ -82,7 +82,7 @@ scoresInRanges = function (mgr, geneRanges, snpRanges, applier = lapply,
     if (matchProbeNames) {
       ans = applier(1:length(snps), function(x) mgr[rsid(snps[[x]]), 
         probeId(gn[x])])
-      names(ans) = names(geneRanges)
+      names(ans) = names(snps)  # used to be names(geneRanges) ...
       } else {
       ans = applier(1:length(snps), function(x) mgr[rsid(snps[[x]]), ])
       names(ans) = names(snps)  # containedSnps propagated suitable range names
