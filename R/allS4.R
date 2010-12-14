@@ -447,8 +447,8 @@ setMethod("show", "eqtlTestsManager", function(object) {
  cat("eqtlTools results manager, computed", exdate(object), "\n")
  cat("gene annotation:", object@geneanno, "\n")
  cat("There are", length(fflist(object)), "chromosomes analyzed.\n")
- cat("some genes (out of", length(colnames(fflist(object)[[1]])),"): ", selectSome(colnames(fflist(object)[[1]])), "\n", sep="")
- cat("some snps (out of", sum(sapply(fflist(object),nrow)),  "): ", selectSome(rownames(fflist(object)[[1]])), "\n")
+ cat("some genes (out of ", length(colnames(fflist(object)[[1]])),"): ", paste(selectSome(colnames(fflist(object)[[1]])),collapse=" "), "\n", sep="")
+ cat("some snps (out of ", sum(sapply(fflist(object),nrow)),  "): ", paste(selectSome(rownames(fflist(object)[[1]])),collapse=" "), "\n", sep="")
 })
 
 
