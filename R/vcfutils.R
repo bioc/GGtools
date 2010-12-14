@@ -16,7 +16,7 @@ filterVCF = function(gzpath, chrom, nrec=NULL, outfile=NULL, return.pipe=TRUE, l
 }
 setClass("metaVCF", contains="character")
 
-getMetaVCF = function (gzcon, maxnlines = 20, final = "^#CHROM") 
+getMetaVCF = function (gzcon, maxnlines = 100, final = "^#CHROM") 
 {
     if (!is(gzcon, "gzfile")) 
         stop("gzcon must inherit from gzfile; see ?gzfile")
@@ -39,7 +39,7 @@ sampleIDs = function(metavec, ndrop=9)
 
 #setMethod("sampleNames", c("metaVCF", "missing"), function(object, ...)
 #  .sampleNames( object, ndrop=9 ) )
-parseVCFrec = function(rec, nmetacol=9 ) {
+parseVCFrec = function(rec, nmetacol=9, makelocpref="chr" ) {
  vec = strsplit(rec, "\t")[[1]]
  meta = vec[1:nmetacol]
  calls = vec[-c(1:nmetacol)]
@@ -51,22 +51,23 @@ parseVCFrec = function(rec, nmetacol=9 ) {
  chr = meta[1]
  id = meta[3]
  loc = meta[2]
- if (id == ".") id = paste("chr", chr, ":", loc, sep="")
+ if (id == "." ) id = paste(makelocpref, chr, ":", loc, sep="")
  list(chr=chr, id=id, loc=loc, ref=meta[4], alt=meta[5], depth=meta[8],
    calls=as.raw(nalt))
 }
 
 vcf2sm = function(gzpath, chrom, tabixcmd = "tabix", nmetacol=9, verbose=FALSE,
-gran=10000) {
+gran=10000, metamax=100, makelocpref="chr") {
  #require(snpMatrix)
- mm = getMetaVCF( gzfile(gzpath, "r") )
+ con = gzfile(gzpath, "r")
+ mm = getMetaVCF( con, maxnlines=metamax )
  sampids = sampleIDs(mm, ndrop=nmetacol)
- on.exit(close(fpipe))
+ on.exit({close(con); close(fpipe)})
  fpipe = filterVCF( gzpath, chrom, return.pipe = TRUE, tabixcmd = tabixcmd )
  out = list()
  i = 1
  while ( length(tmp <- readLines(fpipe, n=1))>0) {
-  out[[i]] = parseVCFrec( tmp, nmetacol=nmetacol )
+  out[[i]] = parseVCFrec( tmp, nmetacol=nmetacol, makelocpref=makelocpref )
   if (verbose & (i%%gran)==0) cat(i)
   i = i+1
   }

@@ -10,7 +10,8 @@ generate a SnpMatrix instance on the basis of a VCF (4.0) file. NOTE: the
 tabix utility must be installed and be invocable via system().
 }
 \usage{
-vcf2sm(gzpath, chrom, tabixcmd = "tabix", nmetacol = 9, verbose = FALSE, gran=10000)
+vcf2sm(gzpath, chrom, tabixcmd = "tabix", nmetacol = 9, verbose = FALSE, gran=10000,
+   metamax=100)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -34,6 +35,11 @@ logical: if TRUE, provide processing info
   \item{gran}{
 numeric: a report is given once every gran snp are traversed to show progress
 }
+  \item{metamax}{number of lines to be sniffed for metadata before real data
+encountered, could be liberal}
+  \item{makelocpref}{string telling what to use to construct a 
+locus identifier when the id field is .; sometimes loc field is adequate and this
+should be set to "".  set to "" if you see loc names with chrchr prefix.}
 }
 %\details{
 %%%  ~~ If necessary, more details than the description above ~~
