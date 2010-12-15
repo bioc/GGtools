@@ -22,6 +22,11 @@ containedSnps = function(geneRanges, snpRanges) {
  # giving the names of the SNP that lie within the gene's range
  #
   mm = findOverlaps( geneRanges, snpRanges )@matchMatrix
+  if (nrow(mm) == 0) {
+     ans = lapply(1:length(geneRanges), function(x)NA)
+     names(ans) = names(geneRanges)
+     return(ans)
+  }
   sinds = split( mm[,2], mm[,1] )  # split snp indexes by gene index
   ugi = unique(mm[,1])
   gn = names(geneRanges)[ugi]

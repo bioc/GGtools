@@ -145,7 +145,7 @@ eqtlTests = function(smlSet, rhs=~1-1,
    geneApply( geneNames, function(gene) {
      if (options()$verbose & geneindex %% genegran == 0) cat(gene, "..")
      geneindex <<- geneindex + 1
-     if (options()$verbose & geneindex %% 8 == 0) cat("\n")
+     if (options()$verbose & geneindex %% 8*genegran == 0) cat("\n")
      ex = exprs(smlSet)[gene,]
      fmla = formula(paste("ex", paste(as.character(rhs),collapse=""), collapse=" "))
      numans = snp.rhs.tests(fmla, snp.data=snpdata, data=pData(smlSet), 
