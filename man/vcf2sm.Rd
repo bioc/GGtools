@@ -11,7 +11,7 @@ tabix utility must be installed and be invocable via system().
 }
 \usage{
 vcf2sm(gzpath, chrom, tabixcmd = "tabix", nmetacol = 9, verbose = FALSE, gran=10000,
-   metamax=100)
+   metamax=100, makelocpref="chr")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

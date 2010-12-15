@@ -1,3 +1,28 @@
+upstr = function (gr, rad = 5000)
+{
+    ee = start(gr) - 1
+    ss = start(gr) - rad
+    start(gr) = ss
+    end(gr) = ee
+    gr
+}
+
+downstr = function(gr, rad=5000) {
+  ss = end(gr)+1
+  ee = end(gr)+rad
+  start(gr) = ss
+  end(gr) = ee
+  gr
+}
+flankingOnly = function(gr, rad=5000) {
+  ans = c(upstr(gr,rad), downstr(gr,rad))
+  lgr = length(gr)
+  reo = as.integer(rbind(1:lgr, (lgr+1):(2*lgr)))
+  ans = ans[reo]
+  values(ans)$gname = rep(names(gr),each=2)
+  ans
+}
+
 
 geneLimits = function( anno="org.Hs.eg.db", chr="20" ) {
  require(anno, character.only=TRUE)
