@@ -120,7 +120,7 @@ eqtlTests = function(smlSet, rhs=~1-1,
  chrNames = names(smList(smlSet))
  ngenes = length(geneNames)
  nchr = length(chrNames)
- system(paste("mkdir", targdir))
+ if (!file.exists(targdir)) system(paste("mkdir", targdir))
  summfflist = list()
  if (saveSummaries) {
   # get MAF and minGTF for all SNP

@@ -1,0 +1,125 @@
+\name{cisProxScores}
+\alias{cisProxScores}
+%- Also NEED an '\alias' for EACH other topic documented here.
+\title{
+create, combine, and harvest eqtlTestsManager instances
+to collect all eQTL tests satisfying certain gene proximity conditions
+}
+\description{
+create, combine, and harvest eqtlTestsManager instances
+to collect all eQTL tests satisfying certain gene proximity conditions
+}
+\usage{
+cisProxScores(smlSet, fmla, dradset, direc = NULL, folder, runname, geneApply = mclapply, saveDirector = TRUE, ...)
+}
+%- maybe also 'usage' for other objects documented here.
+\arguments{
+  \item{smlSet}{
+instance of \code{\link[GGBase]{smlSet-class}}
+}
+  \item{fmla}{
+the right-hand side of a standard modeling formula -- no
+dependent variable; the expression values in the \code{smlSet}
+will be used successively as dependent variables
+}
+  \item{dradset}{
+a numeric vector indicating the boundaries within which
+test scores will be tabulated.  For example, if \code{dradset}
+is \code{c(5000,10000,25000)} then scores will be tabulated
+for SNP in the regions (0-5kb) from start or end of gene,
+(5-10kb), (10-25kb).
+}
+  \item{direc}{
+an instance of \code{\link[GGtools]{multiCisDirector-class}}; if non-null,
+\code{\link{eqtlTests}} will not be run, but the tests managed
+by managers in the \code{direc} instance will be used
+}
+  \item{folder}{
+used to set \code{targdir} parameter when \code{eqtlTests}
+is run; ignored if \code{direc} is non-null
+}
+  \item{runname}{
+used to set \code{runname} parameter when \code{eqtlTests}
+is run; some mangling will be applied.  Ignored if \code{direc} is non-null
+}
+  \item{geneApply}{
+iteration function (like \code{lapply}) to be used for each
+expression probe (gene); passed to \code{eqtlTests}; 
+the setting is also used for some annotation-based iterations;
+if multicore package 
+is present, setting this parameter to \code{mclapply} is advised
+}
+  \item{saveDirector}{
+logical; since it is expensive to compute the \code{multiCisDirector}
+that will be harvested, we may want to serialize it; if so set
+\code{saveDirector} to TRUE.  If set to true the function stores
+an object with name \code{paste(folder,"_director",".rda",sep="")}
+in the current working folder.
+}
+  \item{\dots}{
+arguments passed to \code{\link{eqtlTests}}
+}
+}
+\details{
+This function computes tests for all same-chromosome eQTL
+up to the maximum distance given in \code{dradset}
+and returns a named list with chi-squared statistics computed
+by \code{\link[snpMatrix2]{snp.rhs.tests}}
+}
+\value{
+a list with one component per `radius' derived from \code{dradset}
+
+each radius-associated component includes a list with
+one element per chromosome of the SNP data in the \code{smlSet}
+
+each chromosome-associated sublist includes a list for each
+gene mapped to the chromosome, with contents a column-vector
+of test results for all SNP within the radius of the enclosing
+component; see the example for further concreteness 
+}
+%\references{
+%% ~put references to the literature/web site here ~
+%}
+\author{
+VJ Carey <stvjc@channing.harvard.edu>
+}
+%\note{
+%%  ~~further notes~~
+%}
+
+%% ~Make other sections like Warning with \section{Warning }{....} ~
+
+\seealso{
+\code{\link{eqtlTests}}
+}
+\examples{
+if (!exists("hmceuB36.2021")) data(hmceuB36.2021)
+hm = hmceuB36.2021
+td = tempdir()
+cd = getwd()
+on.exit(setwd(cd))
+library(illuminaHumanv1.db)
+g20 = intersect(get("20", revmap(illuminaHumanv1CHR)),
+   featureNames(hm))[1:10]
+g21 = intersect(get("21", revmap(illuminaHumanv1CHR)),
+   featureNames(hm))[1:10]
+hm = hm[probeId(c(g20,g21)), ] # restrict to small number of genes
+f1 = cisProxScores( hm, ~male, c(5000,10000,25000), folder="man",
+   runname="man", geneApply=lapply )
+length(f1)  # number of proximity regions specified in dradset
+length(f1[[1]]) # number of chromosomes of SNP data in smlSet
+length(f1[[1]][[1]]) # number of genes in smlSet
+                     # mapping to first chromosome in smlSet 
+                     # SNP data
+length(f1[[1]][[2]]) # number of genes mapping to second chr...
+sapply(f1, function(x)max(unlist(x)))
+sapply(f1, function(x)length(x[[1]]))
+lapply(f1, function(x)names(x[[1]]))
+lapply(f1, function(x)rownames(x[[1]][[1]][[1]]))
+load("man_director.rda")
+man_director
+setwd(cd)
+}
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
+\keyword{ models }

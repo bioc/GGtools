@@ -38,10 +38,11 @@ export( multffCT, makeCommonSNPs, checkCommonSNPs, diagffCC, maxchisq,
    cisSnpTests, geneRanges, snp130locs, bestCis, geneTrack, X2chunk, topFeats,
    eqtlTests, mkCisTransDirector, ieqtlTests, getNamedLocs, getGRanges,
    permEx, cisRanges, cisScores, vcf2sm, #vcf2smTXT, vcf2metaloc, 
-	manhPlot, meqtlTests, exome_minp, scoresInRanges, flankingOnly)
+	manhPlot, meqtlTests, exome_minp, scoresInRanges, flankingOnly,
+ 	cisProxScores)
 
 # snpm2phase, snpm2mapLD, eqtlTests )
 
-exportClass(eqtlTestsManager)
+exportClass(eqtlTestsManager, multiCisDirector)
 
 exportMethods(topFeats)
