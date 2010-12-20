@@ -83,7 +83,8 @@ collectSNPRanges = function(mcd, slpref="ch", sprefInMgr="chr", applier=lapply) 
 
 
 cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
-   folder, runname, geneApply=mclapply, saveDirector=TRUE, ... ) {
+   folder, runname, geneApply=mclapply, saveDirector=TRUE, 
+   geneCentric = TRUE, retain=10, ... ) {
   if (is.null(direc)) {
    chrs = names(smList(smlSet))
    nchrs = gsub("chr", "", chrs)
@@ -112,10 +113,37 @@ cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
     ans
     } )
   names(intlist) = radnms
-  lapply( intlist, function(gr) {
+  if (geneCentric) {
+  ans = lapply( intlist, function(gr) {
     lapply( 1:length(direc@mgrs), function(mgrind) {
       cat(mgrind)
       scoresInRanges( direc@mgrs[[mgrind]], gr[[mgrind]], sr[[mgrind]],
         applier=geneApply ) } ) } )
-  }
- 
+  } else {  # end geneCentric
+  # for snpcentric reporting, filter SNP to proximity ranges
+    srtargs2 = lapply(1:length(intlist), function(fammem) {
+         ans = lapply(1:length(sr), function(chr) sr[[chr]][
+             which(IRanges::"%in%"(ranges(sr[[chr]]), ranges(intlist[[fammem]][[chr]]))) ] )
+         names(ans) = names(sr)
+         ans
+         } )
+    names(srtargs2) = names(intlist)
+  # now collect the topFeats results for each SNP for a specified number of genes
+  #  per SNP
+    ans = lapply(1:length(srtargs2), function(fammem) {
+      ans = lapply(1:length(srtargs2[[fammem]]), function(chr) {
+        rs = names(srtargs2[[fammem]][[chr]])
+        ans = lapply(rs, function(sn) {
+              topFeats(rsid(sn), mgr=direc@mgrs[[chr]],
+         ffind=1, useSym=FALSE, n=retain ) }  )
+        names(ans) = rs
+        ans
+       } ) # done chr
+      names(ans) = names(srtargs2[[fammem]])
+      ans
+      } ) # done fammem
+    names(ans) = names(srtargs2)
+    }  # conclude snp-centric chunk
+   ans  # final value
+}
+    
