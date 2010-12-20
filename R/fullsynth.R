@@ -115,10 +115,14 @@ cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
   names(intlist) = radnms
   if (geneCentric) {
   ans = lapply( intlist, function(gr) {
-    lapply( 1:length(direc@mgrs), function(mgrind) {
+     cans = lapply( 1:length(direc@mgrs), function(mgrind) {
       cat(mgrind)
       scoresInRanges( direc@mgrs[[mgrind]], gr[[mgrind]], sr[[mgrind]],
-        applier=geneApply ) } ) } )
+        applier=geneApply ) } ) 
+     names(cans) = names(direc@mgrs)
+     cans
+     } 
+    )
   } else {  # end geneCentric
   # for snpcentric reporting, filter SNP to proximity ranges
     srtargs2 = lapply(1:length(intlist), function(fammem) {
