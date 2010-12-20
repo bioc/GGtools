@@ -81,10 +81,19 @@ collectSNPRanges = function(mcd, slpref="ch", sprefInMgr="chr", applier=lapply) 
  allsr
 }
 
+setClass("cisProxScores", representation(call="call"), contains="list")
+setMethod("show", "cisProxScores", function(object) {
+cat("GGtools cisProxScores instance.\n")
+cat("The call was: ")
+print(object@call)
+cat("intervals examined:", selectSome(names(object)), "\n")
+})
+
 
 cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
    folder, runname, geneApply=mclapply, saveDirector=TRUE, 
    geneCentric = TRUE, retain=10, ... ) {
+  thecall = match.call()
   if (is.null(direc)) {
    chrs = names(smList(smlSet))
    nchrs = gsub("chr", "", chrs)
@@ -148,6 +157,6 @@ cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
       } ) # done fammem
     names(ans) = names(srtargs2)
     }  # conclude snp-centric chunk
-   ans  # final value
+   new("cisProxScores", ans, call=thecall)  # final value
 }
     

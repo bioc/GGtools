@@ -43,6 +43,6 @@ export( multffCT, makeCommonSNPs, checkCommonSNPs, diagffCC, maxchisq,
 
 # snpm2phase, snpm2mapLD, eqtlTests )
 
-exportClass(eqtlTestsManager, multiCisDirector)
+exportClass(eqtlTestsManager, multiCisDirector, cisProxScores)
 
 exportMethods(topFeats)
