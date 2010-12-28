@@ -8,7 +8,7 @@ simple approach to removal of principal components from smlSet
 simple approach to removal of principal components from smlSet
 }
 \usage{
-clipPCs(smlSet, inds2drop)
+clipPCs(smlSet, inds2drop, center=TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -18,6 +18,7 @@ instance of \code{\link[GGBase]{smlSet-class}}
   \item{inds2drop}{
 numeric vector of PCs to be eliminated
 }
+  \item{center}{logical passed to \code{\link[stats]{prcomp}}.}
 }
 \details{
 uses SVD and zeroes out selected eigenvalues before reassembly
