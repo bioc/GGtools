@@ -1,5 +1,6 @@
 \name{cisProxScores}
 \alias{cisProxScores}
+\alias{mcisProxScores}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 create, combine, and harvest eqtlTestsManager instances
@@ -10,7 +11,12 @@ create, combine, and harvest eqtlTestsManager instances
 to collect all eQTL tests satisfying certain gene proximity conditions
 }
 \usage{
-cisProxScores(smlSet, fmla, dradset, direc = NULL, folder, runname, geneApply = mclapply, saveDirector = TRUE, geneCentric=TRUE, retain=10, ...)
+cisProxScores(smlSet, fmla, dradset, direc = NULL, folder, runname, geneApply = mclapply, saveDirector = TRUE, ...)
+
+mcisProxScores (listOfSmlSets, listOfFmlas, dradset, direc = NULL, 
+    folder, runname, geneApply = mclapply, saveDirector = TRUE, 
+    makeCommonSNPs = FALSE, ...) 
+
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -56,15 +62,26 @@ that will be harvested, we may want to serialize it; if so set
 an object with name \code{paste(folder,"_director",".rda",sep="")}
 in the current working folder.
 }
-  \item{geneCentric}{logical to specify whether report is
-oriented towards SNP scores as features of genes, or gene
-scores as features of SNPs.  See details below.}
-  \item{retain}{ numeric used only when \code{geneCentric} is \code{FALSE}.
-tells number of gene scores to retain per SNP.}
+%  \item{geneCentric}{logical to specify whether report is
+%oriented towards SNP scores as features of genes, or gene
+%scores as features of SNPs.  See details below.}
+%  \item{retain}{ numeric used only when \code{geneCentric} is \code{FALSE}.
+%tells number of gene scores to retain per SNP.}
   \item{\dots}{
 arguments passed to \code{\link{eqtlTests}}
-}
-}
+ }
+ \item{listOfSmlSets}{for \code{mcisProxScores}, a list of
+smlSets that are to be sources for eQTL test scores that will be 
+summed}
+ \item{listOfFmlas}{for \code{mcisProxScores}, a list of formulas
+to be used with \code{snp.rhs.tests}, assumed to be ordered to
+correspond to elements of \code{listOfSmlSets}}
+ \item{makeCommonSNPs}{for \code{mcisProxScores}, a logical telling
+whether the sets of SNPs elements of the \code{listOfSmlSets} should
+be reduced to their intersection; this can be slow, and can be
+done externally using the function of the same name.}
+
+}  % end arguments{}
 \details{
 This function computes tests for all same-chromosome eQTL
 up to the maximum distance given in \code{dradset}
