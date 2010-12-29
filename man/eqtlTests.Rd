@@ -120,9 +120,28 @@ of radius and useEnd
 \author{
 VJ Carey <stvjc@channing.harvard.edu>
 }
-%\note{
-%%%  ~~further notes~~
-%}
+\note{
+We are using \code{\link{ff}} to manage the extremely voluminous results
+of comprehensive eqtl searches with one short int per test.  We do not have 
+an approach to handling NA in this framework, so for any nonexistent test
+result (due for example to monomorphy or total missingness) we impute a value
+from the null distribution of the test statistic being computed -- chisq of
+one d.f..  There is no practical risk of misinterpreting such results in
+contexts of interest, but this saves us the complication of dealing with
+artificial masses of test statistic distributions at zero, for example.
+
+The \code{\link{topFeats}} methods have \code{minMAF} and \code{minGTF}
+parameters to assist in filtering results to SNPs
+with certain properties; the metadata used for these is
+stored in a summary ff structure.  When \code{meqtlTests} is used,
+these summary statistics are generated based on only the first
+smlSet in the list passed into meqtlTests.  If significant
+use cases for these filtering parameters emerge, the summary
+statistics will have to be specialized, but listwise summarization is
+not really relevant as with meqtlTests we are marginalizing over
+populations.  Some projection of the list-wise summaries will be most 
+convenient to implement.
+}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 

@@ -90,7 +90,7 @@ cat("intervals examined:", selectSome(names(object)), "\n")
 })
 
 
-cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
+.cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
    folder, runname, geneApply=mclapply, saveDirector=TRUE, 
    geneCentric = TRUE, retain=10, ... ) {
   thecall = match.call()
@@ -160,3 +160,102 @@ cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
    new("cisProxScores", ans, call=thecall)  # final value
 }
     
+cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
+   folder, runname, geneApply=mclapply, saveDirector=TRUE, 
+   ... ) {
+  thecall = match.call()
+  if (is.null(direc)) {
+   chrs = names(smList(smlSet))
+   nchrs = gsub("chr", "", chrs)
+   mgrs = lapply( 1:length(chrs), function(c) {
+     thisset = restrictProbesToChrom( smlSet, nchrs[c] )
+     thisset = thisset[ chrnum(chrs[c]), ]
+     eqtlTests( thisset, fmla, targdir=folder, runname=paste(runname, "_",
+        c, sep=""), geneApply=geneApply, ... )
+     } )
+   names(mgrs) = chrs
+   direc = new("multiCisDirector", mgrs=mgrs)
+   if (saveDirector) {
+        dirn = paste(folder, "_director", sep="")
+        assign(dirn, direc)
+        save(list=dirn, file=paste(dirn, ".rda", sep=""))
+        }
+  }
+  gr = collectGeneRanges(direc, applier=geneApply) # reuse of geneApply not ideal
+  sr = collectSNPRanges(direc, applier=geneApply)
+  if (any(diff(dradset)<0)) stop("diff(dradset) must yield only positive numbers")
+  radmat = cbind(c(0, dradset[-length(dradset)]), c(dradset[1], diff(dradset)))
+  radnms = paste("FL", getbds(radmat), sep="")
+  intlist = lapply(1:nrow(radmat), function(z) {  # over family of radii
+    ans = lapply(gr, function(gra)  # over chrom-specific granges
+        flankingOnly(gra+radmat[z,1], radmat[z,2]) ) 
+    ans
+    } )
+  names(intlist) = radnms
+  if (TRUE) {
+  ans = lapply( intlist, function(gr) {
+     cans = lapply( 1:length(direc@mgrs), function(mgrind) {
+      cat(mgrind)
+      scoresInRanges( direc@mgrs[[mgrind]], gr[[mgrind]], sr[[mgrind]],
+        applier=geneApply ) } ) 
+     names(cans) = names(direc@mgrs)
+     cans
+     } 
+    )
+  } 
+  new("cisProxScores", ans, call=thecall)  # final value
+}
+
+
+mcisProxScores = function( listOfSmlSets, listOfFmlas, dradset, direc=NULL,
+   folder, runname, geneApply=mclapply, saveDirector=TRUE, 
+   makeCommonSNPs=FALSE,
+   ... ) {
+  thecall = match.call()
+  if (length(listOfSmlSets) < 2) stop("need list of > 1 smlSet")
+  if (makeCommonSNPs) listOfSmlSets = makeCommonSNPs(listOfSmlSets)
+  fnl = lapply(listOfSmlSets, featureNames)
+  fn1 = fnl[[1]]
+  for (i in 2:length(fnl)) if (!all.equal(fnl[[i]], fn1)) stop("need congruent featureSets for all input smlSets")
+  if (is.null(direc)) {
+   chrs = names(smList(listOfSmlSets[[1]]))
+   nchrs = gsub("chr", "", chrs)
+   mgrs = lapply( 1:length(chrs), function(c) {
+     thislist = lapply(listOfSmlSets, function(s) restrictProbesToChrom(
+         s, nchrs[c]))
+     thislist = lapply(thislist, function(x) x[chrnum(chrs[c]),] )
+     meqtlTests( thislist, listOfFmlas, targdir=folder, runname=paste(runname, "_",
+        c, sep=""), geneApply=geneApply, ... )
+     } )
+   names(mgrs) = chrs
+   direc = new("multiCisDirector", mgrs=mgrs)
+   if (saveDirector) {
+        dirn = paste(folder, "_director", sep="")
+        assign(dirn, direc)
+        save(list=dirn, file=paste(dirn, ".rda", sep=""))
+        }
+  }
+  gr = collectGeneRanges(direc, applier=geneApply) # reuse of geneApply not ideal
+  sr = collectSNPRanges(direc, applier=geneApply)
+  if (any(diff(dradset)<0)) stop("diff(dradset) must yield only positive numbers")
+  radmat = cbind(c(0, dradset[-length(dradset)]), c(dradset[1], diff(dradset)))
+  radnms = paste("FL", getbds(radmat), sep="")
+  intlist = lapply(1:nrow(radmat), function(z) {  # over family of radii
+    ans = lapply(gr, function(gra)  # over chrom-specific granges
+        flankingOnly(gra+radmat[z,1], radmat[z,2]) ) 
+    ans
+    } )
+  names(intlist) = radnms
+  if (TRUE) {
+  ans = lapply( intlist, function(gr) {
+     cans = lapply( 1:length(direc@mgrs), function(mgrind) {
+      cat(mgrind)
+      scoresInRanges( direc@mgrs[[mgrind]], gr[[mgrind]], sr[[mgrind]],
+        applier=geneApply ) } ) 
+     names(cans) = names(direc@mgrs)
+     cans
+     } 
+    )
+  } 
+  new("cisProxScores", ans, call=thecall)  # final value
+}

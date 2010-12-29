@@ -114,12 +114,15 @@ hm = hmceuB36.2021
 td = tempdir()
 cd = getwd()
 on.exit(setwd(cd))
+setwd(td)
 library(illuminaHumanv1.db)
 g20 = intersect(get("20", revmap(illuminaHumanv1CHR)),
    featureNames(hm))[1:10]
 g21 = intersect(get("21", revmap(illuminaHumanv1CHR)),
    featureNames(hm))[1:10]
 hm = hm[probeId(c(g20,g21)), ] # restrict to small number of genes
+try(unlink("man", recursive=TRUE))  # in tempdir
+set.seed(1234)  # necessary for dealing with null imputation of missing
 f1 = cisProxScores( hm, ~male, c(5000,10000,25000), folder="man",
    runname="man", geneApply=lapply )
 length(f1)  # number of proximity regions specified in dradset
@@ -134,6 +137,12 @@ lapply(f1, function(x)names(x[[1]]))
 lapply(f1, function(x)rownames(x[[1]][[1]][[1]]))
 load("man_director.rda")
 man_director
+\dontrun{
+set.seed(1234)  # necessary for dealing with null imputation of missing
+mm = mcisProxScores( list(hm,hm), list(~male,~male), 
+  dradset=c(5000,10000,25000), folder="mmm", runname="MMM")
+}
+
 setwd(cd)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

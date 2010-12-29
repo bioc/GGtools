@@ -39,7 +39,7 @@ export( multffCT, makeCommonSNPs, checkCommonSNPs, diagffCC, maxchisq,
    eqtlTests, mkCisTransDirector, ieqtlTests, getNamedLocs, getGRanges,
    permEx, cisRanges, cisScores, vcf2sm, #vcf2smTXT, vcf2metaloc, 
 	manhPlot, meqtlTests, exome_minp, scoresInRanges, flankingOnly,
- 	cisProxScores, clipPCs)
+ 	cisProxScores, clipPCs, mcisProxScores)
 
 # snpm2phase, snpm2mapLD, eqtlTests )
 

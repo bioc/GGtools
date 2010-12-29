@@ -546,17 +546,19 @@ meqtlTests = function(listOfSmls, rhslist,
         filename=targffs[chr] ))
  names(ffRefList) = chrNames
  
-# chopped from eqtlTests
+# chopped from eqtlTests -- but won't work as such.  hack -- just
+# develop summaries on first smlSet in list.  they don't seem to be
+# used anyway, except in topFeats for minMAF or minGTF settings...
  summfflist = list()
  if (saveSummaries) {
   # get MAF and minGTF for all SNP
   sumfn = paste(fnhead, chrNames, "_summ.ff", sep="")
   if ("multicore" %in% search()) {
-    summfflist = mclapply( 1:length(chrNames), function(i) ffSnpSummary(smList(smlSet)[[i]], sumfn[i],
+    summfflist = mclapply( 1:length(chrNames), function(i) ffSnpSummary(smList(smlSet1)[[i]], sumfn[i],
          fac=shortfac))
     } else {
           for (i in 1:length(sumfn))
-              summfflist[[chrNames[i]]] = ffSnpSummary(smList(smlSet)[[i]], sumfn[i])
+              summfflist[[chrNames[i]]] = ffSnpSummary(smList(smlSet1)[[i]], sumfn[i])
           }
   # ok, now just save references in object
   }
