@@ -49,8 +49,18 @@ an smlSet instance with transformed expression data
 %}
 \examples{
 data(hmceuB36.2021)
+library(illuminaHumanv1.db)
+g20 = get("20", revmap(illuminaHumanv1CHR))
+g20 = intersect(g20, featureNames(hmceuB36.2021))[1:25]
 hmc = clipPCs(hmceuB36.2021, 1:4)
+hmc = hmc[probeId(g20),]
+pcs = prcomp(t(exprs(hmceuB36.2021)))$x
+hmr = hmceuB36.2021[ probeId(g20), ]
+pData(hmr) = data.frame(pData(hmr), pcs[,1:4])
 hmc
+f1 = eqtlTests(hmc[chrnum("20"),], ~male)
+f2 = eqtlTests(hmr[chrnum("20"),], ~male+PC1+PC2+PC3+PC4, targdir="fmla")
+f3 = eqtlTests(hmr[chrnum("20"),], ~male, targdir="fmlaNOPC")
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
