@@ -23,7 +23,7 @@ getbds = function (mat)
 #
 # produces char vector of form 1K.5K from matrix rows 1000, 5000, for example
 #
-    bds = cbind(mat, apply(mat, 1, sum))[, c(1, 3)]
+    bds = cbind(mat, apply(mat, 1, sum))[, c(1, 3),drop=FALSE] # key to set drop for single radius
     fm = gsub(" ", "", format(bds))
     fm = gsub("000000$", "M", fm)
     fm = gsub("000$", "K", fm)
