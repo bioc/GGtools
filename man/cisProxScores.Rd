@@ -12,12 +12,12 @@ to collect all eQTL tests satisfying certain gene proximity conditions
 }
 \usage{
 cisProxScores(smlSet, fmla, dradset, direc = NULL, folder, runname, geneApply = mclapply, saveDirector = TRUE, snpGRL=NULL,
- geneGRL=NULL, snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ....)
+ geneGRL=NULL, snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ...)
 
 mcisProxScores (listOfSmlSets, listOfFmlas, dradset, direc = NULL, 
     folder, runname, geneApply = mclapply, saveDirector = TRUE, 
     makeCommonSNPs = FALSE, snpGRL=NULL,
-    geneGRL=NULL, snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ....)
+    geneGRL=NULL, snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ...)
 
 }
 %- maybe also 'usage' for other objects documented here.
