@@ -11,11 +11,13 @@ create, combine, and harvest eqtlTestsManager instances
 to collect all eQTL tests satisfying certain gene proximity conditions
 }
 \usage{
-cisProxScores(smlSet, fmla, dradset, direc = NULL, folder, runname, geneApply = mclapply, saveDirector = TRUE, ...)
+cisProxScores(smlSet, fmla, dradset, direc = NULL, folder, runname, geneApply = mclapply, saveDirector = TRUE, snpGRL=NULL,
+ geneGRL=NULL, snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ....)
 
 mcisProxScores (listOfSmlSets, listOfFmlas, dradset, direc = NULL, 
     folder, runname, geneApply = mclapply, saveDirector = TRUE, 
-    makeCommonSNPs = FALSE, ...) 
+    makeCommonSNPs = FALSE, 
+    geneGRL=NULL, snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ....)
 
 }
 %- maybe also 'usage' for other objects documented here.
@@ -80,7 +82,13 @@ correspond to elements of \code{listOfSmlSets}}
 whether the sets of SNPs elements of the \code{listOfSmlSets} should
 be reduced to their intersection; this can be slow, and can be
 done externally using the function of the same name.}
-
+ \item{snpGRL}{named list of GRanges instances  with SNP locations;
+list element names must coincide with names of smList entries in
+smlSet}
+ \item{geneGRL}{named list of GRanges instances  with gene extents;
+list element names must coincide with names of smList entries in
+smlSet}
+ \item{snpannopack}{string naming package with SNPlocs information}
 }  % end arguments{}
 \details{
 This function computes tests for all same-chromosome eQTL
@@ -88,16 +96,16 @@ up to the maximum distance given in \code{dradset}
 and returns a named list with chi-squared statistics computed
 by \code{\link[snpMatrix2]{snp.rhs.tests}}
 
-If \code{geneCentric} is TRUE, the logic of reporting is straightforward.
-For each gene, a family of genomic
-intervals relative to the coding interval is specified
-and scores for SNPs are collected for these intervals.
-
-If \code{geneCentric} is FALSE, the family of intervals is used to
-define whether SNP should be included or not in final reporting.
-If a SNP is within the specified radius of some gene, then it is kept.
-All same-chromosome gene scores for each SNP are sorted and the top \code{retain} are
-returned.
+%If \code{geneCentric} is TRUE, the logic of reporting is straightforward.
+%For each gene, a family of genomic
+%intervals relative to the coding interval is specified
+%and scores for SNPs are collected for these intervals.
+%
+%If \code{geneCentric} is FALSE, the family of intervals is used to
+%define whether SNP should be included or not in final reporting.
+%If a SNP is within the specified radius of some gene, then it is kept.
+%All same-chromosome gene scores for each SNP are sorted and the top \code{retain} are
+%returned.
 }
 \value{
 a list with one component per `radius' derived from \code{dradset}

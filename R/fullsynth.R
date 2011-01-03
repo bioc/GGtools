@@ -60,7 +60,9 @@ collectGeneRanges = function(mcd, chrpref="chr", applier=lapply) {
 }
 
 
-collectSNPRanges = function(mcd, slpref="ch", sprefInMgr="chr", applier=lapply) {
+collectSNPRanges = function(mcd, 
+     slpref="ch", sprefInMgr="chr", applier=lapply,
+     snpannopack) {
  if (!is(mcd, "multiCisDirector")) stop("needs multiCisDirector instance")
  chrs = names(mcd@mgrs)
  if (is.null(chrs)) stop("managers in mcd must be named")
@@ -68,7 +70,7 @@ collectSNPRanges = function(mcd, slpref="ch", sprefInMgr="chr", applier=lapply) 
  chrForSNPlocs = gsub(sprefInMgr, slpref, chrs)
  if (length(grep(slpref, chrForSNPlocs))==0) # guess only numeric chrnames used
    chrForSNPlocs = paste(slpref, chrForSNPlocs, sep="")
- require(SNPlocs.Hsapiens.dbSNP.20100427)
+ require(snpannopack, character.only=TRUE)
  allsr = applier( 1:nmgrs, function(i) {
   tmpsl = getSNPlocs(chrForSNPlocs[i])
   rsnames = paste("rs", tmpsl$RefSNP_id, sep="")
@@ -112,7 +114,7 @@ cat("intervals examined:", selectSome(names(object)), "\n")
         }
   }
   gr = collectGeneRanges(direc, applier=geneApply) # reuse of geneApply not ideal
-  sr = collectSNPRanges(direc, applier=geneApply)
+  sr = collectSNPRanges(direc, applier=geneApply, snpannopack=snpannopack)
   if (any(diff(dradset)<0)) stop("diff(dradset) must yield only positive numbers")
   radmat = cbind(c(0, dradset[-length(dradset)]), c(dradset[1], diff(dradset)))
   radnms = paste("FL", getbds(radmat), sep="")
@@ -162,6 +164,8 @@ cat("intervals examined:", selectSome(names(object)), "\n")
     
 cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
    folder, runname, geneApply=mclapply, saveDirector=TRUE, 
+   snpGRL = NULL, geneGRL = NULL, 
+   snpannopack="SNPlocs.Hsapiens.dbSNP.20100427",
    ... ) {
   thecall = match.call()
   if (is.null(direc)) {
@@ -181,8 +185,17 @@ cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
         save(list=dirn, file=paste(dirn, ".rda", sep=""))
         }
   }
-  gr = collectGeneRanges(direc, applier=geneApply) # reuse of geneApply not ideal
-  sr = collectSNPRanges(direc, applier=geneApply)
+  if (is.null(geneGRL)) {
+   gr = collectGeneRanges(direc, applier=geneApply) # reuse of geneApply not ideal
+    } else gr = geneGRL
+  if (!isTRUE(all.equal(names(gr), names(direc@mgrs)))) 
+         stop("geneGRL must be a list of GRanges with names == names(direc@mgrs)")
+  if (is.null(snpGRL)) {
+   sr = collectSNPRanges(direc, applier=geneApply, snpannopack=snpannopack)
+   } else sr = snpGRL
+  if (!isTRUE(all.equal(names(sr), names(direc@mgrs)))) 
+         stop("geneGRL must be a list of GRanges with names == names(direc@mgrs)")
+  
   if (any(diff(dradset)<0)) stop("diff(dradset) must yield only positive numbers")
   radmat = cbind(c(0, dradset[-length(dradset)]), c(dradset[1], diff(dradset)))
   radnms = paste("FL", getbds(radmat), sep="")
@@ -210,6 +223,8 @@ cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
 mcisProxScores = function( listOfSmlSets, listOfFmlas, dradset, direc=NULL,
    folder, runname, geneApply=mclapply, saveDirector=TRUE, 
    makeCommonSNPs=FALSE,
+   snpGRL = NULL, geneGRL = NULL,
+   snpannopack="SNPlocs.Hsapiens.dbSNP.20100427",
    ... ) {
   thecall = match.call()
   if (length(listOfSmlSets) < 2) stop("need list of > 1 smlSet")
@@ -235,8 +250,19 @@ mcisProxScores = function( listOfSmlSets, listOfFmlas, dradset, direc=NULL,
         save(list=dirn, file=paste(dirn, ".rda", sep=""))
         }
   }
-  gr = collectGeneRanges(direc, applier=geneApply) # reuse of geneApply not ideal
-  sr = collectSNPRanges(direc, applier=geneApply)
+  #gr = collectGeneRanges(direc, applier=geneApply) # reuse of geneApply not ideal
+  #sr = collectSNPRanges(direc, applier=geneApply)
+  if (is.null(geneGRL)) {
+   gr = collectGeneRanges(direc, applier=geneApply) # reuse of geneApply not ideal
+    } else gr = geneGRL
+  if (!isTRUE(all.equal(names(gr), names(direc@mgrs)))) 
+         stop("geneGRL must be a list of GRanges with names == names(direc@mgrs)")
+  if (is.null(snpGRL)) {
+   sr = collectSNPRanges(direc, applier=geneApply, snpannopack=snpannopack)
+   } else sr = snpGRL
+  if (!isTRUE(all.equal(names(sr), names(direc@mgrs)))) 
+         stop("geneGRL must be a list of GRanges with names == names(direc@mgrs)")
+  
   if (any(diff(dradset)<0)) stop("diff(dradset) must yield only positive numbers")
   radmat = cbind(c(0, dradset[-length(dradset)]), c(dradset[1], diff(dradset)))
   radnms = paste("FL", getbds(radmat), sep="")
