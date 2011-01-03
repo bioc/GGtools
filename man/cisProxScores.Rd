@@ -16,7 +16,7 @@ cisProxScores(smlSet, fmla, dradset, direc = NULL, folder, runname, geneApply = 
 
 mcisProxScores (listOfSmlSets, listOfFmlas, dradset, direc = NULL, 
     folder, runname, geneApply = mclapply, saveDirector = TRUE, 
-    makeCommonSNPs = FALSE, 
+    makeCommonSNPs = FALSE, snpGRL=NULL,
     geneGRL=NULL, snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ....)
 
 }
