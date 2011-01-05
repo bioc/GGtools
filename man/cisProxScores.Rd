@@ -1,6 +1,7 @@
 \name{cisProxScores}
 \alias{cisProxScores}
 \alias{mcisProxScores}
+\alias{interleave2cis}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 create, combine, and harvest eqtlTestsManager instances
@@ -19,6 +20,7 @@ mcisProxScores (listOfSmlSets, listOfFmlas, dradset, direc = NULL,
     makeCommonSNPs = FALSE, snpGRL=NULL,
     geneGRL=NULL, snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ...)
 
+interleave2cis( cisp, permcisp )
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -89,12 +91,19 @@ smlSet}
 list element names must coincide with names of smList entries in
 smlSet}
  \item{snpannopack}{string naming package with SNPlocs information}
+ \item{cisp}{result of \code{cisProxScores}}
+ \item{permcisp}{result of \code{cisProxScores}}
 }  % end arguments{}
 \details{
 This function computes tests for all same-chromosome eQTL
 up to the maximum distance given in \code{dradset}
 and returns a named list with chi-squared statistics computed
 by \code{\link[snpMatrix2]{snp.rhs.tests}}
+
+The \code{interleave2cis} function helps with general comparison
+of distributions of real scores to distributions obtained
+after permutation of expression values against genotypes.  See
+the example.
 
 %If \code{geneCentric} is TRUE, the logic of reporting is straightforward.
 %For each gene, a family of genomic
@@ -160,6 +169,15 @@ sapply(f1, function(x)max(unlist(x)))
 sapply(f1, function(x)length(x[[1]]))
 lapply(f1, function(x)names(x[[1]]))
 lapply(f1, function(x)rownames(x[[1]][[1]][[1]]))
+set.seed(1234)
+try(unlink("pman", recursive=TRUE))  # in tempdir
+pf1 = cisProxScores( permEx(hm), ~male, c(5000, 10000, 25000), folder="pman",
+  runname="pman", geneApply=lapply)
+i1o = interleave2cis( f1, pf1 )
+opar = par(no.readonly=TRUE)
+par(las=2, mar=c(12, 5, 5, 5))
+boxplot(lapply(i1o, unlist), range=0, main="compare observed to expr-permuted eQTL test scores")
+par(opar)
 load("man_director.rda")
 man_director
 \dontrun{
