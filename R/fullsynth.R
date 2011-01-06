@@ -92,76 +92,6 @@ cat("intervals examined:", selectSome(names(object)), "\n")
 })
 
 
-.cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
-   folder, runname, geneApply=mclapply, saveDirector=TRUE, 
-   geneCentric = TRUE, retain=10, ... ) {
-  thecall = match.call()
-  if (is.null(direc)) {
-   chrs = names(smList(smlSet))
-   nchrs = gsub("chr", "", chrs)
-   mgrs = lapply( 1:length(chrs), function(c) {
-     thisset = restrictProbesToChrom( smlSet, nchrs[c] )
-     thisset = thisset[ chrnum(chrs[c]), ]
-     eqtlTests( thisset, fmla, targdir=folder, runname=paste(runname, "_",
-        c, sep=""), geneApply=geneApply, ... )
-     } )
-   names(mgrs) = chrs
-   direc = new("multiCisDirector", mgrs=mgrs)
-   if (saveDirector) {
-        dirn = paste(folder, "_director", sep="")
-        assign(dirn, direc)
-        save(list=dirn, file=paste(dirn, ".rda", sep=""))
-        }
-  }
-  gr = collectGeneRanges(direc, applier=geneApply) # reuse of geneApply not ideal
-  sr = collectSNPRanges(direc, applier=geneApply, snpannopack=snpannopack)
-  if (any(diff(dradset)<0)) stop("diff(dradset) must yield only positive numbers")
-  radmat = cbind(c(0, dradset[-length(dradset)]), c(dradset[1], diff(dradset)))
-  radnms = paste("FL", getbds(radmat), sep="")
-  intlist = lapply(1:nrow(radmat), function(z) {  # over family of radii
-    ans = lapply(gr, function(gra)  # over chrom-specific granges
-        flankingOnly(gra+radmat[z,1], radmat[z,2]) ) 
-    ans
-    } )
-  names(intlist) = radnms
-  if (geneCentric) {
-  ans = lapply( intlist, function(gr) {
-     cans = lapply( 1:length(direc@mgrs), function(mgrind) {
-      cat(mgrind)
-      scoresInRanges( direc@mgrs[[mgrind]], gr[[mgrind]], sr[[mgrind]],
-        applier=geneApply ) } ) 
-     names(cans) = names(direc@mgrs)
-     cans
-     } 
-    )
-  } else {  # end geneCentric
-  # for snpcentric reporting, filter SNP to proximity ranges
-    srtargs2 = lapply(1:length(intlist), function(fammem) {
-         ans = lapply(1:length(sr), function(chr) sr[[chr]][
-             which(IRanges::"%in%"(ranges(sr[[chr]]), ranges(intlist[[fammem]][[chr]]))) ] )
-         names(ans) = names(sr)
-         ans
-         } )
-    names(srtargs2) = names(intlist)
-  # now collect the topFeats results for each SNP for a specified number of genes
-  #  per SNP
-    ans = lapply(1:length(srtargs2), function(fammem) {
-      ans = lapply(1:length(srtargs2[[fammem]]), function(chr) {
-        rs = names(srtargs2[[fammem]][[chr]])
-        ans = lapply(rs, function(sn) {
-              topFeats(rsid(sn), mgr=direc@mgrs[[chr]],
-         ffind=1, useSym=FALSE, n=retain ) }  )
-        names(ans) = rs
-        ans
-       } ) # done chr
-      names(ans) = names(srtargs2[[fammem]])
-      ans
-      } ) # done fammem
-    names(ans) = names(srtargs2)
-    }  # conclude snp-centric chunk
-   new("cisProxScores", ans, call=thecall)  # final value
-}
-    
 cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
    folder, runname, geneApply=mclapply, saveDirector=TRUE, 
    snpGRL = NULL, geneGRL = NULL, 
@@ -199,11 +129,13 @@ cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
   if (any(diff(dradset)<0)) stop("diff(dradset) must yield only positive numbers")
   radmat = cbind(c(0, dradset[-length(dradset)]), c(dradset[1], diff(dradset)))
   radnms = paste("FL", getbds(radmat), sep="")
+ # following code will put gene+dradset hole in first element... not intended, see fill below
   intlist = lapply(1:nrow(radmat), function(z) {  # over family of radii
     ans = lapply(gr, function(gra)  # over chrom-specific granges
         flankingOnly(gra+radmat[z,1], radmat[z,2]) ) 
     ans
     } )
+  intlist[[1]] = lapply(gr, function(gra) gra+dradset[1])  # fill initial hole
   names(intlist) = radnms
   if (TRUE) {
   ans = lapply( intlist, function(gr) {
@@ -271,6 +203,7 @@ mcisProxScores = function( listOfSmlSets, listOfFmlas, dradset, direc=NULL,
         flankingOnly(gra+radmat[z,1], radmat[z,2]) ) 
     ans
     } )
+  intlist[[1]] = lapply(gr, function(gra) gra+dradset[1])  # fill initial hole
   names(intlist) = radnms
   if (TRUE) {
   ans = lapply( intlist, function(gr) {

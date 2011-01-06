@@ -1,6 +1,6 @@
 Package: GGtools
 Title: software and data for genetics of gene expression (c) 2006 VJ Carey
-Version: 3.9.33
+Version: 3.9.34
 Author: Vince Carey <stvjc@channing.harvard.edu>
 Description: dealing with hapmap SNP reports, GWAS, etc.
 Depends: R (>= 2.7.0), methods, Biobase (>= 1.11.26), GGBase (>= 3.7.5),
