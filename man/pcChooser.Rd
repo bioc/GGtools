@@ -7,10 +7,11 @@ owing to expression heterogeneity
 }
 \description{
 utility to assist in choosing number of PCs to remove
-owing to expression heterogeneity
+owing to expression heterogeneity -- only cis testing as of jan 2011
 }
 \usage{
-pcChooser(sms, cand = c(1, 10, 15, 20, 25, 30, 40), fmla, radius = c(1e+05), chr = "20", smlc = "20", geneApply = mclapply, pvals = c(1e-06, 1e-07, 1e-08, 1e-09), ncore=NULL, ...)
+pcChooser(sms, cand = c(1, 10, 15, 20, 25, 30, 40), fmla, radius = c(1e+05), chr = "20", smlc = "20", geneApply = lapply, pvals = c(1e-06, 1e-07, 1e-08, 1e-09), ncore=NULL, 
+ ffind=1, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -42,6 +43,8 @@ upper bounds on p-values to declare eQTL present
 }
   \item{ncore}{if set to numeric value, options(cores=ncore) will 
 be executed by this function, useful if geneApply=mclapply}
+  \item{ffind}{chrom selector passed to cisProxScores, typically default is
+appropriate choice}
   \item{\dots}{
 passed to \code{\link{cisProxScores}}
 }

@@ -67,7 +67,7 @@ ee = eqtlTests( hmceuB36.2021[ probeId(p2), ], ~1 )
 library(ceu1kg)
 data(ceu1kgMeta_20)
 ceu1kgMeta_20 = updateObject(ceu1kgMeta_20)
-cc = scoresInRanges( ee, egl[1:10], ceu1kgMeta_20 )
+cc = scoresInRanges( ee, egl[1:10], ceu1kgMeta_20, ffind=1 )
 sapply(cc, sapply, length)
 maxs = sapply(cc, sapply, max)
 maxs

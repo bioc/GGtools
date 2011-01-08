@@ -13,12 +13,12 @@ to collect all eQTL tests satisfying certain gene proximity conditions
 }
 \usage{
 cisProxScores(smlSet, fmla, dradset, direc = NULL, folder, runname, geneApply = mclapply, saveDirector = TRUE, snpGRL=NULL,
- geneGRL=NULL, snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ...)
+ geneGRL=NULL, snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ffind=NULL, ...)
 
 mcisProxScores (listOfSmlSets, listOfFmlas, dradset, direc = NULL, 
     folder, runname, geneApply = mclapply, saveDirector = TRUE, 
     makeCommonSNPs = FALSE, snpGRL=NULL,
-    geneGRL=NULL, snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ...)
+    geneGRL=NULL, snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ffind=NULL, ...)
 
 interleave2cis( cisp, permcisp )
 }
@@ -93,6 +93,8 @@ smlSet}
  \item{snpannopack}{string naming package with SNPlocs information}
  \item{cisp}{result of \code{cisProxScores}}
  \item{permcisp}{result of \code{cisProxScores}}
+ \item{ffind}{propagated to \code{\link{scoresInRanges}}, usually 1
+  for cis applications where one chromosome of SNP is selected at a time}
 }  % end arguments{}
 \details{
 This function computes tests for all same-chromosome eQTL
@@ -158,7 +160,7 @@ hm = hm[probeId(c(g20,g21)), ] # restrict to small number of genes
 try(unlink("man", recursive=TRUE))  # in tempdir
 set.seed(1234)  # necessary for dealing with null imputation of missing
 f1 = cisProxScores( hm, ~male, c(5000,10000,25000), folder="man",
-   runname="man", geneApply=lapply )
+   runname="man", geneApply=lapply, ffind=1 )
 length(f1)  # number of proximity regions specified in dradset
 length(f1[[1]]) # number of chromosomes of SNP data in smlSet
 length(f1[[1]][[1]]) # number of genes in smlSet
@@ -172,7 +174,7 @@ lapply(f1, function(x)rownames(x[[1]][[1]][[1]]))
 set.seed(1234)
 try(unlink("pman", recursive=TRUE))  # in tempdir
 pf1 = cisProxScores( permEx(hm), ~male, c(5000, 10000, 25000), folder="pman",
-  runname="pman", geneApply=lapply)
+  runname="pman", geneApply=lapply, ffind=1)
 i1o = interleave2cis( f1, pf1 )
 opar = par(no.readonly=TRUE)
 par(las=2, mar=c(12, 5, 5, 5))
@@ -183,7 +185,7 @@ man_director
 \dontrun{
 set.seed(1234)  # necessary for dealing with null imputation of missing
 mm = mcisProxScores( list(hm,hm), list(~male,~male), 
-  dradset=c(5000,10000,25000), folder="mmm", runname="MMM")
+  dradset=c(5000,10000,25000), folder="mmm", runname="MMM", ffind=1)
 }
 
 setwd(cd)

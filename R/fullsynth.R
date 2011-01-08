@@ -95,7 +95,7 @@ cat("intervals examined:", selectSome(names(object)), "\n")
 cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
    folder, runname, geneApply=mclapply, saveDirector=TRUE, 
    snpGRL = NULL, geneGRL = NULL, 
-   snpannopack="SNPlocs.Hsapiens.dbSNP.20100427",
+   snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ffind=NULL,
    ... ) {
   thecall = match.call()
   if (is.null(direc)) {
@@ -142,7 +142,7 @@ cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
      cans = lapply( 1:length(direc@mgrs), function(mgrind) {
       cat(mgrind)
       scoresInRanges( direc@mgrs[[mgrind]], gr[[mgrind]], sr[[mgrind]],
-        applier=geneApply ) } ) 
+        applier=geneApply, ffind=ffind ) } ) 
      names(cans) = names(direc@mgrs)
      cans
      } 
@@ -156,7 +156,7 @@ mcisProxScores = function( listOfSmlSets, listOfFmlas, dradset, direc=NULL,
    folder, runname, geneApply=mclapply, saveDirector=TRUE, 
    makeCommonSNPs=FALSE,
    snpGRL = NULL, geneGRL = NULL,
-   snpannopack="SNPlocs.Hsapiens.dbSNP.20100427",
+   snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ffind=NULL,
    ... ) {
   thecall = match.call()
   if (length(listOfSmlSets) < 2) stop("need list of > 1 smlSet")
@@ -210,7 +210,7 @@ mcisProxScores = function( listOfSmlSets, listOfFmlas, dradset, direc=NULL,
      cans = lapply( 1:length(direc@mgrs), function(mgrind) {
       cat(mgrind)
       scoresInRanges( direc@mgrs[[mgrind]], gr[[mgrind]], sr[[mgrind]],
-        applier=geneApply ) } ) 
+        applier=geneApply, ffind=ffind ) } ) 
      names(cans) = names(direc@mgrs)
      cans
      } 

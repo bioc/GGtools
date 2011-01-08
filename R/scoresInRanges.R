@@ -85,6 +85,8 @@ scoresInRanges = function (mgr, geneRanges, snpRanges, applier = lapply,
  # matchProbeNames tells us to restrict attention to ranges in GRanges that
  #   have a name matching a probe in the mgr
  #
+# jan 8 2011 -- ffind needs to be set -- could cause problems for 
+    if (is.null(ffind)) stop("must set ffind")
     if (!is(geneRanges, "GRanges")) stop("geneRanges must inherit from GRanges")
     gonboard = names(geneRanges)
     if (matchProbeNames) {
@@ -100,7 +102,8 @@ scoresInRanges = function (mgr, geneRanges, snpRanges, applier = lapply,
     if (is(mgr, "eqtlTestsManager")) {
         snm = unlist(lapply(mgr@fflist, rownames))
      } else if (is(mgr, "cisTransDirector")) {
-       snm = unlist(snpIdList(mgrs(mgr)[[1]]))
+#       snm = unlist(snpIdList(mgrs(mgr)[[ffind]]))
+       stop("this use case not covered with respect to ffind selection -- needs test")
      }
 
     iniRangeNames = names(snpRanges)
