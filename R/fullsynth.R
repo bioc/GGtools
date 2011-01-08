@@ -159,6 +159,7 @@ mcisProxScores = function( listOfSmlSets, listOfFmlas, dradset, direc=NULL,
    snpGRL = NULL, geneGRL = NULL,
    snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ffind=NULL,
    ... ) {
+  if (is.null(ffind)) stop("must set ffind (usually to 1)")
   thecall = match.call()
   if (length(listOfSmlSets) < 2) stop("need list of > 1 smlSet")
   if (makeCommonSNPs) listOfSmlSets = makeCommonSNPs(listOfSmlSets)
