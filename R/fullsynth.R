@@ -98,6 +98,7 @@ cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
    snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ffind=NULL,
    ... ) {
   thecall = match.call()
+  if (is.null(ffind)) stop("must set ffind (usually to 1)")
   if (is.null(direc)) {
    chrs = names(smList(smlSet))
    nchrs = gsub("chr", "", chrs)
