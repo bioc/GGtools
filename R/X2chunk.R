@@ -30,7 +30,7 @@ X2chunk = function( mgr, ffind, start, end, snplocs, anno, useSym=TRUE ) {
     #g2keep_inds = which(IRanges::"%in%"(ranges(gr)[[1]], lim))
     g2keep_inds = indsWithin(ranges(gr)[[1]], lim)
   g2get = gr[g2keep_inds, ]$name
-  ans = as.ram(FFL[[ffind]][snp2get, g2get])/SF
+  ans = as.ram(FFL[[ffind]][snp2get, g2get, drop=FALSE])/SF
   if (useSym) {
     gs = geneSyms(colnames(ans), anno)
     if (any(is.na(gs))) gs[which(is.na(gs))] = colnames(ans)[which(is.na(gs))]
