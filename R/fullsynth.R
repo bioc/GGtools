@@ -11,6 +11,20 @@ restrictProbesToChrom = function(smlSet, chrom) {
  ans
 }
 
+restrictProbesToChromGRL = function(smlSet, chrom, GRL) {
+#
+# at this point it is assumed that chrom is a single integer or string representing an integer
+#
+ chrtok = paste("chr", chrom, sep="")
+ cn = as(seqnames(GRL), "character")
+ if (!(chrtok %in% cn)) stop(paste("can't find", chrtok, "in seqnames(GRL)"))
+ probesOnChr = names(GRL)[ which(cn == chrtok) ]
+ if (length(probesOnChr) < 1) stop(paste("no probes on chr", chrtok, "found in geneGRL"))
+ okpr = intersect(probesOnChr, featureNames(smlSet))
+ if (length(okpr) < 1) stop("no probes on chr", chrtok, "resident in both geneGRL and featureNames(smlSet)")
+ smlSet[ probeId(okpr), ]
+}
+
 setClass("multiCisDirector", representation(
   mgrs="list"))
 setMethod("show", "multiCisDirector", function(object){
@@ -103,7 +117,11 @@ cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
    chrs = names(smList(smlSet))
    nchrs = gsub("chr", "", chrs)
    mgrs = lapply( 1:length(chrs), function(c) {
+    if (is.null(geneGRL)) {
      thisset = restrictProbesToChrom( smlSet, nchrs[c] )
+     } else {
+     thisset = restrictProbesToChromGRL( smlSet, nchrs[c], geneGRL)
+     }
      thisset = thisset[ chrnum(chrs[c]), ]
      eqtlTests( thisset, fmla, targdir=folder, runname=paste(runname, "_",
         c, sep=""), geneApply=geneApply, ... )
@@ -170,8 +188,13 @@ mcisProxScores = function( listOfSmlSets, listOfFmlas, dradset, direc=NULL,
    chrs = names(smList(listOfSmlSets[[1]]))
    nchrs = gsub("chr", "", chrs)
    mgrs = lapply( 1:length(chrs), function(c) {
+    if (is.null(geneGRL)) {
      thislist = lapply(listOfSmlSets, function(s) restrictProbesToChrom(
          s, nchrs[c]))
+     } else {
+     thislist = lapply(listOfSmlSets, function(s) restrictProbesToChromGRL(
+         s, nchrs[c], geneGRL))
+     }
      thislist = lapply(thislist, function(x) x[chrnum(chrs[c]),] )
      meqtlTests( thislist, listOfFmlas, targdir=folder, runname=paste(runname, "_",
         c, sep=""), geneApply=geneApply, ... )
