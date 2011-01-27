@@ -11,7 +11,7 @@ restrictProbesToChrom = function(smlSet, chrom) {
  ans
 }
 
-restrictProbesToChromGRL = function(smlSet, chrom, GRL) {
+.restrictProbesToChromGRL = function(smlSet, chrom, GRL) {
 #
 # at this point it is assumed that chrom is a single integer or string representing an integer
 #
@@ -24,6 +24,23 @@ restrictProbesToChromGRL = function(smlSet, chrom, GRL) {
  if (length(okpr) < 1) stop("no probes on chr", chrtok, "resident in both geneGRL and featureNames(smlSet)")
  smlSet[ probeId(okpr), ]
 }
+
+restrictProbesToChromGRL = function (smlSet, chrom, GRL)
+{
+    chrtok = paste("chr", chrom, sep = "")
+    GR = GRL[[chrtok]]
+    cn = as(seqnames(GR), "character")
+    if (!(chrtok %in% cn))
+        stop(paste("can't find", chrtok, "in seqnames(GRL)[[chrom]]"))
+    probesOnChr = names(GR)[which(cn == chrtok)]
+    if (length(probesOnChr) < 1)
+        stop(paste("no probes on chr", chrtok, "found in geneGRL"))
+    okpr = intersect(probesOnChr, featureNames(smlSet))
+    if (length(okpr) < 1)
+        stop("no probes on chr", chrtok, "resident in both geneGRL and featureNames(smlSet)")
+    smlSet[probeId(okpr), ]
+}
+
 
 setClass("multiCisDirector", representation(
   mgrs="list"))
@@ -137,13 +154,13 @@ cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
   if (is.null(geneGRL)) {
    gr = collectGeneRanges(direc, applier=geneApply) # reuse of geneApply not ideal
     } else gr = geneGRL
-  if (!isTRUE(all.equal(names(gr), names(direc@mgrs)))) 
-         stop("geneGRL must be a list of GRanges with names == names(direc@mgrs)")
+  if (!isTRUE(all(names(direc@mgrs) %in% names(gr))))
+         stop("geneGRL must be a list of GRanges with all names including names(direc@mgrs)")
   if (is.null(snpGRL)) {
    sr = collectSNPRanges(direc, applier=geneApply, snpannopack=snpannopack)
    } else sr = snpGRL
-  if (!isTRUE(all.equal(names(sr), names(direc@mgrs)))) 
-         stop("geneGRL must be a list of GRanges with names == names(direc@mgrs)")
+  if (!isTRUE(all(names(direc@mgrs) %in% names(sr))))
+         stop("geneGRL must be a list of GRanges with names including names(direc@mgrs)")
   
   if (any(diff(dradset)<0)) stop("diff(dradset) must yield only positive numbers")
   radmat = cbind(c(0, dradset[-length(dradset)]), c(dradset[1], diff(dradset)))
@@ -212,13 +229,13 @@ mcisProxScores = function( listOfSmlSets, listOfFmlas, dradset, direc=NULL,
   if (is.null(geneGRL)) {
    gr = collectGeneRanges(direc, applier=geneApply) # reuse of geneApply not ideal
     } else gr = geneGRL
-  if (!isTRUE(all.equal(names(gr), names(direc@mgrs)))) 
-         stop("geneGRL must be a list of GRanges with names == names(direc@mgrs)")
+  if (!isTRUE(all(names(direc@mgrs) %in% names(gr))))
+         stop("geneGRL must be a list of GRanges with all names including names(direc@mgrs)")
   if (is.null(snpGRL)) {
    sr = collectSNPRanges(direc, applier=geneApply, snpannopack=snpannopack)
    } else sr = snpGRL
-  if (!isTRUE(all.equal(names(sr), names(direc@mgrs)))) 
-         stop("geneGRL must be a list of GRanges with names == names(direc@mgrs)")
+  if (!isTRUE( all(names(direc@mgrs) %in% names(sr))))
+         stop("snpGRL must be a list of GRanges with names including names(direc@mgrs)")
   
   if (any(diff(dradset)<0)) stop("diff(dradset) must yield only positive numbers")
   radmat = cbind(c(0, dradset[-length(dradset)]), c(dradset[1], diff(dradset)))
