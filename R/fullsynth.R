@@ -173,13 +173,20 @@ cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
     } )
   intlist[[1]] = lapply(gr, function(gra) gra+dradset[1])  # fill initial hole
   names(intlist) = radnms
-  if (TRUE) {
+  if (TRUE) {        #  how can you reuse "gr" below?  it seems right because gr has been
+                     #  transformed above to intlist but potentially confusing
+  ## there is a problem with the original coding if the order of spaces
+  ## in managers and address interval lists is not common.  for example the
+  ## intervals might have names chr1 chr10 chr11 and so on...
+  ## need to iterate over the names and select directly
+  allspaces = intersect( names(direc@mgrs), names(gr) )
+  allspaces = intersect( allspaces, names(sr) )
   ans = lapply( intlist, function(gr) {
-     cans = lapply( 1:length(direc@mgrs), function(mgrind) {
+     cans = lapply( allspaces, function(mgrind) {
       cat(mgrind)
       scoresInRanges( direc@mgrs[[mgrind]], gr[[mgrind]], sr[[mgrind]],
         applier=geneApply, ffind=ffind ) } ) 
-     names(cans) = names(direc@mgrs)
+     names(cans) = allspaces # names(direc@mgrs)
      cans
      } 
     )
@@ -195,12 +202,15 @@ mcisProxScores = function( listOfSmlSets, listOfFmlas, dradset, direc=NULL,
    snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ffind=NULL,
    ... ) {
   if (is.null(ffind)) stop("must set ffind (usually to 1)")
+  if (missing(dradset)) stop("must supply dradset")
   thecall = match.call()
+  if (is.null(direc)) {
   if (length(listOfSmlSets) < 2) stop("need list of > 1 smlSet")
   if (makeCommonSNPs) listOfSmlSets = makeCommonSNPs(listOfSmlSets)
   fnl = lapply(listOfSmlSets, featureNames)
   fn1 = fnl[[1]]
   for (i in 2:length(fnl)) if (!all.equal(fnl[[i]], fn1)) stop("need congruent featureSets for all input smlSets")
+    }
   if (is.null(direc)) {
    chrs = names(smList(listOfSmlSets[[1]]))
    nchrs = gsub("chr", "", chrs)
@@ -224,8 +234,6 @@ mcisProxScores = function( listOfSmlSets, listOfFmlas, dradset, direc=NULL,
         save(list=dirn, file=paste(dirn, ".rda", sep=""))
         }
   }
-  #gr = collectGeneRanges(direc, applier=geneApply) # reuse of geneApply not ideal
-  #sr = collectSNPRanges(direc, applier=geneApply)
   if (is.null(geneGRL)) {
    gr = collectGeneRanges(direc, applier=geneApply) # reuse of geneApply not ideal
     } else gr = geneGRL
@@ -247,13 +255,15 @@ mcisProxScores = function( listOfSmlSets, listOfFmlas, dradset, direc=NULL,
     } )
   intlist[[1]] = lapply(gr, function(gra) gra+dradset[1])  # fill initial hole
   names(intlist) = radnms
+  allspaces = intersect( names(direc@mgrs), names(gr) )
+  allspaces = intersect( allspaces, names(sr) )
   if (TRUE) {
-  ans = lapply( intlist, function(gr) {
-     cans = lapply( 1:length(direc@mgrs), function(mgrind) {
+  ans = lapply( intlist, function(gr) {  # this binding of gr is annoying...
+     cans = lapply( allspaces, function(mgrind) {
       cat(mgrind)
       scoresInRanges( direc@mgrs[[mgrind]], gr[[mgrind]], sr[[mgrind]],
         applier=geneApply, ffind=ffind ) } ) 
-     names(cans) = names(direc@mgrs)
+     names(cans) = allspaces # names(direc@mgrs)
      cans
      } 
     )
