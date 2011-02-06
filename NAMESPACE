@@ -3,6 +3,9 @@ importFrom(annaffy, "getURL")
 importFrom(annaffy, "getHTML")
 importFrom(annotate, "organism")
 importFrom(rtracklayer, "browserSession", "ucscTableQuery", "tableName", "track")
+importFrom("Biobase", "exprs")
+importFrom("GGBase", "smList")
+
 
 importClassesFrom("Biobase", "eSet", "VersionedBiobase", "Versioned")
 importClassesFrom("GGBase", "cnumOrMissing")
