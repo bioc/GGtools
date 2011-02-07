@@ -24,8 +24,25 @@ fsnp.rhs.tests = function(ffref, nchunk=10, applier=lapply, ...) {
   }
 }
 
-feqtltests = function(egtSet, rhs=~1, nchunk=10, runname="foo", targdir="foo",
+mfeqtltests = function(listOfEgtSet, listOfRhs=~1, nchunk=10, runname="foo", targdir="foo",
    geneApply=lapply, chromApply=lapply, shortfac=10) {
+ thecall = match.call()
+ if (length(listOfEgtSet) == 1) stop("intended for use with list of egtSet; call feqtltests directly")
+ nset = length(listOfEgtSet)
+ ans = feqtltests( listOfEgtSet[[1]], listOfRhs[[1]], nchunk=nchunk, runname=runname, targdir=targdir,
+   geneApply=geneApply, chromApply=chromApply, shortfac=shortfac, increment=FALSE, incoming=NULL )
+ for (j in 2:length(listOfEgtSet)) {
+   tmp = feqtltests( listOfEgtSet[[j]], listOfRhs[[j]], nchunk=nchunk, runname=runname, targdir=targdir,
+           geneApply=geneApply, chromApply=chromApply, shortfac=shortfac, increment=TRUE, incoming=ans )
+   }
+ ans@df = nset
+ ans@call = thecall
+ ans
+}
+  
+
+feqtltests = function(egtSet, rhs=~1, nchunk=10, runname="foo", targdir="foo",
+   geneApply=lapply, chromApply=lapply, shortfac=10, increment=FALSE, incoming=NULL) {
 #
 # this function works on an out-of-memory representation of genotypes
 # there is a double iteration: over chromosomes, and over genes (constant over
@@ -40,7 +57,7 @@ feqtltests = function(egtSet, rhs=~1, nchunk=10, runname="foo", targdir="foo",
  chrNames = names(smList(egtSet))
  if (!file.exists(targdir)) system(paste("mkdir", targdir))
 #
-# start iteration per chromosome ... set up receptacle
+# start iteration per chromosome ... set up or receive receptacle
 #
  cres = chromApply( chrNames, function(chr) {
       targff = paste( fnhead, "chr", chr, ".ff" , sep="" )
@@ -48,9 +65,10 @@ feqtltests = function(egtSet, rhs=~1, nchunk=10, runname="foo", targdir="foo",
       rownames(snpdata) = sampleNames(egtSet)
       sn = colnames(snpdata) = egtSet@snpNames[[chr]]
       nsnps = ncol(snpdata)
-      store = ff( initdata=0, dim=c(nsnps, length(geneNames)), 
+      if (!increment) store = ff( initdata=0, dim=c(nsnps, length(geneNames)), 
                  dimnames=list(sn,geneNames), vmode="short", overwrite=TRUE,
                  filename = targff )
+      else store = incoming@fflist[[chr]]
 #
 # start iteration over genes: populate receptacle store[, gene, add=TRUE] ...
 #
