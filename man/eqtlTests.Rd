@@ -77,10 +77,9 @@ and allele frequency data for downstream filtering?}
   \item{uncert}{setting for value of \code{uncertain} argument in \code{\link[snpMatrix2]{snp.rhs.tests}}}
   \item{family}{specify the GLM family to use; defaults to 'gaussian' if left missing}
   \item{\dots}{
-parameters passed to \code{\link[snpMatrix2]{snp.rhs.tests}}
+parameters passed to \code{\link[snpMatrix2]{snp.rhs.tests}}}
  \item{obpaths}{vector of strings giving paths to serialized smlSet instances to avoid excess consumption of
-RAM.  These will be loaded as needed.
-}
+RAM.  These will be loaded as needed.  }
   \item{mgr}{an instance of \code{eqtlTestsManager}}
   \item{ffind}{index into the list of ff files managed by \code{mgr} to be used for
 obtaining scores}

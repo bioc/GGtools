@@ -74,6 +74,9 @@ all20 = get("20", revmap(illuminaHumanv1CHR))
 g20 = unique(c(all20[1:10], cptag))
 lkf = feqtltests( fceu[g20,], ~male )
 lkf
+f2 = list(fceu[g20,], fceu[g20,])
+m2 = mfeqtltests(f2, list(~1,~1), folder="abc", runname="def")
+m2
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
