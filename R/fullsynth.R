@@ -270,3 +270,28 @@ mcisProxScores = function( listOfSmlSets, listOfFmlas, dradset, direc=NULL,
   } 
   new("cisProxScores", ans, call=thecall)  # final value
 }
+
+
+
+fmcisRun = function( listOfSmlSets, listOfFmlas, 
+   folder, runname, geneApply=mclapply, saveDirector=TRUE, ffind=1,
+   geneGRL, snpGRL )
+    {
+   chrs = names(smList(listOfSmlSets[[1]]))
+   nchrs = gsub("chr", "", chrs)
+   mgrs = lapply( 1:length(chrs), function(c) {
+     thislist = lapply(listOfSmlSets, function(s) restrictProbesToChromGRL(
+         s, nchrs[c], geneGRL))
+     thislist = lapply(thislist, function(x) x[chrnum(chrs[c]),] )
+     mfeqtltests( listOfEgtSet=thislist, listOfRhs=listOfFmlas, nchunk=10, targdir=folder, runname=paste(runname, "_",
+        c, sep=""), geneApply=geneApply )
+     } )
+   names(mgrs) = chrs
+   direc = new("multiCisDirector", mgrs=mgrs)
+   if (saveDirector) {
+        dirn = paste(folder, "_director", sep="")
+        assign(dirn, direc)
+        save(list=dirn, file=paste(dirn, ".rda", sep=""))
+        }
+   direc
+  }

@@ -47,3 +47,14 @@ setMethod("getSNP", c("egtSet", "ANY", "ScalarCharacter"), function(egts, chrind
  sind = match(tok, egts@snpNames[[chrind]])
  smList(egts)[[chrind]][,sind,drop=FALSE]
 })
+
+setMethod("[", "egtSet", function(x, i, j, ..., drop=FALSE) {
+ if (is(i, "chrnum")) {
+   if (!(i %in% names(smList(x)))) stop("requested chrnum not among smList elements")
+   x@gtlist = x@gtlist[i]
+   x@snpNames = x@snpNames[i]
+   return(x)
+ }
+ callNextMethod()
+})
+ 

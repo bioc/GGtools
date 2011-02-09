@@ -25,15 +25,17 @@ fsnp.rhs.tests = function(ffref, nchunk=10, applier=lapply, ...) {
 }
 
 mfeqtltests = function(listOfEgtSet, listOfRhs=~1, nchunk=10, runname="foo", targdir="foo",
-   geneApply=lapply, chromApply=lapply, shortfac=10) {
+   geneApply=lapply, chromApply=lapply, shortfac=10, scapply=lapply, NA2rchisq=TRUE) {
  thecall = match.call()
  if (length(listOfEgtSet) == 1) stop("intended for use with list of egtSet; call feqtltests directly")
  nset = length(listOfEgtSet)
  ans = feqtltests( listOfEgtSet[[1]], listOfRhs[[1]], nchunk=nchunk, runname=runname, targdir=targdir,
-   geneApply=geneApply, chromApply=chromApply, shortfac=shortfac, increment=FALSE, incoming=NULL )
+   geneApply=geneApply, chromApply=chromApply, shortfac=shortfac, increment=FALSE, incoming=NULL, scapply=scapply ,
+      NA2rchisq=NA2rchisq)
  for (j in 2:length(listOfEgtSet)) {
    tmp = feqtltests( listOfEgtSet[[j]], listOfRhs[[j]], nchunk=nchunk, runname=runname, targdir=targdir,
-           geneApply=geneApply, chromApply=chromApply, shortfac=shortfac, increment=TRUE, incoming=ans )
+           geneApply=geneApply, chromApply=chromApply, shortfac=shortfac, increment=TRUE, incoming=ans, scapply=scapply,
+           NA2rchisq = NA2rchisq )
    }
  ans@df = nset
  ans@call = thecall
@@ -42,7 +44,7 @@ mfeqtltests = function(listOfEgtSet, listOfRhs=~1, nchunk=10, runname="foo", tar
   
 
 feqtltests = function(egtSet, rhs=~1, nchunk=10, runname="foo", targdir="foo",
-   geneApply=lapply, chromApply=lapply, shortfac=10, increment=FALSE, incoming=NULL) {
+   geneApply=lapply, chromApply=lapply, shortfac=10, increment=FALSE, incoming=NULL, scapply=lapply, NA2rchisq=TRUE) {
 #
 # this function works on an out-of-memory representation of genotypes
 # there is a double iteration: over chromosomes, and over genes (constant over
@@ -75,14 +77,16 @@ feqtltests = function(egtSet, rhs=~1, nchunk=10, runname="foo", targdir="foo",
       geneApply(geneNames, function(gene) {
            fmla = formula(paste("ex", paste(as.character(rhs),collapse=""), collapse=" "))
            ex = exprs(egtSet)[gene,]
-           numans = fsnp.rhs.tests(ffref=snpdata, nchunk=nchunk, applier=lapply,
+           numans = fsnp.rhs.tests(ffref=snpdata, nchunk=nchunk, applier=scapply,
                         fmla, data=pData(egtSet), 
                         family="Gaussian", uncertain=TRUE )@chisq
 #
 # to avoid distinguishing NA results (monomorphy in sample) we assign
 # from null distribution of test statistics
 #
+        if (NA2rchisq) {
            if (any(bad <- is.na(numans))) numans[which(bad)] = rchisq(sum(bad), 1)
+           }
            store[, gene, add=TRUE] = shortfac*numans
            NULL
            })
