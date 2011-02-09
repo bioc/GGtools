@@ -7,7 +7,14 @@ if ("package:multicore" %in% search()) {
  }
 mm = meqtlTests( list(hm, hm), list(~male, ~male))
 mm
+td = tempdir()
+setwd(td)
+save(hm, file="hm.rda")
+pa = getwd()
+obpaths = rep(paste(pa, "hm.rda", sep="/"),2)
+mm2 = meqtlTests2( obpaths, list(~male, ~male), targdir="mm2")
 mm@fflist[[1]][1:4,1:4]
+mm2@fflist[[1]][1:4,1:4]
 e1@fflist[[1]][1:4,1:4]  # for nonmissing tests, mm = 2xe1
 e4 = eqtlTests(hm[1:5,], ~male, runname="abc")
 e5 = eqtlTests(hm[6:10,], ~male, runname="def")

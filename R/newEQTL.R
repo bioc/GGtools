@@ -596,3 +596,59 @@ meqtlTests = function(listOfSmls, rhslist,
         exdate=exdate, shortfac=shortfac, geneanno=annotation(smlSet1),
         df=length(listOfSmls), summaryList=summfflist)
 }
+
+
+meqtlTests2 = function(obpaths, rhslist,
+   runname="mfoo", targdir="mfoo", geneApply=lapply, chromApply=lapply,
+   shortfac = 100, computeZ=FALSE, harmonizeSNPs = FALSE, uncert=TRUE, 
+   saveSummaries=TRUE, family, ... ) {
+ theCall = match.call()
+ sess = sessionInfo()
+ if (missing(family)) family="gaussian"
+
+ smlSet1 = get(obpaths[1])
+ fnhead = paste(targdir, "/", runname, "_", sep="")
+ geneNames = featureNames(smlSet1)
+ chrNames = names(smList(smlSet1))
+ ngenes = length(geneNames)
+ nchr = length(chrNames)
+ system(paste("mkdir", targdir))
+#
+# there will be one ff file per chromosome which will accumulate
+# all information across smlSets
+#
+ targffs = paste( fnhead, "chr", chrNames, ".ff", sep="" )
+ allSnpnames = lapply(smList(smlSet1), colnames)
+ ffRefList = lapply( 1:nchr, function(chr)
+    ff( initdata = 0, dim=c( length(allSnpnames[[chr]]), ngenes),
+        dimnames = list(allSnpnames[[chr]], geneNames), vmode="short",
+        filename=targffs[chr] ))
+ names(ffRefList) = chrNames
+ 
+ cres = chromApply( chrNames, function(chr) {
+  for (theSS in 1:length(obpaths)) {
+   gc()
+   smlSet = get(obpaths[theSS])
+   store = ffRefList[[chr]]
+   snpdata = smList(smlSet)[[chr]]
+   geneApply( geneNames, function(gene) {
+     ex = exprs(smlSet)[gene,]
+     fmla = formula(paste("ex", paste(as.character(rhslist[[theSS]]),collapse=""), collapse=" "))
+     numans = snp.rhs.tests(fmla, snp.data=snpdata, 
+         data=pData(smlSet), family=family, uncertain=uncert, ...)@chisq
+     miss = is.na(numans)
+     if (any(miss)) numans[which(miss)] = rchisq(length(which(miss)), 1)
+     store[, gene, add=TRUE] = shortfac*numans
+     NULL
+     }) # end gene apply
+   } # end iterate over smlSet list
+   store
+  })  # end chr apply
+  names(cres) = chrNames
+  exdate = date()
+  new("eqtlTestsManager", fflist=cres, call=theCall, sess=sess, 
+        exdate=exdate, shortfac=shortfac, geneanno=annotation(smlSet1),
+        df=length(listOfSmls), summaryList=summfflist)
+}
+
+

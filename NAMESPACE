@@ -44,7 +44,7 @@ export( multffCT, makeCommonSNPs, checkCommonSNPs, diagffCC, maxchisq,
    permEx, cisRanges, cisScores, vcf2sm, #vcf2smTXT, vcf2metaloc, 
 	manhPlot, meqtlTests, exome_minp, scoresInRanges, flankingOnly,
  	cisProxScores, clipPCs, mcisProxScores, pcChooser,
-	interleave2cis, convertSS, feqtltests, mfeqtltests)
+	interleave2cis, convertSS, feqtltests, mfeqtltests, meqtltests2)
 
 # snpm2phase, snpm2mapLD, eqtlTests )
 

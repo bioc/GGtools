@@ -2,6 +2,7 @@
 \alias{eqtlTests}
 \alias{ieqtlTests}
 \alias{meqtlTests}
+\alias{meqtlTests2}
 \alias{cisScores}
 %\alias{imphm3_1KG_20_mA2}
 %- Also NEED an '\alias' for EACH other topic documented here.
@@ -21,6 +22,8 @@ ieqtlTests(smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = "ifoo",
 meqtlTests(listOfSmls, rhslist, runname = "mfoo", targdir = "mfoo", 
 	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, harmonizeSNPs = FALSE, uncert=TRUE, saveSummaries=TRUE, family, ...)
 cisScores( mgr, ffind=1, chr, snpGR, radius=5e5, applier=lapply, minMAF = 0, minGTF = 0, useEnd=FALSE ) 
+meqtlTests2(obpaths, rhslist, runname = "mfoo", targdir = "mfoo", 
+	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, harmonizeSNPs = FALSE, uncert=TRUE, saveSummaries=TRUE, family, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -75,6 +78,8 @@ and allele frequency data for downstream filtering?}
   \item{family}{specify the GLM family to use; defaults to 'gaussian' if left missing}
   \item{\dots}{
 parameters passed to \code{\link[snpMatrix2]{snp.rhs.tests}}
+ \item{obpaths}{vector of strings giving paths to serialized smlSet instances to avoid excess consumption of
+RAM.  These will be loaded as needed.
 }
   \item{mgr}{an instance of \code{eqtlTestsManager}}
   \item{ffind}{index into the list of ff files managed by \code{mgr} to be used for
