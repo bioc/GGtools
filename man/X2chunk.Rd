@@ -22,7 +22,7 @@ topFeats( x, ... )
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{for topFeats, an instance of \code{\link[GGBase]{probeId-class}} or 
-\code{\link[GGBase]{rsid-class}} or \code{\link[GGBase]{genesym}} classes;
+\code{\link[GGBase]{rsid-class}} or \code{\link[GGBase]{genesym}} or eqtlTestsManager classes;
 this is an API change because of odd logic of old function; to use old
 behavior, call GGtools:::.topFeats}
   \item{mgr}{
@@ -94,7 +94,7 @@ od = getwd()
 setwd(tempdir())
 # create the ff manager instance
 library(ff)
-dd = diagffCC(h20, gs~male)
+dd = eqtlTests(h20, ~male)
 # extract the matrix
 fc = X2chunk(dd, 1, start, end, snpLocs20, "illuminaHumanv1.db")
 dim(fc)

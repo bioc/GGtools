@@ -63,6 +63,7 @@ VJ Carey <stvjc@channing.harvard.edu>
 %}
 \examples{
 # runs interactively but not in check on windows
+\dontrun{
 if (.Platform$OS.type != "windows") {
 sessionInfo()
 example(multffCT)
@@ -80,6 +81,7 @@ readLines(paste(g1, ".wig", sep=""), n=10)
 # if you want to modify aspects of the display as a track, use, e.g.,
 # nsco = as(sco, "UCSCData")
 # nsco@trackLine@name = "[genename]"  etc.
+}
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

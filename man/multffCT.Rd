@@ -90,6 +90,7 @@ VJ Carey <stvjc@channing.harvard.edu>
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
+\dontrun{
 # runs interactively but not in check on windows
 if (.Platform$OS.type != "windows") {
 if (require(ff)) {
@@ -110,6 +111,7 @@ if (require(ff)) {
  dems
  dir()
  setwd(od)
+}
 }
 }
 }

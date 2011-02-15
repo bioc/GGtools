@@ -56,9 +56,11 @@ VJ Carey
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
+\dontrun{
 example(diagffCC)
 data(snpLocs20)
 bestCis(ff, snpLocs20, anno="illuminaHumanv1.db")
+}
 }
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the

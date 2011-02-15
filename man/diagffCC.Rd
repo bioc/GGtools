@@ -75,6 +75,10 @@ VJ Carey <stvjc@channing.harvard.edu>
 %%% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
+#
+# function is dropped Feb 11 2011 -- use makeDiagDirector
+#
+\dontrun{
 if (require(ff)){
 data(hmceuB36.2021)
 library(illuminaHumanv1.db)
@@ -102,8 +106,9 @@ pvraw[[1]][1:10]
 mm2 = maxchisq(ff, type="perGene")
 mm2
 # min_p_vals(mm2, "BH", "global", sidedness=2)[[1]][1:5]
-}
 setwd(owd)
+}
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -1,3 +1,4 @@
+if (FALSE) {
 library(GGtools)
 if (!exists("hmceuB36.2021")) data(hmceuB36.2021)
 f1 = gwSnpTests(genesym("CPNE1")~male, hmceuB36.2021, chrnum(20))
@@ -28,3 +29,5 @@ if (abs(ee2/2 - sco2) > .0001 ) stop("test failed for scalar gwSnpTests vs multi
 # following uses rescaled short int, need bigger tolerance
 sumcpne1 = ddsh[rsid("rs6060535"), probeId(pid)][[1]]
 if (abs((sumcpne1 - 2*sco)/(2*sco)) > .001) stop("test failed comparing short int based storage to single prec")
+}
+TRUE

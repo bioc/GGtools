@@ -64,6 +64,7 @@ int can represent without too much coarsening}
 %	or \code{\linkS4class{CLASSNAME}} for links to other classes
 %}
 \examples{
+\dontrun{
 #
 # seems to throw file error in CMD check on windows
 #
@@ -77,5 +78,6 @@ if (.Platform$OS.type != "windows") {
   dem$vmode
   dem$call
   }
+}
 }
 \keyword{classes}

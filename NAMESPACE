@@ -29,22 +29,16 @@ exportClasses( multffManager, maxchisq, egtSet)
 
 exportMethods(gwSnpTests, plot, topSnps, coerce, 
    show, "[", min_p_vals, probeNames, getSNP )
-#pvals, locs, hscores, 
 
-#export(snpm2phase, personalHap,
-# parsePh.out, snpm2mapLD, masterSnps, chunksize,
-# cisSnpTests, aafSNP, slimCisTrans,
-## slimCTchr2SQLite, slimCTchr2flat, minp, locreport, 
-#  wgtinfo2browser, top4, slimCTchr2ff, ffs2minp, #ffcistrans, 
-#  multffCT, makeCommonSNPs, checkCommonSNPs, diagffCC, maxchisq) #, phaseHS)
-
-export( multffCT, makeCommonSNPs, checkCommonSNPs, diagffCC, maxchisq,
+export( makeCommonSNPs, checkCommonSNPs, maxchisq,
    cisSnpTests, geneRanges, snp130locs, bestCis, geneTrack, X2chunk, topFeats,
    eqtlTests, mkCisTransDirector, ieqtlTests, getNamedLocs, getGRanges,
    permEx, cisRanges, cisScores, vcf2sm, #vcf2smTXT, vcf2metaloc, 
 	manhPlot, meqtlTests, exome_minp, scoresInRanges, flankingOnly,
  	cisProxScores, clipPCs, mcisProxScores, pcChooser,
-	interleave2cis, convertSS, feqtltests, mfeqtltests, fmcisRun, meqtlTests2)
+	interleave2cis, convertSS, 
+	externalize, getSS, makeDiagDirector, eqtlTestsNofile, 
+        makeMultiDiagDirector)
 
 # snpm2phase, snpm2mapLD, eqtlTests )
 
