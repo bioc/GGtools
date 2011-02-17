@@ -1,0 +1,9 @@
+Package: @PKGNAME@
+Title: @PKGNAME@, an small-footprint smlSet
+Version: 0.0.0
+Author: @AUTHOR@
+Description: small-footprint smlSet support
+Depends: Biobase, GGtools
+Maintainer: @MAINTAINER@
+License: private
+LazyLoad: yes

@@ -26,7 +26,8 @@
 #system("rm -rf foo2")
 #unix.time(md2 <- makeDiagDirector( "ceuhm2", litmap , geneApply=mclapply, targdir="foo2"))
 
-externalize = function(smlSet, packname) {
+externalize = function(smlSet, packname, author="Replace Me <auth@a.b.com>",
+  maintainer="Replace Me <repl@a.b.com>") {
 # creates folder structure for package
 # saves expression data as ex in data folder 
  system(paste("mkdir", packname))
@@ -40,7 +41,15 @@ externalize = function(smlSet, packname) {
  system(paste("mkdir ", packname, "/data", sep=""))
  ex = as(smlSet, "ExpressionSet")
  save(ex, file=paste(datfol, "eset.rda", sep=""))
- cat("now add a DESCRIPTION file and install\n")
+ dd = readLines(system.file("extpacksupp/DESCRIPTION.proto", package="GGtools"))
+ zz = readLines(system.file("extpacksupp/zzz.R", package="GGtools"))
+ dd = gsub("@MAINTAINER@", maintainer, dd)
+ dd = gsub("@AUTHOR@", author, dd)
+ dd = gsub("@PKGNAME@", packname, dd)
+ writeLines(dd, paste(packname, "/DESCRIPTION", sep=""))
+ writeLines(zz, paste(packname, "/R/zzz.R", sep=""))
+ writeLines("", paste(packname, "/NAMESPACE", sep=""))
+ cat(paste("now install", packname, "\n"))
  NULL
 }
 
