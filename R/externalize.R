@@ -107,6 +107,7 @@ makeDiagDirector = function(packname, genemap, rhs=~1, geneApply=lapply,
     tmp = tmp[ probeId( genemap[[i]] ), ]
     eqtlTests( tmp, rhs, geneApply=geneApply, ... )
  })
+ names(mgrs) = names(genemap)
  new("multiCisDirector", mgrs = mgrs )
 }
 
