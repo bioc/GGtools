@@ -165,6 +165,7 @@ eqtlTests = function(smlSet, rhs=~1-1,
      store[, gene, add=TRUE] = shortfac*numans
      NULL
      }) # end gene apply
+  close(store)
   store
   })  # end chr apply
   names(cres) = chrNames

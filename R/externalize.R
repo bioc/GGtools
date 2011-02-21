@@ -89,7 +89,7 @@ getSS = function( packname, chrs ) {
 }
 
 makeDiagDirector = function(packname, genemap, rhs=~1, geneApply=lapply,
-    mapApply=lapply, ...) {
+    mapApply=lapply, sleeplen=60, ...) {
 #
 # packname is a package of components of an smlSet made by externalize() and by hand
 # genemap is a list with elements corresponding to chromosomes, each element is a vector of probe ids
@@ -105,7 +105,9 @@ makeDiagDirector = function(packname, genemap, rhs=~1, geneApply=lapply,
  mgrs = mapApply( 1:length(genemap), function(i) {
     tmp = getSS( packname, gmnames[i] )
     tmp = tmp[ probeId( genemap[[i]] ), ]
-    eqtlTests( tmp, rhs, geneApply=geneApply, ... )
+    ans = eqtlTests( tmp, rhs, geneApply=geneApply, ... )
+    Sys.sleep(sleeplen)
+    ans
  })
  names(mgrs) = names(genemap)
  new("multiCisDirector", mgrs = mgrs )
