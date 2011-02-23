@@ -89,7 +89,7 @@ getSS = function( packname, chrs ) {
 }
 
 makeDiagDirector = function(packname, genemap, rhs=~1, geneApply=lapply,
-    mapApply=lapply, sleeplen=60, ...) {
+    mapApply=lapply, sleeplen=60, targdir="dfoo", runname="dfoo", ...) {
 #
 # packname is a package of components of an smlSet made by externalize() and by hand
 # genemap is a list with elements corresponding to chromosomes, each element is a vector of probe ids
@@ -105,12 +105,17 @@ makeDiagDirector = function(packname, genemap, rhs=~1, geneApply=lapply,
  mgrs = mapApply( 1:length(genemap), function(i) {
     tmp = getSS( packname, gmnames[i] )
     tmp = tmp[ probeId( genemap[[i]] ), ]
-    ans = eqtlTests( tmp, rhs, geneApply=geneApply, ... )
+    ans = eqtlTests( tmp, rhs, geneApply=geneApply, targdir=targdir, runname=runname, ... )
+    tobn = paste(runname, "_mgr_", gmnames[i], sep="")
+    assign(tobn, ans)
+    save(list=tobn, file=(ffn <- paste(targdir, "/", tobn, ".rda", sep="")))
     Sys.sleep(sleeplen)
-    ans
+    ffn
  })
  names(mgrs) = names(genemap)
- new("multiCisDirector", mgrs = mgrs )
+ allmgrs = lapply(mgrs, function(x) get(load(x)))
+ names(allmgrs) = names(genemap)  # maybe needless
+ new("multiCisDirector", mgrs = allmgrs )
 }
 
 makeMultiDiagDirector = function(packnames, genemap, rhslist=list(~1), mapapply=lapply, geneApply=lapply, ...) {
