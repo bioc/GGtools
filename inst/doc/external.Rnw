@@ -56,7 +56,7 @@ This document describes the first phase of externalizing large
 genotype data resources for expression genetics data structures.
 Given an smlSet instance, the \texttt{externalize()} function
 will create an R source package with chromosome-specific files
-of genotype data in \texttt{snpMatrix2::SnpMatrix} instances.
+of genotype data in \texttt{snpStats::SnpMatrix} instances.
 When this package is installed and loaded, the \texttt{getSS} function
 will collect information necessary to construct an smlSet with
 a specified number of chromosomes.

@@ -41,7 +41,7 @@ List of standard formulae without dependent variable; predictors for each formul
 with each rhslist element.  In other words, the pData of the kth smlSet in listOfSmls provides the
 data to resolve the symbols in the kth formula of rhslist
 }
-  \item{rules}{instance of \code{\link[snpMatrix2]{ImputationRules-class}} expressing
+  \item{rules}{instance of \code{\link[snpStats]{ImputationRules-class}} expressing
 rules by which unobserved SNP are `imputed' (that is, the value used is the
 conditional expectation of
 B copy number, which is real-valued and may lie outside [0,2])
@@ -74,10 +74,10 @@ before statistical processing of the data in this function.
   \item{checkValid}{logical: shall the function run validObject on input smlSet?}
   \item{saveSummaries}{logical: shall a set of ff files be stored that includes genotype
 and allele frequency data for downstream filtering?}
-  \item{uncert}{setting for value of \code{uncertain} argument in \code{\link[snpMatrix2]{snp.rhs.tests}}}
+  \item{uncert}{setting for value of \code{uncertain} argument in \code{\link[snpStats]{snp.rhs.tests}}}
   \item{family}{specify the GLM family to use; defaults to 'gaussian' if left missing}
   \item{\dots}{
-parameters passed to \code{\link[snpMatrix2]{snp.rhs.tests}}}
+parameters passed to \code{\link[snpStats]{snp.rhs.tests}}}
  \item{obpaths}{vector of strings giving paths to serialized smlSet instances to avoid excess consumption of
 RAM.  These will be loaded as needed.  }
   \item{mgr}{an instance of \code{eqtlTestsManager}}
@@ -97,7 +97,7 @@ as opposed to local to TSS}
   \code{options()$verbose == TRUE}}
 }
 \details{
-\code{\link[snpMatrix2]{snp.rhs.tests}} is run for all genes enumerated in
+\code{\link[snpStats]{snp.rhs.tests}} is run for all genes enumerated in
 \code{featureNames(smlSet)} individually as dependent variables, and all SNP  in \code{smList(smlSet)}
 as predictors, one by one.  Each model fitted for SNP genotype is additionally
 adjusted for elements in \code{rhs}.  There are consequently \code{G*S} test results

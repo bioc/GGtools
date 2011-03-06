@@ -3,15 +3,15 @@
 \alias{imphm3_1KG_20_mA5}
 \docType{data}
 \title{
-snpMatrix2-generated rules from imputing from HapMap phase III loci to 1000 genomes loci -- for chromosome 20 only
+snpStats-generated rules from imputing from HapMap phase III loci to 1000 genomes loci -- for chromosome 20 only
 }
 \description{
-snpMatrix2-generated rules from imputing from HapMap phase III loci to 1000 genomes loci -- for chromosome 20 only
+snpStats-generated rules from imputing from HapMap phase III loci to 1000 genomes loci -- for chromosome 20 only
 }
 \usage{data(imphm3_1KG_20_mA2)}
 \format{
   The format is:
-Formal class 'snp.reg.imputation' [package "snpMatrix2"] with 1 slots \cr
+Formal class 'snp.reg.imputation' [package "snpStats"] with 1 slots \cr
   ..@ .Data:List of 110511 \cr
   .. ..$ :List of 4 \cr
   .. .. ..$ maf         : num 0.2 \cr
@@ -26,10 +26,10 @@ Formal class 'snp.reg.imputation' [package "snpMatrix2"] with 1 slots \cr
   .. ..$ : NULL
 }
 \details{
-Generated with snpMatrix2 1.1.1, rules that use the ceu1kg package to
+Generated with snpStats 1.1.1, rules that use the ceu1kg package to
 define loci and calls for 1000 genomes genotypes for CEU, to allow imputation
 from the hapmap phase III loci for CEU.  The data object with suffix mA2 was generated with
-setting mA=2; for suffix mA5, mA was set at 5; see \code{\link[snpMatrix2]{snp.imputation}}
+setting mA=2; for suffix mA5, mA was set at 5; see \code{\link[snpStats]{snp.imputation}}
 for details on this parameter, which sets the minimum number of observations required for
 an LD determination to be made for SNP tagging or haplotype modeling.
 }

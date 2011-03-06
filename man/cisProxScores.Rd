@@ -100,7 +100,7 @@ smlSet}
 This function computes tests for all same-chromosome eQTL
 up to the maximum distance given in \code{dradset}
 and returns a named list with chi-squared statistics computed
-by \code{\link[snpMatrix2]{snp.rhs.tests}}
+by \code{\link[snpStats]{snp.rhs.tests}}
 
 The \code{interleave2cis} function helps with general comparison
 of distributions of real scores to distributions obtained

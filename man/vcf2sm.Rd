@@ -45,7 +45,7 @@ should be set to "".  set to "" if you see loc names with chrchr prefix.}
 %%%  ~~ If necessary, more details than the description above ~~
 %}
 \value{
-an instance of \code{\link[snpMatrix2]{SnpMatrix-class}}
+an instance of \code{\link[snpStats]{SnpMatrix-class}}
 }
 \references{
 \url{http://www.1000genomes.org/wiki/doku.php?id=1000_genomes:analysis:vcf4.0}

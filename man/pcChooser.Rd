@@ -58,7 +58,7 @@ grows.
 \value{
 matrix with columns corresponding to \code{cands} and 
 rows corresponding to \code{pvals} -- the row names are
-the chi-squared threshold values for \code{\link[snpMatrix2]{snp.rhs.tests}}
+the chi-squared threshold values for \code{\link[snpStats]{snp.rhs.tests}}
 results
 %%  ~Describe the value returned
 %%  If it is a LIST, use
