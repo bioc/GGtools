@@ -207,10 +207,138 @@ This is imported as a custom track and viewed as:
 
 \subsection{Checking coincidence with other genomic features}
 
-g20ok[order(elementMetadata(g20ok)$score, decreasing=TRUE)[1:20]]
+When we store the statistical results in a \texttt{GRanges}
+instance, we have capacity to quickly assess genomic context
+of high-scoring SNP.  The top 20 SNP and their locations are
+<<lkgsc>>=
+top200 = g20ok[order(elementMetadata(g20ok)$score, decreasing=TRUE)[1:200]]
+top200[196:200]
+@
+We see that we have SNP with p-values at most $10^{-5}$.  We will
+now check whether any of these lie in regulatory regions defined
+by ORegAnno, confined to 10MB near CPNE1 on chr20.
+
+<<gettab>>=
+library(rtracklayer)
+ss = browserSession()
+genome(ss) = "hg18"
+GG = GRanges(seqnames="chr20", IRanges(30000000,40000000))
+oq = ucscTableQuery(ss, "oreganno", range=GG)
+toq = track(oq)
+ov = subsetByOverlaps(toq, top200)
+ov
+@
+
+For further discovery of the regulatory feature characteristics,
+consider 
+<<domore,eval=FALSE>>=
+tableName(oq) = "oregannoAttr"
+featdat = getTable(oq)
+featdat[ featdat$id %in% ov$name, ]
+@
+Retrieving the table can take a while, so we suppress it in this
+vignette, but on 8 Mar 2011 the result was:
+\begin{verbatim}
+> featdat[ featdat$id %in% ov$name, ]
+               id       attribute                                 attrVal
+5809  OREG0004040            type                       REGULATORY REGION
+5810  OREG0004040            Gene                                  FER1L4
+5811  OREG0004040         Dataset                 Stanford ENCODE Dataset
+5812  OREG0004040 EvidenceSubtype Transient transfection luciferase assay
+5833  OREG0004046            type                       REGULATORY REGION
+5834  OREG0004046            Gene                                   RBM12
+5835  OREG0004046         Dataset                 Stanford ENCODE Dataset
+5836  OREG0004046 EvidenceSubtype Transient transfection luciferase assay
+86472 OREG0025894            type                       REGULATORY REGION
+86473 OREG0025894            TFbs                                    CTCF
+86474 OREG0025894         Dataset          CTCF ChIP-chip sites (Ren lab)
+86475 OREG0025894 EvidenceSubtype                ChIP-on-chip (ChIP-chip)
+\end{verbatim}
+enabling us to learn more about the annotations of regions in which high-scoring SNP
+are found.
+
+Clearly other UCSC-mediated resources can be used similarly to help interpret SNP scores.
 
 
-\end{document}
+\section{Supporting comprehensive testing}
+
+\subsection{The default behavior of \texttt{eqtlTests}}
+
+\texttt{eqtlTests} will, by default, compute scores for all gene-SNP combinations
+in the \texttt{smlSet} instance to which it is applied.  With a multicore
+system, some concurrency can be achieved.  To illustrate the activity,
+we take only 20 genes sampled from the illumina platform and compute all
+eQTL tests for SNP on chromosomes 20 and 21.
+<<lke>>=
+NG = length(featureNames(hmceuB36.2021))
+hmct = hmceuB36.2021[ sample(1:NG, size=20, replace=FALSE), ]
+applier = apply
+if (require(multicore)) {
+  options(cores=min(c(multicore:::volatile$detectedCores, 6)))
+  applier = mclapply
+  }
+unix.time(e2 <- eqtlTests(hmct, ~male, geneApply=applier, targdir=tempdir(), runname=tname()))
+@
+We are now managing 3.4 million tests.  These are stored out of memory using
+the \textit{ff} system for memory-mapped disk representations of R objects.
+<<lkff>>=
+e2@fflist[[1]]
+sapply(e2@fflist,dim)
+@
+It is unpleasant to use the at-sign fflist notation but until a richer set
+of use cases is identified, this primitive idiom will be used.
+
+In general we will break up a comprehensive run by gene sets -- typically one
+run for all genes on a chromosome.  In this case, we will generate 22 eqtlTestManager
+instances; these can be unified with a cisTransDirector or multiCisDirector
+object.  We will discuss that later.
+
+\subsection{Reducing the memory footprint for comprehensive `same chromosome' tests}
+
+In the example given above, the data for genotypes on chr20 and chr21 are simultaneously
+in memory.  Up to now, we have often stored all genotype data in memory when
+using smlSets, leading to multiple Gb of RAM consumption, causing conflicts
+and loss of speed.  We now describe an approach to building and using package-based
+experiment representations, which allow reduced and more flexible use of resources.
+
+We can take a unified smlSet instance and turn it into a package using the
+\texttt{externalize} function.  We also install it:
+<<doext>>=
+if (interactive() & file.exists("exdempack")) stop("will not remove existing 'exdempack' folder")
+system("rm -rf exdempack")
+externalize(hmceuB36.2021, "exdempack")
+tar("exdempack.tar.gz", "exdempack", compression="gzip")
+install.packages("exdempack.tar.gz", repos=NULL, type="source")
+@
+Now we can use \texttt{getSS} to create tailored smlSet instances on the fly.
+<<lkd>>=
+gc()
+s1 = getSS("exdempack", "20")
+gc()
+rm(s1)
+gc()
+@
+This technology is used in the makeDiagDirector function.  This function requires
+a list that maps genes to chromosomes.  In this example, we take 20 genes from
+each of chromosome 20 and 21 to define the map.  All same-chromosome tests for these
+40 genes will be computed.  No concurrency is used.
+<<mymap>>=
+mymap = lapply(c("20", "21"), function(x) get(x, revmap(illuminaHumanv1CHR))[1:20])
+mymap = lapply(mymap, function(x) intersect(x, featureNames(hmceuB36.2021)))
+names(mymap) = c("20", "21")
+unix.time(md <-  makeDiagDirector("exdempack", mymap, rhs=~male, sleeplen=2, runname=tname()))
+md
+@
+
+\subsection{Acquiring test results within specified intervals}
+
+Here we will discuss how to use cisProxScores with the director computed above.
+
+\section{Working with multiple populations}
+
+Here we will discuss how to take multiple population-specific directors and obtain a director
+representing the sums across populations.
+
 
 
 
