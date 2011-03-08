@@ -1,0 +1,217 @@
+
+%
+% NOTE -- ONLY EDIT THE .Rnw FILE!!!  The .tex file is
+% likely to be overwritten.
+%
+
+%\VignetteIndexEntry{GGtools: exploring genetics of gene expression}
+%\VignetteDepends{snpStats}
+%\VignetteKeywords{expression, genetics, high performance computing}
+%\VignettePackage{GGtools}
+
+\documentclass[12pt]{article}
+
+\usepackage{amsmath,pstricks}
+\usepackage[authoryear,round]{natbib}
+\usepackage{hyperref}
+
+
+\textwidth=6.2in
+\textheight=8.5in
+%\parskip=.3cm
+\oddsidemargin=.1in
+\evensidemargin=.1in
+\headheight=-.3in
+
+\newcommand{\scscst}{\scriptscriptstyle}
+\newcommand{\scst}{\scriptstyle}
+
+
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textit{#1}}}
+\newcommand{\Rmethod}[1]{{\texttt{#1}}}
+\newcommand{\Rfunarg}[1]{{\texttt{#1}}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+
+\textwidth=6.2in
+
+\bibliographystyle{plainnat} 
+ 
+\begin{document}
+%\setkeys{Gin}{width=0.55\textwidth}
+
+\title{GGtools 2011: leaner software for genetics of gene expression}
+\author{VJ Carey (stvjc at channing.harvard.edu)}
+\maketitle
+
+\tableofcontents
+
+\clearpage
+
+\section{Introduction; major changes}
+
+Since its introduction in 2006, GGtools has provided a number of 
+data structures and tools for exploratory data analysis and
+hypothesis testing in expression genetics.  Since 2006, Bioconductor's
+facilities for representing genomes and for exploiting
+advanced ideas in computing and statistical modeling have evolved considerably,
+and many components of GGtools/GGBase need to be discarded to
+promote use of new facilities.
+
+The following major changes have been made.
+\begin{itemize}
+\item \texttt{smlSet} instances should not be used for genotyping panels
+of more than one million loci.  A packaging discipline has been introduced.
+An expression genetics experiment should be managed in a package in which
+expression data are held in an \texttt{ExpressionSet} instance in the
+\texttt{data} folder, and \textit{snpStats} \texttt{SnpMatrix} instances
+are stored in \texttt{inst/parts}.  After installation, the \texttt{getSS}
+function constructs an \texttt{smlSet} instance on the fly -- typically
+with modest memory footprint because only a fraction of available loci
+are held in memory.
+\texttt{externalize} demonstrates construction of a compliant package for
+expression genetics data by converting an existing whole- or partial-genome 
+smlSet instance into a package.
+\item \texttt{gwSnpTests} has been retained for focused in-memory test
+computation, but it will be phased out.
+\item \texttt{eqtlTests} is the primary function for inference
+in expression genetics.  This function takes genotype and phenotype
+information from
+an \texttt{smlSet}, passes it through testing facilities of
+\textit{snpStats}, and creates managed out-of-memory storage for
+voluminous testing results.
+\item Facilities for metadata handling, e.g., determining SNP locations,
+gene locations, vocabulary translations, are being phased out.  Users
+must construct location and feature name metadata using up-to-date
+Bioconductor resources or their own resources.
+\end{itemize}
+
+The remainder of this document illustrates basic activities now
+supported by the package.
+
+\section{A simple exploration of eQTL for a selected gene}
+
+\subsection{Filtering an smlSet for a chromosome-wide test}
+
+We retain a two-chromosome example with expression data
+derived from the Wellcome Trust GENEVAR project archives, and
+genotype data from HapMap phase II:
+<<lkd>>=
+library(GGtools)
+data(hmceuB36.2021)
+hmceuB36.2021
+@
+
+A commonly found gene with eQTL is CPNE1 on chromosome 20.  We
+can determine the probe name in use for CPNE1 as follows:
+<<lkn>>=
+library("illuminaHumanv1.db")
+cpn = get("CPNE1", revmap(illuminaHumanv1SYMBOL))
+use = intersect(cpn, featureNames(hmceuB36.2021))
+if (length(use) == 0) stop("probe not on array")
+use = use[1]
+@
+We will now trim down the \texttt{smlSet} instance
+to this gene and SNPs on chr20:
+<<trim>>=
+hmlit = hmceuB36.2021[probeId(use),]
+hmlit = hmlit[ chrnum("20"), ]
+hmlit
+@
+
+\subsection{Executing tests and interrogating the results}
+
+The preferred testing procedure is:
+<<doe>>=
+tname = function() gsub(".*/", "", tempfile())
+e1 = eqtlTests(hmlit, ~male, targdir=tempdir(), runname=tname())
+e1
+class(e1)
+@
+We support focused queries into the manager of results.  For this
+application we are computing $\chi^2(1)$ statistics for
+each gene-SNP combination, measuring the fit of an additive
+genetic model with, in this case, adjustment for gender.
+
+<<doq>>=
+e1[rsid("rs6060535"), probeId("GI_23397697-A")]
+@
+
+We can acquire the most predictive SNP using \texttt{topFeats}.
+<<dotop>>=
+topFeats(probeId(cpn), mgr=e1, ffind=1)
+@
+Here the \texttt{ffind} parameter must be set to pick among
+files that might be managed by the manager bound to \texttt{mgr}.
+See the technical appendix for more details.
+
+\subsection{Visualization}
+
+To visualize the results, using hg18 locations for the SNP,
+we must acquire location metadata.
+
+<<get09>>=
+library(SNPlocs.Hsapiens.dbSNP.20090506)
+c20 = getSNPlocs("chr20")
+rs20 = paste("rs", c20[,1], sep="")
+loc20 = c20$loc
+g20 = GRanges(seqnames="chr20", IRanges(loc20,width=1))
+names(g20) = rs20
+length(g20)
+g20[1:3,]
+@
+The names of SNP for which tests were computed are
+<<lkn>>=
+tn = rownames(e1@fflist[[1]])
+tn[1:10]
+@
+We can now obtain the manhattan plot:
+<<lkman,fig=TRUE>>=
+manhPlot(cpn, mgr=e1, ffind=1, locGRanges=g20, cex=3)
+@
+
+In general we will prefer to have this information in a browser track.  To accomplish
+this, add the test results to the GRanges instance for locations as `score'
+and export a wig file.
+
+We have to align the SNPs with locations with those for
+which we have tests.  First, restrict the locations.
+<<dook>>=
+okn = intersect(tn, names(g20))
+g20ok = g20[okn]
+@
+Now obtain the -log10 p values:
+<<getp>>=
+chis1 = e1[, probeId(cpn)][[1]][okn,]
+ml10p = -log10(1-pchisq(chis1, 1))
+@
+Bind to the location data:
+<<dob>>=
+elementMetadata(g20ok)$score = ml10p
+g20ok[1:5,]
+@
+and export:
+<<doex>>=
+library(rtracklayer)
+export(g20ok, "cpne1.wig")
+@
+
+This is imported as a custom track and viewed as:
+
+\vspace*{1cm}
+
+\setkeys{Gin}{width=1.15\textwidth}
+
+\includegraphics{cpne1_2011}
+
+\subsection{Checking coincidence with other genomic features}
+
+g20ok[order(elementMetadata(g20ok)$score, decreasing=TRUE)[1:20]]
+
+
+\end{document}
+
+
+
+\end{document}
