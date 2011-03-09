@@ -59,7 +59,7 @@ getSS = function( packname, chrs ) {
  partsfol = system.file("parts", package=packname)
  sml = lapply(chrs, function(x) get(load(paste(partsfol, "/", x, ".rda", sep=""))))
  names(sml) = chrs
- make_smlSet( ex, sml )
+ make_smlSet( ex, sml, harmonizeSamples=TRUE )
 }
 
 #hmceuB36 = new("extSmlSet", packname="ceuhm2", chrnames=
