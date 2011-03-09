@@ -505,7 +505,7 @@ manhPlot = function( probeid, mgr, ffind, namedlocvec=NULL, locGRanges=NULL,
  anno = mgr@geneanno
  if (require(anno, character.only=TRUE)) {
    packref = function(tag="CHRLOC") get(paste(gsub(".db", "", anno), tag, sep=""))
-   gloc = get(probeid, packref())
+   gloc = AnnotationDbi::get(probeid, packref())
    axis(3, label=get(probeid, packref("SYMBOL")),
            at=abs(gloc[1]), col="red", lwd=2)
    }

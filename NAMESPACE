@@ -1,11 +1,6 @@
-import(tools, AnnotationDbi)
-importFrom(annaffy, "getURL")
-importFrom(annaffy, "getHTML")
-importFrom(annotate, "organism")
-importFrom(rtracklayer, "browserSession", "ucscTableQuery", "tableName", "track")
 importFrom("Biobase", "exprs")
 importFrom("GGBase", "smList")
-
+importFrom("AnnotationDbi", "get")
 
 importClassesFrom("Biobase", "eSet", "VersionedBiobase", "Versioned")
 importClassesFrom("GGBase", "cnumOrMissing")
@@ -13,35 +8,13 @@ importClassesFrom("GGBase", "cnumOrMissing")
 importClassesFrom(IRanges, RangedData)
 importFrom(IRanges, RangedData, space, findOverlaps)
 
-importFrom(graphics,
-           abline, axis, boxplot, layout, legend,
-           par, 
-    plot, 
-           points) 
-
-importClassesFrom("GSEABase", "GeneSet")
-importFrom("GSEABase", "GeneSet")
-
 importFrom(stats,
            as.formula, formula, lm, resid)
 
-exportClasses( multffManager, maxchisq, egtSet)
+exportMethods(gwSnpTests, topFeats, show)
 
-exportMethods(gwSnpTests, plot, topSnps, coerce, 
-   show, "[", min_p_vals, probeNames, getSNP )
-
-export( makeCommonSNPs, checkCommonSNPs, maxchisq,
-   cisSnpTests, geneRanges, snp130locs, bestCis, geneTrack, X2chunk, topFeats,
-   eqtlTests, mkCisTransDirector, ieqtlTests, getNamedLocs, getGRanges,
-   permEx, cisRanges, cisScores, vcf2sm, #vcf2smTXT, vcf2metaloc, 
-	manhPlot, meqtlTests, exome_minp, scoresInRanges, flankingOnly,
- 	cisProxScores, clipPCs, mcisProxScores, pcChooser,
-	interleave2cis, convertSS, 
-	externalize, getSS, makeDiagDirector, eqtlTestsNofile, 
-        makeMultiDiagDirector)
-
-# snpm2phase, snpm2mapLD, eqtlTests )
+export(eqtlTests, cisProxScores, clipPCs, pcChooser, permEx,
+	topFeats, vcf2sm, externalize, getSS, manhPlot, makeDiagDirector)
 
 exportClass(eqtlTestsManager, multiCisDirector, cisProxScores)
 
-exportMethods(topFeats)
