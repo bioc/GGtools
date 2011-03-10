@@ -13,7 +13,7 @@ hmlit = hmceuB36.2021[ probeId(gnames), ]
 set.seed(1234)
 e1 = eqtlTests(hmlit, ~male, targdir=tempdir())
 data(snpLocs20)
-ex2ch33_35live = X2chunk(e1, 1, as.integer(33e6), as.integer(35e6), snpLocs20, "illuminaHumanv1.db")
+ex2ch33_35live = GGtools:::X2chunk(e1, 1, as.integer(33e6), as.integer(35e6), snpLocs20, "illuminaHumanv1.db")
 load("ex2ch33_35.rda")
 all.equal(ex2ch33_35live, ex2ch33_35)
 #system("rm -rf .abc")
