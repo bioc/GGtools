@@ -142,28 +142,6 @@ archive governed by facilities of the \textit{ff} package.
 dir("foo")
 @
 
-We can get a GRanges instance with the test results for a specific gene:
-<<getd>>=
-nn = getNamedLocs(slpack= "SNPlocs.Hsapiens.dbSNP.20100427", chr="ch20")
-library(GenomicRanges)
-gg = getGRanges( f1, 1, 1, "ch20", nn )
-gg[1:3,]
-@
-
-We convert this to a RangedData instance for viewing on the UCSC genome browser.
-This code will work in a clean-enough R session; in the sequence
-of computations given in this vignette it
-can throw an infinite recursion.
-<<lkb,eval=FALSE>>=
-if (interactive()) {
-s1 = browserSession()
-rd = RangedData(gg)
-genome(rd) = "hg18"
-s1[["CPNE1"]] = rd
-v1 = browserView(s1, GenomicRanges(33.5e6,34.5e6, "chr20"), track=ucscTrackModes(hide="knownGene", full=c("refGene", "CPNE1")))
-}
-@
-
 \section{Using imputation to 1000 genomes loci}
 
 The \textit{snpStats} package defines methods for using
