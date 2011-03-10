@@ -153,7 +153,7 @@ we must acquire location metadata.
 
 <<get09>>=
 library(SNPlocs.Hsapiens.dbSNP.20090506)
-c20 = getSNPlocs("chr20")
+c20 = getSNPlocs("ch20")
 rs20 = paste("rs", c20[,1], sep="")
 loc20 = c20$loc
 g20 = GRanges(seqnames="chr20", IRanges(loc20,width=1))
@@ -304,16 +304,18 @@ experiment representations, which allow reduced and more flexible use of resourc
 We can take a unified smlSet instance and turn it into a package using the
 \texttt{externalize} function.  We also install it:
 <<doext>>=
-if (interactive() & file.exists("exdempack")) stop("will not remove existing 'exdempack' folder")
-system("rm -rf exdempack")
-externalize(hmceuB36.2021, "exdempack")
-tar("exdempack.tar.gz", "exdempack", compression="gzip")
-install.packages("exdempack.tar.gz", repos=NULL, type="source")
+edname = paste("exdem", tname(), sep="")
+if (interactive() & file.exists(edname)) stop(paste("will not remove existing '", edname, "' folder"))
+externalize(hmceuB36.2021, edname)
+tar(tna <- paste(edname,".tar.gz", sep=""), edname, compression="gzip")
+install.packages(tna, repos=NULL, type="source")
+try(system(paste("rm -rf", tna)))
+try(system(paste("rm -rf", edname)))
 @
 Now we can use \texttt{getSS} to create tailored smlSet instances on the fly.
 <<lkd>>=
 gc()
-s1 = getSS("exdempack", "20")
+s1 = getSS(edname, "20")
 gc()
 rm(s1)
 gc()
@@ -326,13 +328,78 @@ each of chromosome 20 and 21 to define the map.  All same-chromosome tests for t
 mymap = lapply(c("20", "21"), function(x) get(x, revmap(illuminaHumanv1CHR))[1:20])
 mymap = lapply(mymap, function(x) intersect(x, featureNames(hmceuB36.2021)))
 names(mymap) = c("20", "21")
-unix.time(md <-  makeDiagDirector("exdempack", mymap, rhs=~male, sleeplen=2, runname=tname()))
+unix.time(md <-  makeDiagDirector(edname, mymap, rhs=~male, sleeplen=2, runname=tname(),
+    targdir=tname()))
 md
 @
+It would be typical to save the director object (here named \texttt{md}) to disk, so that the ff files
+that have been computed can be reused conveniently.
 
 \subsection{Acquiring test results within specified intervals}
 
 Here we will discuss how to use cisProxScores with the director computed above.
+The calling sequence is
+\begin{verbatim}
+cisProxScores(smlSet, fmla, dradset, direc = NULL, folder, runname, 
+      geneApply = mclapply, saveDirector = TRUE, snpGRL=NULL,
+      geneGRL=NULL, snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ffind=NULL, ...)
+\end{verbatim}
+so in fact one can pass an \texttt{smlSet} instance as input.  However, if a
+\Sexpr{class(md)} instance is available, that can be used, avoiding the computation
+of the tests.  If the director is used, we need only specify 
+\begin{itemize}
+\item \texttt{dradset}: the collection of nested paired intervals around
+genes within which scores will be collected
+\item \texttt{geneGRL}: a list of GRanges, with one element per chromosome,
+providing coordinates of gene start and stop locations
+\item \texttt{snpGRL}: a list of GRanges, with one element per chromosome,
+providing coordinates of SNPs with names
+end{itemize}
+
+The names of probesets scored in \texttt{md} can be obtained:
+<<getb>>=
+ps = lapply(md@mgrs, function(x) colnames(x@fflist[[1]]))
+names(ps) = names(md@mgrs)
+ps
+@
+The GRanges instance is then obtained as
+<<getgr>>=
+getgr = function(x,map) abs(sapply(mget(x, map), "[", 1))
+st = lapply(ps, getgr, illuminaHumanv1CHRLOC)
+en = lapply(ps, getgr, illuminaHumanv1CHRLOCEND)
+sp = names(ps)
+grl = list()
+for (i in 1:length(ps)) {
+  grl[[i]] = GRanges(seqnames=sp[i], IRanges(st[[i]], en[[i]]))
+  names(grl[[i]]) = ps[[i]]
+  }
+names(grl) = names(ps)
+@
+SNP locations can be obtained as follows.
+<<getsr>>=
+#allsn = lapply(md@mgrs, function(x) rownames(x@fflist[[1]]))
+#names(allsn) = names(md@mgrs)
+library(SNPlocs.Hsapiens.dbSNP.20100427)
+c20 = getSNPlocs("ch20", as.GRanges=TRUE)
+seqnames(c20) <- sub("ch", "", seqnames(c20))
+names(c20) = paste("rs", elementMetadata(c20)$RefSNP_id, sep="")
+c21 = getSNPlocs("ch21", as.GRanges=TRUE)
+seqnames(c21) <- sub("ch", "", seqnames(c21))
+names(c21) = paste("rs", elementMetadata(c21)$RefSNP_id, sep="")
+srl = list(`20`=c20, `21`=c21)
+@
+Now compute scores in intervals to 50kb around gene, then from 50kb to 100kb, then from 100kb to 500kb:
+<<lksc>>=
+csc = cisProxScores( direc=md, dradset = c(0,50000,100000, 500000), snpGRL = srl, geneGRL = grl,
+  geneApply=lapply, ffind=1 )
+@
+This yields a deeply nested structure; a hint of best scores per gene within intervals
+comes from
+<<lklap>>=
+lapply(csc, lapply, sapply,  function(x)max(unlist(x)))
+@
+
+
 
 \section{Working with multiple populations}
 
