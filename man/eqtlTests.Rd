@@ -3,7 +3,7 @@
 \alias{ieqtlTests}
 \alias{meqtlTests}
 \alias{meqtlTests2}
-\alias{cisScores}
+%\alias{cisScores}
 %\alias{imphm3_1KG_20_mA2}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -21,7 +21,7 @@ ieqtlTests(smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = "ifoo",
         family, ...)
 meqtlTests(listOfSmls, rhslist, runname = "mfoo", targdir = "mfoo", 
 	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, harmonizeSNPs = FALSE, uncert=TRUE, saveSummaries=TRUE, family, ...)
-cisScores( mgr, ffind=1, chr, snpGR, radius=5e5, applier=lapply, minMAF = 0, minGTF = 0, useEnd=FALSE ) 
+#cisScores( mgr, ffind=1, chr, snpGR, radius=5e5, applier=lapply, minMAF = 0, minGTF = 0, useEnd=FALSE ) 
 meqtlTests2(obpaths, rhslist, runname = "mfoo", targdir = "mfoo", 
 	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, harmonizeSNPs = FALSE, uncert=TRUE, saveSummaries=TRUE, family, ...)
 }
@@ -171,14 +171,6 @@ setwd(td)
 time.lapply = unix.time(e1 <- eqtlTests( hm, ~male ))
 e1
 dir("foo")
-#
-# now show how to extract scores cis to genes
-#
-if (require(ceu1kg)) {
- data(ceu1kgMeta_20)
- chkcc = cisScores(e1, 1, "chr20", ceu1kgMeta_20, radius=2e6) 
- sapply(chkcc, max)
-}
 setwd(curd)
 #
 # additional examples are in the 'extras' folder, extrExt.txt

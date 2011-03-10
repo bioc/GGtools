@@ -84,7 +84,9 @@ snp130 table in hg19 UCSC table set
 %%  ~~ possibly secondary sources and usages ~~
 %}
 \examples{
+\dontrun{
 data(snpLocs20)
 snpLocs20
+}
 }
 \keyword{datasets}

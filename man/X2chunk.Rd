@@ -77,6 +77,7 @@ VJ Carey
 
 
 \examples{
+\dontrun{
 # build an smlSet with a small set of neighboring genes
 data(snpLocs20)
 if (!exists("hmceuB36.2021")) data(hmceuB36.2021)
@@ -103,6 +104,7 @@ setwd(od)
 heatmap(fc[1:50,], Rowv=NA, Colv=NA, scale="none")
 topFeats( rsid("rs6094162"), mgr=dd, 1, "illuminaHumanv1.db")
 topFeats( genesym("MKKS"), mgr=dd, 1, "illuminaHumanv1.db")
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

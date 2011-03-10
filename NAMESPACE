@@ -1,6 +1,6 @@
 importFrom("Biobase", "exprs")
 importFrom("GGBase", "smList")
-importFrom("AnnotationDbi", "get")
+importFrom("AnnotationDbi", "get", "mget")
 
 importClassesFrom("Biobase", "eSet", "VersionedBiobase", "Versioned")
 importClassesFrom("GGBase", "cnumOrMissing")
@@ -14,7 +14,8 @@ importFrom(stats,
 exportMethods(gwSnpTests, topFeats, show)
 
 export(eqtlTests, cisProxScores, clipPCs, pcChooser, permEx,
-	topFeats, vcf2sm, externalize, getSS, manhPlot, makeDiagDirector)
+	topFeats, vcf2sm, externalize, getSS, manhPlot, makeDiagDirector,
+	interleave2cis, exome_minp, topSnps, checkCommonSNPs, makeCommonSNPs)
 
 exportClass(eqtlTestsManager, multiCisDirector, cisProxScores)
 

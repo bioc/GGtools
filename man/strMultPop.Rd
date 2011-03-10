@@ -1,8 +1,8 @@
 \name{strMultPop}
 \alias{strMultPop}
 \docType{data}
-\title{ serialization of a table from Stringer's multipopulation eQTL report }
-\description{ serialization of a table from Stringer's multipopulation eQTL report }
+\title{ serialization of a table from Stranger's multipopulation eQTL report }
+\description{ serialization of a table from Stranger's multipopulation eQTL report }
 \usage{data(strMultPop)}
 \format{
   A data frame with 39649 observations on the following 12 variables.

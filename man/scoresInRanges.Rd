@@ -55,6 +55,7 @@ for SNP
 %}
 
 \examples{
+\dontrun{
 gl = GGtools:::geneLimits( anno="illuminaHumanv1.db" )
 egl = GGtools:::extendGR(gl, siz=5e5)
 data(hmceuB36.2021)
@@ -78,6 +79,7 @@ rsnhits = sapply(cc, sapply, function(x) rownames(x)[which.max(x)])
 # combine with gene names
 data.frame( probe=names(egl[1:10]), bestSNP=rsnhits, maxchisq=maxs )
 setwd(curd)
+}
 }
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the

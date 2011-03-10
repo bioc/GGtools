@@ -47,8 +47,10 @@ VJ Carey
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
+\dontrun{
 library(illuminaHumanv1.db)
 gg = get(c("CPNE1", "BRCA2"), revmap(illuminaHumanv1SYMBOL))
 geneRanges(gg, "illuminaHumanv1.db")
+}
 }
 \keyword{ models }

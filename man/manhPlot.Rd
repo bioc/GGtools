@@ -71,20 +71,27 @@ VJ Carey <stvjc@channing.harvard.edu>
 %%% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
-library(ceuhm3)
-if (!exists("hm3ceuSMS")) data(hm3ceuSMS)
-library(illuminaHumanv1.db)
-cptag = get("CPNE1", revmap(illuminaHumanv1SYMBOL))
-indc = which(featureNames(hm3ceuSMS) == cptag[1])
-hm = hm3ceuSMS[c(indc,1:19),]  # reduce problem
-hm = hm[chrnum("chr20"),]
-td = tempdir()
-curd = getwd()
-setwd(td)
-e1 <- eqtlTests( hm, ~male, targdir="mplex" )
+if (require(SNPlocs.Hsapiens.dbSNP.20100427)) {
+ library(ceuhm3)
+ if (!exists("hm3ceuSMS")) data(hm3ceuSMS)
+ library(illuminaHumanv1.db)
+ cptag = get("CPNE1", revmap(illuminaHumanv1SYMBOL))
+ indc = which(featureNames(hm3ceuSMS) == cptag[1])
+ hm = hm3ceuSMS[c(indc,1:19),]  # reduce problem
+ hm = hm[chrnum("chr20"),]
+ td = tempdir()
+ curd = getwd()
+ setwd(td)
+ e1 <- eqtlTests( hm, ~male, targdir="mplex" )
+ c20  = getSNPlocs("ch20", as.GRanges=TRUE)
+ sr = ranges(c20)
+ sr = GRanges(seqnames="chr20", sr)
+ elementMetadata(sr) = elementMetadata(c20)
+ names(sr) = paste("rs", elementMetadata(sr)$RefSNP_id, sep="")
 # use ffind=1 below because you have confined attention to chr20
-manhPlot( cptag, e1, ffind=1, namedlocvec= getNamedLocs(chr="ch20"), cex=3)
-setwd(curd)
+ manhPlot( cptag, e1, ffind=1, locGRanges=sr, cex=3)
+ setwd(curd)
+ }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -54,10 +54,12 @@ VJ Carey <stvjc@channing.harvard.edu>
 %%% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
+\dontrun{
 library(illuminaHumanv1.db)
 g20 = get("20", revmap(illuminaHumanv1CHR))
 m1 = intersect(g20, mappedkeys(illuminaHumanv1CHRLOC))
 cisRanges(m1[1:10], "chr20", "illuminaHumanv1.db")
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -51,10 +51,12 @@ VJ Carey <stvjc@channing.harvard.edu>
 %%% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
+\dontrun{
 library(GenomicRanges)
 dem = GRanges(seqnames="chr1", IRanges(c(1e6,2e6), c(1.5e6, 3e6)))
 flankingOnly(dem,1e5)
 flankingOnly(dem+1e5,1e5)
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

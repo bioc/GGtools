@@ -71,20 +71,22 @@ f1
 #v1 = browserView(s1, GenomicRanges(30e6, 40e6, "chr20"), full="CPNE1")
 #}
 # R-based visualization
-plot(f1)
+#plot(f1) -- no longer supported, need to supply location data -- consider eqtlTests/manhPlot
 # show how to avoid adjusted fit
 f1b = gwSnpTests(genesym("CPNE1")~1-1, hmFou, chrnum(20))
 # show gene set modeling on chromosome
-library(GSEABase)
+\dontrun{
+library(GSEABase)  # functionality abandoned
 gs1 = GeneSet(c("CPNE1", "ADA"))
 geneIdType(gs1) = SymbolIdentifier()
 f2 = gwSnpTests(gs1~male, hmFou, chrnum(20))
 f2
 names(f2)
-plot(f2[["ADA"]])
+#plot(f2[["ADA"]])
 # show 'smlSet-wide' fit
 f3 = gwSnpTests(gs1~male, hmFou)
 f3
+}
 # now use a phenoVar
 f3b = gwSnpTests(phenoVar("persid")~male, hmFou, chrnum(20))
 topSnps(f3b)
@@ -97,6 +99,7 @@ f4
   }
 # illustrate alternate approach to expression feature enumeration
 #
+\dontrun{  # nice but out of scope
 data(smlSet.example)
 esml = as(smlSet.example, "ExpressionSet")
 library(genefilter)
@@ -113,5 +116,6 @@ mygs = GeneSet(c("ZNF253", "MRS2"), geneIdType = SymbolIdentifier())
 geneIdType(mygs) = AnnotationIdentifier("org.Hs.eg")
 tt = gwSnpTests(mygs~male, fesml)
 lapply(tt, topSnps)
+}
 }
 \keyword{ models }

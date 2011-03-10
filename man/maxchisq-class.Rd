@@ -60,7 +60,7 @@ p-value is returned.  supply the factor 1 or 2 as desired.
 %	or \code{\linkS4class{CLASSNAME}} for links to other classes
 %}
 \examples{
-showClass("maxchisq")
+#showClass("maxchisq")
 # also see example(diagffCC) for illustrations
 }
 \keyword{classes}
