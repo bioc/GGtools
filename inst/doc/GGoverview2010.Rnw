@@ -158,22 +158,22 @@ imphm3_1KG_20_mA2[1:10]
 @
 We can use these rules to obtain a richer
 collection of tests for eQTL for CPNE1:
-<<doi>>=
+<<doi,eval=FALSE>>=
 try(system("rm -rf icpne1"))
 if1 = ieqtlTests(hmFouc[chrnum("chr20"),], ~male, targdir="icpne1",
      runname="icpne1",
      rules=imphm3_1KG_20_mA2)
 @
 The number of tests on the original data:
-<<lkn1>>=
+<<lkn1,eval=FALSE>>=
 length(GGtools:::snpIdList(f1)[[1]])
 @
 and on the imputed data:
-<<lki1>>=
+<<lki1,eval=FALSE>>=
 length(GGtools:::snpIdList(if1)[[1]])
 @
 We need special metadata to get locations for the SNP in this run.
-<<getnm>>=
+<<getnm,eval=FALSE>>=
 library(ceu1kg)
 data(ceu1kgMeta_20)
 inn = start(ceu1kgMeta_20)

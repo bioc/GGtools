@@ -149,17 +149,19 @@ See the technical appendix for more details.
 \subsection{Visualization}
 
 To visualize the results, using hg18 locations for the SNP,
-we must acquire location metadata.
+we must acquire location metadata.  Note that we are using
+the 2009 SNPlocs metadata from Bioconductor; for later
+builds, an as.GRanges parameter can be set to help avoid some
+of the conversion tasks.
 
 <<get09>>=
 library(SNPlocs.Hsapiens.dbSNP.20090506)
-c20 = getSNPlocs("ch20")
-rs20 = paste("rs", c20[,1], sep="")
-loc20 = c20$loc
-g20 = GRanges(seqnames="chr20", IRanges(loc20,width=1))
-names(g20) = rs20
-length(g20)
-g20[1:3,]
+c20 = getSNPlocs("chr20")
+c20 = SNPlocs.Hsapiens.dbSNP.20100427:::.SNPlocsAsGranges(c20, "chr20")
+rs20 = paste("rs", elementMetadata(c20)$RefSNP_id, sep="")
+names(c20) = rs20
+length(c20)
+c20[1:3,]
 @
 The names of SNP for which tests were computed are
 <<lkn>>=
@@ -168,7 +170,7 @@ tn[1:10]
 @
 We can now obtain the manhattan plot:
 <<lkman,fig=TRUE>>=
-manhPlot(cpn, mgr=e1, ffind=1, locGRanges=g20, cex=3)
+manhPlot(cpn, mgr=e1, ffind=1, locGRanges=c20, cex=3)
 @
 
 In general we will prefer to have this information in a browser track.  To accomplish
@@ -178,8 +180,8 @@ and export a wig file.
 We have to align the SNPs with locations with those for
 which we have tests.  First, restrict the locations.
 <<dook>>=
-okn = intersect(tn, names(g20))
-g20ok = g20[okn]
+okn = intersect(tn, names(c20))
+c20ok = c20[okn]
 @
 Now obtain the -log10 p values:
 <<getp>>=
@@ -188,13 +190,13 @@ ml10p = -log10(1-pchisq(chis1, 1))
 @
 Bind to the location data:
 <<dob>>=
-elementMetadata(g20ok)$score = ml10p
-g20ok[1:5,]
+elementMetadata(c20ok)$score = ml10p
+c20ok[1:5,]
 @
 and export:
 <<doex>>=
 library(rtracklayer)
-export(g20ok, "cpne1.wig")
+export(c20ok, "cpne1.wig")
 @
 
 This is imported as a custom track and viewed as:
@@ -211,7 +213,7 @@ When we store the statistical results in a \texttt{GRanges}
 instance, we have capacity to quickly assess genomic context
 of high-scoring SNP.  The top 20 SNP and their locations are
 <<lkgsc>>=
-top200 = g20ok[order(elementMetadata(g20ok)$score, decreasing=TRUE)[1:200]]
+top200 = c20ok[order(elementMetadata(c20ok)$score, decreasing=TRUE)[1:200]]
 top200[196:200]
 @
 We see that we have SNP with p-values at most $10^{-5}$.  We will
@@ -342,7 +344,7 @@ The calling sequence is
 \begin{verbatim}
 cisProxScores(smlSet, fmla, dradset, direc = NULL, folder, runname, 
       geneApply = mclapply, saveDirector = TRUE, snpGRL=NULL,
-      geneGRL=NULL, snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ffind=NULL, ...)
+      geneGRL=NULL, snpannopack="SNPlocs.Hsapiens.dbSNP.20090506", ffind=NULL, ...)
 \end{verbatim}
 so in fact one can pass an \texttt{smlSet} instance as input.  However, if a
 \Sexpr{class(md)} instance is available, that can be used, avoiding the computation
@@ -354,7 +356,7 @@ genes within which scores will be collected
 providing coordinates of gene start and stop locations
 \item \texttt{snpGRL}: a list of GRanges, with one element per chromosome,
 providing coordinates of SNPs with names
-end{itemize}
+\end{itemize}
 
 The names of probesets scored in \texttt{md} can be obtained:
 <<getb>>=
@@ -375,17 +377,18 @@ for (i in 1:length(ps)) {
   }
 names(grl) = names(ps)
 @
-SNP locations can be obtained as follows.
+SNP locations from hg18 can be obtained as follows (we did chr20 above):
 <<getsr>>=
 #allsn = lapply(md@mgrs, function(x) rownames(x@fflist[[1]]))
 #names(allsn) = names(md@mgrs)
-library(SNPlocs.Hsapiens.dbSNP.20100427)
-c20 = getSNPlocs("ch20", as.GRanges=TRUE)
-seqnames(c20) <- sub("ch", "", seqnames(c20))
-names(c20) = paste("rs", elementMetadata(c20)$RefSNP_id, sep="")
-c21 = getSNPlocs("ch21", as.GRanges=TRUE)
-seqnames(c21) <- sub("ch", "", seqnames(c21))
-names(c21) = paste("rs", elementMetadata(c21)$RefSNP_id, sep="")
+#c20 = getSNPlocs("ch20", as.GRanges=TRUE)
+seqnames(c20) <- sub("chr", "", seqnames(c20))
+#names(c20) = paste("rs", elementMetadata(c20)$RefSNP_id, sep="")
+c21 = getSNPlocs("chr21")
+c21 = SNPlocs.Hsapiens.dbSNP.20100427:::.SNPlocsAsGranges(c21, "chr21")
+rs21 = paste("rs", elementMetadata(c21)$RefSNP_id, sep="")
+names(c21) = rs21
+seqnames(c21) <- sub("chr", "", seqnames(c21))
 srl = list(`20`=c20, `21`=c21)
 @
 Now compute scores in intervals to 50kb around gene, then from 50kb to 100kb, then from 100kb to 500kb:
