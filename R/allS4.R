@@ -301,16 +301,16 @@ setMethod("gwSnpTests", c("formula", "smlSet", "snpdepth", "chunksize"),
   ans
   })
 
-setClass("maxchisq", contains="list")
-setMethod("show", "maxchisq", function(object) {
- cat("GGtools maxchisq structure.\n")
- cat("The call was:\n")
- print(object$theCall)
- cat("The original call in multffManager was:\n")
- print(object$mgrcall)
- cat("Excerpt:\n")
- print(lapply(object[c("maxchisq", "bestFeats")], function(x) head(x[[1]])))
-})
+#setClass("maxchisq", contains="list")
+#setMethod("show", "maxchisq", function(object) {
+# cat("GGtools maxchisq structure.\n")
+# cat("The call was:\n")
+# print(object$theCall)
+# cat("The original call in multffManager was:\n")
+# print(object$mgrcall)
+# cat("Excerpt:\n")
+# print(lapply(object[c("maxchisq", "bestFeats")], function(x) head(x[[1]])))
+#})
 
    
 setGeneric("min_p_vals", function(mcs, mtcorr, type, sidedness) standardGeneric("min_p_vals"))
@@ -348,39 +348,39 @@ setMethod("min_p_vals", c("maxchisq", "character", "character", "numeric"), func
  adjpv
 })
 
-setClass("multffManager", contains="list")
-setMethod("show", "multffManager", function(object) {
- require(ff, quietly=TRUE)
- cat("multffManager instance. The call was:\n")
- print(object$call)
- cat("There are ", length(object$filenames), " ff files.\n")
- cat("Excerpt from first file:\n")
- ngenes = ncol(object$fflist[[1]])
- print(object$fflist[[1]][1:4,1:min(4,ngenes)])
-})
+#setClass("multffManager", contains="list")
+#setMethod("show", "multffManager", function(object) {
+# require(ff, quietly=TRUE)
+# cat("multffManager instance. The call was:\n")
+# print(object$call)
+# cat("There are ", length(object$filenames), " ff files.\n")
+# cat("Excerpt from first file:\n")
+# ngenes = ncol(object$fflist[[1]])
+# print(object$fflist[[1]][1:4,1:min(4,ngenes)])
+#})
 
-setMethod("[", c("multffManager", "rsid", "missing"), function(x, i, j, ..., drop=TRUE) {
-  div = 1.0
-  if (x$vmode == "short") div = x$shortfac
-  rsn = rsnum(x)
-  pres = which(sapply(rsn, function(y) any(i %in% y)))
-  if (length(pres) < 1) stop("rsid not found in rownames of any ff matrix from multffCT")
-  ffl = x$fflist[pres]
-  tmp = lapply(ffl, function(y)y[intersect(rownames(y),as(i,"character")),,drop=FALSE])
-  lapply(tmp, function(z)z/div)
-})
+#setMethod("[", c("multffManager", "rsid", "missing"), function(x, i, j, ..., drop=TRUE) {
+#  div = 1.0
+#  if (x$vmode == "short") div = x$shortfac
+#  rsn = rsnum(x)
+#  pres = which(sapply(rsn, function(y) any(i %in% y)))
+#  if (length(pres) < 1) stop("rsid not found in rownames of any ff matrix from multffCT")
+#  ffl = x$fflist[pres]
+#  tmp = lapply(ffl, function(y)y[intersect(rownames(y),as(i,"character")),,drop=FALSE])
+#  lapply(tmp, function(z)z/div)
+#})
 
-setMethod("[", c("multffManager", "missing", "probeId"), function(x, i, j, ..., drop=TRUE) {
-  div = x$shortfac
-  if (x$vmode != "short") div = 1.0
-  if (length(j) > 50 & !isTRUE(getOption("ggt_manyGenes"))) stop("to request more than 50 genes with [ please set option ggt_manyGenes to TRUE with options(ggt_manyGenes=TRUE)\nand recognize that you may be creating a large RAM image")
-  lapply(x$fflist, function(x)x[, as(j, "character"), drop=FALSE]/div)
-})
-
-setMethod("[", c("multffManager", "rsid", "probeId"), function(x, i, j, ..., drop=TRUE) {
-  tmp = x[ i, , drop=FALSE ]
-  lapply(tmp, function(z) z[, j, drop=FALSE])
-})
+#setMethod("[", c("multffManager", "missing", "probeId"), function(x, i, j, ..., drop=TRUE) {
+#  div = x$shortfac
+#  if (x$vmode != "short") div = 1.0
+#  if (length(j) > 50 & !isTRUE(getOption("ggt_manyGenes"))) stop("to request more than 50 genes with [ please set option ggt_manyGenes to TRUE with options(ggt_manyGenes=TRUE)\nand recognize that you may be creating a large RAM image")
+#  lapply(x$fflist, function(x)x[, as(j, "character"), drop=FALSE]/div)
+#})
+#
+#setMethod("[", c("multffManager", "rsid", "probeId"), function(x, i, j, ..., drop=TRUE) {
+#  tmp = x[ i, , drop=FALSE ]
+#  lapply(tmp, function(z) z[, j, drop=FALSE])
+#})
 
 
 #

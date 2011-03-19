@@ -2,6 +2,7 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{multiCisDirector-class}
+\alias{makeDiagDirector}
 \alias{show,multiCisDirector-method}
 
 \title{Class "multiCisDirector"}
@@ -29,9 +30,10 @@ Objects can be created by calls of the form \code{new("multiCisDirector", ...)}.
 %\author{
 %%%  ~~who you are~~
 %}
-%\note{
-%%%  ~~further notes~~
-%}
+\note{
+\code{makeDiagDirector} is a tool that will generate all same-chromosome
+eqtlTests from an smlSet instance or package and will create a director of this type.
+}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 

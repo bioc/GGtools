@@ -93,7 +93,7 @@ smlSet}
  \item{snpannopack}{string naming package with SNPlocs information}
  \item{cisp}{result of \code{cisProxScores}}
  \item{permcisp}{result of \code{cisProxScores}}
- \item{ffind}{propagated to \code{\link{scoresInRanges}}, usually 1
+ \item{ffind}{usually 1
   for cis applications where one chromosome of SNP is selected at a time}
 }  % end arguments{}
 \details{

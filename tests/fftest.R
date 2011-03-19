@@ -1,3 +1,6 @@
+#
+# test dropped as we have dropped multffCT, but need to recraft with new infrastructure
+#
 if (FALSE) {
 library(GGtools)
 if (!exists("hmceuB36.2021")) data(hmceuB36.2021)
