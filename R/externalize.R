@@ -55,7 +55,7 @@ externalize = function(smlSet, packname, author="Replace Me <auth@a.b.com>",
 
 getSS = function( packname, chrs ) {
  require(packname, character.only=TRUE)
- ex = get(load(dir(system.file(package=packname, "data"), full=TRUE)))
+ ex = get(load(system.file(package=packname, "data/eset.rda")))
  partsfol = system.file("parts", package=packname)
  sml = lapply(chrs, function(x) get(load(paste(partsfol, "/", x, ".rda", sep=""))))
  names(sml) = chrs
