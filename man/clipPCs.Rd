@@ -58,9 +58,9 @@ pcs = prcomp(t(exprs(hmceuB36.2021)))$x
 hmr = hmceuB36.2021[ probeId(g20), ]
 pData(hmr) = data.frame(pData(hmr), pcs[,1:4])
 hmc
-f1 = eqtlTests(hmc[chrnum("20"),], ~male)
-f2 = eqtlTests(hmr[chrnum("20"),], ~male+PC1+PC2+PC3+PC4, targdir="fmla")
-f3 = eqtlTests(hmr[chrnum("20"),], ~male, targdir="fmlaNOPC")
+f1 = eqtlTests(hmc[chrnum("20"),], ~male, targdir="clipdem")
+f2 = eqtlTests(hmr[chrnum("20"),], ~male+PC1+PC2+PC3+PC4, targdir="clipfmla")
+f3 = eqtlTests(hmr[chrnum("20"),], ~male, targdir="clipfmlaNOPC")
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
