@@ -124,8 +124,10 @@ hmlit
 
 The preferred testing procedure is:
 <<doe>>=
-tname = function() gsub(".*/|.*\\", "", tempfile())
-e1 = eqtlTests(hmlit, ~male, targdir=tempdir(), runname=tname())
+#tname = function() gsub(".*/", "", tempfile())
+system("rm -rf foobarr")
+system("mkdir foobarr")
+e1 = eqtlTests(hmlit, ~male, targdir="foobarr", runname="foobarr")
 e1
 class(e1)
 @
