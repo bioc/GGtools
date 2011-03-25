@@ -15,7 +15,8 @@ exportMethods(gwSnpTests, topFeats, show)
 
 export(eqtlTests, cisProxScores, clipPCs, pcChooser, permEx,
 	topFeats, vcf2sm, externalize, getSS, manhPlot, makeDiagDirector,
-	interleave2cis, exome_minp, topSnps, checkCommonSNPs, makeCommonSNPs)
+	interleave2cis, exome_minp, topSnps, checkCommonSNPs, makeCommonSNPs,
+	relocate)
 
 exportClass(eqtlTestsManager, multiCisDirector, cisProxScores)
 
