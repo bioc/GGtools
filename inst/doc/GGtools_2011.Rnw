@@ -275,7 +275,8 @@ eQTL tests for SNP on chromosomes 20 and 21.
 NG = length(featureNames(hmceuB36.2021))
 hmct = hmceuB36.2021[ sample(1:NG, size=20, replace=FALSE), ]
 applier = apply
-if (require(multicore)) {
+chkmult = function() {length(grep("^multicore$", installed.packages()[,1])) > 0}
+if (chkmult()) {
   options(cores=min(c(multicore:::volatile$detectedCores, 6)))
   applier = mclapply
   }
@@ -409,6 +410,12 @@ lapply(csc, lapply, sapply,  function(x)max(unlist(x)))
 Here we will discuss how to take multiple population-specific directors and obtain a director
 representing the sums across populations.
 
+
+\section{Session information}
+
+<<lks>>=
+sessionInfo()
+@
 
 
 
