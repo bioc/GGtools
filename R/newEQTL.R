@@ -149,7 +149,7 @@ eqtlTests = function(smlSet, rhs=~1-1,
      ex = exprs(smlSet)[gene,]
      fmla = formula(paste("ex", paste(as.character(rhs),collapse=""), collapse=" "))
      numans = snp.rhs.tests(fmla, snp.data=snpdata, data=pData(smlSet), 
-         family=family , ...)@chisq
+         family=family , uncertain=uncert, ...)@chisq
 #uncertain=uncert
      if (computeZ) {
        numans = sqrt(numans)
@@ -247,83 +247,83 @@ mkDirectorDb = function(cd, commonSNPs=TRUE) {
 }
 
 
-ieqtlTests = function (smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = "ifoo", 
-    geneApply = lapply, chromApply = lapply, shortfac = 100, 
-    computeZ = FALSE, uncert=TRUE, saveSummaries=TRUE,
-    family, ...) 
-{
-    theCall = match.call()
-    if (missing(family)) family="gaussian"
-    sess = sessionInfo()
-    fnhead = paste(targdir, "/", runname, "_", sep = "")
-    geneNames = featureNames(smlSet)
-    chrNames = names(smList(smlSet))
-    ngenes = length(geneNames)
-    nchr = length(chrNames)
-    system(paste("mkdir", targdir))
+##ieqtlTests = function (smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = "ifoo", 
+#    geneApply = lapply, chromApply = lapply, shortfac = 100, 
+#    computeZ = FALSE, uncert=TRUE, saveSummaries=TRUE,
+#    family, ...) 
+#{
+#    theCall = match.call()
+#    if (missing(family)) family="gaussian"
+#    sess = sessionInfo()
+#    fnhead = paste(targdir, "/", runname, "_", sep = "")
+#    geneNames = featureNames(smlSet)
+#    chrNames = names(smList(smlSet))
+#    ngenes = length(geneNames)
+#    nchr = length(chrNames)
+#    system(paste("mkdir", targdir))
+##
+## following just grabbed from eqtlTests
+##
+# summfflist = list()
+#if (saveSummaries) {
+#  # get MAF and minGTF for all SNP
+#  sumfn = paste(fnhead, chrNames, "_summ.ff", sep="")
+#  if ("multicore" %in% search()) {
+#    summfflist = mclapply( 1:length(chrNames), function(i) ffSnpSummary(smList(smlSet)[[i]], sumfn[i],
+#         fac=shortfac))
+#    } else {
+#          for (i in 1:length(sumfn))
+#              summfflist[[chrNames[i]]] = ffSnpSummary(smList(smlSet)[[i]], sumfn[i])
+#          }
+#  # ok, now just save references in object
+#  }
 #
-# following just grabbed from eqtlTests
-#
- summfflist = list()
-if (saveSummaries) {
-  # get MAF and minGTF for all SNP
-  sumfn = paste(fnhead, chrNames, "_summ.ff", sep="")
-  if ("multicore" %in% search()) {
-    summfflist = mclapply( 1:length(chrNames), function(i) ffSnpSummary(smList(smlSet)[[i]], sumfn[i],
-         fac=shortfac))
-    } else {
-          for (i in 1:length(sumfn))
-              summfflist[[chrNames[i]]] = ffSnpSummary(smList(smlSet)[[i]], sumfn[i])
-          }
-  # ok, now just save references in object
-  }
-
-    cres = chromApply(chrNames, function(chr) {
-        snpdata = smList(smlSet)[[chr]]
-        targff = paste(fnhead, "chr", chr, ".ff", sep = "")
-        snpnames = c(colnames(snpdata), names(rules))
-        nsnps = length(snpnames)
-        store = ff(initdata = 0, dim = c(nsnps, ngenes), dimnames = list(snpnames, 
-            geneNames), vmode = "short", filename = targff)
-        geneApply(geneNames, function(gene) {
-            ex = exprs(smlSet)[gene, ]
-            fmla = formula(paste("ex", paste(as.character(rhs), 
-                collapse = ""), collapse = " "))
-            numans = snp.rhs.tests(fmla, snp.data = snpdata, 
-                data = pData(smlSet), family = family, uncertain=uncert, 
-                ...)@chisq
-            numansi = snp.rhs.tests(fmla, snp.data = snpdata, uncertain=uncert,
-                data = pData(smlSet), family = family, rules = rules, 
-                ...)@chisq
-            numans = c(numans, numansi)
-            if (computeZ) {
-                numans = sqrt(numans)
-                signl = snp.rhs.estimates(fmla, snp.data = snpdata, 
-                  data = pData(smlSet), family = family, 
-                  ...)
-                bad = which(unlist(lapply(signl, is.null)))
-                if (length(bad) > 0) 
-                  signl[bad] = list(beta = NA)
-                ifelse(unlist(signl) >= 0, 1, -1)
-                numans = numans * signl
-            }
-            miss = is.na(numans)
-            if (any(miss) & !computeZ) 
-                numans[which(miss)] = rchisq(length(which(miss)), 
-                  1)
-            if (any(miss) & computeZ) 
-                numans[which(miss)] = rnorm(length(which(miss)))
-            store[, gene, add = TRUE] = shortfac * numans
-            NULL
-        })
-        store
-    })
-    names(cres) = chrNames
-    exdate = date()
-    new("eqtlTestsManager", fflist = cres, call = theCall, sess = sess, 
-        exdate = exdate, shortfac = shortfac, geneanno = annotation(smlSet), 
-        df=1, summaryList=summfflist)
-}
+#    cres = chromApply(chrNames, function(chr) {
+#        snpdata = smList(smlSet)[[chr]]
+#        targff = paste(fnhead, "chr", chr, ".ff", sep = "")
+#        snpnames = c(colnames(snpdata), names(rules))
+#        nsnps = length(snpnames)
+#        store = ff(initdata = 0, dim = c(nsnps, ngenes), dimnames = list(snpnames, 
+#            geneNames), vmode = "short", filename = targff)
+#        geneApply(geneNames, function(gene) {
+#            ex = exprs(smlSet)[gene, ]
+#            fmla = formula(paste("ex", paste(as.character(rhs), 
+#                collapse = ""), collapse = " "))
+#            numans = snp.rhs.tests(fmla, snp.data = snpdata, 
+#                data = pData(smlSet), family = family, uncertain=uncert, 
+#                ...)@chisq
+#            numansi = snp.rhs.tests(fmla, snp.data = snpdata, uncertain=uncert,
+#                data = pData(smlSet), family = family, rules = rules, 
+#                ...)@chisq
+#            numans = c(numans, numansi)
+#            if (computeZ) {
+#                numans = sqrt(numans)
+#                signl = snp.rhs.estimates(fmla, snp.data = snpdata, 
+#                  data = pData(smlSet), family = family, 
+#                  ...)
+#                bad = which(unlist(lapply(signl, is.null)))
+#                if (length(bad) > 0) 
+#                  signl[bad] = list(beta = NA)
+#                ifelse(unlist(signl) >= 0, 1, -1)
+#                numans = numans * signl
+#            }
+#            miss = is.na(numans)
+#            if (any(miss) & !computeZ) 
+#                numans[which(miss)] = rchisq(length(which(miss)), 
+#                  1)
+#            if (any(miss) & computeZ) 
+#                numans[which(miss)] = rnorm(length(which(miss)))
+#            store[, gene, add = TRUE] = shortfac * numans
+#            NULL
+#        })
+#        store
+#    })
+#    names(cres) = chrNames
+#    exdate = date()
+#    new("eqtlTestsManager", fflist = cres, call = theCall, sess = sess, 
+#        exdate = exdate, shortfac = shortfac, geneanno = annotation(smlSet), 
+#        df=1, summaryList=summfflist)
+#}
 
 getNamedLocs = function(slpack="SNPlocs.Hsapiens.dbSNP.20100427", chrtok) {
  require(slpack, character.only=TRUE)
