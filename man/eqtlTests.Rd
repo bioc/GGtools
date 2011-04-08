@@ -1,8 +1,5 @@
 \name{eqtlTests}
 \alias{eqtlTests}
-\alias{ieqtlTests}
-\alias{meqtlTests}
-\alias{meqtlTests2}
 %\alias{cisScores}
 %\alias{imphm3_1KG_20_mA2}
 %- Also NEED an '\alias' for EACH other topic documented here.
@@ -16,14 +13,6 @@ perform genome x transcriptome eQTL searches with high-performance options
 eqtlTests(smlSet, rhs = ~1 - 1, runname = "foo", targdir = "foo", 
 	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, 
         checkValid = TRUE, saveSummaries = TRUE, uncert=TRUE, family, genegran=50, ...)
-ieqtlTests(smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = "ifoo", 
-	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, uncert=TRUE, saveSummaries=TRUE,
-        family, ...)
-meqtlTests(listOfSmls, rhslist, runname = "mfoo", targdir = "mfoo", 
-	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, harmonizeSNPs = FALSE, uncert=TRUE, saveSummaries=TRUE, family, ...)
-#cisScores( mgr, ffind=1, chr, snpGR, radius=5e5, applier=lapply, minMAF = 0, minGTF = 0, useEnd=FALSE ) 
-meqtlTests2(obpaths, rhslist, runname = "mfoo", targdir = "mfoo", 
-	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, harmonizeSNPs = FALSE, uncert=TRUE, saveSummaries=TRUE, family, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -137,14 +126,15 @@ artificial masses of test statistic distributions at zero, for example.
 The \code{\link{topFeats}} methods have \code{minMAF} and \code{minGTF}
 parameters to assist in filtering results to SNPs
 with certain properties; the metadata used for these is
-stored in a summary ff structure.  When \code{meqtlTests} is used,
-these summary statistics are generated based on only the first
-smlSet in the list passed into meqtlTests.  If significant
-use cases for these filtering parameters emerge, the summary
-statistics will have to be specialized, but listwise summarization is
-not really relevant as with meqtlTests we are marginalizing over
-populations.  Some projection of the list-wise summaries will be most 
-convenient to implement.
+stored in a summary ff structure.  
+%When \code{meqtlTests} is used,
+%these summary statistics are generated based on only the first
+%smlSet in the list passed into meqtlTests.  If significant
+%use cases for these filtering parameters emerge, the summary
+%statistics will have to be specialized, but listwise summarization is
+%not really relevant as with meqtlTests we are marginalizing over
+%populations.  Some projection of the list-wise summaries will be most 
+%convenient to implement.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
