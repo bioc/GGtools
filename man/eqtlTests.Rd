@@ -14,27 +14,28 @@ eqtlTests(smlSet, rhs = ~1 - 1, runname = "foo", targdir = "foo",
 	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, 
         checkValid = TRUE, saveSummaries = TRUE, uncert=TRUE, family, genegran=50, ...)
 }
+
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{smlSet}{
 instance of \code{\link[GGBase]{smlSet-class}}
 }
-  \item{listOfSmls}{
-list of instances of \code{\link[GGBase]{smlSet-class}}
-}
+%  \item{listOfSmls}{
+%list of instances of \code{\link[GGBase]{smlSet-class}}
+%}
   \item{rhs}{
 standard formula without dependent variable; predictors must be found in \code{pData(smlSet)}
 }
-  \item{rhslist}{
-List of standard formulae without dependent variable; predictors for each formula must be found in \code{pData(smlSet)} associated
-with each rhslist element.  In other words, the pData of the kth smlSet in listOfSmls provides the
-data to resolve the symbols in the kth formula of rhslist
-}
-  \item{rules}{instance of \code{\link[snpStats]{ImputationRules-class}} expressing
-rules by which unobserved SNP are `imputed' (that is, the value used is the
-conditional expectation of
-B copy number, which is real-valued and may lie outside [0,2])
-}
+%  \item{rhslist}{
+%List of standard formulae without dependent variable; predictors for each formula must be found in \code{pData(smlSet)} associated
+%with each rhslist element.  In other words, the pData of the kth smlSet in listOfSmls provides the
+%data to resolve the symbols in the kth formula of rhslist
+%}
+%  \item{rules}{instance of \code{\link[snpStats]{ImputationRules-class}} expressing
+%rules by which unobserved SNP are `imputed' (that is, the value used is the
+%conditional expectation of
+%B copy number, which is real-valued and may lie outside [0,2])
+%}
   \item{runname}{
 arbitrary character string that will identify a serialized object storing references to
 results
@@ -55,11 +56,11 @@ quantity by which chisquared tests will be inflated before coercion to short int
   \item{computeZ}{
 logical to direct calculation of Zscore instead of X2
 }
-  \item{harmonizeSNPs}{
-logical: it can be time consuming to harmonize SNPs across a long listOfSmls, so you can
-do this outside of the function and set harmonizeSNPs=FALSE; if TRUE, it will be done
-before statistical processing of the data in this function.
-}
+%  \item{harmonizeSNPs}{
+%logical: it can be time consuming to harmonize SNPs across a long listOfSmls, so you can
+%do this outside of the function and set harmonizeSNPs=FALSE; if TRUE, it will be done
+%before statistical processing of the data in this function.
+%}
   \item{checkValid}{logical: shall the function run validObject on input smlSet?}
   \item{saveSummaries}{logical: shall a set of ff files be stored that includes genotype
 and allele frequency data for downstream filtering?}
@@ -67,21 +68,19 @@ and allele frequency data for downstream filtering?}
   \item{family}{specify the GLM family to use; defaults to 'gaussian' if left missing}
   \item{\dots}{
 parameters passed to \code{\link[snpStats]{snp.rhs.tests}}}
- \item{obpaths}{vector of strings giving paths to serialized smlSet instances to avoid excess consumption of
-RAM.  These will be loaded as needed.  }
-  \item{mgr}{an instance of \code{eqtlTestsManager}}
-  \item{ffind}{index into the list of ff files managed by \code{mgr} to be used for
-obtaining scores}
-  \item{chr}{token identifying chromosome of interest}
-  \item{snpGR}{instance of \code{\link[GenomicRanges]{GRanges-class}} with SNP location}
-  \item{radius}{numeric: number of basepairs up and downstream of TSS to be used for cis filtering}
-  \item{minMAF}{numeric: minimum minor allele frequency for inclusion of SNP in reporting}
-  \item{minGTF}{numeric: minimum genotype frequency for inclusion of SNP in reporting}
-  \item{applier}{function, typically either \code{lapply} or \code{mclapply} if multicore
-services are desired}
-\item{useEnd}{logical to request cis relative to radius
-past entire gene sequence
-as opposed to local to TSS}
+%  \item{mgr}{an instance of \code{eqtlTestsManager}}
+%  \item{ffind}{index into the list of ff files managed by \code{mgr} to be used for
+%obtaining scores}
+%  \item{chr}{token identifying chromosome of interest}
+%  \item{snpGR}{instance of \code{\link[GenomicRanges]{GRanges-class}} with SNP location}
+%  \item{radius}{numeric: number of basepairs up and downstream of TSS to be used for cis filtering}
+%  \item{minMAF}{numeric: minimum minor allele frequency for inclusion of SNP in reporting}
+%  \item{minGTF}{numeric: minimum genotype frequency for inclusion of SNP in reporting}
+%  \item{applier}{function, typically either \code{lapply} or \code{mclapply} if multicore
+%services are desired}
+%\item{useEnd}{logical to request cis relative to radius
+%past entire gene sequence
+%as opposed to local to TSS}
  \item{genegran}{numeric value of frequency at which gene names will be catted to stdout in case
   \code{options()$verbose == TRUE}}
 }

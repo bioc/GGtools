@@ -51,7 +51,7 @@ tests under null hypothesis }
     \item{\code{summaryList}:}{Object of class \code{"list"} that includes
 references to ff files with per-chromosome MAF and genotype frequency (GTF)
 statistics per SNP.  These summary statistics can be used with the
-\code{\link{topFeats}} methods, with caveats for use in the \code{\link{meqtlTests}} context (see note for that function).}
+\code{\link{topFeats}} methods.}
   }
 }
 \section{Methods}{
