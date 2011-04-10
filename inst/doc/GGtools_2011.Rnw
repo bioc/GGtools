@@ -384,13 +384,13 @@ SNP locations from hg18 can be obtained as follows (we did chr20 above):
 #allsn = lapply(md@mgrs, function(x) rownames(x@fflist[[1]]))
 #names(allsn) = names(md@mgrs)
 #c20 = getSNPlocs("ch20", as.GRanges=TRUE)
-seqnames(c20) <- sub("chr", "", seqnames(c20))
+seqlevels(c20) <- sub("chr", "", seqlevels(c20))
 #names(c20) = paste("rs", elementMetadata(c20)$RefSNP_id, sep="")
 c21 = getSNPlocs("chr21")
 c21 = SNPlocs.Hsapiens.dbSNP.20100427:::.SNPlocsAsGranges(c21, "chr21")
 rs21 = paste("rs", elementMetadata(c21)$RefSNP_id, sep="")
 names(c21) = rs21
-seqnames(c21) <- sub("chr", "", seqnames(c21))
+seqlevels(c21) <- sub("chr", "", seqlevels(c21))
 srl = list(`20`=c20, `21`=c21)
 @
 Now compute scores in intervals to 50kb around gene, then from 50kb to 100kb, then from 100kb to 500kb:
