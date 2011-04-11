@@ -51,22 +51,7 @@ a new manager instance
 %\seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
-\examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function (old, new, obj, ffind = 1) 
-{
-    inst = obj@fflist[[ffind]]
-    fref = attr(attributes(inst)[["physical"]], "filename")
-    ans = gsub(old, new, fref)
-    attr(attributes(inst)[["physical"]], "filename") = ans
-    obj@fflist[[ffind]] = inst
-    obj
-  }
-}
-% Add one or more standard keywords, see file 'KEYWORDS' in the
+%\examples{
+%}
 % R documentation directory.
 \keyword{ models }
