@@ -358,6 +358,8 @@ genes within which scores will be collected
 providing coordinates of gene start and stop locations
 \item \texttt{snpGRL}: a list of GRanges, with one element per chromosome,
 providing coordinates of SNPs with names
+\item \texttt{ffind}: an index value into the manager-specific lists
+for the scores we wish to retrieve; in most cases this will be 1
 \end{itemize}
 
 The names of probesets scored in \texttt{md} can be obtained:

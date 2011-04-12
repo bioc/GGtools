@@ -484,7 +484,7 @@ eqtlTestsMACH = function(smlSet, machmat, rhs=~1-1,
 manhPlot = function( probeid, mgr, ffind, namedlocvec=NULL, locGRanges=NULL,
    plotter=smoothScatter, tx=function(x)-log10(1-pchisq(x,1)), 
    xlab = paste("pos. on ",names(fflist(mgr))[ffind]),
-   ylab = "-log10 p", ... ) {
+   ylab = "-log10 p", suppressGeneLoc=FALSE, ... ) {
  if (!(is(mgr, "eqtlTestsManager"))) stop("mgr must inherit from eqtlTestsManager")
  if (is.null(namedlocvec) & is.null(locGRanges)) stop("one of namedlocvec and locGRanges must be non-null")
  if (is.null(namedlocvec) & is.null(names(locGRanges))) stop("locGRanges must have non-null names")
@@ -503,7 +503,7 @@ manhPlot = function( probeid, mgr, ffind, namedlocvec=NULL, locGRanges=NULL,
  vals = as.numeric(vals[vv])
  plotter(loc, tx(vals), xlab=xlab, ylab=ylab, ...)
  anno = mgr@geneanno
- if (require(anno, character.only=TRUE)) {
+ if (require(anno, character.only=TRUE) && !suppressGeneLoc) {
    packref = function(tag="CHRLOC") get(paste(gsub(".db", "", anno), tag, sep=""))
    gloc = AnnotationDbi::get(probeid, packref())
    axis(3, label=get(probeid, packref("SYMBOL")),

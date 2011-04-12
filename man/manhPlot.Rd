@@ -8,7 +8,7 @@ manhattan plot for an eqtlTests result
 manhattan plot for an eqtlTests result
 }
 \usage{
-manhPlot(probeid, mgr, ffind, namedlocvec = NULL, locGRanges = NULL, plotter = smoothScatter, tx = function(x) -log10(1 - pchisq(x, 1)), xlab = paste("pos. on ", names(fflist(mgr))[ffind]), ylab = "-log10 p", ...)
+manhPlot(probeid, mgr, ffind, namedlocvec = NULL, locGRanges = NULL, plotter = smoothScatter, tx = function(x) -log10(1 - pchisq(x, 1)), xlab = paste("pos. on ", names(fflist(mgr))[ffind]), ylab = "-log10 p", suppressGeneLoc=FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -40,6 +40,10 @@ label for x axis
 }
   \item{ylab}{
 label for y axis
+}
+  \item{suppressGeneLoc}{
+logical; if true, will refrain from trying to indicate gene location
+on plot.  Important to have TRUE when a trans association is being plotted.
 }
   \item{\dots}{
 passed to plotting function
