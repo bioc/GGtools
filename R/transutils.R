@@ -27,7 +27,7 @@ topKfeats = function(mgr, K, fn="inds1.ff", batchsize=200,
        vmode="short")
        }
 
-updateKfeats = function( sco1, sco2, ind1, ind2, batchsize=200 ) {
+.updateKfeats = function( sco1, sco2, ind1, ind2, batchsize=500 ) {
 #
 # will overwrite sco1, ind1 with the improvements available in sco2, ind2
 #
@@ -77,7 +77,7 @@ cisZero = function(mgr, snpRanges, geneRanges, radius) {
         }
     }
 
-transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdir = "tsco", 
+transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsco", 
     geneApply = mclapply, chrnames = paste("chr", as.character(1:22), sep=""), 
     geneRanges = NULL, snpRanges = NULL, radius = 2e+06) 
 {
@@ -110,6 +110,7 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdir = "tsco",
     if (length(todrop)>0) pnameList = pnameList[-todrop]
     genemap = lapply(pnameList, function(x) match(x, guniv))  # numerical indices for probes
     nchr_genes = length(names(pnameList))
+    targdir = paste(targdirpref, snpchr, sep="")
     inimgr = eqtlTests(sms[probeId(pnameList[[chrnames[1]]]),   # start the sifting through transcriptome
         ], rhs, targdir = targdir, runname = paste("tsc_", chrnames[1],  # testing on genes in chrom 1
         sep = ""), geneApply = geneApply, saveSummaries = FALSE)
@@ -127,6 +128,7 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdir = "tsco",
     unlink(filename(inimgr@fflist[[1]]))
     for (j in 2:nchr_genes) {    # continue sifting through transcriptome
         cat(j)
+        gc()
         nxtmgr = eqtlTests(sms[probeId(pnameList[[chrnames[j]]]), 
             ], rhs, targdir = targdir, runname = paste("tsctmp", 
             j, sep = ""), geneApply = geneApply, saveSummaries = FALSE)
@@ -147,3 +149,33 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdir = "tsco",
     list(scores = topKscores, inds = topKinds, guniv = guniv, 
         snpnames = rownames(inimgr@fflist[[1]]), call = theCall)
 }
+
+updateKfeats = function( sco1, sco2, ind1, ind2, batchsize=200 ) {
+#
+# will overwrite sco1, ind1 with the improvements available in sco2, ind2
+#  this version reduces reliance on ff for sorting tasks
+#
+   snchunk = chunk(1, nrow(sco1), by=batchsize)
+   K=ncol(sco1)
+      rsco1 = as.ram(sco1)
+      rsco2 = as.ram(sco2)
+      rind1 = as.ram(ind1)
+      rind2 = as.ram(ind2)
+   for (i in 1:length(snchunk)) {
+      i1 = snchunk[[i]][1]
+      i2 = snchunk[[i]][2]
+      scos = cbind(rsco1[i1:i2,], rsco2[i1:i2,])
+      ginds = cbind(rind1[i1:i2,], rind2[i1:i2,])
+      rowwiseExtract = function(x,y) t(sapply(1:nrow(x), function(row) x[row,][y[row,]]))
+      chind = t(apply(scos, 1, function(x)order(x,decreasing=TRUE)[1:K]))
+      sco1[i1:i2,] = rowwiseExtract( scos, chind )
+      ind1[i1:i2,] = rowwiseExtract( ginds, chind )
+      }
+   rm(rsco1)
+   rm(rsco2)
+   rm(rind1)
+   rm(rind2)
+   gc()
+   invisible(NULL)
+}
+

@@ -129,7 +129,7 @@ setMethod("gwSnpTests", c("formula", "smlSet", "cnumOrMissing", "missing"),
       }
     else alld = pData(sms)
     allsst = lapply( smList(sms), function(x) snp.rhs.tests(sym, family="gaussian",
-        snp.data=x, data=alld))
+        snp.data=x, data=alld, uncertain=TRUE))
     testType = "Gaussian"
 ## as of 8 july, we have data frames instead of snp.tests.single objects
 ## need to coerce
@@ -208,7 +208,7 @@ setMethod("gwSnpTests", c("formula", "smlSet", "snpdepth", "missing"),
       names(alld)[1] = pname
       }
     else alld = pData(sms)
-    allsst = lapply( smList(sms), function(x) snp.rhs.tests(sym, family="gaussian",
+    allsst = lapply( smList(sms), function(x) snp.rhs.tests(sym, family="gaussian", uncertain=TRUE,
         snp.data=x, data=alld))
 # as of 8 july, we have data frames instead of snp.tests.single objects
 # need to coerce
@@ -243,7 +243,7 @@ setMethod("residTests", c("cwSnpScreenResult", "smlSet", "formula", "missing"), 
   litfmla[[2]] = as.name("res")
   alld = data.frame(res, pData(sms)[ok,])
   allsst = lapply( smList(sms), function(x) snp.rhs.tests(litfmla, family="gaussian",
-        snp.data=x, data=alld))
+        snp.data=x, data=alld, uncertain=TRUE))
 # mksts = function(x) {
 ##
 ## I THINK YOU NEED TO DROP
