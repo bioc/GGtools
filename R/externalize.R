@@ -53,12 +53,13 @@ externalize = function(smlSet, packname, author="Replace Me <auth@a.b.com>",
  NULL
 }
 
-getSS = function( packname, chrs ) {
+getSS = function( packname, chrs, renameChrs=NULL ) {
  require(packname, character.only=TRUE)
  ex = get(load(system.file(package=packname, "data/eset.rda")))
  partsfol = system.file("parts", package=packname)
  sml = lapply(chrs, function(x) get(load(paste(partsfol, "/", x, ".rda", sep=""))))
- names(sml) = chrs
+ if (is.null(renameChrs)) names(sml) = chrs
+ else names(sml) = renameChrs
  make_smlSet( ex, sml, harmonizeSamples=TRUE )
 }
 

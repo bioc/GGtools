@@ -13,7 +13,7 @@ externalize(smlSet,
   packname, 
   author = "Replace Me <auth@a.b.com>", 
   maintainer = "Replace Me <repl@a.b.com>")
-getSS( packname, chrs )
+getSS( packname, chrs, renameChrs=NULL )
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -34,6 +34,9 @@ string that should be a valid Maintainer: entry for  a DESCRIPTION file
   \item{chrs}{vector of strings naming chromosomes to be
 included in the \code{\link[GGBase]{smlSet-class}} instance
 created by \code{getSS}}
+  \item{renameChrs}{if non-null, the names of the \texttt{smList}
+component of the \code{\link[GGBase]{smlSet-class}} will be set
+to the value of \code{renameChrs}}
 }
 \details{
 Each \code{\link[snpStats]{SnpMatrix-class}} instance in the
