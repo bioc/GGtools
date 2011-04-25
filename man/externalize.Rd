@@ -34,7 +34,7 @@ string that should be a valid Maintainer: entry for  a DESCRIPTION file
   \item{chrs}{vector of strings naming chromosomes to be
 included in the \code{\link[GGBase]{smlSet-class}} instance
 created by \code{getSS}}
-  \item{renameChrs}{if non-null, the names of the \texttt{smList}
+  \item{renameChrs}{if non-null, the names of the \code{smList}
 component of the \code{\link[GGBase]{smlSet-class}} will be set
 to the value of \code{renameChrs}}
 }

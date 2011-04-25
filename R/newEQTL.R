@@ -140,6 +140,7 @@ eqtlTests = function(smlSet, rhs=~1-1,
    targff = paste( fnhead, "chr", chr, ".ff" , sep="" )
    snpnames = colnames(snpdata)
    nsnps = ncol(snpdata)
+   if (file.exists(targff)) cat("attempting to overwrite ", targff, "...")
    store = ff( initdata=0, dim=c(nsnps, ngenes), dimnames=list(snpnames, geneNames), vmode="short",
                  filename = targff )
    geneApply( geneNames, function(gene) {
@@ -515,9 +516,10 @@ manhPlot = function( probeid, mgr, ffind, namedlocvec=NULL, locGRanges=NULL,
 meqtlTests = function(listOfSmls, rhslist,
    runname="mfoo", targdir="mfoo", geneApply=lapply, chromApply=lapply,
    shortfac = 100, computeZ=FALSE, harmonizeSNPs = FALSE, uncert=TRUE, 
-   saveSummaries=TRUE, family, ... ) {
+   saveSummaries=TRUE, family, genegran=50, ... ) {
  theCall = match.call()
  sess = sessionInfo()
+ geneindex <<- 1
  if (missing(family)) family="gaussian"
  allfeat = lapply(listOfSmls, featureNames)
  smlSet1 = listOfSmls[[1]]
@@ -570,6 +572,9 @@ meqtlTests = function(listOfSmls, rhslist,
    store = ffRefList[[chr]]
    snpdata = smList(smlSet)[[chr]]
    geneApply( geneNames, function(gene) {
+     if (options()$verbose & geneindex %% genegran == 0) cat(gene, "..")
+     geneindex <<- geneindex + 1
+     if (options()$verbose & geneindex %% 8*genegran == 0) cat("\n")
      ex = exprs(smlSet)[gene,]
      fmla = formula(paste("ex", paste(as.character(rhslist[[theSS]]),collapse=""), collapse=" "))
      numans = snp.rhs.tests(fmla, snp.data=snpdata, 

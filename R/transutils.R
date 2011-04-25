@@ -79,15 +79,23 @@ cisZero = function(mgr, snpRanges, geneRanges, radius) {
 
 transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsco", 
     geneApply = mclapply, chrnames = paste("chr", as.character(1:22), sep=""), 
-    geneRanges = NULL, snpRanges = NULL, radius = 2e+06, renameChrs=NULL) 
+    geneRanges = NULL, snpRanges = NULL, radius = 2e+06, renameChrs=NULL, 
+    probesToKeep=NULL, batchsize=200, genegran=50, shortfac=10) 
 {
 #
 # objective is a small-footprint accumulation of trans-eQTL tests
 #  smpack is a lightweight smlSet package name
 #  snpchr is the chromosome for which SNPs will be tested
 #  rhs is the right hand side of formula for snp.rhs.tests in snpTests
-#  K is the number of best features to be retained as we explore the transcriptome
-#
+#  K is the number of best features to be retained (per SNP) as we explore the transcriptome
+#  targdirpref is used to define the eqtlTests targdir setting for transient and persistent ff files
+#  chrnames is used to enumerate chromosomes for which probes will be identified using the
+#    annotation package named in the smlSet -- the "chr" will be stripped
+#  geneRanges and snpRanges are used to identify cis tests (relative to radius), which are set to zero
+#  renameChrs is available in case the smList elements of the smlSet need to be renamed
+#  probesToKeep is used to define a hard restriction on the expression data in the smlSet
+#  batchsize is for applications of ffrowapply
+#  genegran is for reporting as eqtlTests runs, if options()$verbose is TRUE
 #
     if (length(chrnames) < 2) 
         stop("must have length(chrnames) >= 2")
@@ -96,7 +104,8 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
 #
 # get an image of the expression+genotype data for SNP on specific chromosome snpchr
 #
-    sms = getSS(smpack, snpchr, renameChrs=renameChrs)
+    sms = getSS(smpack, snpchr, renameChrs=renameChrs, probesToKeep=probesToKeep)
+    if (!is.null(renameChrs)) snpchr=renameChrs
     guniv = featureNames(sms)   # universe of probes
     smanno = gsub(".db", "", annotation(sms))
     require(paste(smanno, ".db", sep = ""), character.only = TRUE)
@@ -113,7 +122,7 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
     targdir = paste(targdirpref, snpchr, sep="")
     inimgr = eqtlTests(sms[probeId(pnameList[[chrnames[1]]]),   # start the sifting through transcriptome
         ], rhs, targdir = targdir, runname = paste("tsc_", chrnames[1],  # testing on genes in chrom 1
-        sep = ""), geneApply = geneApply, saveSummaries = FALSE)
+        sep = ""), geneApply = geneApply, saveSummaries = FALSE, genegran=genegran, shortfac=shortfac)
     if (snpchr == chrnames[1]) {
         if (is.null(geneRanges) || is.null(snpRanges)) 
             stop("ranges must be supplied to exclude cis tests")
@@ -121,27 +130,29 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
     }
     topKinds = topKfeats(inimgr, K = K, fn = paste(targdir, "/",  # sort and save
         snpchr, "_tsinds1_1.ff", sep = ""), feat = "geneind", 
-        ginds = genemap[[1]])
+        ginds = genemap[[1]], batchsize=batchsize)
     topKscores = topKfeats(inimgr, K = K, fn = paste(targdir, 
         "/", snpchr, "_tssco1_1.ff", sep = ""), feat = "score", 
-        ginds = genemap[[1]])
+        ginds = genemap[[1]], batchsize=batchsize)
     unlink(filename(inimgr@fflist[[1]]))
     for (j in 2:nchr_genes) {    # continue sifting through transcriptome
         cat(j)
         gc()
         nxtmgr = eqtlTests(sms[probeId(pnameList[[chrnames[j]]]), 
             ], rhs, targdir = targdir, runname = paste("tsctmp", 
-            j, sep = ""), geneApply = geneApply, saveSummaries = FALSE)
+            j, sep = ""), geneApply = geneApply, saveSummaries = FALSE,
+            genegran=genegran, shortfac=shortfac)
         if (snpchr == chrnames[j]) {
             if (is.null(geneRanges) || is.null(snpRanges)) 
                 stop("ranges must be supplied to exclude cis tests")
             cisZero(nxtmgr, snpRanges, geneRanges, radius)
             }
         nxtKinds = topKfeats(nxtmgr, K = K, fn = paste(targdir, 
-            "indscratch.ff", sep = ""), feat = "geneind", ginds = genemap[[j]])
+            "indscratch.ff", sep = ""), feat = "geneind", ginds = genemap[[j]], 		batchsize=batchsize)
         nxtKscores = topKfeats(nxtmgr, K = K, fn = paste(targdir, 
-            "scoscratch.ff", sep = ""), feat = "score", ginds = genemap[[j]])
-        updateKfeats(topKscores, nxtKscores, topKinds, nxtKinds)  
+            "scoscratch.ff", sep = ""), feat = "score", ginds = genemap[[j]],
+                batchsize=batchsize)
+        updateKfeats(topKscores, nxtKscores, topKinds, nxtKinds, batchsize=batchsize)  
         unlink(filename(nxtmgr@fflist[[1]]))   # kill off scratch materials
         unlink(paste(targdir, "indscratch.ff", sep = ""))
         unlink(paste(targdir, "scoscratch.ff", sep = ""))
@@ -181,7 +192,8 @@ updateKfeats = function( sco1, sco2, ind1, ind2, batchsize=200 ) {
 
 mtransScores = function (smpackvec, snpchr = "chr1", rhslist, K = 20, targdirpref = "multtsco", 
     geneApply = mclapply, chrnames = paste("chr", as.character(1:22), sep=""), 
-    geneRanges = NULL, snpRanges = NULL, radius = 2e+06, renameChrs=NULL) 
+    geneRanges = NULL, snpRanges = NULL, radius = 2e+06, renameChrs=NULL,
+    batchsize=200, genegran=50, probesToKeep=NULL, shortfac=10) 
 {
 #
 # objective is a small-footprint accumulation of trans-eQTL tests 
@@ -199,7 +211,9 @@ mtransScores = function (smpackvec, snpchr = "chr1", rhslist, K = 20, targdirpre
 #
 # get an image of the expression+genotype data for SNP on specific chromosome snpchr
 #
-    smsl = lapply(smpackvec, function(x) getSS(x, snpchr, renameChrs=renameChrs))
+    smsl = lapply(smpackvec, function(x) getSS(x, snpchr, renameChrs=renameChrs,
+       probesToKeep=probesToKeep))
+    if (!is.null(renameChrs)) snpchr=renameChrs
     smsl = makeCommonSNPs(smsl) # could be optional
     names(smsl) = smpackvec
     sms = smsl[[1]]
@@ -220,7 +234,8 @@ mtransScores = function (smpackvec, snpchr = "chr1", rhslist, K = 20, targdirpre
     cursmsl = lapply(smsl, function(x) x[probeId(pnameList[[chrnames[1]]]),])
     inimgr = meqtlTests(cursmsl,   # start the sifting through transcriptome
          rhslist, targdir = targdir, runname = paste("tsc_", chrnames[1],  # testing on genes in chrom 1
-        sep = ""), geneApply = geneApply, saveSummaries = FALSE)
+        sep = ""), geneApply = geneApply, 
+        saveSummaries = FALSE, genegran=genegran, shortfac=shortfac)
     rm(cursmsl); gc()
     if (snpchr == chrnames[1]) {
         if (is.null(geneRanges) || is.null(snpRanges)) 
@@ -229,10 +244,10 @@ mtransScores = function (smpackvec, snpchr = "chr1", rhslist, K = 20, targdirpre
     }
     topKinds = topKfeats(inimgr, K = K, fn = paste(targdir, "/",  # sort and save
         snpchr, "_tsinds1_1.ff", sep = ""), feat = "geneind", 
-        ginds = genemap[[1]])
+        ginds = genemap[[1]], batchsize=batchsize)
     topKscores = topKfeats(inimgr, K = K, fn = paste(targdir, 
         "/", snpchr, "_tssco1_1.ff", sep = ""), feat = "score", 
-        ginds = genemap[[1]])
+        ginds = genemap[[1]], batchsize=batchsize)
     unlink(filename(inimgr@fflist[[1]]))
     for (j in 2:nchr_genes) {    # continue sifting through transcriptome
         cat(j)
@@ -240,7 +255,8 @@ mtransScores = function (smpackvec, snpchr = "chr1", rhslist, K = 20, targdirpre
         cursmsl = lapply(smsl, function(x) x[probeId(pnameList[[chrnames[j]]]),])
         nxtmgr = meqtlTests(cursmsl, rhslist, targdir = targdir, 
             runname = paste("tsctmp", 
-            j, sep = ""), geneApply = geneApply, saveSummaries = FALSE)
+            j, sep = ""), geneApply = geneApply, 
+		saveSummaries = FALSE, genegran=genegran, shortfac=shortfac)
         rm(cursmsl); gc()
         if (snpchr == chrnames[j]) {
             if (is.null(geneRanges) || is.null(snpRanges)) 
@@ -248,10 +264,10 @@ mtransScores = function (smpackvec, snpchr = "chr1", rhslist, K = 20, targdirpre
             cisZero(nxtmgr, snpRanges, geneRanges, radius)
             }
         nxtKinds = topKfeats(nxtmgr, K = K, fn = paste(targdir, 
-            "indscratch.ff", sep = ""), feat = "geneind", ginds = genemap[[j]])
+            "indscratch.ff", sep = ""), feat = "geneind", ginds = genemap[[j]], batchsize=batchsize)
         nxtKscores = topKfeats(nxtmgr, K = K, fn = paste(targdir, 
-            "scoscratch.ff", sep = ""), feat = "score", ginds = genemap[[j]])
-        updateKfeats(topKscores, nxtKscores, topKinds, nxtKinds)  
+            "scoscratch.ff", sep = ""), feat = "score", ginds = genemap[[j]], batchsize=batchsize)
+        updateKfeats(topKscores, nxtKscores, topKinds, nxtKinds, batchsize=batchsize)  
         unlink(filename(nxtmgr@fflist[[1]]))   # kill off scratch materials
         unlink(paste(targdir, "indscratch.ff", sep = ""))
         unlink(paste(targdir, "scoscratch.ff", sep = ""))
