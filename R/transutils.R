@@ -58,8 +58,10 @@ cisZero = function(mgr, snpRanges, geneRanges, radius) {
         oks = gsub("rs", "", dimnt[[1]])
         okg = dimnt[[2]]
         srids = values(snpRanges)$RefSNP_id
-        if (is.null(srids)) # perhaps naming convention used
+        if (is.null(srids)) {# perhaps naming convention used
              srids = names(snpRanges)
+             if (length(grep("rs", srids))>0) srids = gsub("rs", "", srids)
+             }
         if (length(srids) > 0) warning("had to take snp names from names(snpRanges)")
         if (!isTRUE(all(okg %in% names(geneRanges))))  {
             warning("geneRanges does not include names/ranges for all colnames of mgr fflist")
