@@ -12,7 +12,7 @@ Suggests: illuminaHumanv1.db, org.Hs.eg.db, SNPlocs.Hsapiens.dbSNP.20100427,
 LazyData: no
 biocViews: SNP, GeneticVariability, Genetics, Bioinformatics
 Maintainer: Vince Carey <stvjc@channing.harvard.edu>
-Imports: AnnotationDbi, IRanges (>= 1.1.6), annaffy, GSEABase, rtracklayer, ff
+Imports: AnnotationDbi, IRanges (>= 1.1.6), annaffy, GSEABase, rtracklayer, ff, bit
 Enhances: multicore, Rsamtools
 License: Artistic-2.0
 Collate: allS4.R X2chunk.R cisSnpTests.R geneTrack.R multff.R topFeats.R
