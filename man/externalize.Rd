@@ -13,7 +13,8 @@ externalize(smlSet,
   packname, 
   author = "Replace Me <auth@a.b.com>", 
   maintainer = "Replace Me <repl@a.b.com>")
-getSS( packname, chrs, renameChrs=NULL )
+getSS( packname, chrs, renameChrs=NULL, renameChrs=NULL, probesToKeep=NULL,
+   wrapperEndo=NULL ) 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -37,6 +38,11 @@ created by \code{getSS}}
   \item{renameChrs}{if non-null, the names of the \code{smList}
 component of the \code{\link[GGBase]{smlSet-class}} will be set
 to the value of \code{renameChrs}}
+  \item{probesToKeep}{a vector used as G in X[G,...] for filtering probes in use,
+chiefly to get smaller scale computations}
+ \item{wrapperEndo}{a function that takes an smlSet as input and returns an smlSet; this will be
+evaluated with the getSS request (minus wrapperEndo) result, and validObject
+will be run on this result before returning}
 }
 \details{
 Each \code{\link[snpStats]{SnpMatrix-class}} instance in the
