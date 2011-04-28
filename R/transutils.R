@@ -80,7 +80,7 @@ cisZero = function(mgr, snpRanges, geneRanges, radius) {
 transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsco", 
     geneApply = mclapply, chrnames = paste("chr", as.character(1:22), sep=""), 
     geneRanges = NULL, snpRanges = NULL, radius = 2e+06, renameChrs=NULL, 
-    probesToKeep=NULL, batchsize=200, genegran=50, shortfac=10) 
+    probesToKeep=NULL, batchsize=200, genegran=50, shortfac=10, wrapperEndo=NULL) 
 {
 #
 # objective is a small-footprint accumulation of trans-eQTL tests
@@ -104,7 +104,7 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
 #
 # get an image of the expression+genotype data for SNP on specific chromosome snpchr
 #
-    sms = getSS(smpack, snpchr, renameChrs=renameChrs, probesToKeep=probesToKeep)
+    sms = getSS(smpack, snpchr, renameChrs=renameChrs, probesToKeep=probesToKeep, wrapperEndo=wrapperEndo)
     if (!is.null(renameChrs)) snpchr=renameChrs
     guniv = featureNames(sms)   # universe of probes
     smanno = gsub(".db", "", annotation(sms))
@@ -193,7 +193,7 @@ updateKfeats = function( sco1, sco2, ind1, ind2, batchsize=200 ) {
 mtransScores = function (smpackvec, snpchr = "chr1", rhslist, K = 20, targdirpref = "multtsco", 
     geneApply = mclapply, chrnames = paste("chr", as.character(1:22), sep=""), 
     geneRanges = NULL, snpRanges = NULL, radius = 2e+06, renameChrs=NULL,
-    batchsize=200, genegran=50, probesToKeep=NULL, shortfac=10) 
+    batchsize=200, genegran=50, probesToKeep=NULL, shortfac=10, wrapperEndo=NULL) 
 {
 #
 # objective is a small-footprint accumulation of trans-eQTL tests 
@@ -212,7 +212,7 @@ mtransScores = function (smpackvec, snpchr = "chr1", rhslist, K = 20, targdirpre
 # get an image of the expression+genotype data for SNP on specific chromosome snpchr
 #
     smsl = lapply(smpackvec, function(x) getSS(x, snpchr, renameChrs=renameChrs,
-       probesToKeep=probesToKeep))
+       probesToKeep=probesToKeep, wrapperEndo=wrapperEndo))
     if (!is.null(renameChrs)) snpchr=renameChrs
     smsl = makeCommonSNPs(smsl) # could be optional
     names(smsl) = smpackvec
