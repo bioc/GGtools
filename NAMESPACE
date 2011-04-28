@@ -1,6 +1,7 @@
 importFrom("Biobase", "exprs")
 importFrom("GGBase", "smList")
 importFrom("AnnotationDbi", "get", "mget")
+importFrom("ff", "ff", "ffrowapply", "[.ff", "filename")
 
 importClassesFrom("Biobase", "eSet", "VersionedBiobase", "Versioned")
 importClassesFrom("GGBase", "cnumOrMissing")

@@ -13,7 +13,7 @@ externalize(smlSet,
   packname, 
   author = "Replace Me <auth@a.b.com>", 
   maintainer = "Replace Me <repl@a.b.com>")
-getSS( packname, chrs, renameChrs=NULL, renameChrs=NULL, probesToKeep=NULL,
+getSS( packname, chrs, renameChrs=NULL, probesToKeep=NULL,
    wrapperEndo=NULL ) 
 }
 %- maybe also 'usage' for other objects documented here.
