@@ -280,3 +280,62 @@ mtransScores = function (smpackvec, snpchr = "chr1", rhslist, K = 20, targdirpre
     list(scores = topKscores, inds = topKinds, guniv = guniv, 
         snpnames = rownames(inimgr@fflist[[1]]), call = theCall)
 }
+
+bindSnpRanges2mgr = function (mgr, snpRanges, badstart=-2, badend=-1)
+{
+#
+# this will get a GRanges instance from snpRanges congruent to mgr snp info
+#
+    dimnt = dimnames(mgr@fflist[[1]])
+    snpsInMgr = dimnt[[1]]
+    if (!is.null(values(snpRanges)$RefSNP_id)) {
+        snpsInMgr = gsub("rs", "", snpsInMgr)
+        names(snpRanges) = as.character(values(snpRanges)$RefSNP_id)
+    }
+    if (is.null(names(snpRanges)))
+        stop("need names on snpRanges instances if not a SNPlocs.Hsapiens.* derivative")
+    fullsr = IRanges(rep(badstart, length(snpsInMgr)), rep(badend, length(snpsInMgr)))
+    sn = seqnames(snpRanges)[1]
+    fullsr = GRanges(seqnames = sn, fullsr)
+    names(fullsr) = snpsInMgr
+    matup = match(names(fullsr), names(snpRanges), nomatch = 0)
+    IRanges:::end(fullsr[which(matup > 0)]) = IRanges:::end(snpRanges[matup[matup>0]])
+    IRanges:::start(fullsr[which(matup > 0)]) = IRanges:::start(snpRanges[matup[matup>0]])
+    fullsr
+}
+
+bindGeneRanges2mgr = function (mgr, geneRanges, badstart=-6, badend=-5)
+{
+#
+# this will get a GRanges instance from geneRanges congruent to mgr gene info
+#
+    dimnt = dimnames(mgr@fflist[[1]])
+    genesInMgr = dimnt[[2]]
+    fullgr = IRanges(rep(badstart, length(genesInMgr)), rep(badend, length(genesInMgr)))
+    sn = seqnames(geneRanges)[1]
+    fullgr = GRanges(seqnames = sn, fullgr)
+    names(fullsr) = genesInMgr
+    matup = match(names(fullsr), names(geneRanges), nomatch = 0)
+    IRanges:::end(fullgr[which(matup > 0)]) = IRanges:::end(geneRanges[matup[matup>0]])
+    IRanges:::start(fullgr[which(matup > 0)]) = IRanges:::start(geneRanges[matup[matup>0]])
+    fullgr
+}
+
+
+cisZero = function (mgr, snpRanges, geneRanges, radius) 
+{
+#
+# use geneRanges+radius to define cis to gene intervals
+# find tests of SNPs in these intervals
+# set their scores in mgr to zero
+#
+    realSnpRanges = bindSnpRanges2mgr( mgr, snpRanges )
+    realGeneRanges = bindGeneRanges2mgr( mgr, geneRanges )
+    ol = findOverlaps(realSnpRanges, realGeneRanges +
+        radius)
+    matm = matchMatrix(ol)
+    if (nrow(matm) > 0) {
+        mgr@fflist[[1]][matm] = 0
+    }
+}
+
