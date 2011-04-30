@@ -314,8 +314,8 @@ bindGeneRanges2mgr = function (mgr, geneRanges, badstart=-6, badend=-5)
     fullgr = IRanges(rep(badstart, length(genesInMgr)), rep(badend, length(genesInMgr)))
     sn = seqnames(geneRanges)[1]
     fullgr = GRanges(seqnames = sn, fullgr)
-    names(fullsr) = genesInMgr
-    matup = match(names(fullsr), names(geneRanges), nomatch = 0)
+    names(fullgr) = genesInMgr
+    matup = match(names(fullgr), names(geneRanges), nomatch = 0)
     IRanges:::end(fullgr[which(matup > 0)]) = IRanges:::end(geneRanges[matup[matup>0]])
     IRanges:::start(fullgr[which(matup > 0)]) = IRanges:::start(geneRanges[matup[matup>0]])
     fullgr
