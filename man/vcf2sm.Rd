@@ -63,12 +63,10 @@ VJ Carey <stvjc@channing.harvard.edu>
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
-# requires tabix
-chkTabix = try(system("tabix 2>&1", intern=TRUE))
-if (!inherits(chkTabix, "try-error") && length(grep("Option", chkTabix))>0) {
+# SRC: ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/pilot_data/release/2010_07/exon/CEU.exon.2010_03.genotypes.vcf.gz
  vref = system.file("vcf/CEU.exon.2010_09.genotypes.vcf.gz", package="GGtools")
- vcf2sm( vref, "1" )
- }
+ gg = GRanges(seqnames="1", IRanges(1,10000))
+ vcf2sm(Rsamtools::TabixFile(vref), gr=gg, nmetacol=9L)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

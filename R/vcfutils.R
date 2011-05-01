@@ -5,7 +5,7 @@ filterVCF = function(gzpath, chrom, nrec=NULL, outfile=NULL, return.pipe=TRUE, l
 #   can direct tabix output to a file
 #   can get tabix output internally as character vector
 #
- if (list.chromnames) return(system(paste(tabixcmd, "-l",  gzpath), intern=TRUE))
+ if (list.chromnames) return(seqnamesTabix(gzpath))
  if (missing(chrom)) stop("must specify a chromosome")
  if (return.pipe) return(pipe(paste(tabixcmd, gzpath, chrom), "r"))
  redirec = ""
@@ -28,6 +28,7 @@ getMetaVCF = function (gzcon, maxnlines = 100, final = "^#CHROM")
         if (length(grep(final, tmp)) > 0) 
             break
     }
+    close(gzcon)
     new("metaVCF", meta)
 }
 
@@ -56,7 +57,32 @@ parseVCFrec = function(rec, nmetacol=9, makelocpref="chr" ) {
    calls=as.raw(nalt))
 }
 
-vcf2sm = function(gzpath, chrom, tabixcmd = "tabix", nmetacol=9, verbose=FALSE,
+setGeneric("vcf2sm", function(tbxfi, ..., gr, nmetacol) standardGeneric("vcf2sm"))
+setMethod("vcf2sm", c("TabixFile", "GRanges", "integer"), 
+   function( tbxfi, ..., gr, nmetacol=9) {
+     # get metadata, terminated by ^#CHROM
+     meta = NULL
+     while( length( tmp <- yieldTabix(tbxfi, yieldSize=1) ) > 0) {
+         meta = c(meta, tmp)
+         if (length(grep("^#CHROM", tmp))>0) break
+         }
+     sampids = sampleIDs(meta, ndrop=nmetacol)
+     out = list()
+     i = 1
+     while( length( tmp <- yieldTabix(tbxfi, yieldSize=1) ) > 0) {
+       out[[i]] = parseVCFrec( tmp, nmetacol=nmetacol, makelocpref="chr" )
+       i = i+1
+       }
+     rsid = sapply(out, "[[", "id")
+     nsnp = length(out)
+     mat = matrix(as.raw(0), nr=length(sampids), ncol=nsnp)
+     for (i in 1:nsnp) mat[,i] = out[[i]]$calls
+     rownames(mat) = sampids
+     colnames(mat) = rsid
+     new("SnpMatrix", mat)
+})
+
+.vcf2sm = function(gzpath, chrom, tabixcmd = "tabix", nmetacol=9, verbose=FALSE,
 gran=10000, metamax=100, makelocpref="chr") {
  #require(snpMatrix)
  con = gzfile(gzpath, "r")
