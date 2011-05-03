@@ -4,7 +4,7 @@ restrictProbesToChrom = function(smlSet, chrom) {
  require(ganno, character.only=TRUE)
  annomappref = gsub(".db", "", ganno)
  map = get(mapn <- paste(annomappref, "CHR", sep=""))
- if (!chrom %in% mappedkeys(revmap(map))) stop(paste(chr, "not mapped in", mapn))
+ if (!chrom %in% mappedkeys(revmap(map))) stop(paste(chrom, "not mapped in", mapn))
  psn = get(chrom, revmap(map))
  ans = smlSet[ probeId(intersect(psn, featureNames(smlSet))), ]
  if (nrow(ans) == 0) stop("no probes present after filter")

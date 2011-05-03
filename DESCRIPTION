@@ -14,12 +14,12 @@ biocViews: SNP, GeneticVariability, Genetics, Bioinformatics
 Maintainer: Vince Carey <stvjc@channing.harvard.edu>
 Imports: AnnotationDbi, IRanges (>= 1.1.6), annaffy, GSEABase, rtracklayer, ff, bit,
 	Rsamtools
-Enhances: multicore
+Enhances: multicore, GGdata
 License: Artistic-2.0
 Collate: allS4.R X2chunk.R cisSnpTests.R geneTrack.R multff.R topFeats.R
 	filterCode.R gwSnpScreen.R newEQTL.R topSnps.R
 	bestCis.R geneRanges.R minp.R snp130locs.R trackSet.R
-	permEx.R vcfutils.R snp.rhs.testsMACH.R shiftRight.R exome_minp.R 
+	permEx.R vcfutils.R shiftRight.R exome_minp.R 
 	scoresInRanges.R fullsynth.R clipPCs.R pcc.R interleave2cis.R
 	transTops.R feqtltests.R externalize.R egtset.R relocate.R
 	sumDirectors.R getTransScores.R transutils.R machutils.R

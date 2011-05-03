@@ -37,15 +37,15 @@ an instance of \code{\link[snpStats]{SnpMatrix-class}}
 \author{
 VJ Carey
 }
-\note{
-%%  ~~further notes~~
-}
+%\note{
+%%%  ~~further notes~~
+%}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
+%\seealso{
+%%% ~~objects to See Also as \code{\link{help}}, ~~~
+%}
 \examples{
 smhapf = system.file("machHap/c20small.hap.gz", package="GGtools")
 snidf = gzfile(system.file("machHap/chr20.snps.gz", package="GGtools"))

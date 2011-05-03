@@ -41,14 +41,9 @@ as for \code{father}
 \details{
 basic purpose is to convert SnpMatrix instances to PED to allow genotype imputation
 }
-%\value{
+\value{
 a data.frame instance
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
-%}
+}
 %\references{
 %% ~put references to the literature/web site here ~
 %}
@@ -61,9 +56,9 @@ a data.frame instance
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-\seealso{
+%\seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
-}
+%}
 \examples{
 library(snpStats)
 sm = chopsticks::read.HapMap.data(paste("file://",
