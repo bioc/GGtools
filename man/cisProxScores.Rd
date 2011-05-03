@@ -12,7 +12,7 @@ create, combine, and harvest eqtlTestsManager instances
 to collect all eQTL tests satisfying certain gene proximity conditions
 }
 \usage{
-cisProxScores(smlSet, fmla, dradset, direc = NULL, folder, runname, geneApply = mclapply, saveDirector = TRUE, snpGRL=NULL,
+cisProxScores(smlSet, fmla, dradset, direc = NULL, folder, runname, geneApply = lapply, saveDirector = TRUE, snpGRL=NULL,
  geneGRL=NULL, snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ffind=NULL, ...)
 
 mcisProxScores (listOfSmlSets, listOfFmlas, dradset, direc = NULL, 

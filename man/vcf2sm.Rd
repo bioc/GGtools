@@ -16,6 +16,7 @@ vcf2sm(tbxfi, ..., gr, nmetacol)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{tbxfi}{instance of \code{\link[Rsamtools]{TabixFile-class}}}
+  \item{\dots}{not used}
   \item{gr}{instance of \code{\link[GenomicRanges]{GRanges-class}}}
   \item{nmetacol}{numeric: tells number of columns used in each record as locus-level metadata }
 }
