@@ -1,6 +1,6 @@
 \name{cisProxScores}
 \alias{cisProxScores}
-\alias{mcisProxScores}
+%\alias{mcisProxScores}
 \alias{interleave2cis}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -15,11 +15,11 @@ to collect all eQTL tests satisfying certain gene proximity conditions
 cisProxScores(smlSet, fmla, dradset, direc = NULL, folder, runname, geneApply = lapply, saveDirector = TRUE, snpGRL=NULL,
  geneGRL=NULL, snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ffind=NULL, ...)
 
-mcisProxScores (listOfSmlSets, listOfFmlas, dradset, direc = NULL, 
-    folder, runname, geneApply = mclapply, saveDirector = TRUE, 
-    makeCommonSNPs = FALSE, snpGRL=NULL,
-    geneGRL=NULL, snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ffind=NULL, ...)
-
+#mcisProxScores (listOfSmlSets, listOfFmlas, dradset, direc = NULL, 
+#    folder, runname, geneApply = mclapply, saveDirector = TRUE, 
+#    makeCommonSNPs = FALSE, snpGRL=NULL,
+#    geneGRL=NULL, snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ffind=NULL, ...)
+#
 interleave2cis( cisp, permcisp )
 }
 %- maybe also 'usage' for other objects documented here.

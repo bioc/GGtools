@@ -538,8 +538,8 @@ meqtlTests = function(listOfSmls, rhslist,
  nchr = length(chrNames)
  system(paste("mkdir", targdir))
 
- there will be one ff file per chromosome which will accumulate
- all information across smlSets
+# there will be one ff file per chromosome which will accumulate
+# all information across smlSets
 
  targffs = paste( fnhead, "chr", chrNames, ".ff", sep="" )
  allSnpnames = lapply(smList(listOfSmls[[1]]), colnames)
@@ -557,7 +557,7 @@ meqtlTests = function(listOfSmls, rhslist,
   # get MAF and minGTF for all SNP
   sumfn = paste(fnhead, chrNames, "_summ.ff", sep="")
   if ("multicore" %in% search()) {
-    summfflist = mclapply( 1:length(chrNames), function(i) ffSnpSummary(smList(smlSet1)[[i]], sumfn[i],
+    summfflist = multicore::mclapply( 1:length(chrNames), function(i) ffSnpSummary(smList(smlSet1)[[i]], sumfn[i],
          fac=shortfac))
     } else {
           for (i in 1:length(sumfn))
