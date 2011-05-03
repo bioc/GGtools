@@ -124,7 +124,7 @@ cat("intervals examined:", selectSome(names(object)), "\n")
 
 
 cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
-   folder, runname, geneApply=mclapply, saveDirector=TRUE, 
+   folder, runname, geneApply=lapply, saveDirector=TRUE, 
    snpGRL = NULL, geneGRL = NULL, 
    snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ffind=NULL,
    ... ) {
@@ -195,103 +195,103 @@ cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
 }
 
 
-mcisProxScores = function( listOfSmlSets, listOfFmlas, dradset, direc=NULL,
-   folder, runname, geneApply=mclapply, saveDirector=TRUE, 
-   makeCommonSNPs=FALSE,
-   snpGRL = NULL, geneGRL = NULL,
-   snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ffind=NULL,
-   ... ) {
-  if (is.null(ffind)) stop("must set ffind (usually to 1)")
-  if (missing(dradset)) stop("must supply dradset")
-  thecall = match.call()
-  if (is.null(direc)) {
-  if (length(listOfSmlSets) < 2) stop("need list of > 1 smlSet")
-  if (makeCommonSNPs) listOfSmlSets = makeCommonSNPs(listOfSmlSets)
-  fnl = lapply(listOfSmlSets, featureNames)
-  fn1 = fnl[[1]]
-  for (i in 2:length(fnl)) if (!all.equal(fnl[[i]], fn1)) stop("need congruent featureSets for all input smlSets")
-    }
-  if (is.null(direc)) {
-   chrs = names(smList(listOfSmlSets[[1]]))
-   nchrs = gsub("chr", "", chrs)
-   mgrs = lapply( 1:length(chrs), function(c) {
-    if (is.null(geneGRL)) {
-     thislist = lapply(listOfSmlSets, function(s) restrictProbesToChrom(
-         s, nchrs[c]))
-     } else {
-     thislist = lapply(listOfSmlSets, function(s) restrictProbesToChromGRL(
-         s, nchrs[c], geneGRL))
-     }
-     thislist = lapply(thislist, function(x) x[chrnum(chrs[c]),] )
-     meqtlTests( thislist, listOfFmlas, targdir=folder, runname=paste(runname, "_",
-        c, sep=""), geneApply=geneApply, ... )
-     } )
-   names(mgrs) = chrs
-   direc = new("multiCisDirector", mgrs=mgrs)
-   if (saveDirector) {
-        dirn = paste(folder, "_director", sep="")
-        assign(dirn, direc)
-        save(list=dirn, file=paste(dirn, ".rda", sep=""))
-        }
-  }
-  if (is.null(geneGRL)) {
-   gr = collectGeneRanges(direc, applier=geneApply) # reuse of geneApply not ideal
-    } else gr = geneGRL
-  if (!isTRUE(all(names(direc@mgrs) %in% names(gr))))
-         stop("geneGRL must be a list of GRanges with all names including names(direc@mgrs)")
-  if (is.null(snpGRL)) {
-   sr = collectSNPRanges(direc, applier=geneApply, snpannopack=snpannopack)
-   } else sr = snpGRL
-  if (!isTRUE( all(names(direc@mgrs) %in% names(sr))))
-         stop("snpGRL must be a list of GRanges with names including names(direc@mgrs)")
-  
-  if (any(diff(dradset)<0)) stop("diff(dradset) must yield only positive numbers")
-  radmat = cbind(c(0, dradset[-length(dradset)]), c(dradset[1], diff(dradset)))
-  radnms = paste("FL", getbds(radmat), sep="")
-  intlist = lapply(1:nrow(radmat), function(z) {  # over family of radii
-    ans = lapply(gr, function(gra)  # over chrom-specific granges
-        flankingOnly(gra+radmat[z,1], radmat[z,2]) ) 
-    ans
-    } )
-  intlist[[1]] = lapply(gr, function(gra) gra+dradset[1])  # fill initial hole
-  names(intlist) = radnms
-  allspaces = intersect( names(direc@mgrs), names(gr) )
-  allspaces = intersect( allspaces, names(sr) )
-  if (TRUE) {
-  ans = lapply( intlist, function(gr) {  # this binding of gr is annoying...
-     cans = lapply( allspaces, function(mgrind) {
-      cat(mgrind)
-      scoresInRanges( direc@mgrs[[mgrind]], gr[[mgrind]], sr[[mgrind]],
-        applier=geneApply, ffind=ffind ) } ) 
-     names(cans) = allspaces # names(direc@mgrs)
-     cans
-     } 
-    )
-  } 
-  new("cisProxScores", ans, call=thecall)  # final value
-}
+#mcisProxScores = function( listOfSmlSets, listOfFmlas, dradset, direc=NULL,
+#   folder, runname, geneApply=mclapply, saveDirector=TRUE, 
+#   makeCommonSNPs=FALSE,
+#   snpGRL = NULL, geneGRL = NULL,
+#   snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ffind=NULL,
+#   ... ) {
+#  if (is.null(ffind)) stop("must set ffind (usually to 1)")
+#  if (missing(dradset)) stop("must supply dradset")
+#  thecall = match.call()
+#  if (is.null(direc)) {
+#  if (length(listOfSmlSets) < 2) stop("need list of > 1 smlSet")
+#  if (makeCommonSNPs) listOfSmlSets = makeCommonSNPs(listOfSmlSets)
+#  fnl = lapply(listOfSmlSets, featureNames)
+#  fn1 = fnl[[1]]
+#  for (i in 2:length(fnl)) if (!all.equal(fnl[[i]], fn1)) stop("need congruent featureSets for all input smlSets")
+#    }
+#  if (is.null(direc)) {
+#   chrs = names(smList(listOfSmlSets[[1]]))
+#   nchrs = gsub("chr", "", chrs)
+#   mgrs = lapply( 1:length(chrs), function(c) {
+#    if (is.null(geneGRL)) {
+#     thislist = lapply(listOfSmlSets, function(s) restrictProbesToChrom(
+#         s, nchrs[c]))
+#     } else {
+#     thislist = lapply(listOfSmlSets, function(s) restrictProbesToChromGRL(
+#         s, nchrs[c], geneGRL))
+#     }
+#     thislist = lapply(thislist, function(x) x[chrnum(chrs[c]),] )
+#     meqtlTests( thislist, listOfFmlas, targdir=folder, runname=paste(runname, "_",
+#        c, sep=""), geneApply=geneApply, ... )
+#     } )
+#   names(mgrs) = chrs
+#   direc = new("multiCisDirector", mgrs=mgrs)
+#   if (saveDirector) {
+#        dirn = paste(folder, "_director", sep="")
+#        assign(dirn, direc)
+#        save(list=dirn, file=paste(dirn, ".rda", sep=""))
+#        }
+#  }
+#  if (is.null(geneGRL)) {
+#   gr = collectGeneRanges(direc, applier=geneApply) # reuse of geneApply not ideal
+#    } else gr = geneGRL
+#  if (!isTRUE(all(names(direc@mgrs) %in% names(gr))))
+#         stop("geneGRL must be a list of GRanges with all names including names(direc@mgrs)")
+#  if (is.null(snpGRL)) {
+#   sr = collectSNPRanges(direc, applier=geneApply, snpannopack=snpannopack)
+#   } else sr = snpGRL
+#  if (!isTRUE( all(names(direc@mgrs) %in% names(sr))))
+#         stop("snpGRL must be a list of GRanges with names including names(direc@mgrs)")
+#  
+#  if (any(diff(dradset)<0)) stop("diff(dradset) must yield only positive numbers")
+#  radmat = cbind(c(0, dradset[-length(dradset)]), c(dradset[1], diff(dradset)))
+#  radnms = paste("FL", getbds(radmat), sep="")
+#  intlist = lapply(1:nrow(radmat), function(z) {  # over family of radii
+#    ans = lapply(gr, function(gra)  # over chrom-specific granges
+#        flankingOnly(gra+radmat[z,1], radmat[z,2]) ) 
+#    ans
+#    } )
+#  intlist[[1]] = lapply(gr, function(gra) gra+dradset[1])  # fill initial hole
+#  names(intlist) = radnms
+#  allspaces = intersect( names(direc@mgrs), names(gr) )
+#  allspaces = intersect( allspaces, names(sr) )
+#  if (TRUE) {
+#  ans = lapply( intlist, function(gr) {  # this binding of gr is annoying...
+#     cans = lapply( allspaces, function(mgrind) {
+#      cat(mgrind)
+#      scoresInRanges( direc@mgrs[[mgrind]], gr[[mgrind]], sr[[mgrind]],
+#        applier=geneApply, ffind=ffind ) } ) 
+#     names(cans) = allspaces # names(direc@mgrs)
+#     cans
+#     } 
+#    )
+#  } 
+#  new("cisProxScores", ans, call=thecall)  # final value
+#}
+#
 
 
-
-fmcisRun = function( listOfSmlSets, listOfFmlas, 
-   folder, runname, geneApply=mclapply, saveDirector=TRUE, ffind=1,
-   geneGRL, snpGRL )
-    {
-   chrs = names(smList(listOfSmlSets[[1]]))
-   nchrs = gsub("chr", "", chrs)
-   mgrs = lapply( 1:length(chrs), function(c) {
-     thislist = lapply(listOfSmlSets, function(s) restrictProbesToChromGRL(
-         s, nchrs[c], geneGRL))
-     thislist = lapply(thislist, function(x) x[chrnum(chrs[c]),] )
-     mfeqtltests( listOfEgtSet=thislist, listOfRhs=listOfFmlas, nchunk=10, targdir=folder, runname=paste(runname, "_",
-        c, sep=""), geneApply=geneApply )
-     } )
-   names(mgrs) = chrs
-   direc = new("multiCisDirector", mgrs=mgrs)
-   if (saveDirector) {
-        dirn = paste(folder, "_director", sep="")
-        assign(dirn, direc)
-        save(list=dirn, file=paste(dirn, ".rda", sep=""))
-        }
-   direc
-  }
+#fmcisRun = function( listOfSmlSets, listOfFmlas, 
+#   folder, runname, geneApply=mclapply, saveDirector=TRUE, ffind=1,
+#   geneGRL, snpGRL )
+#    {
+#   chrs = names(smList(listOfSmlSets[[1]]))
+#   nchrs = gsub("chr", "", chrs)
+#   mgrs = lapply( 1:length(chrs), function(c) {
+#     thislist = lapply(listOfSmlSets, function(s) restrictProbesToChromGRL(
+#         s, nchrs[c], geneGRL))
+#     thislist = lapply(thislist, function(x) x[chrnum(chrs[c]),] )
+#     mfeqtltests( listOfEgtSet=thislist, listOfRhs=listOfFmlas, nchunk=10, targdir=folder, runname=paste(runname, "_",
+#        c, sep=""), geneApply=geneApply )
+#     } )
+#   names(mgrs) = chrs
+#   direc = new("multiCisDirector", mgrs=mgrs)
+#   if (saveDirector) {
+#        dirn = paste(folder, "_director", sep="")
+#        assign(dirn, direc)
+#        save(list=dirn, file=paste(dirn, ".rda", sep=""))
+#        }
+#   direc
+#  }

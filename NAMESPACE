@@ -10,7 +10,7 @@ importClassesFrom("Rsamtools", "TabixFile")
 
 importClassesFrom(IRanges, RangedData)
 importFrom(IRanges, RangedData, space, findOverlaps)
-importFrom(Rsamtools, yieldTabix, TabixFile)
+importFrom(Rsamtools, yieldTabix, TabixFile, seqnamesTabix)
 
 importFrom(stats,
            as.formula, formula, lm, resid)

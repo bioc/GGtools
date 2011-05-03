@@ -1,6 +1,7 @@
 \name{vcf2sm}
 \alias{vcf2sm}
 \alias{show,metaVCF-method}
+\alias{vcf2sm,TabixFile,GRanges,integer-method}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 generate a SnpMatrix instance on the basis of a VCF (4.0) file
@@ -10,36 +11,13 @@ generate a SnpMatrix instance on the basis of a VCF (4.0) file. NOTE: the
 tabix utility must be installed and be invocable via system().
 }
 \usage{
-vcf2sm(gzpath, chrom, tabixcmd = "tabix", nmetacol = 9, verbose = FALSE, gran=10000,
-   metamax=100, makelocpref="chr")
+vcf2sm(tbxfi, ..., gr, nmetacol)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{gzpath}{
-string: path to a gzipped vcf file
-}
-  \item{chrom}{
-string: chromosome for processing; use tabix -l to obtain the
-list of tokens if necessary
-}
-  \item{tabixcmd}{
-string: assumes tabix available as an executable utility; tells
-the absolute path for invoking the command
-}
-  \item{nmetacol}{
-numeric: tells number of columns used in each record as locus-level metadata
-}
-  \item{verbose}{
-logical: if TRUE, provide processing info
-}
-  \item{gran}{
-numeric: a report is given once every gran snp are traversed to show progress
-}
-  \item{metamax}{number of lines to be sniffed for metadata before real data
-encountered, could be liberal}
-  \item{makelocpref}{string telling what to use to construct a 
-locus identifier when the id field is .; sometimes loc field is adequate and this
-should be set to "".  set to "" if you see loc names with chrchr prefix.}
+  \item{tbxfi}{instance of \code{\link[Rsamtools]{TabixFile-class}}}
+  \item{gr}{instance of \code{\link[GenomicRanges]{GRanges-class}}}
+  \item{nmetacol}{numeric: tells number of columns used in each record as locus-level metadata }
 }
 %\details{
 %%%  ~~ If necessary, more details than the description above ~~

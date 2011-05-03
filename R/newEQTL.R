@@ -113,7 +113,7 @@ eqtlTests = function(smlSet, rhs=~1-1,
    tmp = validObject(smlSet)
    }
  if (missing(family)) family="gaussian"
- geneindex <<- 1
+ geneindex <- 1
  sess = sessionInfo()
  fnhead = paste(targdir, "/", runname, "_", sep="")
  geneNames = featureNames(smlSet)
@@ -126,7 +126,7 @@ eqtlTests = function(smlSet, rhs=~1-1,
   # get MAF and minGTF for all SNP
   sumfn = paste(fnhead, chrNames, "_summ.ff", sep="")
   if ("multicore" %in% search()) {
-    summfflist = mclapply( 1:length(chrNames), function(i) ffSnpSummary(smList(smlSet)[[i]], sumfn[i], 
+    summfflist = multicore::mclapply( 1:length(chrNames), function(i) ffSnpSummary(smList(smlSet)[[i]], sumfn[i], 
          fac=shortfac)) 
     } else {
           for (i in 1:length(sumfn))
@@ -145,7 +145,7 @@ eqtlTests = function(smlSet, rhs=~1-1,
                  filename = targff )
    geneApply( geneNames, function(gene) {
      if (options()$verbose & geneindex %% genegran == 0) cat(gene, "..")
-     geneindex <<- geneindex + 1
+     geneindex <- geneindex + 1
      if (options()$verbose & geneindex %% 8*genegran == 0) cat("\n")
      ex = exprs(smlSet)[gene,]
      fmla = formula(paste("ex", paste(as.character(rhs),collapse=""), collapse=" "))
@@ -519,7 +519,7 @@ meqtlTests = function(listOfSmls, rhslist,
    saveSummaries=TRUE, family, genegran=50, ... ) {
  theCall = match.call()
  sess = sessionInfo()
- geneindex <<- 1
+ geneindex <- 1
  if (missing(family)) family="gaussian"
  allfeat = lapply(listOfSmls, featureNames)
  smlSet1 = listOfSmls[[1]]
@@ -573,7 +573,7 @@ meqtlTests = function(listOfSmls, rhslist,
    snpdata = smList(smlSet)[[chr]]
    geneApply( geneNames, function(gene) {
      if (options()$verbose & geneindex %% genegran == 0) cat(gene, "..")
-     geneindex <<- geneindex + 1
+     geneindex <- geneindex + 1
      if (options()$verbose & geneindex %% 8*genegran == 0) cat("\n")
      ex = exprs(smlSet)[gene,]
      fmla = formula(paste("ex", paste(as.character(rhslist[[theSS]]),collapse=""), collapse=" "))
@@ -658,62 +658,62 @@ meqtlTests2 = function(obpaths, rhslist,
 }
 
  
-eqtlTestsNofile = function(smlSet, rhs=~1-1,
-   runname="foo", targdir="foo", geneApply=lapply, chromApply=lapply,
-   shortfac = 100, computeZ=FALSE, checkValid=TRUE, saveSummaries=TRUE, uncert=TRUE, 
-   family, genegran=50, ... ) {
-#
-# this version does not specify a persistent disk image.  data are assumed to be
-# added to an existing disk ff image once computed, using the add() function
-#
- theCall = match.call()
- if (checkValid) {
-   tmp = validObject(smlSet)
-   }
- if (missing(family)) family="gaussian"
- geneindex <<- 1
- sess = sessionInfo()
- fnhead = paste(targdir, "/", runname, "_", sep="")
- geneNames = featureNames(smlSet)
- chrNames = names(smList(smlSet))
- ngenes = length(geneNames)
- nchr = length(chrNames)
- if (!file.exists(targdir)) system(paste("mkdir", targdir))
-  
- cres = chromApply( chrNames, function(chr) {
-   snpdata = smList(smlSet)[[chr]]
-   snpnames = colnames(snpdata)
-   nsnps = ncol(snpdata)
-   store = ff( initdata=0, dim=c(nsnps, ngenes), dimnames=list(snpnames, geneNames), vmode="short")
-                 
-   geneApply( geneNames, function(gene) {
-     if (options()$verbose & geneindex %% genegran == 0) cat(gene, "..")
-     geneindex <<- geneindex + 1
-     if (options()$verbose & geneindex %% 8*genegran == 0) cat("\n")
-     ex = exprs(smlSet)[gene,]
-     fmla = formula(paste("ex", paste(as.character(rhs),collapse=""), collapse=" "))
-     numans = snp.rhs.tests(fmla, snp.data=snpdata, data=pData(smlSet), 
-         family=family , ...)@chisq
-#uncertain=uncert
-     if (computeZ) {
-       numans = sqrt(numans)
-       signl = snp.rhs.estimates( fmla, snp.data=snpdata, data=pData(smlSet), family=family, ... )
-       bad = which(unlist(lapply(signl, is.null)))
-       if (length(bad)>0) signl[bad] = list(beta=NA)
-       ifelse(unlist(signl)>=0, 1, -1)
-       numans = numans*signl
-     }
-     miss = is.na(numans)
-     if (any(miss) & !computeZ) numans[which(miss)] = rchisq(length(which(miss)), 1)
-     if (any(miss) & computeZ) numans[which(miss)] = rnorm(length(which(miss)))
-     store[, gene, add=TRUE] = shortfac*numans
-     NULL
-     }) # end gene apply
-  store
-  })  # end chr apply
-  names(cres) = chrNames
-  exdate = date()
-  new("eqtlTestsManager", fflist=cres, call=theCall, sess=sess, 
-        exdate=exdate, shortfac=shortfac, geneanno=annotation(smlSet),
-        df=1, summaryList=list())
-}
+#eqtlTestsNofile = function(smlSet, rhs=~1-1,
+#   runname="foo", targdir="foo", geneApply=lapply, chromApply=lapply,
+#   shortfac = 100, computeZ=FALSE, checkValid=TRUE, saveSummaries=TRUE, uncert=TRUE, 
+#   family, genegran=50, ... ) {
+##
+## this version does not specify a persistent disk image.  data are assumed to be
+## added to an existing disk ff image once computed, using the add() function
+##
+# theCall = match.call()
+# if (checkValid) {
+#   tmp = validObject(smlSet)
+#   }
+# if (missing(family)) family="gaussian"
+# geneindex <<- 1
+# sess = sessionInfo()
+# fnhead = paste(targdir, "/", runname, "_", sep="")
+# geneNames = featureNames(smlSet)
+# chrNames = names(smList(smlSet))
+# ngenes = length(geneNames)
+# nchr = length(chrNames)
+# if (!file.exists(targdir)) system(paste("mkdir", targdir))
+#  
+# cres = chromApply( chrNames, function(chr) {
+#   snpdata = smList(smlSet)[[chr]]
+#   snpnames = colnames(snpdata)
+#   nsnps = ncol(snpdata)
+#   store = ff( initdata=0, dim=c(nsnps, ngenes), dimnames=list(snpnames, geneNames), vmode="short")
+#                 
+#   geneApply( geneNames, function(gene) {
+#     if (options()$verbose & geneindex %% genegran == 0) cat(gene, "..")
+#     geneindex <<- geneindex + 1
+#     if (options()$verbose & geneindex %% 8*genegran == 0) cat("\n")
+#     ex = exprs(smlSet)[gene,]
+#     fmla = formula(paste("ex", paste(as.character(rhs),collapse=""), collapse=" "))
+#     numans = snp.rhs.tests(fmla, snp.data=snpdata, data=pData(smlSet), 
+#         family=family , ...)@chisq
+##uncertain=uncert
+#     if (computeZ) {
+#       numans = sqrt(numans)
+#       signl = snp.rhs.estimates( fmla, snp.data=snpdata, data=pData(smlSet), family=family, ... )
+#       bad = which(unlist(lapply(signl, is.null)))
+#       if (length(bad)>0) signl[bad] = list(beta=NA)
+#       ifelse(unlist(signl)>=0, 1, -1)
+#       numans = numans*signl
+#     }
+#     miss = is.na(numans)
+#     if (any(miss) & !computeZ) numans[which(miss)] = rchisq(length(which(miss)), 1)
+#     if (any(miss) & computeZ) numans[which(miss)] = rnorm(length(which(miss)))
+#     store[, gene, add=TRUE] = shortfac*numans
+#     NULL
+#     }) # end gene apply
+#  store
+#  })  # end chr apply
+#  names(cres) = chrNames
+#  exdate = date()
+#  new("eqtlTestsManager", fflist=cres, call=theCall, sess=sess, 
+#        exdate=exdate, shortfac=shortfac, geneanno=annotation(smlSet),
+#        df=1, summaryList=list())
+#}
