@@ -17,4 +17,26 @@
 #load("ex2ch33_35.rda")
 #all.equal(ex2ch33_35live, ex2ch33_35)
 ##system("rm -rf .abc")
-TRUE
+#TRUE
+
+# april 2011
+library(GGtools)
+data(hmceuB36.2021)
+library(illuminaHumanv1.db)
+cp = get("CPNE1", revmap(illuminaHumanv1SYMBOL))
+hcp = hmceuB36.2021[ probeId(cp), ]
+hcp = hcp[ chrnum("20"), ]
+t1 = gwSnpTests(genesym("CPNE1")~male, hcp, chrnum("20"))
+pick = as(t1@.Data[[1]], "data.frame")[22101:22115,]
+rsids = rownames(pick)[!is.na(pick[,1])]
+csq = pick[rsids,1]
+names(csq) = rsids
+fi = tempfile()
+if (file.exists(fi)) unlink(fi, recursive=TRUE)
+t2 = eqtlTests(hcp, ~male, targdir=fi)
+sco = t2[rsid(rsids),][[1]][,1]
+unlink(fi, recursive=TRUE)
+comp = (sco-trunc(100*csq,0)/100)/sco
+(!(max(abs(comp)) > .01))
+
+
