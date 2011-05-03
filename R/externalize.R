@@ -105,35 +105,35 @@ getSS = function( packname, chrs, renameChrs=NULL, probesToKeep=NULL,
 # new("multiCisDirector", mgrs = mgrs )
 #}
 
-#makeDiagDirector = function(packname, genemap, rhs=~1, geneApply=lapply,
-#    mapApply=lapply, sleeplen=60, targdir="dfoo", runname="dfoo", ...) {
-##
-## packname is a package of components of an smlSet made by externalize() and by hand
-## genemap is a list with elements corresponding to chromosomes, each element is a vector of probe ids
-## we construct a multiCisDirector with all same-chromosome tests
-## ... is passed to eqtlTests
-##
-# require(packname, character.only=TRUE)
-# cnames = gsub(".rda", "", dir(system.file("parts", package=packname)))
-# gmnames = names(genemap)
-## mgrs = list()
-# if (!all(gmnames %in% cnames)) stop("some chr in gene map is not represented in chroms of package")
-## for (i in 1:length(genemap)) {
-# mgrs = mapApply( 1:length(genemap), function(i) {
-#    tmp = getSS( packname, gmnames[i] )
-#    tmp = tmp[ probeId( genemap[[i]] ), ]
-#    ans = eqtlTests( tmp, rhs, geneApply=geneApply, targdir=targdir, runname=runname, ... )
-#    tobn = paste(runname, "_mgr_", gmnames[i], sep="")
-#    assign(tobn, ans)
-#    save(list=tobn, file=(ffn <- paste(targdir, "/", tobn, ".rda", sep="")))
-#    Sys.sleep(sleeplen)
-#    ffn
-# })
-# names(mgrs) = names(genemap)
-# allmgrs = lapply(mgrs, function(x) get(load(x)))
-# names(allmgrs) = names(genemap)  # maybe needless
-# new("multiCisDirector", mgrs = allmgrs )
-#}
+makeDiagDirector = function(packname, genemap, rhs=~1, geneApply=lapply,
+    mapApply=lapply, sleeplen=60, targdir="dfoo", runname="dfoo", ...) {
+#
+# packname is a package of components of an smlSet made by externalize() and by hand
+# genemap is a list with elements corresponding to chromosomes, each element is a vector of probe ids
+# we construct a multiCisDirector with all same-chromosome tests
+# ... is passed to eqtlTests
+#
+ require(packname, character.only=TRUE)
+ cnames = gsub(".rda", "", dir(system.file("parts", package=packname)))
+ gmnames = names(genemap)
+# mgrs = list()
+ if (!all(gmnames %in% cnames)) stop("some chr in gene map is not represented in chroms of package")
+# for (i in 1:length(genemap)) {
+ mgrs = mapApply( 1:length(genemap), function(i) {
+    tmp = getSS( packname, gmnames[i] )
+    tmp = tmp[ probeId( genemap[[i]] ), ]
+    ans = eqtlTests( tmp, rhs, geneApply=geneApply, targdir=targdir, runname=runname, ... )
+    tobn = paste(runname, "_mgr_", gmnames[i], sep="")
+    assign(tobn, ans)
+    save(list=tobn, file=(ffn <- paste(targdir, "/", tobn, ".rda", sep="")))
+    Sys.sleep(sleeplen)
+    ffn
+ })
+ names(mgrs) = names(genemap)
+ allmgrs = lapply(mgrs, function(x) get(load(x)))
+ names(allmgrs) = names(genemap)  # maybe needless
+ new("multiCisDirector", mgrs = allmgrs )
+}
 
 #makeMultiDiagDirector = function(packnames, genemap, rhslist=list(~1), mapapply=lapply, geneApply=lapply, ...) {
 ##
