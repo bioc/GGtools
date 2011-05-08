@@ -76,6 +76,8 @@ scoresInRanges = function (mgr, geneRanges, snpRanges, applier = lapply,
    ffind=NULL, matchProbeNames=TRUE) 
 {
  #
+ # bug identified may 8 2011 -- when snps are sparse in gene ranges we can have
+ # a mismatch between naming of output and contents .. see (***)
  # mgr is an eqtlTestsManager instance
  # geneRanges will typically be a GRanges extended for 'cis'
  # snpRanges can be a general snp metadata GRanges
@@ -110,10 +112,13 @@ scoresInRanges = function (mgr, geneRanges, snpRanges, applier = lapply,
     onboard = intersect(snm, iniRangeNames)
     mm = match(onboard, iniRangeNames)
     snpRanges = snpRanges[mm]
-    snps = containedSnps(geneRanges, snpRanges)
-    gn = names(geneRanges)
+    snps = containedSnps(geneRanges, snpRanges)  # dumb name! list of snp ids split by genes ...
+# *** at this point it is possible that length(snps) != length(geneRanges) so 
+#    gn = names(geneRanges)  # could be trouble
+    gn = names(snps)   # containedSnps does name the splits suitably
     if (matchProbeNames) {
       ans = applier(1:length(snps), function(x) mgr[rsid(snps[[x]]), 
+#        probeId(gn[x])])   # this is not safe if gn = names(geneRanges) as it was before may 8 2011
         probeId(gn[x])])
       names(ans) = names(snps)  # used to be names(geneRanges) ...
       } else {
