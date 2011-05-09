@@ -67,18 +67,22 @@ setMethod("vcf2sm", c("TabixFile", "GRanges", "integer"),
          if (length(grep("^#CHROM", tmp))>0) break
          }
      sampids = sampleIDs(meta, ndrop=nmetacol)
+     close(tbxfi)
+     open(tbxfi)
+     chunk = scanTabix(tbxfi, param=gr)  # list of vectors of strings, one list elem per range in gr
      out = list()
-     i = 1
-     while( length( tmp <- yieldTabix(tbxfi, yieldSize=1) ) > 0) {
-       out[[i]] = parseVCFrec( tmp, nmetacol=nmetacol, makelocpref="chr" )
-       i = i+1
+     for (i in 1:length(chunk)) {
+       out[[i]] = lapply( chunk[[i]], function(x)
+                    parseVCFrec( x, nmetacol=nmetacol, makelocpref="chr" ))
        }
+     out = unlist(out, recursive=FALSE)
      rsid = sapply(out, "[[", "id")
      nsnp = length(out)
      mat = matrix(as.raw(0), nr=length(sampids), ncol=nsnp)
      for (i in 1:nsnp) mat[,i] = out[[i]]$calls
      rownames(mat) = sampids
      colnames(mat) = rsid
+     close(tbxfi)
      new("SnpMatrix", mat)
 })
 
