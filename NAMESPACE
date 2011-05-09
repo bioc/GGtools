@@ -21,7 +21,7 @@ export(eqtlTests, cisProxScores, clipPCs, pcChooser, permEx, makeDiagDirector,
 	topFeats, vcf2sm, externalize, getSS, manhPlot, 
 	interleave2cis, exome_minp, topSnps, checkCommonSNPs, makeCommonSNPs,
 	relocate, transScores, mtransScores,
-        sm2ped, mrefhap2sm, scoresByGenes)
+        sm2ped, mrefhap2sm, scoresByGenes, dropMonomorphies)
 
 exportClass(eqtlTestsManager, multiCisDirector, cisProxScores)
 

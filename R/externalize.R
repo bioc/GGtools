@@ -192,3 +192,14 @@ increment1 = function( ff1, ff2, nchunk=20 ) {
    ff1[, inds[[i]], add=TRUE] = ff2[, inds[[i]] ]
  NULL
 }
+
+dropMonomorphies = function(sms) {
+ sl = smList(sms)
+ summs = lapply(sl, col.summary)
+ todrop = lapply(summs, function(x) which(x[,"RAF"]==1 | x[,"RAF"]==0))
+ for (i in 1:length(todrop))
+   if (length(todrop[[i]])>0) sl[[i]] = sl[[i]][,-todrop[[i]]]
+ sms@smlEnv$smList = sl
+ sms
+}
+
