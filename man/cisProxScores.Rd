@@ -99,7 +99,7 @@ smlSet}
  \item{permcisp}{result of \code{cisProxScores}}
  \item{ffind}{usually 1
   for cis applications where one chromosome of SNP is selected at a time}
- \item{cps}{instance of \code{\link{cisProxScores-class}}
+ \item{cps}{instance of \code{\link{cisProxScores-class}}}
  \item{intvind}{index of cis interval to be evaluated (usually the cisProxScores
 has been run with a dradset specifying a set of disjoint intervals, given
 by names(cps), for example, where cps is the cisProxScores instance}
