@@ -295,3 +295,34 @@ cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
 #        }
 #   direc
 #  }
+
+
+
+scoresByGenes = function (cps, intvind = 1, as.GRanges=TRUE, dups2max=TRUE, snpGR=NULL,
+  scoreConverter=function(x)x ) { 
+#
+# method for working with a cisProxScores result, to retrieve scores conveniently
+#
+    sco = lapply(cps[[intvind]], lapply, function(x) {
+        tmp = x[[1]][, 1]
+        names(tmp) = rownames(x[[1]])
+        tmp
+    })[[1]]
+    if (!as.GRanges) return(lapply(sco,scoreConverter))
+    if (is.null(snpGR)) stop("for as.GRanges, please supply snpGR with GRanges instance of SNP addresses")
+    if (is.null(names(snpGR))) stop("snpGR names must hold the dbSNP id or other snp identifier")
+    if (!dups2max) stop("no duplicate policy other than dups2max at present... please set dups2max to TRUE")
+    allsco = unlist(sco)
+    alln = unlist(lapply(sco, names))
+    getd = split(allsco, alln)
+    maxs = sapply(getd,max)
+    names(maxs) = names(getd)
+    okn = intersect(names(maxs), names(snpGR))
+    maxs = maxs[okn]
+    okn = match(names(maxs), names(snpGR), nomatch=0)
+    snpGR = snpGR[okn[okn>0]]
+    if (!all.equal(names(snpGR), names(maxs))) stop("something is wrong in match of snpGR names to max scores...")
+    elementMetadata(snpGR)$score = scoreConverter(maxs)
+    snpGR
+}
+

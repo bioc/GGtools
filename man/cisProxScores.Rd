@@ -1,5 +1,6 @@
 \name{cisProxScores}
 \alias{cisProxScores}
+\alias{scoresByGenes}
 %\alias{mcisProxScores}
 \alias{interleave2cis}
 %- Also NEED an '\alias' for EACH other topic documented here.
@@ -21,6 +22,9 @@ cisProxScores(smlSet, fmla, dradset, direc = NULL, folder, runname, geneApply = 
 #    geneGRL=NULL, snpannopack="SNPlocs.Hsapiens.dbSNP.20100427", ffind=NULL, ...)
 #
 interleave2cis( cisp, permcisp )
+
+scoresByGenes(cps, intvind = 1, as.GRanges=TRUE, dups2max=TRUE, snpGR=NULL,
+  scoreConverter=function(x)x )
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -95,6 +99,19 @@ smlSet}
  \item{permcisp}{result of \code{cisProxScores}}
  \item{ffind}{usually 1
   for cis applications where one chromosome of SNP is selected at a time}
+ \item{cps}{instance of \code{\link{cisProxScores-class}}
+ \item{intvind}{index of cis interval to be evaluated (usually the cisProxScores
+has been run with a dradset specifying a set of disjoint intervals, given
+by names(cps), for example, where cps is the cisProxScores instance}
+ \item{as.GRanges}{logical indicating that scores should be returned bound
+to GRanges for SNP addresses}
+ \item{dups2max}{logical indicating policy for dealing with SNP that occur
+multiple times in this gene-oriented survey -- the duplicate SNP are reduced
+to the highest-scoring one}
+ \item{snpGR}{GRanges instance with SNP addresses -- need not be identical
+to set of SNP analyzed}
+ \item{scoreConverter}{a function accepting and returning numeric; for minus log10 p,
+use \code{scoreConverter=function(x)-log10(1-pchisq(x,df))}, where df is typically 1}
 }  % end arguments{}
 \details{
 This function computes tests for all same-chromosome eQTL
