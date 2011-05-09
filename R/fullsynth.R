@@ -160,7 +160,7 @@ cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
    sr = collectSNPRanges(direc, applier=geneApply, snpannopack=snpannopack)
    } else sr = snpGRL
   if (!isTRUE(all(names(direc@mgrs) %in% names(sr))))
-         stop("geneGRL must be a list of GRanges with names including names(direc@mgrs)")
+         stop("snpGRL must be a list of GRanges with names including names(direc@mgrs)")
   
   if (any(diff(dradset)<0)) stop("diff(dradset) must yield only positive numbers")
   radmat = cbind(c(0, dradset[-length(dradset)]), c(dradset[1], diff(dradset)))
