@@ -14,6 +14,8 @@ topKfeats = function(mgr, K, fn="inds1.ff", batchsize=200,
 # the scores and the names simultaneously.  i am not sure it will be beneficial
 #
      intests = mgr@fflist[[ffind]]
+     thevmode = "short"
+     if (feat == "ind" | feat == "geneind") thevmode = "long"
      if (feat == "score") op = function(x)sort(x, decreasing=TRUE)[1:K]
 #     else if (feat == "ind") op = function(x)order(x, decreasing=TRUE)[1:K]
      else if (feat == "geneind") op = function(x)ginds[
@@ -24,7 +26,7 @@ topKfeats = function(mgr, K, fn="inds1.ff", batchsize=200,
        X=intests, RETURN=TRUE, RETCOL=K,
        BATCHSIZE=batchsize)
      ff(tmp, filename=fn, dim=c(nrow(intests),K), overwrite=TRUE,
-       vmode="short")
+       vmode=thevmode)
        }
 
 .updateKfeats = function( sco1, sco2, ind1, ind2, batchsize=500 ) {
