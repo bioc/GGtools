@@ -15,7 +15,7 @@ topKfeats = function(mgr, K, fn="inds1.ff", batchsize=200,
 #
      intests = mgr@fflist[[ffind]]
      thevmode = "short"
-     if (feat == "ind" | feat == "geneind") thevmode = "long"
+     if (feat == "ind" | feat == "geneind") thevmode = "integer"
      if (feat == "score") op = function(x)sort(x, decreasing=TRUE)[1:K]
 #     else if (feat == "ind") op = function(x)order(x, decreasing=TRUE)[1:K]
      else if (feat == "geneind") op = function(x)ginds[
