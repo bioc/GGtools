@@ -342,3 +342,16 @@ cisZero = function (mgr, snpRanges, geneRanges, radius)
     }
 }
 
+topScores = function(tm) {
+ tm@base$scores[,1]/tm@base$shortfac
+}
+topGenes = function(tm) {
+ tm@base$guniv[ tm@base$inds[,1] ]
+}
+locusNames = function(tm) tm@base$snpnames
+geneNames = function(tm) tm@base$guniv
+geneIndcol = function(tm, col) tm@base$inds[,col]
+nthScores = function(tm, n) {
+ tm@base$scores[,n]/tm@base$shortfac
+}
+
