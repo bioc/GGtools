@@ -67,8 +67,8 @@ setMethod("vcf2sm", c("TabixFile", "GRanges", "integer"),
          if (length(grep("^#CHROM", tmp))>0) break
          }
      sampids = sampleIDs(meta, ndrop=nmetacol)
-     close(tbxfi)
-     open(tbxfi)
+     Rsamtools:::close.TabixFile(tbxfi)
+     Rsamtools:::open.TabixFile(tbxfi)
      chunk = scanTabix(tbxfi, param=gr)  # list of vectors of strings, one list elem per range in gr
      out = list()
      for (i in 1:length(chunk)) {
@@ -82,7 +82,7 @@ setMethod("vcf2sm", c("TabixFile", "GRanges", "integer"),
      for (i in 1:nsnp) mat[,i] = out[[i]]$calls
      rownames(mat) = sampids
      colnames(mat) = rsid
-     close(tbxfi)
+     Rsamtools:::close.TabixFile(tbxfi)
      new("SnpMatrix", mat)
 })
 
