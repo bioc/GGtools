@@ -1,5 +1,6 @@
 \name{eqtlTests}
 \alias{eqtlTests}
+\alias{ieqtlTests}
 %\alias{cisScores}
 %\alias{imphm3_1KG_20_mA2}
 %- Also NEED an '\alias' for EACH other topic documented here.
@@ -13,6 +14,11 @@ perform genome x transcriptome eQTL searches with high-performance options
 eqtlTests(smlSet, rhs = ~1 - 1, runname = "foo", targdir = "foo", 
 	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, 
         checkValid = TRUE, saveSummaries = TRUE, uncert=TRUE, family, genegran=50, ...)
+ieqtlTests (smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = "ifoo",
+    geneApply = lapply, chromApply = lapply, shortfac = 100,
+    computeZ = FALSE, uncert=TRUE, saveSummaries=TRUE,
+    family, ...)
+
 }
 
 %- maybe also 'usage' for other objects documented here.
@@ -83,6 +89,7 @@ parameters passed to \code{\link[snpStats]{snp.rhs.tests}}}
 %as opposed to local to TSS}
  \item{genegran}{numeric value of frequency at which gene names will be catted to stdout in case
   \code{options()$verbose == TRUE}}
+ \item{rules}{instance of \code{\link[snpStats]{ImputationRules}}}
 }
 \details{
 \code{\link[snpStats]{snp.rhs.tests}} is run for all genes enumerated in
