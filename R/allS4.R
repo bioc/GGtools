@@ -693,3 +693,16 @@ setAs("cwSnpScreenResult", "GRanges", function(from) {
 #setMethod("annotation", "eqtlTestsManager", function(x, ...) {
 # x@geneanno
 #})
+
+setClass("transManager", representation(base="list"))
+
+setMethod("show", "transManager", function(object){
+ require(ff, quietly=TRUE)
+ basel = object@base
+ cat("transManager instance, created", basel$date, "\n", sep=" ")
+ cat("dimension of scores component:\n")
+ cat(" number of loci checked: ", nrow(basel$scores), 
+   "; genes retained: ", ncol(basel$scores), "\n", sep="")
+ cat("the call was:\n")
+ print(basel$call)
+})

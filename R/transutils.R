@@ -87,7 +87,7 @@ cisZero = function(mgr, snpRanges, geneRanges, radius) {
 transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsco", 
     geneApply = lapply, chrnames = paste("chr", as.character(1:22), sep=""), 
     geneRanges = NULL, snpRanges = NULL, radius = 2e+06, renameChrs=NULL, 
-    probesToKeep=NULL, batchsize=200, genegran=50, shortfac=10, wrapperEndo=NULL) 
+    probesToKeep=NULL, batchsize=200, genegran=50, shortfac=10, wrapperEndo=NULL)
 {
 #
 # objective is a small-footprint accumulation of trans-eQTL tests
@@ -164,8 +164,9 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
         unlink(paste(targdir, "indscratch.ff", sep = ""))
         unlink(paste(targdir, "scoscratch.ff", sep = ""))
     }
-    list(scores = topKscores, inds = topKinds, guniv = guniv, 
-        snpnames = rownames(inimgr@fflist[[1]]), call = theCall)
+    baseout = list(scores = topKscores, inds = topKinds, guniv = guniv, 
+        snpnames = rownames(inimgr@fflist[[1]]), call = theCall, date=date(), shortfac=shortfac)
+    new("transManager", base=baseout)
 }
 
 updateKfeats = function( sco1, sco2, ind1, ind2, batchsize=200 ) {
