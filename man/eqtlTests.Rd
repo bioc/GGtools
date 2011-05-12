@@ -89,7 +89,7 @@ parameters passed to \code{\link[snpStats]{snp.rhs.tests}}}
 %as opposed to local to TSS}
  \item{genegran}{numeric value of frequency at which gene names will be catted to stdout in case
   \code{options()$verbose == TRUE}}
- \item{rules}{instance of \code{\link[snpStats]{ImputationRules}}}
+ \item{rules}{instance of \code{\link[snpStats]{ImputationRules-class}}}
 }
 \details{
 \code{\link[snpStats]{snp.rhs.tests}} is run for all genes enumerated in
