@@ -25,7 +25,7 @@ instance of \code{\link[GGBase]{smlSet-class}}
 }
 \examples{
 library(GGdata)
-gg20 = get("GGdata", "20")
+gg20 = getSS("GGdata", "20")
 dim(smList(gg20)[[1]])
 dim(smList(dropMonomorphies(gg20))[[1]])
 }
