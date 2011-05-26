@@ -16,6 +16,11 @@
 \alias{probeNames,eqtlTestsManager-method}
 \alias{probeNames,cisTransDirector-method}
 \alias{probeNames}
+\alias{probesManaged}
+\alias{probesManaged,eqtlTestsManager,numeric-method}
+\alias{snpsManaged}
+\alias{snpsManaged,eqtlTestsManager,numeric-method}
+
 
 \title{Class "eqtlTestsManager"}
 \description{
@@ -66,6 +71,8 @@ archives for eQTL searches }
 a vector }
     \item{probeNames}{\code{signature(object = "cisTransDirector")}: extract the probe names as a list
 with one element per manager }
+    \item{probesManaged}{\code{signature(mgr = "eqtlTestsManager", ffind="numeric")}: extract the probe names for a specific ff element of a manager}
+    \item{snpsManaged}{\code{signature(mgr = "eqtlTestsManager", ffind="numeric")}: extract the snp names for a specific ff element of a manager}
 	 }
 }
 %\references{

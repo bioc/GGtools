@@ -165,6 +165,8 @@ td = tempdir()
 curd = getwd()
 setwd(td)
 time.lapply = unix.time(e1 <- eqtlTests( hm, ~male ))
+length(probesManaged(e1,1))
+length(snpsManaged(e1,1))
 e1
 dir("foo")
 setwd(curd)

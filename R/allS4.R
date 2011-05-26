@@ -313,40 +313,40 @@ setMethod("gwSnpTests", c("formula", "smlSet", "snpdepth", "chunksize"),
 #})
 
    
-setGeneric("min_p_vals", function(mcs, mtcorr, type, sidedness) standardGeneric("min_p_vals"))
-setMethod("min_p_vals", c("maxchisq", "character", "character", "numeric"), function(mcs, mtcorr, type, sidedness) {
- sidedness = as.integer(sidedness)
- if (sidedness != 1 & sidedness != 2) stop("sidedness must be 1 or 2")
- pv = lapply(mcs$maxchisq, function(x) pmin(1, sidedness*(1-pchisq(x, mcs$df))))
- npv = lapply(mcs$maxchisq, names)
- mtcorrp = function(x, mtcorr) {
-   tmp = mt.rawp2adjp(x, mtcorr)
-   tmp$adjp[ order(tmp$index), mtcorr ]
- }
- if (mtcorr == "none") adjpv = pv
- else {
-   stop("owing to a namespace complication, please use mtcorr = 'none' and compute corrections on your own.")
-   #require(multtest)
-   if (type == "chr_specific")
-     adjpv = lapply( pv, function(x) mtcorrp(x, mtcorr))
-   else if (type=="global") {
-     ulp = unlist(pv)
-     uln = unlist(npv)
-     names(ulp) = uln
-     adjpv = mtcorrp(ulp, mtcorr)
-     names(adjpv) = uln
-     anslist = list()
-     for (i in 1:length(npv)) {
-       anslist[[i]] = adjpv[ npv[[i]] ] # restore chromosomal list structure
-       names(anslist[[i]]) = npv[[i]]
-     }
-     names(anslist) = names(npv)
-     return(anslist)
-   }  
- }
- for (i in 1:length(adjpv)) names(adjpv[[i]]) = npv[[i]]
- adjpv
-})
+#setGeneric("min_p_vals", function(mcs, mtcorr, type, sidedness) standardGeneric("min_p_vals"))
+#setMethod("min_p_vals", c("maxchisq", "character", "character", "numeric"), function(mcs, mtcorr, type, sidedness) {
+# sidedness = as.integer(sidedness)
+# if (sidedness != 1 & sidedness != 2) stop("sidedness must be 1 or 2")
+# pv = lapply(mcs$maxchisq, function(x) pmin(1, sidedness*(1-pchisq(x, mcs$df))))
+# npv = lapply(mcs$maxchisq, names)
+# mtcorrp = function(x, mtcorr) {
+#   tmp = mt.rawp2adjp(x, mtcorr)
+#   tmp$adjp[ order(tmp$index), mtcorr ]
+# }
+# if (mtcorr == "none") adjpv = pv
+# else {
+#   stop("owing to a namespace complication, please use mtcorr = 'none' and compute corrections on your own.")
+#   #require(multtest)
+#   if (type == "chr_specific")
+#     adjpv = lapply( pv, function(x) mtcorrp(x, mtcorr))
+#   else if (type=="global") {
+#     ulp = unlist(pv)
+#     uln = unlist(npv)
+#     names(ulp) = uln
+#     adjpv = mtcorrp(ulp, mtcorr)
+#     names(adjpv) = uln
+#     anslist = list()
+#     for (i in 1:length(npv)) {
+#       anslist[[i]] = adjpv[ npv[[i]] ] # restore chromosomal list structure
+#       names(anslist[[i]]) = npv[[i]]
+#     }
+#     names(anslist) = names(npv)
+#     return(anslist)
+#   }  
+# }
+# for (i in 1:length(adjpv)) names(adjpv[[i]]) = npv[[i]]
+# adjpv
+#})
 
 #setClass("multffManager", contains="list")
 #setMethod("show", "multffManager", function(object) {
@@ -706,3 +706,28 @@ setMethod("show", "transManager", function(object){
  cat("the call was:\n")
  print(basel$call)
 })
+
+.probesManaged = function(mgr,ffind=1) {
+ colnames(mgr@fflist[[ffind]])
+}
+
+.snpsManaged = function(mgr,ffind=1) {
+ rownames(mgr@fflist[[ffind]])
+}
+
+setGeneric("probesManaged", function(mgr, ffind)
+ standardGeneric("probesManaged"))
+setGeneric("snpsManaged", function(mgr, ffind)
+ standardGeneric("snpsManaged"))
+
+setMethod("probesManaged", c("eqtlTestsManager",
+     "numeric"), function(mgr, ffind=1)
+       {
+       .probesManaged(mgr, ffind)
+       })
+
+setMethod("snpsManaged", c("eqtlTestsManager",
+     "numeric"), function(mgr, ffind=1)
+       {
+       .snpsManaged(mgr, ffind)
+       })
