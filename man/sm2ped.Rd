@@ -60,6 +60,7 @@ a data.frame instance
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
+if (.Platform$OS.type == "unix") { # can't get pathname in windows?
 library(snpStats)
 sm = chopsticks::read.HapMap.data(paste("file://",
  system.file("hapmap/smallc20CEU.txt.gz", package="GGtools"), sep=""))
@@ -76,6 +77,7 @@ ac = as.character
 ss = sm2ped(smat, supp, fam=ac(hrel[,1]), person=ac(hrel[,2]), father=ac(hrel[,3]),
 mother=ac(hrel[,4]), sex=hrel[,5])
 ss[1:5,1:8]
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
