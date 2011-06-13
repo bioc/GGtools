@@ -45,9 +45,10 @@ parseVCFrec = function(rec, nmetacol=9, makelocpref="chr" ) {
  meta = vec[1:nmetacol]
  calls = vec[-c(1:nmetacol)]
  nalt = strsplit(calls, "")
- nums = lapply(nalt, "[", c(1,3))
- nalt = sapply(nums, function(x) 2-sum(x=="0"))
- if (any(is.na(nalt))) nalt[which(is.na(nalt))]=-1
+ nums = lapply(nalt, "[", c(1,3))  # extract the call components
+ hasmiss = which(sapply(nums, function(x) any(x == ".")))
+ nalt = sapply(nums, function(x) 2-sum(x=="0"))  # this is correct only for diallelic locus; note in doc
+ if (length(hasmiss)>0) nalt[hasmiss] = -1
  nalt = nalt+1
  chr = meta[1]
  id = meta[3]
