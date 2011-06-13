@@ -20,9 +20,11 @@ vcf2sm(tbxfi, ..., gr, nmetacol)
   \item{gr}{instance of \code{\link[GenomicRanges]{GRanges-class}}}
   \item{nmetacol}{numeric: tells number of columns used in each record as locus-level metadata }
 }
-%\details{
-%%%  ~~ If necessary, more details than the description above ~~
-%}
+\details{
+This function is relevant only for diallelic SNP.  If any base call is denoted `.', the associated genotype is
+set to missing (raw 0), even if the nonmissing call is ALT, implying at least one ALT.  
+}
+
 \value{
 an instance of \code{\link[snpStats]{SnpMatrix-class}}
 }
