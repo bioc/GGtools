@@ -74,19 +74,6 @@ f1
 #plot(f1) -- no longer supported, need to supply location data -- consider eqtlTests/manhPlot
 # show how to avoid adjusted fit
 f1b = gwSnpTests(genesym("CPNE1")~1-1, hmFou, chrnum(20))
-# show gene set modeling on chromosome
-\dontrun{
-library(GSEABase)  # functionality abandoned
-gs1 = GeneSet(c("CPNE1", "ADA"))
-geneIdType(gs1) = SymbolIdentifier()
-f2 = gwSnpTests(gs1~male, hmFou, chrnum(20))
-f2
-names(f2)
-#plot(f2[["ADA"]])
-# show 'smlSet-wide' fit
-f3 = gwSnpTests(gs1~male, hmFou)
-f3
-}
 # now use a phenoVar
 f3b = gwSnpTests(phenoVar("persid")~male, hmFou, chrnum(20))
 topSnps(f3b)

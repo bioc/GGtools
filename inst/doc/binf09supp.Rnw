@@ -56,7 +56,8 @@ manually reset.
 
 <<geta,eval=FALSE>>=
 library(GGtools)
-data(hla2set)
+library(GSEABase)
+load(system.file("genesets/hla2set.rda", package="GGtools"))
 hla2set
 @
 

@@ -98,24 +98,24 @@ setMethod("gwSnpTests", c("formula", "smlSet", "cnumOrMissing", "missing"),
         }
       }
     else if (is(respObj, "probeId")) pid = respObj
-    else if (is(respObj, "GeneSet")) {
-       fms = gsetFmla2FmlaList(sym)
-       theCall = match.call()
-       if (!missing(cnum)) ans = lapply(fms, function(z) {
-               if (options()$verbose) cat(".")
-               gwSnpTests(z, sms, cnum, ...)
-               })
-       else ans = lapply(fms, function(z) {
-          if (options()$verbose) cat(".")
-          gwSnpTests(z, sms, ...)
-          })
-       if (options()$verbose) cat("\n")
-       names(ans) = GSEABase::geneIds(respObj)
-       SI = new("SessionInfo", sessionInfo())
-       if (!missing(cnum)) ans = lapply(ans, function(x) { x@chrnum = cnum; x })
-       return(new("multiGwSnpScreenResult", geneset=respObj, call=theCall, 
-          sessionInfo = SI, ans))
-       }
+#    else if (is(respObj, "GeneSet")) {
+#       fms = gsetFmla2FmlaList(sym)
+#       theCall = match.call()
+#       if (!missing(cnum)) ans = lapply(fms, function(z) {
+#               if (options()$verbose) cat(".")
+#               gwSnpTests(z, sms, cnum, ...)
+#               })
+#       else ans = lapply(fms, function(z) {
+#          if (options()$verbose) cat(".")
+#          gwSnpTests(z, sms, ...)
+#          })
+#       if (options()$verbose) cat("\n")
+#       names(ans) = GSEABase::geneIds(respObj)
+#       SI = new("SessionInfo", sessionInfo())
+#       if (!missing(cnum)) ans = lapply(ans, function(x) { x@chrnum = cnum; x })
+#       return(new("multiGwSnpScreenResult", geneset=respObj, call=theCall, 
+#          sessionInfo = SI, ans))
+#       }
     else stop("response in formula must be of class phenoVar, genesym, probeId, or GeneSet")
 #
 # at this point we have the featureName that we need
@@ -171,17 +171,17 @@ setMethod("gwSnpTests", c("formula", "smlSet", "snpdepth", "missing"),
         }
       }
     else if (is(respObj, "probeId")) pid = respObj
-    else if (is(respObj, "GeneSet")) {
-       fms = gsetFmla2FmlaList(sym)
-       theCall = match.call()
-       ans = lapply(fms, function(z) gwSnpTests(z, sms, ...))
-       names(ans) = GSEABase::geneIds(respObj)
-       SI = new("SessionInfo", sessionInfo())
-       tmp <- new("multiGwSnpScreenResult", geneset=respObj, call=theCall, 
-            sessionInfo=SI, ans)
-       names(tmp@.Data) = GSEABase::geneIds(respObj)
-       return( filterSnpTests( tmp, cnum ) )
-       }
+#    else if (is(respObj, "GeneSet")) {
+#       fms = gsetFmla2FmlaList(sym)
+#       theCall = match.call()
+#       ans = lapply(fms, function(z) gwSnpTests(z, sms, ...))
+#       names(ans) = GSEABase::geneIds(respObj)
+#       SI = new("SessionInfo", sessionInfo())
+#       tmp <- new("multiGwSnpScreenResult", geneset=respObj, call=theCall, 
+#            sessionInfo=SI, ans)
+#       names(tmp@.Data) = GSEABase::geneIds(respObj)
+#       return( filterSnpTests( tmp, cnum ) )
+#       }
     else if (is(respObj, "chrnum")) {
 #
 # in this segment we transform chrnum spec to gene set
@@ -269,37 +269,37 @@ setClass("chunksize", contains="numeric")
 chunksize = function(x) new("chunksize", as.numeric(x))
 
 
-setMethod("gwSnpTests", c("formula", "smlSet", "snpdepth", "chunksize"),
- function(sym, sms, cnum, cs) {
-# assumes a gene set is response of formula
-  theCall = match.call(call=sys.call(2))
-  gn = GSEABase::geneIds(gs <- eval(sym[[2]]))
-  ng = length(gn)
-   chunklabs = function (n, chunksize) 
-   {
-       bas = 1:n
-       tool = ceiling(n/chunksize)
-       as.numeric(cut(bas, tool))
-   }
-  gspl = split(gn, chunklabs(ng, cs))
-  csets = lapply( gspl, function(x) gs[x] )
-  savesym = sym
-  out = list()
-  for (i in 1:length(gspl)) {
-      nsym = savesym
-      nsym[[2]] = csets[[i]]
-      out[[i]] = gwSnpTests(nsym, sms, cnum)
-      gc()
-      }
-# this list has all the tests filtered already, so filterSnpTests is not 
-# needed
-  flattened = unlist(out, recursive=FALSE)
-  names(flattened) = gn
-  ans = new("filteredMultiGwSnpScreenResult", geneset=gs,
-      call=theCall, flattened)
-  names(ans@.Data) = gn
-  ans
-  })
+#setMethod("gwSnpTests", c("formula", "smlSet", "snpdepth", "chunksize"),
+# function(sym, sms, cnum, cs) {
+## assumes a gene set is response of formula
+#  theCall = match.call(call=sys.call(2))
+#  gn = GSEABase::geneIds(gs <- eval(sym[[2]]))
+#  ng = length(gn)
+#   chunklabs = function (n, chunksize) 
+#   {
+#       bas = 1:n
+#       tool = ceiling(n/chunksize)
+#       as.numeric(cut(bas, tool))
+#   }
+#  gspl = split(gn, chunklabs(ng, cs))
+#  csets = lapply( gspl, function(x) gs[x] )
+#  savesym = sym
+#  out = list()
+#  for (i in 1:length(gspl)) {
+#      nsym = savesym
+#      nsym[[2]] = csets[[i]]
+#      out[[i]] = gwSnpTests(nsym, sms, cnum)
+#      gc()
+#      }
+## this list has all the tests filtered already, so filterSnpTests is not 
+## needed
+#  flattened = unlist(out, recursive=FALSE)
+#  names(flattened) = gn
+#  ans = new("filteredMultiGwSnpScreenResult", geneset=gs,
+#      call=theCall, flattened)
+#  names(ans@.Data) = gn
+#  ans
+#  })
 
 #setClass("maxchisq", contains="list")
 #setMethod("show", "maxchisq", function(object) {

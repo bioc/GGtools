@@ -25,9 +25,9 @@ This set of 9 genes related to human HLA2 locus was used in the
 %%%  ~~ possibly secondary sources and usages ~~
 %}
 \examples{
-data(hla2set)
-if (require(GSEABase)) {
- geneIds(hla2set)
-}
+if ("GSEABase" \%in\% installed.packages()[,1]) {
+ load(system.file("genesets/hla2set.rda", package="GGtools"))
+ hla2set
+ }
 }
 \keyword{datasets}
