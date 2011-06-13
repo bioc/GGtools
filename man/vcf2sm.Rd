@@ -41,9 +41,10 @@ encountered, could be liberal}
 locus identifier when the id field is .; sometimes loc field is adequate and this
 should be set to "".  set to "" if you see loc names with chrchr prefix.}
 }
-%\details{
-%%%  ~~ If necessary, more details than the description above ~~
-%}
+\details{
+This function is relevant only for diallelic SNP.  If any base call is denoted `.', the associated genotype is
+set to missing (raw 0), even if the nonmissing call is ALT, implying at least one ALT.  
+}
 \value{
 an instance of \code{\link[snpStats]{SnpMatrix-class}}
 }
