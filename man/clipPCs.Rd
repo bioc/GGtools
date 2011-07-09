@@ -58,6 +58,10 @@ pcs = prcomp(t(exprs(hmceuB36.2021)))$x
 hmr = hmceuB36.2021[ probeId(g20), ]
 pData(hmr) = data.frame(pData(hmr), pcs[,1:4])
 hmc
+# files persist on certain windows systems?
+if (file.exists("clipdem")) try(system("rmdir clipdem"))
+if (file.exists("clipfmla")) try(system("rmdir clipfmla"))
+if (file.exists("clipfmlaNOPC")) try(system("rmdir clipfmlaNOPC"))
 f1 = eqtlTests(hmc[chrnum("20"),], ~male, targdir="clipdem")
 f2 = eqtlTests(hmr[chrnum("20"),], ~male+PC1+PC2+PC3+PC4, targdir="clipfmla")
 f3 = eqtlTests(hmr[chrnum("20"),], ~male, targdir="clipfmlaNOPC")
