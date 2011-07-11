@@ -48,6 +48,7 @@ an smlSet instance with transformed expression data
 %%% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
+if (.Platform$OS.type != "windows") {  # our build system not removing folders...
 data(hmceuB36.2021)
 library(illuminaHumanv1.db)
 g20 = get("20", revmap(illuminaHumanv1CHR))
@@ -65,6 +66,7 @@ if (file.exists("clipfmlaNOPC")) try(system("rmdir clipfmlaNOPC"))
 f1 = eqtlTests(hmc[chrnum("20"),], ~male, targdir="clipdem")
 f2 = eqtlTests(hmr[chrnum("20"),], ~male+PC1+PC2+PC3+PC4, targdir="clipfmla")
 f3 = eqtlTests(hmr[chrnum("20"),], ~male, targdir="clipfmlaNOPC")
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
