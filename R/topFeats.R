@@ -22,6 +22,7 @@ setMethod("topFeats", c("probeId"), function(x, ...) {
 .topFeats = function(probeid=NULL, sym=NULL, rsid=NULL, mgrOrCTD, ffind, anno, n=10, useSym=TRUE, minMAF=0, minGTF=0 ) {
  if (is.null(probeid) & is.null(sym) & is.null(rsid)) 
        stop("must supply one of probeid, sym, rsid")
+ if (!is.null(rsid) & (minMAF>0 | minGTF>0)) stop("can't currently use minMAF with rsid selection -- please filter outputs on MAF by hand.")
  if (!is.null(sym)) {
   id = sym2id(sym, anno)
   }
