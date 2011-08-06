@@ -24,8 +24,9 @@ export(eqtlTests, cisProxScores, clipPCs, pcChooser, permEx, makeDiagDirector,
         sm2ped, mrefhap2sm, scoresByGenes, 
         dropMonomorphies, ieqtlTests, topScores,
 	topGenes, locusNames, geneNames, geneIndcol,
-	nthScores)
+	nthScores, eqtlEstimates)
 
 
-exportClass(eqtlTestsManager, multiCisDirector, cisProxScores, transManager)
+exportClass(eqtlTestsManager, multiCisDirector, cisProxScores, transManager,
+	eqtlEstimatesManager)
 

@@ -408,6 +408,8 @@ chkeman = function(object){
  return(TRUE)
 }
 
+chkeeman = chkeman  # eventually enlarge for estimates object
+
 # elements of a multffManager list
 #> names(dem)
 # [1] "fflist"       "call"         "runname"      "targdir"      "generangetag"
@@ -420,6 +422,9 @@ setClass("eqtlTestsManager",
 	exdate="ANY", shortfac="numeric", geneanno="character", df="numeric",
         summaryList="list"),
         validity=chkeman)
+
+setClass("eqtlEstimatesManager", contains="eqtlTestsManager",
+        validity=chkeeman)
 
 setAs("multffManager", "eqtlTestsManager", function(from) {
  new("eqtlTestsManager", fflist=from$fflist, call=from$call,
