@@ -80,16 +80,20 @@ eqtlEstimates = function (smlSet, rhs = ~1 - 1, runname = "fooe", targdir = "foo
 }
 
 
-setMethod("[", c("eqtlEstimatesManager", "rsid", "probeId"),
- function(x, i, j, ..., drop=FALSE) {
+setMethod("[", "eqtlEstimatesManager", function(x, i, j, k, ..., drop=FALSE) {
 #
 # ultimately this may not be exposed, serving only for deep
 # testing, because a director database may be required for every
 # manager
 #
+
+ if (!(k %in% c(1L,2L))) stop("3rd index must be 1L (for estimates) or 2L (for s.e.s)")
  m1 = snpIdMap( as(i, "character"), x )
- ans = lapply(1:length(m1), function(i) fflist(x)[[names(m1)[i]]][ m1[[i]], 
-    as(j, "character"), 1, drop=FALSE]/shortfac(x))
+#
+# do not rebind i here
+#
+ ans = lapply(1:length(m1), function(mapi) fflist(x)[[names(m1)[mapi]]][ m1[[mapi]], 
+    as(j, "character"), k, drop=FALSE]/shortfac(x))
  names(ans) = names(m1)
  ans
 })

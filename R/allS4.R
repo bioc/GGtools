@@ -423,7 +423,10 @@ setClass("eqtlTestsManager",
         summaryList="list"),
         validity=chkeman)
 
-setClass("eqtlEstimatesManager", contains="eqtlTestsManager",
+setClass("eqtlEstimatesManager",
+ representation(fflist="list", call="call", sess="ANY",
+	exdate="ANY", shortfac="numeric", geneanno="character", df="numeric",
+        summaryList="list"),
         validity=chkeeman)
 
 setAs("multffManager", "eqtlTestsManager", function(from) {
@@ -464,7 +467,13 @@ setMethod("[", c("eqtlTestsManager", "rsid", "probeId"),
 # testing, because a director database may be required for every
 # manager
 #
+# note aug 2011 -- that in Biobase, we do not explicity have signatures
+# for "[", "eSet" ... the arguments are checked in the method -- 
+#
  m1 = snpIdMap( as(i, "character"), x )
+#
+# you should not rebind i below...
+#
  ans = lapply(1:length(m1), function(i) fflist(x)[[names(m1)[i]]][ m1[[i]], 
     as(j, "character"), drop=FALSE]/shortfac(x))
  names(ans) = names(m1)
@@ -476,6 +485,9 @@ setMethod("[", c("eqtlTestsManager", "missing", "probeId"),
 #
 #
  ll = length(fflist(x))
+#
+# you should not rebind i below.  set up tests and relabel
+#
  ans = lapply(1:ll, function(i) fflist(x)[[i]][ , 
     as(j, "character"), drop=FALSE]/shortfac(x))
  names(ans) = names(fflist(x))
@@ -485,6 +497,9 @@ setMethod("[", c("eqtlTestsManager", "missing", "probeId"),
 setMethod("[", c("eqtlTestsManager", "rsid", "missing"),
  function(x, i, j, ..., drop=FALSE) {
  m1 = snpIdMap( as(i, "character"), x )
+#
+# you should not rebind i below.  set up tests and relabel
+#
  ans = lapply(1:length(m1), function(i) fflist(x)[[names(m1)[i]]][ m1[[i]], 
     , drop=FALSE]/shortfac(x))
  names(ans) = names(m1)

@@ -149,18 +149,17 @@ stored in a summary ff structure.
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
-library(ceuhm3)
-if (!exists("hm3ceuSMS")) data(hm3ceuSMS)
+library(GGdata)
+hm2ceuSMS = getSS("GGdata", c("20", "21"), renameChrs=c("chr20", "chr21"))
 library(illuminaHumanv1.db)
 cptag = get("CPNE1", revmap(illuminaHumanv1SYMBOL))
-indc = which(featureNames(hm3ceuSMS) == cptag[1])
+indc = which(featureNames(hm2ceuSMS) == cptag[1])
 #
 # get a set of additional genes on chr20
 all20 = get("20", revmap(illuminaHumanv1CHR))
 g20 = unique(c(all20[1:10], cptag))
 #
-hm = hm3ceuSMS[probeId(g20),]  # reduce problem
-hm = hm[ chrnum(c("chr20", "chr21")), ]
+hm = hm2ceuSMS[probeId(g20),]  # reduce problem
 td = tempdir()
 curd = getwd()
 setwd(td)
