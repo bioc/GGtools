@@ -98,28 +98,24 @@ setMethod("[", "eqtlEstimatesManager", function(x, i, j, k, ..., drop=FALSE) {
  ans
 })
 
-setMethod("[", c("eqtlEstimatesManager", "missing", "probeId"),
- function(x, i, j, ..., drop=FALSE) {
-#
-#
- ll = length(fflist(x))
- ans = lapply(1:ll, function(i) fflist(x)[[i]][ , 
-    as(j, "character"), 1, drop=FALSE]/shortfac(x))
- names(ans) = names(fflist(x))
- ans
-})
-
-setMethod("[", c("eqtlEstimatesManager", "rsid", "missing"),
- function(x, i, j, ..., drop=FALSE) {
- m1 = snpIdMap( as(i, "character"), x )
- ans = lapply(1:length(m1), function(i) fflist(x)[[names(m1)[i]]][ m1[[i]], 
-    , 1, drop=FALSE]/shortfac(x))
+setMethod("[", c("eqtlEstimatesManager"), 
+ function(x, i, j, k,..., drop=FALSE) {
+ if (!missing(i) & !missing(j) & !missing(k)) {
+   if (!is(i, "rsid")) stop("index i must be rsid instance")
+   if (!is(j, "probeId")) stop("index j must be probeId instance")
+   if (!is(k, "integer")) stop("index k must be integer")
+     m1 = snpIdMap( as(i, "character"), x )
+     ans = lapply(1:length(m1), function(mind) fflist(x)[[names(m1)[mind]]][ m1[[mind]],
+        as(j, "character"), k, drop=FALSE]/shortfac(x))
+   }
+ else if (missing(i) & !missing(j) & !missing(k)) {
+   if (!is(j, "probeId")) stop("index j must be probeId instance")
+   if (!is(k, "integer")) stop("index k must be integer")
+     ans = lapply(1:length(fflist(x)), function(mind) fflist(x)[[mind]][ ,
+        as(j, "character"), k, drop=FALSE]/shortfac(x))
+   }
+ else stop("one of i (rsid instance), j (probeId instance) must be present along with k in (1L, 2L)")
  names(ans) = names(m1)
  ans
-})
-
-setMethod("[", c("eqtlEstimatesManager", "ANY", "ANY"),
- function(x, i, j, ..., drop=FALSE) {
- stop("[ for eqtlEstimatesManager only defined for signature ('rsid', 'probeId') [one may be omitted]")
  })
 

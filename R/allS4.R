@@ -423,10 +423,10 @@ setClass("eqtlTestsManager",
         summaryList="list"),
         validity=chkeman)
 
-setClass("eqtlEstimatesManager",
- representation(fflist="list", call="call", sess="ANY",
-	exdate="ANY", shortfac="numeric", geneanno="character", df="numeric",
-        summaryList="list"),
+setClass("eqtlEstimatesManager", contains="eqtlTestsManager",
+# representation(fflist="list", call="call", sess="ANY",
+#	exdate="ANY", shortfac="numeric", geneanno="character", df="numeric",
+#        summaryList="list"),
         validity=chkeeman)
 
 setAs("multffManager", "eqtlTestsManager", function(from) {
@@ -452,7 +452,7 @@ setMethod("exdate", "eqtlTestsManager", function(x)
   x@exdate)
 
 setMethod("show", "eqtlTestsManager", function(object) {
- cat("eqtlTools results manager, computed", exdate(object), "\n")
+ cat(class(object), " computed", exdate(object), "\n")
  cat("gene annotation:", object@geneanno, "\n")
  cat("There are", length(fflist(object)), "chromosomes analyzed.\n")
  cat("some genes (out of ", length(colnames(fflist(object)[[1]])),"): ", paste(selectSome(colnames(fflist(object)[[1]])),collapse=" "), "\n", sep="")
@@ -460,7 +460,7 @@ setMethod("show", "eqtlTestsManager", function(object) {
 })
 
 
-setMethod("[", c("eqtlTestsManager", "rsid", "probeId"),
+setMethod("[", c("eqtlTestsManager"), # , "rsid", "probeId"),
  function(x, i, j, ..., drop=FALSE) {
 #
 # ultimately this may not be exposed, serving only for deep
@@ -470,46 +470,59 @@ setMethod("[", c("eqtlTestsManager", "rsid", "probeId"),
 # note aug 2011 -- that in Biobase, we do not explicity have signatures
 # for "[", "eSet" ... the arguments are checked in the method -- 
 #
- m1 = snpIdMap( as(i, "character"), x )
 #
 # you should not rebind i below...
 #
- ans = lapply(1:length(m1), function(i) fflist(x)[[names(m1)[i]]][ m1[[i]], 
-    as(j, "character"), drop=FALSE]/shortfac(x))
- names(ans) = names(m1)
- ans
-})
-
-setMethod("[", c("eqtlTestsManager", "missing", "probeId"),
- function(x, i, j, ..., drop=FALSE) {
-#
-#
- ll = length(fflist(x))
-#
-# you should not rebind i below.  set up tests and relabel
-#
- ans = lapply(1:ll, function(i) fflist(x)[[i]][ , 
-    as(j, "character"), drop=FALSE]/shortfac(x))
- names(ans) = names(fflist(x))
- ans
-})
-
-setMethod("[", c("eqtlTestsManager", "rsid", "missing"),
- function(x, i, j, ..., drop=FALSE) {
- m1 = snpIdMap( as(i, "character"), x )
-#
-# you should not rebind i below.  set up tests and relabel
-#
- ans = lapply(1:length(m1), function(i) fflist(x)[[names(m1)[i]]][ m1[[i]], 
+ if (!missing(i) & missing(j)) {
+  if (!is(i, "rsid")) stop("subscript 1 must be rsid instance")
+  m1 = snpIdMap( as(i, "character"), x )
+  ans = lapply(1:length(m1), function(i) fflist(x)[[names(m1)[i]]][ m1[[i]], 
     , drop=FALSE]/shortfac(x))
+ } else if (missing(i) & !missing(j)) {
+  if (!is(j, "probeId")) stop("subscript 2 must be probeId instance")
+  ans = lapply(1:length(fflist(x)), function(mind) fflist(x)[[mind]][ , as.character(j) 
+    , drop=FALSE]/shortfac(x))
+ } else if (!missing(i) & !missing(j)) {
+  if (!is(i, "rsid")) stop("subscript 1 must be rsid instance")
+  if (!is(j, "probeId")) stop("subscript 2 must be probeId instance")
+  m1 = snpIdMap( as(i, "character"), x )
+  ans = lapply(1:length(m1), function(mind) fflist(x)[[names(m1)[mind]]][ m1[[mind]], 
+    as(j, "character"), drop=FALSE]/shortfac(x))
+ } else stop("at least one of i and j must be supplied")
  names(ans) = names(m1)
  ans
 })
 
-setMethod("[", c("eqtlTestsManager", "ANY", "ANY"),
- function(x, i, j, ..., drop=FALSE) {
- stop("[ for eqtlTestsManager only defined for signature ('rsid', 'probeId') [one may be omitted]")
- })
+#setMethod("[", c("eqtlTestsManager", "missing", "probeId"),
+# function(x, i, j, ..., drop=FALSE) {
+##
+##
+# ll = length(fflist(x))
+##
+## you should not rebind i below.  set up tests and relabel
+##
+# ans = lapply(1:ll, function(i) fflist(x)[[i]][ , 
+#    as(j, "character"), drop=FALSE]/shortfac(x))
+# names(ans) = names(fflist(x))
+# ans
+#})
+#
+#setMethod("[", c("eqtlTestsManager", "rsid", "missing"),
+# function(x, i, j, ..., drop=FALSE) {
+# m1 = snpIdMap( as(i, "character"), x )
+##
+## you should not rebind i below.  set up tests and relabel
+##
+# ans = lapply(1:length(m1), function(i) fflist(x)[[names(m1)[i]]][ m1[[i]], 
+#    , drop=FALSE]/shortfac(x))
+# names(ans) = names(m1)
+# ans
+#})
+
+#setMethod("[", c("eqtlTestsManager", "ANY", "ANY"),
+# function(x, i, j, ..., drop=FALSE) {
+# stop("[ for eqtlTestsManager only defined for signature ('rsid', 'probeId') [one may be omitted]")
+# })
 
 # director for group of managers
 
