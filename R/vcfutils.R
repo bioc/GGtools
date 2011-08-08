@@ -72,9 +72,10 @@ setMethod("vcf2sm", c("TabixFile", "GRanges", "integer"),
      Rsamtools:::open.TabixFile(tbxfi)
      chunk = scanTabix(tbxfi, param=gr)  # list of vectors of strings, one list elem per range in gr
      out = list()
+     trk = 0
      for (i in 1:length(chunk)) {
-       out[[i]] = lapply( chunk[[i]], function(x)
-                    parseVCFrec( x, nmetacol=nmetacol, makelocpref="chr" ))
+       out[[i]] = lapply( chunk[[i]], function(x) { trk <<- trk+1; if (options()$verbose) if (trk %% 100 == 0) cat(trk);
+                    parseVCFrec( x, nmetacol=nmetacol, makelocpref="chr" ) })
        }
      out = unlist(out, recursive=FALSE)
      rsid = sapply(out, "[[", "id")

@@ -1,5 +1,6 @@
 \name{eqtlTests}
 \alias{eqtlTests}
+\alias{eqtlEstimates}
 \alias{ieqtlTests}
 %\alias{cisScores}
 %\alias{imphm3_1KG_20_mA2}
@@ -14,6 +15,15 @@ perform genome x transcriptome eQTL searches with high-performance options
 eqtlTests(smlSet, rhs = ~1 - 1, runname = "foo", targdir = "foo", 
 	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, 
         checkValid = TRUE, saveSummaries = TRUE, uncert=TRUE, family, genegran=50, ...)
+
+eqtlEstimates(smlSet, rhs = ~1 - 1, 
+   runname = "fooe", targdir = "fooe", 
+   geneApply = lapply, chromApply = lapply, 
+   shortfac = 100, checkValid = TRUE, 
+   saveSummaries = TRUE, uncert = TRUE, family, 
+   genegran = 50, prefilter = dropMonomorphies, ...)
+}
+
 ieqtlTests (smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = "ifoo",
     geneApply = lapply, chromApply = lapply, shortfac = 100,
     computeZ = FALSE, uncert=TRUE, saveSummaries=TRUE,
@@ -92,13 +102,16 @@ parameters passed to \code{\link[snpStats]{snp.rhs.tests}}}
  \item{rules}{instance of \code{\link[snpStats]{ImputationRules-class}}}
 }
 \details{
-\code{\link[snpStats]{snp.rhs.tests}} is run for all genes enumerated in
+\code{\link[snpStats]{snp.rhs.tests}} (or
+\code{\link[snpStats]{snp.rhs.estimates}} is run for all genes enumerated in
 \code{featureNames(smlSet)} individually as dependent variables, and all SNP  in \code{smList(smlSet)}
 as predictors, one by one.  Each model fitted for SNP genotype is additionally
 adjusted for elements in \code{rhs}.  There are consequently \code{G*S} test results
 where \code{G} is the number of features in \code{exprs(smlSet)}, and \code{S} is the
 total number of SNP in \code{smlSet}.  These are stored in \code{ff} files in folder
-\code{targdir}.
+\code{targdir}.  For \code{eqtlEstimates} the \code{ff} files are three-dimensional
+arrays with dimensions S x G x 2 where the top SxG subarray provides estimates, and
+the bottom, standard errors.
 
 \code{imphm3_1KG_20_mA2} is a set of imputation rules for SNP on chromosome 20, where the
 1000 genomes genotypes distributed in `pilot1' VCF files are used to create
@@ -164,9 +177,14 @@ td = tempdir()
 curd = getwd()
 setwd(td)
 time.lapply = unix.time(e1 <- eqtlTests( hm, ~male ))
+time.lapply
 length(probesManaged(e1,1))
 length(snpsManaged(e1,1))
 e1
+dir("foo")
+time.lapply2 = unix.time(ee1 <- eqtlEstimates( hm, ~male ))
+time.lapply2
+ee1
 dir("foo")
 setwd(curd)
 #
