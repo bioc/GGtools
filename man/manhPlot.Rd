@@ -76,12 +76,12 @@ VJ Carey <stvjc@channing.harvard.edu>
 %}
 \examples{
 if (require(SNPlocs.Hsapiens.dbSNP.20100427)) {
- library(ceuhm3)
- if (!exists("hm3ceuSMS")) data(hm3ceuSMS)
+ library(GGdata)
+ hm2ceuSMS = getSS("GGdata", "20", renameChrs="chr20")
  library(illuminaHumanv1.db)
  cptag = get("CPNE1", revmap(illuminaHumanv1SYMBOL))
- indc = which(featureNames(hm3ceuSMS) == cptag[1])
- hm = hm3ceuSMS[c(indc,1:19),]  # reduce problem
+ indc = which(featureNames(hm2ceuSMS) == cptag[1])
+ hm = hm2ceuSMS[c(indc,1:19),]  # reduce problem
  hm = hm[chrnum("chr20"),]
  td = tempdir()
  curd = getwd()

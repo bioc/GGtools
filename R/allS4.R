@@ -478,18 +478,20 @@ setMethod("[", c("eqtlTestsManager"), # , "rsid", "probeId"),
   m1 = snpIdMap( as(i, "character"), x )
   ans = lapply(1:length(m1), function(i) fflist(x)[[names(m1)[i]]][ m1[[i]], 
     , drop=FALSE]/shortfac(x))
+  names(ans) = names(m1)
  } else if (missing(i) & !missing(j)) {
   if (!is(j, "probeId")) stop("subscript 2 must be probeId instance")
   ans = lapply(1:length(fflist(x)), function(mind) fflist(x)[[mind]][ , as.character(j) 
     , drop=FALSE]/shortfac(x))
+  names(ans) = names(fflist)
  } else if (!missing(i) & !missing(j)) {
   if (!is(i, "rsid")) stop("subscript 1 must be rsid instance")
   if (!is(j, "probeId")) stop("subscript 2 must be probeId instance")
   m1 = snpIdMap( as(i, "character"), x )
   ans = lapply(1:length(m1), function(mind) fflist(x)[[names(m1)[mind]]][ m1[[mind]], 
     as(j, "character"), drop=FALSE]/shortfac(x))
+  names(ans) = names(m1)
  } else stop("at least one of i and j must be supplied")
- names(ans) = names(m1)
  ans
 })
 
