@@ -15,20 +15,16 @@ perform genome x transcriptome eQTL searches with high-performance options
 eqtlTests(smlSet, rhs = ~1 - 1, runname = "foo", targdir = "foo", 
 	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, 
         checkValid = TRUE, saveSummaries = TRUE, uncert=TRUE, family, genegran=50, ...)
-
 eqtlEstimates(smlSet, rhs = ~1 - 1, 
    runname = "fooe", targdir = "fooe", 
    geneApply = lapply, chromApply = lapply, 
    shortfac = 100, checkValid = TRUE, 
    saveSummaries = TRUE, uncert = TRUE, family, 
    genegran = 50, prefilter = dropMonomorphies, ...)
-}
-
 ieqtlTests (smlSet, rhs = ~1 - 1, rules, runname = "ifoo", targdir = "ifoo",
     geneApply = lapply, chromApply = lapply, shortfac = 100,
     computeZ = FALSE, uncert=TRUE, saveSummaries=TRUE,
     family, ...)
-
 }
 
 %- maybe also 'usage' for other objects documented here.
