@@ -60,10 +60,10 @@ eqtlEstimates = function (smlSet, rhs = ~1 - 1, runname = "fooe", targdir = "foo
                 numans[badests] = NA
                 numans = unlist(numans)
 		}
-            numans.se = sqrt(sapply(numans.full, "[[", "Var.beta"))
+            numans.se = sapply(numans.full, "[[", "Var.beta")
             if (any(badses <- sapply(numans.se, is.null))) {
                 numans.se[badses] = NA
-                numans.se = unlist(numans.se)
+                numans.se = sqrt(unlist(numans.se))
             }
             store[, gene, 1, add = TRUE] = shortfac * numans
             store[, gene, 2, add = TRUE] = shortfac * numans.se
