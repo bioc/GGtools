@@ -14,7 +14,8 @@ perform genome x transcriptome eQTL searches with high-performance options
 \usage{
 eqtlTests(smlSet, rhs = ~1 - 1, runname = "foo", targdir = "foo", 
 	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, 
-        checkValid = TRUE, saveSummaries = TRUE, uncert=TRUE, family, genegran=50, ...)
+        checkValid = TRUE, saveSummaries = TRUE, uncert=TRUE, 
+	family, genegran=50, prefilter = dropMonomorphies, ...)
 eqtlEstimates(smlSet, rhs = ~1 - 1, 
    runname = "fooe", targdir = "fooe", 
    geneApply = lapply, chromApply = lapply, 
@@ -96,6 +97,8 @@ parameters passed to \code{\link[snpStats]{snp.rhs.tests}}}
  \item{genegran}{numeric value of frequency at which gene names will be catted to stdout in case
   \code{options()$verbose == TRUE}}
  \item{rules}{instance of \code{\link[snpStats]{ImputationRules-class}}}
+ \item{prefilter}{function that takes and returns smlSet instance to
+   be executed prior to any analysis}
 }
 \details{
 \code{\link[snpStats]{snp.rhs.tests}} (or
