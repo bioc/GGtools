@@ -76,6 +76,18 @@ selection policies to be defined over SNP.
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
+data(smlSet.example)
+applier = lapply
+if ("multicore" \%in\% installed.packages()[,1]) {
+ library(multicore)
+ applier = mclapply
+}
+td = tempdir()
+curd = getwd()
+setwd(td)
+f1 = genewiseFDRtab( smlSet.example[1:30,] , ~male )
+f1
+setwd(curd)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
