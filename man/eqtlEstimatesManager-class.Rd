@@ -60,5 +60,24 @@ array, is 1 for estimates, 2 for s.e. }
 %}
 \examples{
 showClass("eqtlEstimatesManager")
+data(smlSet.example)
+curd = getwd()
+td = tempdir()
+setwd(td)
+applier = lapply
+if ("multicore" \%in\% installed.packages()[,1])  {
+  library(multicore)
+  applier = mclapply
+}
+te = eqtlEstimates( smlSet.example[1:15,], ~male, geneApply=applier )
+te
+pm = probesManaged(te,1)
+sm = snpsManaged(te,1)
+te[ rsid(sm[1]), probeId(pm[1]), 1L ]
+te[ rsid(sm[1]), probeId(pm[1]), 2L ]
+ex = exprs(smlSet.example)[pm[1],]
+male = smlSet.example$male
+summary(lm(ex~male+as(smList(smlSet.example)[[1]][, sm[1]], "numeric")))
+setwd(curd)
 }
 \keyword{classes}

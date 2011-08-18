@@ -187,6 +187,8 @@ ee1
 dir("foo")
 setwd(curd)
 #
+# see example("eqtlEstimatesManager-class") for illustration eqtlEstimates
+#
 # additional examples are in the 'extras' folder, extrExt.txt
 # 
 }
