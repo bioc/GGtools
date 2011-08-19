@@ -15,7 +15,7 @@ probeLocations(sms)
 probeSequences(sms)
 probeChromosomes(sms)
 snpLocations(sms, snpLocGRanges, grsnpid = "RefSNP_id")
-proximityList(sms, smlind=1, snpLocGRanges, grsnpid = "RefSNP_id",
+proximityList(sms, smlind=1, snpLocGRanges, grsnpid = "RefSNP_id", probeLocExtend=0,
   glocTransform=function(x)x)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -33,6 +33,9 @@ holding the SNP identifiers, as returned by a getSNPlocs with
 as.GRanges=TRUE}
   \item{smlind}{\code{proximityList} will work for only one
 element of \code{smList(sms)}; this argument picks it out.}
+  \item{probeLocExtend}{numeric, by which we extend (using ranges()+extend)
+the ranges of the resulting
+GRanges for probe locations}
   \item{glocTransform}{alters the \code{probeLocations(sms)} GRanges
 to define SNP proximity for inclusion in gene-snp association list}
 } % end args
@@ -74,7 +77,7 @@ data(smlSet.example)
 library(illuminaHumanv1.db)
 probeLocations(smlSet.example)
 spac = "SNPlocs.Hsapiens.dbSNP.20100427"
-if (spac \%in\% installed.packages()[,1]) {
+if (spac \%in\% (IP <- installed.packages()[,1])) {
  library(spac, character.only=TRUE)
  c20 = getSNPlocs("ch20", as.GRanges=TRUE)
  seqlevels(c20)[20] = "20"
@@ -89,8 +92,22 @@ if (spac \%in\% installed.packages()[,1]) {
  pl2 = proximityList( h20, 1, c20, glocTransform = function(x) {
     ranges(x) = ranges(x)+50000 # extend gene interval 50kb on each end
     x})
+ pl3 = proximityList( h20, 1, c20, probeLocExtend=50000)
  cat("count SNPs in gene region extended by 50k at each end\n")
  print( sapply(pl2, length))
+ td = tempdir()
+ curd = getwd()
+ setwd(td)
+ applier = lapply
+ if ("multicore" \%in\% IP) {
+    library(multicore)
+    applier=mclapply
+    }
+ et1 = eqtlTests( h20, ~male, geneApply=applier )
+ sco1 = lapply(1:length(pl), function(x) et1[ rsid(pl[[x]]), probeId(names(pl)[x]) ])
+ print(sapply(sco1, sapply, max))
+ sco2 = lapply(1:length(pl2), function(x) et1[ rsid(pl2[[x]]), probeId(names(pl2)[x]) ])
+ print(sapply(sco2, sapply, max))
  }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

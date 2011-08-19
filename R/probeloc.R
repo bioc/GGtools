@@ -32,7 +32,7 @@ probeChromosomes = function(sms) {
 	sapply(chrs, "[", 1)
 }
 
-probeLocations = function(sms) {
+probeLocations = function(sms, extend=0) {
 	fn = featureNames(sms)
 	stem = gsub(".db", "", annotation(sms))
 	stenv = get(paste(stem, "CHRLOC", sep=""))
@@ -51,7 +51,7 @@ probeLocations = function(sms) {
 		ch1 = unlist(ch1[-bad])
 	} else ch1 = unlist(ch1)
 	strand = ifelse(st1<0, "-", "+")
-	ans = GRanges(seqnames=ch1, IRanges(abs(st1), abs(en1)), strand=strand)
+	ans = GRanges(seqnames=ch1, IRanges(abs(st1), abs(en1))+extend, strand=strand)
 	if (length(bad) > 0) names(ans) = fn[-bad]
    	else names(ans) = fn
 	ans
@@ -83,9 +83,9 @@ snpLocations = function(sms, snpLocGRanges, grsnpid = "RefSNP_id" ) {
 	locl
 }
 
-proximityList = function(sms, smlind=1, snpLocGRanges, grsnpid = "RefSNP_id",
+proximityList = function(sms, smlind=1, snpLocGRanges, grsnpid = "RefSNP_id", probeLocExtend=0,
    glocTransform = function(x)x) {
-   gloc = glocTransform(probeLocations(sms))
+   gloc = glocTransform(probeLocations(sms,extend=probeLocExtend))
    sloc = snpLocations(sms=sms, snpLocGRanges=snpLocGRanges, grsnpid=grsnpid)[[smlind]]
    snames = paste("rs", elementMetadata(sloc)[[grsnpid]], sep="")
    ov = matchMatrix(findOverlaps(gloc, sloc))
