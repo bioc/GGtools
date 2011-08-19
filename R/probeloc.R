@@ -49,10 +49,11 @@ probeLocations = function(sms) {
 		st1 = st1[-bad]
 		en1 = en1[-bad]
 		ch1 = unlist(ch1[-bad])
-	}
+	} else ch1 = unlist(ch1)
 	strand = ifelse(st1<0, "-", "+")
 	ans = GRanges(seqnames=ch1, IRanges(abs(st1), abs(en1)), strand=strand)
-	names(ans) = fn[-bad]
+	if (length(bad) > 0) names(ans) = fn[-bad]
+   	else names(ans) = fn
 	ans
 }
 
@@ -67,7 +68,10 @@ probeSequences = function(sms) {
 snpLocations = function(sms, snpLocGRanges, grsnpid = "RefSNP_id" ) {
 	slc = names(smList(sms))
 	sqn = seqlevels(snpLocGRanges)
-	if (!all(slc %in% sqn)) stop("names(smList(sms)) returns values not found in seqlevels(snpLocGRanges).  Please reconcile.")
+	if (!all(slc %in% sqn)) stop(paste(
+              "names(smList(sms)) [",
+                  paste(sQuote(names(smList(sms))), collapse=","), 
+                  "]  returns values not found in seqlevels(snpLocGRanges).  Please reconcile."))
 	locl = list()
 	for (i in 1:length(slc)) {
 		tsn = colnames(smList(sms)[[i]])
@@ -77,4 +81,15 @@ snpLocations = function(sms, snpLocGRanges, grsnpid = "RefSNP_id" ) {
 		}
 	names(locl) = slc
 	locl
+}
+
+proximityList = function(sms, smlind=1, snpLocGRanges, grsnpid = "RefSNP_id",
+   glocTransform = function(x)x) {
+   gloc = glocTransform(probeLocations(sms))
+   sloc = snpLocations(sms=sms, snpLocGRanges=snpLocGRanges, grsnpid=grsnpid)[[smlind]]
+   snames = paste("rs", elementMetadata(sloc)[[grsnpid]], sep="")
+   ov = matchMatrix(findOverlaps(gloc, sloc))
+   snpsmatched = snames[ov[,2]]
+   probesmatched = names(gloc)[ov[,1]]
+   split(snpsmatched,probesmatched)
 }
