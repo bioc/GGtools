@@ -22,10 +22,10 @@ genewiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.95, .975, .99, 
   else {
     gn = intersect(names(gene2snpList), pm)
     if (length(gn) < 1) stop("gene2snpList is non-null and has null intersection with featureNames(sms)")
-    tops = sapply(1:length(gn), function(z) max(as.numeric(obs[rsid(gene2snpList[[gn[z]]]),
-        probeId(gn[z]) ])))
-    ptops = sapply(1:length(gn), function(z) max(as.numeric(per[rsid(gene2snpList[[gn[z]]]),
-        probeId(gn[z]) ])))
+    tops = sapply(1:length(gn), function(z) max(as.numeric(unlist(obs[rsid(gene2snpList[[gn[z]]]),
+        probeId(gn[z]) ]))))
+    ptops = sapply(1:length(gn), function(z) max(as.numeric(unlist(per[rsid(gene2snpList[[gn[z]]]),
+        probeId(gn[z]) ]))))
     }
   nullq = quantile(ptops, targp)
   fcalls = sapply(nullq, function(x)sum(ptops>x))
