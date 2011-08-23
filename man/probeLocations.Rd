@@ -1,6 +1,7 @@
 \name{probeLocations}
 \alias{probeLocations}
 \alias{probeChromosomes}
+\alias{probeSequences}
 \alias{snpLocations}
 \alias{proximityList}
 %- Also NEED an '\alias' for EACH other topic documented here.
@@ -11,7 +12,7 @@ utilities for annotation acquisition with smlSet instances
 utilities for annotation acquisition with smlSet instances
 }
 \usage{
-probeLocations(sms)
+probeLocations(sms, extend=0)
 probeSequences(sms)
 probeChromosomes(sms)
 snpLocations(sms, snpLocGRanges, grsnpid = "RefSNP_id")
@@ -25,6 +26,7 @@ instance of \code{\link[GGBase]{smlSet-class}}, which should have
 an annotation slot correctly identifying an AnnotationDbi-compliant
 annotation package for expression probes
 }
+  \item{extend}{numeric value to extend regions by, using algebra of + for IRanges instances}
   \item{snpLocGRanges}{an instance of \code{\link[GenomicRanges]{GRanges-class}} with numeric tokens for dbSNP identifiers as used in SNPlocs.* packages.
 The identifiers are in elementMetadata(snpLocGRanges)[[grsnpid]]
 }

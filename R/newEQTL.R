@@ -107,11 +107,14 @@ ffSnpSummary = function(sm,fn,fac=100) {
  
 eqtlTests = function(smlSet, rhs=~1-1,
    runname="foo", targdir="foo", geneApply=lapply, chromApply=lapply,
-   shortfac = 100, computeZ=FALSE, checkValid=TRUE, saveSummaries=TRUE, uncert=TRUE, family, genegran=50, ... ) {
+   shortfac = 100, computeZ=FALSE, checkValid=TRUE, saveSummaries=TRUE, 
+   uncert=TRUE, family, genegran=50, prefilter=dropMonomorphies, ... ) {
  theCall = match.call()
  if (checkValid) {
    tmp = validObject(smlSet)
    }
+ if (!is.function(prefilter)) stop("prefilter must be a function returning smlSet on smlSet input")
+ smlSet = prefilter(smlSet)
  if (missing(family)) family="gaussian"
  geneindex <- 1
  sess = sessionInfo()

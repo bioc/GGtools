@@ -15,7 +15,7 @@ thresholds
 \usage{
 genewiseFDRtab(sms, rhs, nperm = 1, seed = 1234, 
 	targp = c(0.95, 0.975, 0.99, 0.995), 
-	folderstem = "fdrf", geneApply = mclapply)
+	folderstem = "fdrf", geneApply = mclapply, gene2snpList=NULL)
 policyFDRtab(sms, rhs, universe=featureNames(sms),
   	policyClo=function(mgr) function(x)topFeats(probeId(x),
      	mgr=mgr, ffind=1, n=1), nperm=1, seed=1234, 
@@ -48,6 +48,15 @@ for permutation folders
   \item{geneApply}{
 iteration (apply-like) function to be used to iterate over genes
 }
+  \item{gene2snpList}{
+list with genes as organizing element, specifying for each
+gene which SNP will be retained for testing summaries.  can be
+created by the \code{\link{proximityList}} function
+}
+  \item{universe}{tests will focus on organizing by the tokens in this vector}
+  \item{policyClo}{function accepting an eqtlTests manager, returning function of argument x
+that will implement a policy of filtering scores for use in identifying genetic
+elements that are associated with expression}
 }
 \details{
 \code{policyFDRtab} should achieve greater flexibility at the call, allowing
