@@ -95,7 +95,7 @@ total number of SNP in \code{smlSet}.  These are stored in \code{ff} files in fo
 
 \code{imphm3_1KG_20_mA2} is a set of imputation rules for SNP on chromosome 20, where the
 1000 genomes genotypes distributed in `pilot1' VCF files are used to create
-imputations to loci not covered in the phase 3 hapmap data in \code{hm3ceuSMS}.
+imputations to loci not covered in the phase 3 hapmap data in \code{ceuhm3}.
 
 cisScores will fail if genes are present that are not on the chromosome
 for which scores are requested.
@@ -143,22 +143,23 @@ stored in a summary ff structure.
 %}
 \examples{
 library(ceuhm3)
-if (!exists("hm3ceuSMS")) data(hm3ceuSMS)
+hm = getSS("ceuhm3", c("chr20", "chr21"))
 library(illuminaHumanv1.db)
 cptag = get("CPNE1", revmap(illuminaHumanv1SYMBOL))
-indc = which(featureNames(hm3ceuSMS) == cptag[1])
+indc = which(featureNames(hm) == cptag[1])
 #
 # get a set of additional genes on chr20
 all20 = get("20", revmap(illuminaHumanv1CHR))
 g20 = unique(c(all20[1:10], cptag))
 #
-hm = hm3ceuSMS[probeId(g20),]  # reduce problem
+hm = hm[probeId(g20),]  # reduce problem
 hm = hm[ chrnum(c("chr20", "chr21")), ]
 td = tempdir()
 curd = getwd()
 setwd(td)
 time.lapply = unix.time(e1 <- eqtlTests( hm, ~male ))
 e1
+topFeats(probeId("GI_23397697-A"), mgr=e1, ffind=1)
 dir("foo")
 setwd(curd)
 #
