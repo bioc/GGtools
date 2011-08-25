@@ -84,8 +84,7 @@ attach the package and load some test data.
 <<doini>>=
 library(GGtools)
 library(ceuhm3)
-data(hm3ceuSMS)
-hm3ceuSMS
+hm3ceuSMS = getSS("ceuhm3", paste("chr", 1:22, sep=""))
 @
 Expression data are recoverable in a familiar way:
 <<lkex>>=
