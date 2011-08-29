@@ -114,7 +114,7 @@ the bottom, standard errors.
 
 \code{imphm3_1KG_20_mA2} is a set of imputation rules for SNP on chromosome 20, where the
 1000 genomes genotypes distributed in `pilot1' VCF files are used to create
-imputations to loci not covered in the phase 3 hapmap data in \code{hm3ceuSMS}.
+imputations to loci not covered in the phase 3 hapmap data in \code{ceuhm3}.
 
 cisScores will fail if genes are present that are not on the chromosome
 for which scores are requested.
