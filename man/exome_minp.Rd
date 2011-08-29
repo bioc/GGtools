@@ -78,7 +78,7 @@ hmlit = hmceuB36.2021[ chrnum(20), ]
 library(illuminaHumanv1.db)
 cptag = get("CPNE1", revmap(illuminaHumanv1SYMBOL))
 indc = which(featureNames(hmlit) == cptag[1])
-hm = hmlit[c(indc,1:19),]  # reduce problem
+hm = dropMonomorphies(hmlit[c(indc,1:19),])  # reduce problem
 curd = getwd()
 td = tempdir()
 setwd(td)
