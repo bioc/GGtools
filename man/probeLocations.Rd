@@ -88,6 +88,7 @@ if (spac \%in\% (IP <- installed.packages()[,1])) {
  pcc = probeChromosomes(h20)
  p20 = featureNames(h20)[ which(pcc == "20") ] # for NA
  h20 = h20[ probeId(p20[1:20]), ]
+ h20 = dropMonomorphies(h20)
  pl = proximityList( h20, 1, c20)
  cat("count SNPs in gene region\n")
  print(sapply(pl, length))
