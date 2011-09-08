@@ -31,9 +31,14 @@ genewiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.95, .975, .99, 
   fcalls = sapply(nullq, function(x)sum(ptops>x))
   scalls = sapply(nullq, function(x)sum(tops>x))
   fdrtab = cbind(pctile=100*targp, thres=nullq, nfalse=fcalls, nsig=scalls, fdr=fcalls/scalls)
+  sotops = sort(tops, decreasing=TRUE)
+  sptops = sort(ptops, decreasing=TRUE)
+  sfdr = sapply(sotops, function(x) sum(sptops>x)/sum(sotops>x))
+  nf = sfdr*length(sfdr)
+  ncall = 1:length(sfdr)
   new("eqtlFDRtab", list(fdrtab=fdrtab, obsmgr=obs, permmgr=per, 
 	universe=pm, tops=tops, permtops=ptops,
-     	nullq = nullq, targp=targp))
+     	nullq = nullq, targp=targp, ncall=ncall, sfdr=sfdr))
 }
 
 policyFDRtab = function(sms, rhs, universe=featureNames(sms),
@@ -53,7 +58,12 @@ policyFDRtab = function(sms, rhs, universe=featureNames(sms),
   fcalls = sapply(nullq, function(x)sum(ptops>x))
   scalls = sapply(nullq, function(x)sum(tops>x))
   fdrtab = cbind(pctile=100*targp, thres=nullq, nfalse=fcalls, nsig=scalls, fdr=fcalls/scalls)
+  sotops = sort(tops, decreasing=TRUE)
+  sptops = sort(ptops, decreasing=TRUE)
+  sfdr = sapply(sotops, function(x) sum(sptops>x)/sum(sotops>x))
+  nf = sfdr*length(sfdr)
+  ncall = 1:length(sfdr)
   new("eqtlFDRtab", list(fdrtab=fdrtab, obsmgr=obs, permmgr=per, 
 	universe=pm, tops=tops, permtops=ptops,
-     	nullq = nullq, targp=targp))
+     	nullq = nullq, targp=targp, ncall=ncall, sfdr=sfdr))
 }
