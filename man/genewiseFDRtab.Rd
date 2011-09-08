@@ -94,7 +94,7 @@ if ("multicore" \%in\% installed.packages()[,1]) {
 td = tempdir()
 curd = getwd()
 setwd(td)
-f1 = genewiseFDRtab( smlSet.example[1:30,] , ~male )
+f1 = genewiseFDRtab( smlSet.example[1:30,] , ~male, geneApply=applier )
 f1
 setwd(curd)
 }
