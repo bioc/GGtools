@@ -17,9 +17,9 @@ genewiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.95, .975, .99, 
   per = eqtlTests(permEx(sms), rhs, geneApply=geneApply, 
 	targdir=paste("p", folderstem, sep=""))
   if (is.null(gene2snpList)) {
-    tops = unlist(mclapply(pm, function(x)topFeats(probeId(x), mgr=obs, ffind=1, 
+    tops = unlist(geneApply(pm, function(x)topFeats(probeId(x), mgr=obs, ffind=1, 
 		n=1)))
-    ptops = unlist(mclapply(pm, function(x)topFeats(probeId(x), mgr=per, ffind=1, 
+    ptops = unlist(geneApply(pm, function(x)topFeats(probeId(x), mgr=per, ffind=1, 
 		n=1)))
     }
   else {
@@ -58,9 +58,9 @@ policyFDRtab = function(sms, rhs, universe=featureNames(sms),
   per = eqtlTests(permEx(sms), rhs, geneApply=geneApply, 
 	targdir=paste("p", folderstem, sep=""))
   policy = policyClo(obs)
-  tops = unlist(mclapply(universe, policy))
+  tops = unlist(geneApply(universe, policy))
   policy = policyClo(per)
-  ptops = unlist(mclapply(universe, policy))
+  ptops = unlist(geneApply(universe, policy))
   nullq = quantile(ptops, targp)
   fcalls = sapply(nullq, function(x)sum(ptops>x))
   scalls = sapply(nullq, function(x)sum(tops>x))
