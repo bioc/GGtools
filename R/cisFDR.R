@@ -1,6 +1,9 @@
 setClass("eqtlFDRtab", contains="list")
 setMethod("show", "eqtlFDRtab", function(object) {
 print(object$fdrtab)
+cat(object$nc01, "calls at approx FDR = 0.01\n")
+cat(object$nc05, "calls at approx FDR = 0.05\n")
+cat(object$nc10, "calls at approx FDR = 0.10\n")
 cat("additional elements are:\n", names(object)[-1])
 cat("\n")
 })
@@ -33,12 +36,16 @@ genewiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.95, .975, .99, 
   fdrtab = cbind(pctile=100*targp, thres=nullq, nfalse=fcalls, nsig=scalls, fdr=fcalls/scalls)
   sotops = sort(tops, decreasing=TRUE)
   sptops = sort(ptops, decreasing=TRUE)
-  sfdr = sapply(sotops, function(x) sum(sptops>x)/sum(sotops>x))
+  sfdr = sapply(sotops, function(x) sum(sptops>=x)/sum(sotops>=x))
   nf = sfdr*length(sfdr)
   ncall = 1:length(sfdr)
+  nc01 = min(which(sfdr >= .01))
+  nc05 = min(which(sfdr >= .05))
+  nc10 = min(which(sfdr >= .10))
   new("eqtlFDRtab", list(fdrtab=fdrtab, obsmgr=obs, permmgr=per, 
 	universe=pm, tops=tops, permtops=ptops,
-     	nullq = nullq, targp=targp, ncall=ncall, sfdr=sfdr))
+     	nullq = nullq, targp=targp, ncall=ncall, sfdr=sfdr,
+	nc01=nc01, nc05=nc05, nc10=nc10))
 }
 
 policyFDRtab = function(sms, rhs, universe=featureNames(sms),
@@ -60,10 +67,14 @@ policyFDRtab = function(sms, rhs, universe=featureNames(sms),
   fdrtab = cbind(pctile=100*targp, thres=nullq, nfalse=fcalls, nsig=scalls, fdr=fcalls/scalls)
   sotops = sort(tops, decreasing=TRUE)
   sptops = sort(ptops, decreasing=TRUE)
-  sfdr = sapply(sotops, function(x) sum(sptops>x)/sum(sotops>x))
+  sfdr = sapply(sotops, function(x) sum(sptops>=x)/sum(sotops>=x))
   nf = sfdr*length(sfdr)
   ncall = 1:length(sfdr)
+  nc01 = min(which(sfdr >= .01))
+  nc05 = min(which(sfdr >= .05))
+  nc10 = min(which(sfdr >= .10))
   new("eqtlFDRtab", list(fdrtab=fdrtab, obsmgr=obs, permmgr=per, 
 	universe=pm, tops=tops, permtops=ptops,
-     	nullq = nullq, targp=targp, ncall=ncall, sfdr=sfdr))
+     	nullq = nullq, targp=targp, ncall=ncall, sfdr=sfdr,
+	nc01=nc01, nc05=nc05, nc10=nc10))
 }

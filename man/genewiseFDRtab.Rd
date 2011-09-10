@@ -87,7 +87,7 @@ selection policies to be defined over SNP.
 \examples{
 data(smlSet.example)
 applier = lapply
-if ("multicore" \%in\% installed.packages()[,1]) {
+if ("multicore" \%in\% installed.packages()[,1] & .Platform$OS.type != "windows") {
  library(multicore)
  applier = mclapply
 }
