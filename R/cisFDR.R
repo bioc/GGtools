@@ -146,15 +146,20 @@ genewiseScores = function(sms, rhs, targp=c(.95, .975, .99, .995),
   list(mgr=obs, universe=pm, tops=tops, scoreq=scoreq)
 }
 
-genewiseFDRtab = function(sms, rhs, seed=1234, targp=c(.95, .975, .99, .995),
+genewiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.95, .975, .99, .995),
        folderstem="fdrf", geneApply=mclapply, gene2snpList=NULL) {
  obs = genewiseScores( sms=sms, rhs=rhs, targp=targp, folderstem=folderstem,
 	geneApply=geneApply, gene2snpList=gene2snpList )
  set.seed(seed)
- per = genewiseScores( sms=permEx(sms), rhs=rhs, targp=targp, folderstem=paste("p", folderstem,
-        sep=""),
+ perlist = list()
+ for (i in 1:nperm) {
+   perlist[[i]] = genewiseScores( sms=permEx(sms), rhs=rhs, targp=targp, 
+        folderstem=paste("p", folderstem, sep=""),
 	geneApply=geneApply, gene2snpList=gene2snpList )
- nullq = quantile(per$tops, targp)
+   }
+# nullq = quantile(per$tops, targp)
+ nullq = sapply( perlist, function(x) quantile(x$tops, targp))
+# fcalls = sapply(nullq, function(x)sum(per$tops>x))
  fcalls = sapply(nullq, function(x)sum(per$tops>x))
  scalls = sapply(nullq, function(x)sum(obs$tops>x))
  fdrtab = cbind(pctile=100*targp, thres=nullq, nfalse=fcalls, nsig=scalls, fdr=fcalls/scalls)

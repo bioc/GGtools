@@ -66,6 +66,9 @@ if (file.exists("clipfmlaNOPC")) try(system("rmdir clipfmlaNOPC"))
 f1 = eqtlTests(hmc[chrnum("20"),], ~male, targdir="clipdem")
 f2 = eqtlTests(hmr[chrnum("20"),], ~male+PC1+PC2+PC3+PC4, targdir="clipfmla")
 f3 = eqtlTests(hmr[chrnum("20"),], ~male, targdir="clipfmlaNOPC")
+system("rm -rf clipdem")
+system("rm -rf clipfmla")
+system("rm -rf clipfmlaNOPC")
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

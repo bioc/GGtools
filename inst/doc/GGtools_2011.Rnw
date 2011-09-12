@@ -310,9 +310,14 @@ using smlSets, leading to multiple Gb of RAM consumption, causing conflicts
 and loss of speed.  We now describe an approach to building and using package-based
 experiment representations, which allow reduced and more flexible use of resources.
 
+Because this functionality involves use of the file system
+along with package building and installation,
+which can lead to subtle portability issues, we do
+not evaluate the code chunks here.
+
 We can take a unified smlSet instance and turn it into a package using the
 \texttt{externalize} function.  We also install it:
-<<doext>>=
+<<doext,eval=FALSE>>=
 edname = paste("exdem", tname(), sep="")
 if (interactive() & file.exists(edname)) stop(paste("will not remove existing '", edname, "' folder"))
 externalize(hmceuB36.2021, edname)
@@ -322,7 +327,7 @@ try(system(paste("rm -rf", tna)))
 try(system(paste("rm -rf", edname)))
 @
 Now we can use \texttt{getSS} to create tailored smlSet instances on the fly.
-<<lkd>>=
+<<lkd,eval=FALSE>>=
 gc()
 s1 = getSS(edname, "20")
 gc()
@@ -333,7 +338,7 @@ This technology is used in the makeDiagDirector function.  This function require
 a list that maps genes to chromosomes.  In this example, we take 20 genes from
 each of chromosome 20 and 21 to define the map.  All same-chromosome tests for these
 40 genes will be computed.  No concurrency is used.
-<<mymap>>=
+<<mymap,eval=FALSE>>=
 mymap = lapply(c("20", "21"), function(x) get(x, revmap(illuminaHumanv1CHR))[1:20])
 mymap = lapply(mymap, function(x) intersect(x, featureNames(hmceuB36.2021)))
 names(mymap) = c("20", "21")
@@ -346,7 +351,7 @@ that have been computed can be reused conveniently.
 
 \subsection{Acquiring test results within specified intervals}
 
-Here we will discuss how to use cisProxScores with the director computed above.
+Here we will discuss how to use \texttt{cisProxScores}. 
 The calling sequence is
 \begin{verbatim}
 cisProxScores(smlSet, fmla, dradset, direc = NULL, folder, runname, 
@@ -354,7 +359,8 @@ cisProxScores(smlSet, fmla, dradset, direc = NULL, folder, runname,
       geneGRL=NULL, snpannopack="SNPlocs.Hsapiens.dbSNP.20090506", ffind=NULL, ...)
 \end{verbatim}
 so in fact one can pass an \texttt{smlSet} instance as input.  However, if a
-\Sexpr{class(md)} instance is available, that can be used, avoiding the computation
+suitable director 
+ instance is available, that can be used, avoiding the computation
 of the tests.  If the director is used, we need only specify 
 \begin{itemize}
 \item \texttt{dradset}: the collection of nested paired intervals around
