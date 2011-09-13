@@ -3,6 +3,7 @@
 \docType{class}
 \alias{eqtlFDRtab-class}
 \alias{show,eqtlFDRtab-method}
+\alias{show,gwScores-method}
 
 \title{Class \code{"eqtlFDRtab"}}
 \description{
@@ -26,6 +27,7 @@ Class \code{"\linkS4class{AssayData}"}, by class "list", distance 2.
 \section{Methods}{
   \describe{
     \item{show}{\code{signature(object = "eqtlFDRtab")}: ... }
+    \item{show}{\code{signature(object = "gwScores")}: utility container en route to eqtlFDRtab }
 	 }
 }
 \references{

@@ -15,9 +15,11 @@
   Important data classes in use: \code{\link[GGBase]{smlSet-class}},
   \code{\link[GGBase]{gwSnpScreenResult-class}}, defined in GGBase package.
 
-  Main data sets: \code{\link{hmceuB36.2021}}, an excerpt based on
+  Main data sets: \code{\link{ex}}, an ExpressionSet that can be
+  linked to genotype data based on
   chromosomes 20 and 21, with genotypes for all phase II HapMap SNP
-  and full expression data for 90 CEU HapMap cohort members.
+  and full expression data for 90 CEU HapMap cohort members.  To
+  create this example dataset, use \code{getSS("GGtools", c("20", "21"))}
 
   Introductory information is available from vignettes, type
   \code{openVignette()}.

@@ -3,7 +3,10 @@
 \docType{data}
 \title{ two chromosomes of genotype data and full expression data for CEPH CEU hapmap data}
 \description{ two chromosomes of genotype data and full expression data for CEPH CEU hapmap data}
-\usage{getSS("GGtools", c("20", "21"))}
+\usage{
+data(ex)  # not intended for direct use, instead use getSS
+# getSS("GGtools", c("20", "21"))
+}
 \format{
   The format is:
 Formal class 'smlSet' [package "GGBase"] with 9 slots

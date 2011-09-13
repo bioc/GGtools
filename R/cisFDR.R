@@ -150,7 +150,7 @@ genewiseScores = function(sms, rhs, targp=c(.95, .975, .99, .995),
         probeId(gn[z]) ]))))
     }
   scoreq = quantile(tops, targp)
-  list(mgr=obs, universe=pm, tops=tops, scoreq=scoreq)
+  new("gwScores", list(mgr=obs, universe=pm, tops=tops, scoreq=scoreq))
 }
 
 genewiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.95, .975, .99, .995),
