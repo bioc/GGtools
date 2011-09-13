@@ -99,7 +99,7 @@ in the \textit{snpMatrix} package of Clayton and Leung \citep{clayton2007}), the
 The following is a simple illustration of a focused workflow.
 <<wk1>>=
 library(GGtools)
-if (!exists("hmceuB36.2021")) data(hmceuB36.2021)
+if (!exists("hmceuB36.2021")) hmceuB36.2021 <- getSS("GGtools", c("20", "21"))
 f1 = gwSnpTests(genesym("CPNE1")~male, hmceuB36.2021, chrnum(20))
 topSnps(f1)
 @

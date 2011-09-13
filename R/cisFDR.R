@@ -8,6 +8,13 @@ cat("additional elements are:\n", names(object)[-1])
 cat("\n")
 })
 
+setClass("gwScores", contains="list")
+setMethod("show", "gwScores", function(object){
+cat("instance of gwScores\n")
+cat("elements are:\n", names(objects))
+cat("\n")
+})
+
 .genewiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.95, .975, .99, .995),
 	folderstem="fdrf", geneApply=mclapply, gene2snpList=NULL) {
   set.seed(seed)
@@ -154,25 +161,36 @@ genewiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.95, .975, .99, 
  perlist = list()
  for (i in 1:nperm) {
    perlist[[i]] = genewiseScores( sms=permEx(sms), rhs=rhs, targp=targp, 
-        folderstem=paste("p", folderstem, sep=""),
+        folderstem=paste("p_", i, "_",  folderstem, sep=""),
 	geneApply=geneApply, gene2snpList=gene2snpList )
    }
 # nullq = quantile(per$tops, targp)
- nullq = sapply( perlist, function(x) quantile(x$tops, targp))
+ nullq = lapply( perlist, function(x) quantile(x$tops, targp))
 # fcalls = sapply(nullq, function(x)sum(per$tops>x))
- fcalls = sapply(nullq, function(x)sum(per$tops>x))
+ fcalls = sapply(1:length(perlist), 
+     function(i) sapply(nullq[[i]], function(x)sum(perlist[[i]]$tops>x)))  # need to squelch list character
+ fcalls = apply(fcalls, 1, mean)
+ nullq = sapply(nullq, function(x)x)
+ nullq = apply(nullq,1,mean)
  scalls = sapply(nullq, function(x)sum(obs$tops>x))
+##
+## do something here to summarize fcalls
+##
  fdrtab = cbind(pctile=100*targp, thres=nullq, nfalse=fcalls, nsig=scalls, fdr=fcalls/scalls)
  sotops = sort(obs$tops, decreasing=TRUE)
- sptops = sort(per$tops, decreasing=TRUE)
+ sptopslist = list()
+ for (i in 1:length(perlist)) {
+    sptopslist[[i]] = sort(perlist[[i]]$tops, decreasing=TRUE)
+    }
+ sptops = apply(sapply(sptopslist, function(x)x), 1, mean)  # check margin here, looks right
  sfdr = sapply(sotops, function(x) sum(sptops>=x)/sum(sotops>=x))
  nf = sfdr*length(sfdr)
  ncall = 1:length(sfdr)
  nc01 = min(which(sfdr >= .01))
  nc05 = min(which(sfdr >= .05))
  nc10 = min(which(sfdr >= .10))
- new("eqtlFDRtab", list(fdrtab=fdrtab, obsmgr=obs, permmgr=per, 
-	universe=obs$pm, tops=obs$tops, permtops=per$tops,
+ new("eqtlFDRtab", list(fdrtab=fdrtab, obsmgr=obs, permmgr=perlist, 
+	universe=obs$pm, sorted.tops=obs$tops, sorted.av.permtops=sptops,
      	nullq = nullq, targp=targp, ncall=ncall, sfdr=sfdr,
 	nc01=nc01, nc05=nc05, nc10=nc10))
 }

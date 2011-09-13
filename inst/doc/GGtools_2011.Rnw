@@ -104,7 +104,7 @@ derived from the Wellcome Trust GENEVAR project archives, and
 genotype data from HapMap phase II:
 <<lkd>>=
 library(GGtools)
-data(hmceuB36.2021)
+if (!exists("hmceuB36.2021")) hmceuB36.2021 <- getSS("GGtools", c("20", "21"))
 hmceuB36.2021
 @
 
@@ -338,11 +338,11 @@ This technology is used in the makeDiagDirector function.  This function require
 a list that maps genes to chromosomes.  In this example, we take 20 genes from
 each of chromosome 20 and 21 to define the map.  All same-chromosome tests for these
 40 genes will be computed.  No concurrency is used.
-<<mymap,eval=FALSE>>=
+<<mymap,eval=TRUE>>=
 mymap = lapply(c("20", "21"), function(x) get(x, revmap(illuminaHumanv1CHR))[1:20])
 mymap = lapply(mymap, function(x) intersect(x, featureNames(hmceuB36.2021)))
 names(mymap) = c("20", "21")
-unix.time(md <-  makeDiagDirector(edname, mymap, rhs=~male, sleeplen=2, runname=tname(),
+unix.time(md <-  makeDiagDirector("GGtools", mymap, rhs=~male, sleeplen=2, runname=tname(),
     targdir=tname()))
 md
 @

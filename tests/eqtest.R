@@ -21,7 +21,7 @@
 
 # april 2011
 library(GGtools)
-data(hmceuB36.2021)
+hmceuB36.2021 <- getSS("GGtools", c("20", "21"))
 library(illuminaHumanv1.db)
 cp = get("CPNE1", revmap(illuminaHumanv1SYMBOL))
 hcp = hmceuB36.2021[ probeId(cp), ]

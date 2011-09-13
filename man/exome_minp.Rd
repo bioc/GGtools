@@ -73,7 +73,7 @@ parameters passed to eqtlTests
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
-data(hmceuB36.2021)
+if (!exists("hmceuB36.2021")) hmceuB36.2021 <- getSS("GGtools", c("20", "21"))
 hmlit = hmceuB36.2021[ chrnum(20), ]
 library(illuminaHumanv1.db)
 cptag = get("CPNE1", revmap(illuminaHumanv1SYMBOL))

@@ -162,7 +162,7 @@ VJ Carey <stvjc@channing.harvard.edu>
 \code{\link{eqtlTests}}
 }
 \examples{
-if (!exists("hmceuB36.2021")) data(hmceuB36.2021)
+if (!exists("hmceuB36.2021")) hmceuB36.2021 <- getSS("GGtools", c("20", "21"))
 hm = hmceuB36.2021
 td = tempdir()
 cd = getwd()

@@ -49,7 +49,7 @@ an smlSet instance with transformed expression data
 %}
 \examples{
 if (.Platform$OS.type != "windows") {  # our build system not removing folders...
-data(hmceuB36.2021)
+if (!exists("hmceuB36.2021")) hmceuB36.2021 <- getSS("GGtools", c("20", "21"))
 library(illuminaHumanv1.db)
 g20 = get("20", revmap(illuminaHumanv1CHR))
 g20 = intersect(g20, featureNames(hmceuB36.2021))[1:25]

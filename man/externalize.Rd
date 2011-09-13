@@ -77,7 +77,7 @@ depending on the structure of \code{smList(smlSet)}.
 %}
 \examples{
 \dontrun{
- data(hmceuB36.2021)
+ if (!exists("hmceuB36.2021")) hmceuB36.2021 <- getSS("GGtools", c("20", "21"))
  owd = getwd()
  setwd(tempdir())
  externalize(hmceuB36.2021, "hmdemo")

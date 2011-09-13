@@ -83,7 +83,7 @@ if (spac \%in\% (IP <- installed.packages()[,1])) {
  library(spac, character.only=TRUE)
  c20 = getSNPlocs("ch20", as.GRanges=TRUE)
  seqlevels(c20)[20] = "20"
- data(hmceuB36.2021)
+ if (!exists("hmceuB36.2021")) hmceuB36.2021 <- getSS("GGtools", c("20", "21"))
  h20 = hmceuB36.2021[ chrnum("20"), ] # restrict smList
  pcc = probeChromosomes(h20)
  p20 = featureNames(h20)[ which(pcc == "20") ] # for NA

@@ -38,7 +38,7 @@ VJ Carey <stvjc@channing.harvard.edu>
 %%% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
-if (!exists("hmceuB36.2021")) data(hmceuB36.2021)
+if (!exists("hmceuB36.2021")) hmceuB36.2021 <- getSS("GGtools", c("20", "21"))
 library(illuminaHumanv1.db)
 cptag = get("CPNE1", revmap(illuminaHumanv1SYMBOL))
 indc = which(featureNames(hmceuB36.2021) == cptag[1])

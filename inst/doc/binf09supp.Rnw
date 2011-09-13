@@ -64,7 +64,7 @@ hla2set
 We need to filter the full HapMap CEU cohort to founders:
 <<aasd,eval=FALSE>>=
 library(GGdata)
-data(hmceuB36)
+hmceuB36 = getSS("GGdata", as.character(1:22))
 hmFou = hmceuB36[, which(hmceuB36$isFounder == TRUE)]
 @
 

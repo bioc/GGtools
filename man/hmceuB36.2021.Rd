@@ -1,9 +1,9 @@
 \name{hmceuB36.2021}
-\alias{hmceuB36.2021}
+\alias{ex}
 \docType{data}
 \title{ two chromosomes of genotype data and full expression data for CEPH CEU hapmap data}
 \description{ two chromosomes of genotype data and full expression data for CEPH CEU hapmap data}
-\usage{data(hmceuB36.2021)}
+\usage{getSS("GGtools", c("20", "21"))}
 \format{
   The format is:
 Formal class 'smlSet' [package "GGBase"] with 9 slots
@@ -26,9 +26,11 @@ Formal class 'smlSet' [package "GGBase"] with 9 slots
 
   ..@ ...classVersion..:Formal class 'Versions' [package "Biobase"] with 1 slots
 }
-%\details{
-%  ~~ If necessary, more details than the ..description.. above ~~
-%}
+\details{
+Until Sept 2011 this object was serialized as an smlSet instance.
+Now the ExpressionSet component is serialized in data (as eset.rda, with
+contents ex), and the genotype data are in inst/parts as SnpMatrix instances.
+}
 %\source{
 %  ~~ reference to a publication or URL from which the data were obtained ~~
 %}
@@ -36,7 +38,7 @@ Formal class 'smlSet' [package "GGBase"] with 9 slots
 %  ~~ possibly secondary sources and usages ~~
 %}
 \examples{
-data(hmceuB36.2021)
+if (!exists("hmceuB36.2021")) hmceuB36.2021 <- getSS("GGtools", c("20", "21"))
 validObject(hmceuB36.2021)
 }
 \keyword{datasets}

@@ -55,7 +55,7 @@ formula.
 %\seealso{  }
 
 \examples{
-if (!exists("hmceuB36.2021")) data(hmceuB36.2021)
+if (!exists("hmceuB36.2021")) hmceuB36.2021 <- getSS("GGtools", c("20", "21"))
 # condense to founders only
 hmFou = hmceuB36.2021[, which(hmceuB36.2021$isFounder)]
 # show basic formula fit
