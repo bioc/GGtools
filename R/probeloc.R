@@ -51,7 +51,8 @@ probeLocations = function(sms, extend=0) {
 		ch1 = unlist(ch1[-bad])
 	} else ch1 = unlist(ch1)
 	strand = ifelse(st1<0, "-", "+")
-	ans = GRanges(seqnames=ch1, IRanges(abs(st1), abs(en1))+extend, strand=strand)
+        vec2rle = function(x) Rle(factor(x), rep(1, length(x)))
+	ans = GRanges(seqnames=vec2rle(ch1), IRanges(abs(st1), abs(en1))+extend, strand=vec2rle(strand))
 	if (length(bad) > 0) names(ans) = fn[-bad]
    	else names(ans) = fn
 	ans

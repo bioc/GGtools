@@ -99,6 +99,11 @@ ffSnpSummary = function(sm,fn,fac=100) {
  dat = col.summary(sm)
  maf = fac*dat[,"MAF"]
  mingtf = fac*apply(dat[,c(5:7)],1,min,na.rm=TRUE)
+ if (file.exists(fn)) { 
+    warning(paste("found existing", fn, "reusing..."))
+    return(ff( vmode="short", dim=c(length(maf),2),filename=fn,
+     dimnames=list(colnames(sm), c("MAF", "mGTF"))))
+ }
  ff(initdata=cbind(maf,mingtf), vmode="short", dim=c(length(maf),2),filename=fn,
      dimnames=list(colnames(sm), c("MAF", "mGTF")))
 }
@@ -143,32 +148,37 @@ eqtlTests = function(smlSet, rhs=~1-1,
    targff = paste( fnhead, "chr", chr, ".ff" , sep="" )
    snpnames = colnames(snpdata)
    nsnps = ncol(snpdata)
-   if (file.exists(targff)) cat("attempting to overwrite ", targff, "...")
-   store = ff( initdata=0, dim=c(nsnps, ngenes), dimnames=list(snpnames, geneNames), vmode="short",
-                 filename = targff )
-   geneApply( geneNames, function(gene) {
-     if (options()$verbose & geneindex %% genegran == 0) cat(gene, "..")
-     geneindex <- geneindex + 1
-     if (options()$verbose & geneindex %% 8*genegran == 0) cat("\n")
-     ex = exprs(smlSet)[gene,]
-     fmla = formula(paste("ex", paste(as.character(rhs),collapse=""), collapse=" "))
-     numans = snp.rhs.tests(fmla, snp.data=snpdata, data=pData(smlSet), 
-         family=family , uncertain=uncert, ...)@chisq
-#uncertain=uncert
-     if (computeZ) {
-       numans = sqrt(numans)
-       signl = snp.rhs.estimates( fmla, snp.data=snpdata, data=pData(smlSet), family=family, ... )
-       bad = which(unlist(lapply(signl, is.null)))
-       if (length(bad)>0) signl[bad] = list(beta=NA)
-       ifelse(unlist(signl)>=0, 1, -1)
-       numans = numans*signl
-     }
-     miss = is.na(numans)
-     if (any(miss) & !computeZ) numans[which(miss)] = rchisq(length(which(miss)), 1)
-     if (any(miss) & computeZ) numans[which(miss)] = rnorm(length(which(miss)))
-     store[, gene, add=TRUE] = shortfac*numans
-     NULL
-     }) # end gene apply
+   if (!file.exists(targff)) {
+    store = ff( initdata=0, dim=c(nsnps, ngenes), dimnames=list(snpnames, geneNames), vmode="short",
+                  filename = targff )
+    geneApply( geneNames, function(gene) {
+      if (options()$verbose & geneindex %% genegran == 0) cat(gene, "..")
+      geneindex <- geneindex + 1
+      if (options()$verbose & geneindex %% 8*genegran == 0) cat("\n")
+      ex = exprs(smlSet)[gene,]
+      fmla = formula(paste("ex", paste(as.character(rhs),collapse=""), collapse=" "))
+      numans = snp.rhs.tests(fmla, snp.data=snpdata, data=pData(smlSet), 
+          family=family , uncertain=uncert, ...)@chisq
+ #uncertain=uncert
+      if (computeZ) {
+        numans = sqrt(numans)
+        signl = snp.rhs.estimates( fmla, snp.data=snpdata, data=pData(smlSet), family=family, ... )
+        bad = which(unlist(lapply(signl, is.null)))
+        if (length(bad)>0) signl[bad] = list(beta=NA)
+        ifelse(unlist(signl)>=0, 1, -1)
+        numans = numans*signl
+      }
+      miss = is.na(numans)
+      if (any(miss) & !computeZ) numans[which(miss)] = rchisq(length(which(miss)), 1)
+      if (any(miss) & computeZ) numans[which(miss)] = rnorm(length(which(miss)))
+      store[, gene, add=TRUE] = shortfac*numans
+      NULL
+      }) # end gene apply
+  } else {
+    warning(paste("found", targff, "will reuse", sep=" "))
+    store = ff( dim=c(nsnps, ngenes), dimnames=list(snpnames, geneNames), vmode="short",
+                  filename = targff )
+    }
   close(store)
   store
   })  # end chr apply

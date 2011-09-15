@@ -348,40 +348,6 @@ chunksize = function(x) new("chunksize", as.numeric(x))
 # adjpv
 #})
 
-#setClass("multffManager", contains="list")
-#setMethod("show", "multffManager", function(object) {
-# require(ff, quietly=TRUE)
-# cat("multffManager instance. The call was:\n")
-# print(object$call)
-# cat("There are ", length(object$filenames), " ff files.\n")
-# cat("Excerpt from first file:\n")
-# ngenes = ncol(object$fflist[[1]])
-# print(object$fflist[[1]][1:4,1:min(4,ngenes)])
-#})
-
-#setMethod("[", c("multffManager", "rsid", "missing"), function(x, i, j, ..., drop=TRUE) {
-#  div = 1.0
-#  if (x$vmode == "short") div = x$shortfac
-#  rsn = rsnum(x)
-#  pres = which(sapply(rsn, function(y) any(i %in% y)))
-#  if (length(pres) < 1) stop("rsid not found in rownames of any ff matrix from multffCT")
-#  ffl = x$fflist[pres]
-#  tmp = lapply(ffl, function(y)y[intersect(rownames(y),as(i,"character")),,drop=FALSE])
-#  lapply(tmp, function(z)z/div)
-#})
-
-#setMethod("[", c("multffManager", "missing", "probeId"), function(x, i, j, ..., drop=TRUE) {
-#  div = x$shortfac
-#  if (x$vmode != "short") div = 1.0
-#  if (length(j) > 50 & !isTRUE(getOption("ggt_manyGenes"))) stop("to request more than 50 genes with [ please set option ggt_manyGenes to TRUE with options(ggt_manyGenes=TRUE)\nand recognize that you may be creating a large RAM image")
-#  lapply(x$fflist, function(x)x[, as(j, "character"), drop=FALSE]/div)
-#})
-#
-#setMethod("[", c("multffManager", "rsid", "probeId"), function(x, i, j, ..., drop=TRUE) {
-#  tmp = x[ i, , drop=FALSE ]
-#  lapply(tmp, function(z) z[, j, drop=FALSE])
-#})
-
 
 #
 # an eqtlTestsManager can cover a collection of SNP on different
@@ -429,11 +395,11 @@ setClass("eqtlEstimatesManager", contains="eqtlTestsManager",
 #        summaryList="list"),
         validity=chkeeman)
 
-setAs("multffManager", "eqtlTestsManager", function(from) {
- new("eqtlTestsManager", fflist=from$fflist, call=from$call,
-      sess=from$sessionInfo, shortfac=from$shortfac, df=from$df,
-      exdate=paste("converted:", date()), geneanno="please supply")
-})
+#setAs("multffManager", "eqtlTestsManager", function(from) {
+# new("eqtlTestsManager", fflist=from$fflist, call=from$call,
+#      sess=from$sessionInfo, shortfac=from$shortfac, df=from$df,
+#      exdate=paste("converted:", date()), geneanno="please supply")
+#})
 
 setGeneric("probeNames", function(x) standardGeneric("probeNames"))
 setMethod("probeNames", "eqtlTestsManager", function(x) {
@@ -455,6 +421,8 @@ setMethod("show", "eqtlTestsManager", function(object) {
  cat(class(object), " computed", exdate(object), "\n")
  cat("gene annotation:", object@geneanno, "\n")
  cat("There are", length(fflist(object)), "chromosomes analyzed.\n")
+ on.exit(close(fflist(object)[[1]]))
+ open(fflist(object)[[1]])
  cat("some genes (out of ", length(colnames(fflist(object)[[1]])),"): ", paste(selectSome(colnames(fflist(object)[[1]])),collapse=" "), "\n", sep="")
  cat("some snps (out of ", sum(sapply(fflist(object),nrow)),  "): ", paste(selectSome(rownames(fflist(object)[[1]])),collapse=" "), "\n", sep="")
 })
@@ -476,20 +444,30 @@ setMethod("[", c("eqtlTestsManager"), # , "rsid", "probeId"),
  if (!missing(i) & missing(j)) {
   if (!is(i, "rsid")) stop("subscript 1 must be rsid instance")
   m1 = snpIdMap( as(i, "character"), x )
-  ans = lapply(1:length(m1), function(i) fflist(x)[[names(m1)[i]]][ m1[[i]], 
-    , drop=FALSE]/shortfac(x))
+  ans = lapply(1:length(m1), function(i) {
+   on.exit(close(fflist(x)[[ names(m1)[i] ]]))
+   open(fflist(x)[[ names(m1)[i] ]])
+   fflist(x)[[names(m1)[i]]][ m1[[i]], 
+    , drop=FALSE]/shortfac(x) })
   names(ans) = names(m1)
  } else if (missing(i) & !missing(j)) {
   if (!is(j, "probeId")) stop("subscript 2 must be probeId instance")
-  ans = lapply(1:length(fflist(x)), function(mind) fflist(x)[[mind]][ , as.character(j) 
-    , drop=FALSE]/shortfac(x))
+  ans = lapply(1:length(fflist(x)), function(mind) {
+      on.exit(close(fflist(x)[[mind]]))
+      open(fflist(x)[[mind]])
+      fflist(x)[[mind]][ , as.character(j) 
+    , drop=FALSE]/shortfac(x)
+    })
   names(ans) = names(fflist)
  } else if (!missing(i) & !missing(j)) {
   if (!is(i, "rsid")) stop("subscript 1 must be rsid instance")
   if (!is(j, "probeId")) stop("subscript 2 must be probeId instance")
   m1 = snpIdMap( as(i, "character"), x )
-  ans = lapply(1:length(m1), function(mind) fflist(x)[[names(m1)[mind]]][ m1[[mind]], 
-    as(j, "character"), drop=FALSE]/shortfac(x))
+  ans = lapply(1:length(m1), function(mind) {
+      on.exit(close(fflist(x)[[names(m1)[mind]]]))
+      open(fflist(x)[[names(m1)[mind]]])
+      fflist(x)[[names(m1)[mind]]][ m1[[mind]], 
+          as(j, "character"), drop=FALSE]/shortfac(x)})
   names(ans) = names(m1)
  } else stop("at least one of i and j must be supplied")
  ans

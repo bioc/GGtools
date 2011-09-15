@@ -223,9 +223,10 @@ top200[196:200]
 @
 We see that we have SNP with p-values at most $10^{-5}$.  We will
 now check whether any of these lie in regulatory regions defined
-by ORegAnno, confined to 10MB near CPNE1 on chr20.
+by ORegAnno, confined to 10MB near CPNE1 on chr20.  Execution suppressed
+for build failures, 9/15/2011.
 
-<<gettab>>=
+<<gettab,eval=FALSE>>=
 library(rtracklayer)
 ss = browserSession()
 genome(ss) = "hg18"
