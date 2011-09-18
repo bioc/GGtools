@@ -1,7 +1,7 @@
 setClass("eqtlFDRtab", contains="list")
 setMethod("show", "eqtlFDRtab", function(object) {
 cat("there were", object$nsnptests, "SNP tested\n", sep=" ")
-cat("there were", object$nsnptests, "probes\n", sep=" ")
+cat("there were", object$nprobes, "probes\n", sep=" ")
 print(object$fdrtab)
 cat(object$nc005, "calls at approx FDR = 0.005\n")
 cat(object$nc01, "calls at approx FDR = 0.01\n")
@@ -169,7 +169,7 @@ genewiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.95, .975, .99, 
  nc10 = min(which(sfdr >= .10))
  new("eqtlFDRtab", list(fdrtab=fdrtab, obsmgr=obs, permmgr=perlist, 
 	universe=obs$pm, sorted.tops=obs$tops, sorted.av.permtops=sptops,
-        nsnpsmgd = obs$nsnpsmgd, nprobes=obs$nprobes,
+        nsnpsmgd = obs$nsnpsmgd, nprobes=obs$nprobes, nsnptests=obs$nsnptests,
      	nullq = nullq, targp=targp, ncall=ncall, sfdr=sfdr,
 	nc005=nc005, nc01=nc01, nc05=nc05, nc10=nc10, thecall=thecall))
 }
