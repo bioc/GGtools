@@ -18,7 +18,7 @@ importFrom(stats,
 exportMethods(gwSnpTests, topFeats, show, vcf2sm, probesManaged, snpsManaged)
 
 export(eqtlTests, cisProxScores, clipPCs, pcChooser, permEx, makeDiagDirector,
-	topFeats, vcf2sm, externalize, getSS, manhPlot, 
+	topFeats, vcf2sm, externalize, manhPlot, 
 	interleave2cis, exome_minp, topSnps, checkCommonSNPs, makeCommonSNPs,
 	relocate, transScores, mtransScores,
         sm2ped, mrefhap2sm, scoresByGenes, 
