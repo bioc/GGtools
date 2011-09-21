@@ -134,7 +134,7 @@ eqtlTests = function(smlSet, rhs=~1-1,
   # get MAF and minGTF for all SNP
   sumfn = paste(fnhead, chrNames, "_summ.ff", sep="")
   if ("multicore" %in% search()) {
-    summfflist = multicore::mclapply( 1:length(chrNames), function(i) ffSnpSummary(smList(smlSet)[[i]], sumfn[i], 
+    summfflist = geneApply( 1:length(chrNames), function(i) ffSnpSummary(smList(smlSet)[[i]], sumfn[i], 
          fac=shortfac)) 
     } else {
           for (i in 1:length(sumfn))
@@ -283,7 +283,7 @@ if (saveSummaries) {
   # get MAF and minGTF for all SNP
   sumfn = paste(fnhead, chrNames, "_summ.ff", sep="")
   if ("multicore" %in% search()) {
-    summfflist = mclapply( 1:length(chrNames), function(i) ffSnpSummary(smList(smlSet)[[i]], sumfn[i],
+    summfflist = geneApply( 1:length(chrNames), function(i) ffSnpSummary(smList(smlSet)[[i]], sumfn[i],
          fac=shortfac))
     } else {
           for (i in 1:length(sumfn))
@@ -570,7 +570,7 @@ meqtlTests = function(listOfSmls, rhslist,
   # get MAF and minGTF for all SNP
   sumfn = paste(fnhead, chrNames, "_summ.ff", sep="")
   if ("multicore" %in% search()) {
-    summfflist = multicore::mclapply( 1:length(chrNames), function(i) ffSnpSummary(smList(smlSet1)[[i]], sumfn[i],
+    summfflist = geneApply( 1:length(chrNames), function(i) ffSnpSummary(smList(smlSet1)[[i]], sumfn[i],
          fac=shortfac))
     } else {
           for (i in 1:length(sumfn))

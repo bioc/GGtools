@@ -15,12 +15,12 @@ thresholds
 \usage{
 genewiseFDRtab(sms, rhs, nperm = 1, seed = 1234, 
 	targp = c(0.95, 0.975, 0.99, 0.995), 
-	folderstem = "fdrf", geneApply = mclapply, gene2snpList=NULL)
+	folderstem = "fdrf", geneApply = lapply, gene2snpList=NULL)
 policyFDRtab(sms, rhs, universe=featureNames(sms),
   	policyClo=function(mgr) function(x)topFeats(probeId(x),
      	mgr=mgr, ffind=1, n=1), nperm=1, seed=1234, 
 	targp=c(.95, .975, .99, .995),
-        folderstem="fdrf", geneApply=mclapply) 
+        folderstem="fdrf", geneApply=lapply) 
 
 }
 %- maybe also 'usage' for other objects documented here.

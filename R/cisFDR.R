@@ -21,7 +21,7 @@ cat("\n")
 policyFDRtab = function(sms, rhs, universe=featureNames(sms),
   policyClo=function(mgr) function(x)topFeats(probeId(x),
      mgr=mgr, ffind=1, n=1), nperm=1, seed=1234, targp=c(.95, .975, .99, .995),
-	folderstem="fdrf", geneApply=mclapply) {
+	folderstem="fdrf", geneApply=lapply) {
   set.seed(seed)
   if (nperm > 1) stop("not supporting more than 1 perm at present")
   obs = eqtlTests(sms, rhs, geneApply=geneApply, targdir=folderstem)
@@ -50,7 +50,7 @@ policyFDRtab = function(sms, rhs, universe=featureNames(sms),
 }
 
 genewiseScores = function(sms, rhs, targp=c(.95, .975, .99, .995),
-	folderstem="fdrf", geneApply=mclapply, gene2snpList=NULL) {
+	folderstem="fdrf", geneApply=lapply, gene2snpList=NULL) {
 #
 # factor out the obs and permute steps for genewiseFDRtab, let the 
 # permutation occur outside
@@ -90,7 +90,7 @@ genewiseScores = function(sms, rhs, targp=c(.95, .975, .99, .995),
 }
 
 genewiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.95, .975, .99, .995),
-       folderstem="fdrf", geneApply=mclapply, gene2snpList=NULL) {
+       folderstem="fdrf", geneApply=lapply, gene2snpList=NULL) {
  thecall = match.call()
  obs = genewiseScores( sms=sms, rhs=rhs, targp=targp, folderstem=folderstem,
 	geneApply=geneApply, gene2snpList=gene2snpList )
