@@ -63,10 +63,10 @@ radius within which an association is considered cis and therefore the correspon
 test statistic is set to zero
 }
   \item{renameChrs}{
-passed to \code{\link{getSS}}
+passed to \code{\link[GGBase]{getSS}}
 }
   \item{probesToKeep}{
-passed to \code{\link{getSS}}
+passed to \code{\link[GGBase]{getSS}}
 }
   \item{batchsize}{
 defines batch size for \code{\link[ff]{ffrowapply}}
