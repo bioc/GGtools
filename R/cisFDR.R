@@ -14,7 +14,7 @@ cat("\n")
 setClass("gwScores", contains="list")
 setMethod("show", "gwScores", function(object){
 cat("instance of gwScores\n")
-cat("elements are:\n", names(objects))
+cat("elements are:\n", names(object))
 cat("\n")
 })
 
@@ -130,7 +130,8 @@ genewiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.95, .975, .99, 
  nc12.5 = min(which(sfdr >= .125))
  nc15 = min(which(sfdr >= .15))
  new("eqtlFDRtab", list(fdrtab=fdrtab, obsmgr=obs, permmgr=perlist, 
-	universe=obs$pm, sorted.tops=obs$sotops, sorted.av.permtops=sptops,
+	unsorted.tops = obs$tops, 
+	universe=obs$universe, sorted.tops=obs$sotops, sorted.av.permtops=sptops,
         nsnpsmgd = obs$nsnpsmgd, nprobes=obs$nprobes, nsnptests=obs$nsnptests,
      	nullq = nullq, targp=targp, ncall=ncall, sfdr=sfdr,
 	nc005=nc005, nc01=nc01, nc05=nc05, nc10=nc10, nc12.5=nc12.5,
