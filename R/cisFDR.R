@@ -62,7 +62,7 @@ genewiseScores = function(sms, rhs, targp=c(.95, .975, .99, .995),
   g2l = gene2snpList  # for revision
   if (is.null(gene2snpList)) {
     tops = unlist(geneApply(pm, function(x)topFeats(probeId(x), mgr=obs, ffind=1, 
-		n=1)))
+		n=1)))   # in this case, tops has names
     }
   else {
     gn = intersect(names(gene2snpList), pm)
@@ -76,14 +76,29 @@ genewiseScores = function(sms, rhs, targp=c(.95, .975, .99, .995),
       g2l = g2l[-bad]
       gn = intersect(names(g2l), pm)
     }
-    tops = sapply(1:length(gn), function(z) max(as.numeric(unlist(obs[rsid(clnsnps(g2l[[gn[z]]])),
-        probeId(gn[z]) ]))))
+    #tops = sapply(1:length(gn), function(z) {
+    #    rs2check = clnsnps(g2l[[ gn[z] ]])
+    #    p2check = probeId(gn[z])
+    #    max(as.numeric(unlist(obs[rs2check, p2check])))
+    #    })
+    selector = function(z) {
+        rs2check = clnsnps(g2l[[ gn[z] ]])
+        p2check = probeId(gn[z])
+        tmp = obs[rsid(rs2check), probeId(p2check)]
+        nmat = tmp[[1]][,1,drop=FALSE]  # has names, deals with single snp in range
+        ind = which.max(as.numeric(unlist(tmp)))
+        ans = nmat[ind,1]
+        names(ans) = rownames(nmat)[ind]
+        ans
+        }
+    tops = sapply(1:length(gn), selector)
     }
+  topdf = data.frame(probes=gn, rsid=names(tops), max.gwscores=tops)
   scoreq = quantile(tops, targp)
   ndistinctsnps = ifelse(is.null(g2l), nsnpsmgd, length(unique(unlist(g2l))))
   nsnptests = ifelse(is.null(g2l), nsnpsmgd, length(unlist(g2l)))
   nprobes = ifelse(is.null(g2l), nprobesmgd, length(g2l))
-  new("gwScores", list(mgr=obs, universe=pm, tops=tops, 
+  new("gwScores", list(mgr=obs, universe=pm, tops=tops, topdf=topdf,
      scoreq=scoreq, ndistinctsnps=ndistinctsnps, nsnptests = nsnptests,
      nsnpsmgd = nsnpsmgd, nprobesmgd= nprobesmgd,
      nprobes=nprobes))
@@ -130,7 +145,7 @@ genewiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.95, .975, .99, 
  nc12.5 = min(which(sfdr >= .125))
  nc15 = min(which(sfdr >= .15))
  new("eqtlFDRtab", list(fdrtab=fdrtab, obsmgr=obs, permmgr=perlist, 
-	unsorted.tops = obs$tops, 
+	unsorted.tops = obs$tops,  topdf=obs$topdf,
 	universe=obs$universe, sorted.tops=obs$sotops, sorted.av.permtops=sptops,
         nsnpsmgd = obs$nsnpsmgd, nprobes=obs$nprobes, nsnptests=obs$nsnptests,
      	nullq = nullq, targp=targp, ncall=ncall, sfdr=sfdr,
