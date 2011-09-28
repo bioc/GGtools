@@ -55,7 +55,7 @@ genewiseScores = function(sms, rhs, targp=c(.95, .975, .99, .995),
 # factor out the obs and permute steps for genewiseFDRtab, let the 
 # permutation occur outside
 #
-  pm = featureNames(sms)
+  gn = pm = featureNames(sms)  # gn will be filtered if necessary
   obs = eqtlTests(sms, rhs, geneApply=geneApply, targdir=folderstem)
   nsnpsmgd = length(snpsManaged(obs,1))
   nprobesmgd = length(probesManaged(obs,1))
