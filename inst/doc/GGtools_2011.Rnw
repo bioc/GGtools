@@ -161,9 +161,9 @@ of the conversion tasks.
 
 <<get09>>=
 library(SNPlocs.Hsapiens.dbSNP.20090506)
-c20 = getSNPlocs("chr20")
-c20 = SNPlocs.Hsapiens.dbSNP.20100427:::.SNPlocsAsGranges(c20, "chr20")
-rs20 = paste("rs", elementMetadata(c20)$RefSNP_id, sep="")
+c20l = getSNPlocs("chr20")
+c20 = GRanges(IRanges(c20l$loc, width=1), seqnames="chr20")
+rs20 = paste("rs", c20l$RefSNP_id, sep="")
 names(c20) = rs20
 length(c20)
 c20[1:3,]
