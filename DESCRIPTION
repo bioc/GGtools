@@ -8,7 +8,8 @@ Depends: R (>= 2.13.0), methods, Biobase (>= 1.11.26), GGBase (>= 3.13.5),
 	GenomicRanges (>= 1.3.38)
 Suggests: illuminaHumanv1.db, org.Hs.eg.db, SNPlocs.Hsapiens.dbSNP.20100427,
 	rpart, rtracklayer, ceu1kg, SNPlocs.Hsapiens.dbSNP.20090506,
-	genefilter, hmyriB36, chopsticks, GGdata
+	genefilter, chopsticks, GGdata
+Enhances: multicore
 LazyData: no
 biocViews: SNP, GeneticVariability, Genetics, Bioinformatics
 Maintainer: Vince Carey <stvjc@channing.harvard.edu>
