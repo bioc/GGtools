@@ -24,7 +24,7 @@ export(eqtlTests, cisProxScores, clipPCs, pcChooser, permEx, makeDiagDirector,
         sm2ped, mrefhap2sm, scoresByGenes, 
         dropMonomorphies, ieqtlTests, topScores,
 	topGenes, locusNames, geneNames, geneIndcol,
-	nthScores, eqtlEstimates, genewiseFDRtab, policyFDRtab,
+	nthScores, eqtlEstimates, genewiseFDRtab, policywiseFDRtab,
 	probeLocations, snpLocations, probeChromosomes, proximityList)
 
 

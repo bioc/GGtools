@@ -1,6 +1,6 @@
 \name{genewiseFDRtab}
 \alias{genewiseFDRtab}
-\alias{policyFDRtab}
+\alias{policywiseFDRtab}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 encapsulates testing, permutation and thresholding using permutation
@@ -16,12 +16,11 @@ thresholds
 genewiseFDRtab(sms, rhs, nperm = 1, seed = 1234, 
 	targp = c(0.95, 0.975, 0.99, 0.995), 
 	folderstem = "fdrf", geneApply = lapply, gene2snpList=NULL)
-policyFDRtab(sms, rhs, universe=featureNames(sms),
+policywiseFDRtab(sms, rhs, nperm = 1, seed = 1234, 
+	targp = c(0.95, 0.975, 0.99, 0.995), 
+	folderstem = "fdrf", geneApply = lapply, 
   	policyClo=function(mgr) function(x)topFeats(probeId(x),
-     	mgr=mgr, ffind=1, n=1), nperm=1, seed=1234, 
-	targp=c(.95, .975, .99, .995),
-        folderstem="fdrf", geneApply=lapply) 
-
+     	mgr=mgr, ffind=1, n=1))
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -39,7 +38,8 @@ number of permutations to evaluate
 }
   \item{targp}{
 percentiles/100 of permutation distribution to be used as
-thresholds
+thresholds; not fully integrated into report extraction code as of 10/10/2011,
+so it is not advised to manipulate this
 }
   \item{folderstem}{
 name of folder created will start with this string; 'p' will be prepended
@@ -53,7 +53,7 @@ list with genes as organizing element, specifying for each
 gene which SNP will be retained for testing summaries.  can be
 created by the \code{\link{proximityList}} function
 }
-  \item{universe}{tests will focus on organizing by the tokens in this vector}
+%  \item{universe}{tests will focus on organizing by the tokens in this vector}
   \item{policyClo}{function accepting an eqtlTests manager, returning function of argument x
 that will implement a policy of filtering scores for use in identifying genetic
 elements that are associated with expression}
@@ -94,6 +94,7 @@ if ("multicore" \%in\% installed.packages()[,1] & .Platform$OS.type != "windows"
 td = tempdir()
 curd = getwd()
 setwd(td)
+#  this is a poor example but will flag any major faults
 f1 = genewiseFDRtab( smlSet.example[1:30,] , ~male, geneApply=applier )
 f1
 setwd(curd)

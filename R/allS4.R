@@ -744,3 +744,18 @@ setMethod("snpsManaged", c("eqtlTestsManager",
        {
        .snpsManaged(mgr, ffind)
        })
+
+#setMethod("nsFilter", "smlSet", 
+#function (eset, require.entrez = TRUE, require.GOBP = FALSE, 
+#    require.GOCC = FALSE, require.GOMF = FALSE, require.CytoBand = FALSE, 
+#    remove.dupEntrez = TRUE, var.func = IQR, var.cutoff = 0.5, 
+#    var.filter = TRUE, filterByQuantile = TRUE, feature.exclude = "^AFFX", 
+#    ...) {
+# ex = as(eset, "ExpressionSet")
+# ex = nsFilter(ex, require.entrez, require.GOBP,
+#      require.GOCC, require.GOMF, require.CytoBand,
+#	 remove.dupEntrez, var.func, var.cutoff, var.filter, filterByQuantile,
+#	feature.exclude, ...)$eset
+# make_smlSet(ex, smList(eset))
+#})
+

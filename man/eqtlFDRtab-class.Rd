@@ -4,6 +4,7 @@
 \alias{eqtlFDRtab-class}
 \alias{show,eqtlFDRtab-method}
 \alias{show,gwScores-method}
+\alias{show,pwScores-method}
 
 \title{Class \code{"eqtlFDRtab"}}
 \description{
