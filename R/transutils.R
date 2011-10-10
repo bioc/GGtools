@@ -164,7 +164,8 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
         unlink(paste(targdir, "indscratch.ff", sep = ""))
         unlink(paste(targdir, "scoscratch.ff", sep = ""))
     }
-    baseout = list(scores = topKscores, inds = topKinds, guniv = guniv, 
+    baseout = list(scores = topKscores, inds = topKinds, guniv = guniv, K=K,
+	smsanno = annotation(sms),
         snpnames = rownames(inimgr@fflist[[1]]), call = theCall, date=date(), shortfac=shortfac)
     new("transManager", base=baseout)
 }
@@ -280,7 +281,8 @@ mtransScores = function (smpackvec, snpchr = "chr1", rhslist, K = 20, targdirpre
         unlink(paste(targdir, "indscratch.ff", sep = ""))
         unlink(paste(targdir, "scoscratch.ff", sep = ""))
     }
-    list(scores = topKscores, inds = topKinds, guniv = guniv, 
+    list(scores = topKscores, inds = topKinds, guniv = guniv, K=K,
+	smsanno = annotation(sms),
         snpnames = rownames(inimgr@fflist[[1]]), call = theCall)
 }
 
