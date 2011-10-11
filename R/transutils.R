@@ -357,3 +357,58 @@ nthScores = function(tm, n) {
  tm@base$scores[,n]/tm@base$shortfac
 }
 
+
+
+transTab = function( x, snpchr ) {
+ require(ff)
+ gannopkname = x$smsanno
+ K = x$K
+ sids = rep(x$snpnames, each=K )
+ thescos = as.numeric(t(as.ram(x$sco)))/x$shortfac
+ theinds = as.numeric(t(as.ram(x$inds)))
+ require( gannopkname, character.only=TRUE)
+ ganno = gsub(".db", "", gannopkname )
+ gchr = sapply(mget(x$guniv, get(paste(ganno, "CHR", sep="")), ifnotfound=NA), "[", 1)
+ gsym = sapply(mget(x$guniv, get(paste(ganno, "SYMBOL", sep="")), ifnotfound=NA), "[", 1)
+ gent = sapply(mget(x$guniv, get(paste(ganno, "ENTREZID", sep="")), ifnotfound=NA), "[", 1)
+ gn = x$guniv[ theinds ]
+ gchr = gchr[ theinds ]
+ gsym = gsym[ theinds ]
+ gent = gent[ theinds ]
+ data.frame(snp=sids, sumchisq=thescos, probeid=gn , probechr=gchr,
+    sym=gsym, entrez=gent)
+}
+
+
+treloc = function (old = "@@REPLACE_BY_RELOCATE@@", new, obj) 
+{
+# not for export
+    tmp = obj
+    fref = attr(attributes(tmp@base[["scores"]])[["physical"]], 
+        "filename")
+    ans = gsub(old, new, fref)
+    attr(attributes(tmp@base[["scores"]])[["physical"]], "filename") = ans
+    fref = attr(attributes(tmp@base[["inds"]])[["physical"]], 
+        "filename")
+    ans = gsub(old, new, fref)
+    attr(attributes(tmp@base[["inds"]])[["physical"]], "filename") = ans
+    obj = tmp
+    obj
+}
+
+
+tr1_perm = function () 
+{
+# for export
+    ans = get(load(system.file("transObjs/ptr1.rda", package = "GGtools")))
+    treloc("@@REPLACE_BY_RELOCATE@@", system.file(package = "GGtools"), 
+        ans)
+}
+
+tr1_obs = function () 
+{
+# for export
+    ans = get(load(system.file("transObjs/tr1.rda", package = "GGtools")))
+    treloc("@@REPLACE_BY_RELOCATE@@", system.file(package = "GGtools"), 
+        ans)
+}
