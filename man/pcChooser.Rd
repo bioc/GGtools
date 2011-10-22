@@ -82,12 +82,14 @@ results
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
+\dontrun{
 if (!exists("hmceuB36.2021")) hmceuB36.2021 <- getSS("GGtools", c("20", "21"))
 library(illuminaHumanv1.db)
 g20 = get("20", revmap(illuminaHumanv1CHR))
 g20 = intersect(g20, featureNames(hmceuB36.2021))[1:40]
 pcChooser( hmceuB36.2021[probeId(g20),], cand=c(7,9,11), fmla=~male,
   radius=1e6, chr="20", smlc="20", geneApply=lapply, pvals=10^(-c(3:5)))
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

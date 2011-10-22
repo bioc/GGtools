@@ -162,6 +162,7 @@ VJ Carey <stvjc@channing.harvard.edu>
 \code{\link{eqtlTests}}
 }
 \examples{
+\dontrun{
 if (!exists("hmceuB36.2021")) hmceuB36.2021 <- getSS("GGtools", c("20", "21"))
 hm = hmceuB36.2021
 td = tempdir()
@@ -199,13 +200,17 @@ boxplot(lapply(i1o, unlist), range=0, main="compare observed to expr-permuted eQ
 par(opar)
 load("man_director.rda")
 man_director
+setwd(cd)
+}
 \dontrun{
+cd = getwd()
+td = tempdir()
+on.exit(setwd(cd))
 set.seed(1234)  # necessary for dealing with null imputation of missing
 mm = mcisProxScores( list(hm,hm), list(~male,~male), 
   dradset=c(5000,10000,25000), folder="mmm", runname="MMM", ffind=1)
-}
-
 setwd(cd)
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

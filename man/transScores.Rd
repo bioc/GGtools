@@ -1,6 +1,8 @@
 \name{transScores}
 \alias{transScores}
 \alias{mtransScores}
+\alias{tr1_obs}
+\alias{tr1_perm}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 obtain the top trans associations for each SNP in an smlSet
