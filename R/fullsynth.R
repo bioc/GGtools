@@ -167,11 +167,19 @@ cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
   radnms = paste("FL", getbds(radmat), sep="")
  # following code will put gene+dradset hole in first element... not intended, see fill below
   intlist = lapply(1:nrow(radmat), function(z) {  # over family of radii
-    ans = lapply(gr, function(gra)  # over chrom-specific granges
-        flankingOnly(gra+radmat[z,1], radmat[z,2]) ) 
-    ans
-    } )
-  intlist[[1]] = lapply(gr, function(gra) gra+dradset[1])  # fill initial hole
+    ans = lapply(gr, function(gra) {  # over chrom-specific granges
+        curg = gra
+        ranges(curg) = ranges(curg)+radmat[z,1]
+        flankingOnly(curg, radmat[z,2]) 
+    } ) 
+   ans 
+  } )
+  intlist[[1]] = lapply(gr, function(gra) {
+       curg = gra
+       ranges(curg) = ranges(curg)+dradset[1]
+       curg
+       }
+      )  # fill initial hole
   names(intlist) = radnms
   if (TRUE) {        #  how can you reuse "gr" below?  it seems right because gr has been
                      #  transformed above to intlist but potentially confusing
@@ -181,10 +189,10 @@ cisProxScores = function( smlSet, fmla, dradset, direc=NULL,
   ## need to iterate over the names and select directly
   allspaces = intersect( names(direc@mgrs), names(gr) )
   allspaces = intersect( allspaces, names(sr) )
-  ans = lapply( intlist, function(gr) {
+  ans = lapply( intlist, function(ingr) {   # recycled "gr" here previously
      cans = lapply( allspaces, function(mgrind) {
       cat(mgrind)
-      scoresInRanges( direc@mgrs[[mgrind]], gr[[mgrind]], sr[[mgrind]],
+      scoresInRanges( direc@mgrs[[mgrind]], ingr[[mgrind]], sr[[mgrind]],
         applier=geneApply, ffind=ffind ) } ) 
      names(cans) = allspaces # names(direc@mgrs)
      cans
