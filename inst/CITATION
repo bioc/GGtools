@@ -1,0 +1,19 @@
+
+citHeader("To cite package 'GGtools' in publications use:")
+     
+     ## R >= 2.8.0 passes package metadata to citation().
+     if(!exists("meta") || is.null(meta)) meta <- packageDescription("nlme")
+     year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date)
+     vers <- paste("R package version", meta$Version)
+     
+     citEntry(entry="Manual",
+              title = "GGtools: Genetics of Gene Expression with Bioconductor",
+              author = personList(as.person("Vincent J. Carey")),
+              year = year,
+              note = vers,
+     
+              textVersion =
+              paste("Vincent J. Carey (",
+                    year,
+                    "). GGtools: Genetics of Gene Expression with Bioconductor. ",
+                    vers, ".", sep=""))
