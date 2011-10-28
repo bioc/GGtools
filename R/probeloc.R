@@ -94,3 +94,149 @@ proximityList = function(sms, smlind=1, snpLocGRanges, grsnpid = "RefSNP_id", pr
    probesmatched = names(gloc)[ov[,1]]
    split(snpsmatched,probesmatched)
 }
+
+
+getGene2SnpList = function(sms, chr, genome, radius=50000,
+   additionalSNPGR=NULL, useTxDb=FALSE) {
+#
+# will return list named with probe names; each probe has a vector
+#   of associated SNP names
+# based on the bioconductor annotations
+# note that "imputed" SNP in the sms may need additionalSNPGR info
+#
+#
+# first acquire the SNP locations
+#
+ if (length(chr)>1) stop("chr must be scalar")
+ chr = as.character(chr)
+ if (!(chr %in% as.character(1:22))) stop("chr must be in as.character(1:22)")
+ if (genome == "hg18") spack = "SNPlocs.Hsapiens.dbSNP.20090506"
+ else if (genome == "hg19") spack = "SNPlocs.Hsapiens.dbSNP.20100427"
+ else stop("only using hg18 and hg19 to select SNPlocs")
+ require(spack, character.only=TRUE)
+ if (packageVersion(spack) < package_version("0.99.6")) stop(
+	"please install SNPlocs package with version at least 0.99.6 [these have GRanges conversion built in]")
+ seqn = do.call(":::", list(spack, "SEQNAMES"))  # 
+# here we will assume that prefix of seqn is either "ch" or "chr"
+ nseqn = gsub("ch", "", gsub("chr", "", seqn))
+ seqnToUseInd = which(nseqn == chr)
+ if (length(seqnToUseInd)==0) stop(paste("no match of chr submitted in call to SEQNAMES of", spack))
+ seqnToUse = seqn[seqnToUseInd]
+ getter = do.call("::", list(spack, "getSNPlocs"))  # for multiple SNPlocs on searchlist
+ snpgr = getter( seqnToUse, as.GRanges=TRUE )  # LAST USE of seqnToUse, reset to chr prefix below
+ elementMetadata(snpgr)$RefSNP_id = paste("rs", elementMetadata(snpgr)$RefSNP_id, sep="")
+#
+# deal with possible additional snpGR for imputed loci
+#
+# force chr prefix
+ nnsl = gsub("[^0-9]", "", seqlevels(snpgr))  # numeric only
+ seqlevels(snpgr) = make.names(paste("chr", nnsl, sep=""),unique=TRUE)
+ if (!is.null(additionalSNPGR)) {
+   emn = names(elementMetadata(additionalSNPGR))
+   if (!all.equal(emn, names(elementMetadata(snpgr)))) stop(paste("need elementMetadata on additionalSNPGR to have columns", paste(names(elementMetadata(snpgr)), collapse=", ")))
+   snpgr = c(snpgr, additionalSNPGR)
+ }
+#
+#  deal with gene location
+#
+#  first determine chromosome residence
+#
+ ganno = annotation(sms)
+ require(ganno, character.only=TRUE)
+ mapper = get(paste(gsub(".db", "", ganno), "CHR", sep=""))
+ ponc = get(chr, revmap(mapper))
+ ponc = intersect(featureNames(sms), ponc)
+ if (length(ponc) == 0) stop(paste("sms contains no probes on chromosome ", chr))
+#
+# now obtain coordinates
+#
+ if (!useTxDb) {  # will use bioc chip annotation location data -- typically hg19 for
+                  # current R  
+   if (!(genome == "hg19")) warning("you are using bioconductor locations; current are hg19-based")
+   locmapper = get(paste(gsub(".db", "", ganno), "CHRLOC", sep=""))
+   lenmapper = get(paste(gsub(".db", "", ganno), "CHRLENGTHS", sep=""))
+   locendmapper = get(paste(gsub(".db", "", ganno), "CHRLOCEND", sep=""))
+   pstart = abs(sapply(mget(ponc, locmapper, ifnotfound=NA), "[", 1))
+   pend = abs(sapply(mget(ponc, locendmapper, ifnotfound=NA), "[", 1))
+   if (any(is.na(c(pstart,pend)))) {
+     bad = union( which(is.na(pstart)), which(is.na(pend)))
+     pstart = pstart[-bad]
+     pend = pend[-bad]
+     ponc = ponc[-bad]
+     }
+   genelocs = GRanges(seqnames=paste("chr", chr, sep=""), IRanges(pstart,pend))
+   maxlen = lenmapper[chr]
+   } else { 
+#
+# using TxDb 
+#
+   egmapper = get(paste(gsub(".db", "", ganno), "ENTREZID", sep=""))
+   egids = sapply(mget(ponc, egmapper, ifnotfound=NA), "[", 1)
+   if (any(is.na(egids))) {
+      badp = which(is.na(egids))
+      ponc = ponc[-badp]
+      egids = egids[-badp]
+      }
+   dupeg = which(duplicated(egids))
+   if (length(dupeg)>0) egids = egids[-dupeg]
+   TxDb2get = paste("TxDb.Hsapiens.UCSC", genome, "knownGene", sep=".")
+   require(TxDb2get, character.only=TRUE)
+   dbobj = get(TxDb2get)
+   #txseqn = names(isActiveSeq(dbobj))
+   #toset = (txseqn == paste("chr", chr, sep=""))  # crucial filtering
+   #names(toset) = txseqn
+   #isActiveSeq(dbobj) = toset
+setSoloSeq = function(tx, ind) {
+   curactive = isActiveSeq(tx)
+   kpns = names(curactive)
+   curactive[] = FALSE
+   curactive[ind] = TRUE
+   names(curactive) = kpns
+   isActiveSeq(tx) = curactive
+   tx
+}
+   dbobj = setSoloSeq(dbobj, paste("chr", chr, sep=""))
+   tx = transcriptsBy(dbobj, "gene")
+   egwaddr = names(tx)
+   badeg = which(!(egids %in% egwaddr))
+   if (length(badeg)>0) {
+      egids = egids[-badeg]
+      ponc = ponc[-badeg]
+      }
+   txok = reduce(tx[egids])
+   alll = sapply(txok, length)
+   if (any(alll != 1)) {
+     warning("some entrez genes selected in TxDb had disjoint transcripts; picking first for addressing")
+     txok = txok[-which(alll != 1)]
+     }
+   egnames = names(txok)
+   genelocs = unlist(txok) #unlist(GRangesList(txok))
+#   expand to probes
+   pids = try(mget(egnames, revmap(egmapper) ))  # should not have NA
+   if (inherits(pids, "try-error")) stop("unexpected NA in EG lookup, bug.")
+   repv = sapply(pids, length)
+   ponc = unlist(pids)
+   genelocs = rep(genelocs,repv)
+   strand(genelocs) = "*"
+   maxlen = seqlengths(txok)
+   }
+#
+# add radius extension
+ exlocs = ranges(genelocs) + radius
+ hasnonp = which(start(exlocs)<1)
+ if (length(hasnonp) > 0) start(exlocs[hasnonp]) = 1
+ hasoverhang = which(end(exlocs)>maxlen)
+ if (length(hasoverhang) > 0) send(exlocs[hasoverhang]) = maxlen
+ ranges(genelocs) = exlocs
+ ol = findOverlaps(genelocs, snpgr)
+ mmol = matchMatrix(ol)
+ g2use = unique(mmol[,1])
+ ponc = ponc[g2use]
+ snpinds = split(mmol[,2], mmol[,1])
+ snid = elementMetadata(snpgr)$RefSNP_id
+ ans = lapply(snpinds, function(x) snid[x])
+ names(ans) = ponc
+ ans
+}
+
+ 

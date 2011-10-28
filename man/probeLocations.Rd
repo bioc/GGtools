@@ -4,6 +4,7 @@
 \alias{probeSequences}
 \alias{snpLocations}
 \alias{proximityList}
+\alias{getGene2SnpList}
 \alias{restrictProbesToChrom}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -20,6 +21,8 @@ snpLocations(sms, snpLocGRanges, grsnpid = "RefSNP_id")
 proximityList(sms, smlind=1, snpLocGRanges, grsnpid = "RefSNP_id", probeLocExtend=0,
   glocTransform=function(x)x)
 restrictProbesToChrom(smlSet, chrom)
+getGene2SnpList = function(sms, chr, genome, radius=50000,
+   additionalSNPGR=NULL, useTxDb=FALSE) {
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -44,6 +47,17 @@ GRanges for probe locations}
   \item{glocTransform}{alters the \code{probeLocations(sms)} GRanges
 to define SNP proximity for inclusion in gene-snp association list}
   \item{chrom}{chromosome token}
+  \item{chr}{chromosome token, must be in 1:22}
+  \item{genome}{an element of \code{c("hg18", "hg19")}}
+  \item{radius}{numeric, how far upstream and downstream from gene interval
+to check for SNP, in bases}
+  \item{additionalSNPGR}{a GRanges with range information on additional
+SNP not found in Bioconductor resources, for example those obtained
+by imputation.  Must have structure similar to that returned by
+the genome-appropriate call to
+getSNPlocs.}
+  \item{useTxDb}{logical, if TRUE take the gene locations for probes
+by translating to Entrez genes and using the genome-appropriate TxDb.}
 } % end args
 %\details{
 %%  ~~ If necessary, more details than the description above ~~

@@ -26,7 +26,8 @@ export(eqtlTests, cisProxScores, clipPCs, pcChooser, permEx, makeDiagDirector,
 	topGenes, locusNames, geneNames, geneIndcol,
 	nthScores, eqtlEstimates, genewiseFDRtab, policywiseFDRtab,
 	probeLocations, snpLocations, probeChromosomes, proximityList,
-	transTab, tr1_perm, tr1_obs, restrictProbesToChrom)
+	transTab, tr1_perm, tr1_obs, restrictProbesToChrom,
+	getGene2SnpList)
 
 
 exportClass(eqtlTestsManager, multiCisDirector, cisProxScores, transManager,
