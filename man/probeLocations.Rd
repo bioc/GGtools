@@ -21,10 +21,9 @@ snpLocations(sms, snpLocGRanges, grsnpid = "RefSNP_id")
 proximityList(sms, smlind=1, snpLocGRanges, grsnpid = "RefSNP_id", probeLocExtend=0,
   glocTransform=function(x)x)
 restrictProbesToChrom(smlSet, chrom)
-getGene2SnpList = function(sms, chr, genome, radius=50000,
-   additionalSNPGR=NULL, useTxDb=FALSE) {
+getGene2SnpList(sms, chr, genome, radius=50000,
+   additionalSNPGR=NULL, useTxDb=FALSE) 
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{sms}{
 instance of \code{\link[GGBase]{smlSet-class}}, which should have
