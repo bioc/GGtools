@@ -4,6 +4,7 @@
 \alias{probeSequences}
 \alias{snpLocations}
 \alias{proximityList}
+\alias{restrictProbesToChrom}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 utilities for annotation acquisition with smlSet instances
@@ -18,6 +19,7 @@ probeChromosomes(sms)
 snpLocations(sms, snpLocGRanges, grsnpid = "RefSNP_id")
 proximityList(sms, smlind=1, snpLocGRanges, grsnpid = "RefSNP_id", probeLocExtend=0,
   glocTransform=function(x)x)
+restrictProbesToChrom(smlSet, chrom)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -26,6 +28,7 @@ instance of \code{\link[GGBase]{smlSet-class}}, which should have
 an annotation slot correctly identifying an AnnotationDbi-compliant
 annotation package for expression probes
 }
+  \item{smlSet}{see \code{sms} above}
   \item{extend}{numeric value to extend regions by, using algebra of + for IRanges instances}
   \item{snpLocGRanges}{an instance of \code{\link[GenomicRanges]{GRanges-class}} with numeric tokens for dbSNP identifiers as used in SNPlocs.* packages.
 The identifiers are in elementMetadata(snpLocGRanges)[[grsnpid]]
@@ -40,6 +43,7 @@ the ranges of the resulting
 GRanges for probe locations}
   \item{glocTransform}{alters the \code{probeLocations(sms)} GRanges
 to define SNP proximity for inclusion in gene-snp association list}
+  \item{chrom}{chromosome token}
 } % end args
 %\details{
 %%  ~~ If necessary, more details than the description above ~~
