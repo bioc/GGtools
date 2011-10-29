@@ -204,7 +204,7 @@ setSoloSeq = function(tx, ind) {
       ponc = ponc[-badeg]
       }
    txok = reduce(tx[egids])
-   alll = sapply(txok, length)
+   alll = elementLengths(txok)
    if (any(alll != 1)) {
      warning("some entrez genes selected in TxDb had disjoint transcripts; picking first for addressing")
      txok = txok[-which(alll != 1)]
