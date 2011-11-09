@@ -104,6 +104,9 @@ getGene2SnpList = function(sms, chr, genome, radius=50000,
 # based on the bioconductor annotations
 # note that "imputed" SNP in the sms may need additionalSNPGR info
 #
+# comments: return GRanges for genes and then a GRangesList for snp
+# consider a generalization of GRangesList so that queries can be
+# against list node elements
 #
 # first acquire the SNP locations
 #
