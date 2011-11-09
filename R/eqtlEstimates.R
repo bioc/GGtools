@@ -115,7 +115,7 @@ setMethod("[", c("eqtlEstimatesManager"),
         as(j, "character"), k, drop=FALSE]/shortfac(x))
    }
  else stop("one of i (rsid instance), j (probeId instance) must be present along with k in (1L, 2L)")
- names(ans) = names(m1)
+ names(ans) = names(fflist(x))
  ans
  })
 
