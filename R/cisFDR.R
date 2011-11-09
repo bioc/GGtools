@@ -99,14 +99,14 @@ genewiseScores = function(sms, rhs, targp=c(.95, .975, .99, .995),
         }
     tops = sapply(1:length(gn), selector)
     }
-  topdf = data.frame(probes=gn, rsid=names(tops), max.gwscores=tops)
+  topdf = data.frame(probes=gn, rsid=names(tops), max.gwscores=tops)  # fragile, assumes names(tops) are rsid
   topdf = topdf[order(topdf$max.gwscores,decreasing=TRUE),]
   scoreq = quantile(tops, targp)
   ndistinctsnps = ifelse(is.null(g2l), nsnpsmgd, length(unique(unlist(g2l))))
   nsnptests = ifelse(is.null(g2l), nsnpsmgd, length(unlist(g2l)))
   nprobes = ifelse(is.null(g2l), nprobesmgd, length(g2l))
-  new("gwScores", list(mgr=obs, universe=pm, tops=tops, topdf=topdf,
-     scoreq=scoreq, ndistinctsnps=ndistinctsnps, nsnptests = nsnptests,
+  new("gwScores", list(mgr=obs, universe=pm, tops=tops, gn4tops=gn, topdf=topdf,  # everything should work through topdf
+     scoreq=scoreq, ndistinctsnps=ndistinctsnps, nsnptests = nsnptests,   # because metadata are there
      nsnpsmgd = nsnpsmgd, nprobesmgd= nprobesmgd,
      nprobes=nprobes))
 }
@@ -245,4 +245,71 @@ policywiseScores = function(sms, rhs, targp=c(.95, .975, .99, .995),
      scoreq=scoreq, ndistinctsnps=ndistinctsnps, nsnptests = nsnptests,
      nsnpsmgd = nsnpsmgd, nprobesmgd= nprobesmgd,
      nprobes=nprobes))
+}
+
+genewiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.95, .975, .99, .995),
+       folderstem="fdrf", geneApply=lapply, gene2snpList=NULL) {
+#
+# revised 3 nov 2011 with simpler false call enumeration/averaging for FDR
+#
+ thecall = match.call()
+ obs = genewiseScores( sms=sms, rhs=rhs, targp=targp, folderstem=folderstem,
+	geneApply=geneApply, gene2snpList=gene2snpList )
+ set.seed(seed)
+ perlist = list()
+ for (i in 1:nperm) {
+   perlist[[i]] = genewiseScores( sms=permEx(sms), rhs=rhs, targp=targp, 
+        folderstem=paste("p_", i, "_",  folderstem, sep=""),
+	geneApply=geneApply, gene2snpList=gene2snpList )
+   }
+ #nullq = lapply( perlist, function(x) quantile(x$tops, targp))
+ nullq = lapply( perlist, function(x) quantile(x$topdf$max.gwscores, targp))
+ fcalls = sapply(1:length(perlist), 
+     function(i) sapply(nullq[[i]], function(x)sum(perlist[[i]]$topdf$max.gwscores>x)))  # need to squelch list character
+ fcalls = apply(fcalls, 1, mean)
+ nullq = sapply(nullq, function(x)x)
+ nullq = apply(nullq,1,mean)
+ scalls = sapply(nullq, function(x)sum(obs$topdf$max.gwscores>x))
+##
+## do something here to summarize fcalls
+##
+ fdrtab = cbind(pctile=100*targp, thres=nullq, nfalse=fcalls, nsig=scalls, fdr=fcalls/scalls)
+ soprobeids = obs$topdf$probes[ order(obs$topdf$max.gwscores, decreasing=TRUE) ]
+ sorsid = obs$topdf$rsid[ order(obs$topdf$max.gwscores, decreasing=TRUE) ]
+ sotops = sort(obs$topdf$max.gwscores, decreasing=TRUE)
+ names(sotops) = soprobeids
+ sptopslist = list()
+ for (i in 1:length(perlist)) {
+    sptopslist[[i]] = perlist[[i]]$topdf$max.gwscores
+    }
+ #sptops = apply(sapply(sptopslist, function(x)x), 1, mean)  # check margin here, looks right
+ sptops = unlist(sptopslist)
+ sfdr = sapply(sotops, function(x) (sum(sptops>x)/nperm)/max(c(1,sum(sotops>x))))  # switch to > 10/oct/2011 # use unlist 3 nov 2011
+ nf = sfdr*length(sfdr)
+ ncall = 1:length(sfdr)
+ nc005 = max(which(sfdr <= .005))
+ nc01 = max(which(sfdr <= .01))
+ nc05 = max(which(sfdr <= .05))
+ nc10 = max(which(sfdr <= .10))
+ nc12.5 = max(which(sfdr <= .125))
+ nc15 = max(which(sfdr <= .15))
+ thresh005 = sptops[nc005]
+ thresh01 = sptops[nc01]
+ thresh05 = sptops[nc05]
+ thresh10 = sptops[nc10]
+ thresh12.5 = sptops[nc12.5]
+ thresh15 = sptops[nc15]
+ fullfdrtab = data.frame(probes=soprobeids, # names(sotops), 
+     best.QTLid=sorsid, max.gwscores=as.numeric(sotops), fdr=sfdr)
+ fullfdrtab = fullfdrtab[ order(fullfdrtab$fdr), ]
+ rownames(fullfdrtab) = NULL
+ tlist = list(thresh005=thresh005, thresh01=thresh01, thresh10=thresh10,
+	thresh12.5=thresh12.5,thresh15=thresh15)
+ new("eqtlFDRtab", list(fdrtab=fdrtab, fullfdrtab=fullfdrtab, obsmgr=obs, permmgr=perlist, 
+	unsorted.tops = obs$tops,  topdf=obs$topdf,
+	universe=obs$universe, sorted.tops=obs$sotops, sorted.av.permtops=sptops,
+        nsnpsmgd = obs$nsnpsmgd, nprobes=obs$nprobes, nsnptests=obs$nsnptests,
+     	nullq = nullq, targp=targp, ncall=ncall, sfdr=sfdr,
+	nc005=nc005, nc01=nc01, nc05=nc05, nc10=nc10, nc12.5=nc12.5,
+        nc15=nc15, threshlist=tlist, thecall=thecall))
 }
