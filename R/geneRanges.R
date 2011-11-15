@@ -17,7 +17,7 @@ geneRanges.annopk = function(ids, annopkg, extend=0) {
  sts[negsts] = -sts[negsts]
  ens[negsts] = -ens[negsts]
  st = pmax(1,sts-extend)
- en = ens+extend
+ en = ens+extend  # you may need to check against seqlengths ...
  st[is.na(sts)] = 1
  en[is.na(sts)] = 2
  #RangedData(IRanges(st,en), space=chrs, name=ids)
