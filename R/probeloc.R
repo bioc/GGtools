@@ -213,7 +213,7 @@ setSoloSeq = function(tx, ind) {
      txok = txok[-which(alll != 1)]
      }
    egnames = names(txok)
-   genelocs = unlist(txok) #unlist(GRangesList(txok))
+   genelocs = IRanges::unlist(txok) #unlist(GRangesList(txok))
 #   expand to probes
    pids = try(mget(egnames, revmap(egmapper) ))  # should not have NA
    if (inherits(pids, "try-error")) stop("unexpected NA in EG lookup, bug.")
