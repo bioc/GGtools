@@ -31,6 +31,11 @@ names an annotation package.
   \item{extend}{
 numeric indicating radius of symmetric extension desired around annotated extent
 }
+  \item{applier}{
+application function used to obtain extents of genes when iterating over transcriptsBy
+result -- this seemed slow for an ENSEMBL TxDb so multicore application can be considered
+by setting this parameter to mclapply.
+}
 }
 \details{
 This function is intended to help users get locations for named genes.

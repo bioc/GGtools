@@ -33,45 +33,10 @@ geneSyms = function(ids, annopkg) {
  unlist(sapply(mget(ids, symmap, ifnotfound=NA), "[", 1))
 }
 
-geneRanges = function(genomeOrPkgOrTxDb, chr=NULL, is.annopkg=FALSE, extend=0) {
- if (is.null(chr)) stop("must specify chr")
- if (is.annopkg) {
-    if (!is(genomeOrPkgOrTxDb, "character")) stop("genomeOrPkgOrTxDb must be string if is.annopkg is TRUE")
-    require(genomeOrPkgOrTxDb, character.only=TRUE)
-    pkname = gsub(".db", "", genomeOrPkgOrTxDb)
-    clenv = get(paste(pkname, "CHRLOC", sep=""))
-    ids = mappedkeys(clenv)
-    tmp = geneRanges.annopk(ids, genomeOrPkgOrTxDb, extend=extend)
-    return(tmp[seqnames(tmp) == chr])
-    }
- if (is(genomeOrPkgOrTxDb, "TranscriptDb")) txdb = genomeOrPkgOrTxDb
- else if (!(genomeOrPkgOrTxDb %in% c("hg18", "hg19")))
-   stop("genomeOrPkgOrTxDb must be a TranscriptDb instance or %in% c('hg18', 'hg19')")
- else {
-    txpk = paste("TxDb.Hsapiens.UCSC", genomeOrPkgOrTxDb, "knownGene",
-      sep=".") 
-    require(txpk, character.only=TRUE)
-    txdb = get(txpk)
-    }
- actseq = isActiveSeq(txdb)
- sn = names(actseq)
- if (!(chr %in% sn)) stop(paste("chr", chr, 
-       " is not in names(isActiveSeq(txdb))"))
- actseq[] = FALSE
- actseq[chr] = TRUE
- isActiveSeq(txdb) = actseq
- txl = transcriptsBy(txdb, "gene")
- gn = names(txl)
- simpleExtents = function(r) IRanges(min(start(r)), max(end(r)))
- z = IRangesList(lapply(txl, function(z) simpleExtents(ranges(z))))
- strnd = sapply(txl, function(x)runValue(strand(x))[1])
- ans = IRanges::unlist(z)
- ans = GRanges(seqnames=chr, ans, strand=strnd)
- names(ans) = gn
- ans
-}
 
 .splitGR2GRL = function(g1, g2, ...) {
+#
+# this can be described as groupByOverlaps instead of "split"
 #
 # a simple approach would be
 #function(g1, g2) {
@@ -95,5 +60,48 @@ geneRanges = function(genomeOrPkgOrTxDb, chr=NULL, is.annopkg=FALSE, extend=0) {
    split(g1, fac)
 }
 
+
+geneRanges = function (genomeOrPkgOrTxDb, chr = NULL, is.annopkg = FALSE, 
+    extend = 0, applier = lapply) 
+{
+    if (is.null(chr)) 
+        stop("must specify chr")
+    if (is.annopkg) {
+        if (!is(genomeOrPkgOrTxDb, "character")) 
+            stop("genomeOrPkgOrTxDb must be string if is.annopkg is TRUE")
+        require(genomeOrPkgOrTxDb, character.only = TRUE)
+        pkname = gsub(".db", "", genomeOrPkgOrTxDb)
+        clenv = get(paste(pkname, "CHRLOC", sep = ""))
+        ids = mappedkeys(clenv)
+        tmp = geneRanges.annopk(ids, genomeOrPkgOrTxDb, extend = extend)
+        return(tmp[seqnames(tmp) == chr])
+    }
+    if (is(genomeOrPkgOrTxDb, "TranscriptDb")) 
+        txdb = genomeOrPkgOrTxDb
+    else if (!(genomeOrPkgOrTxDb %in% c("hg18", "hg19"))) 
+        stop("genomeOrPkgOrTxDb must be a TranscriptDb instance or %in% c('hg18', 'hg19')")
+    else {
+        txpk = paste("TxDb.Hsapiens.UCSC", genomeOrPkgOrTxDb, 
+            "knownGene", sep = ".")
+        require(txpk, character.only = TRUE)
+        txdb = get(txpk)
+    }
+    actseq = isActiveSeq(txdb)
+    sn = names(actseq)
+    if (!(chr %in% sn)) 
+        stop(paste("chr", chr, " is not in names(isActiveSeq(txdb))"))
+    actseq[] = FALSE
+    actseq[chr] = TRUE
+    isActiveSeq(txdb) = actseq
+    txl = transcriptsBy(txdb, "gene")
+    gn = names(txl)
+    simpleExtents = function(r) IRanges(min(start(r)), max(end(r)))
+    z = IRangesList(applier(1:length(txl), function(z) simpleExtents(ranges(txl[[z]]))))
+    strnd = sapply(1:length(txl), function(x) runValue(strand(txl[[x]]))[1])
+    ans = IRanges::unlist(z)
+    ans = GRanges(seqnames = chr, ans, strand = strnd)
+    names(ans) = gn
+    ans
+}
  
 
