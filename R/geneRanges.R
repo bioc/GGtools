@@ -44,7 +44,7 @@ geneRanges = function(genomeOrPkgOrTxDb, chr=NULL, is.annopkg=FALSE, extend=0) {
     tmp = geneRanges.annopk(ids, genomeOrPkgOrTxDb, extend=extend)
     return(tmp[seqnames(tmp) == chr])
     }
- if (is(genomeOrPkgOrTxDb, "TranscriptDb")) txdb = genomeOrPkgOrTxdb
+ if (is(genomeOrPkgOrTxDb, "TranscriptDb")) txdb = genomeOrPkgOrTxDb
  else if (!(genomeOrPkgOrTxDb %in% c("hg18", "hg19")))
    stop("genomeOrPkgOrTxDb must be a TranscriptDb instance or %in% c('hg18', 'hg19')")
  else {
