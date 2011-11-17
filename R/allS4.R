@@ -386,7 +386,7 @@ chkeeman = chkeman  # eventually enlarge for estimates object
 setClass("eqtlTestsManager",
  representation(fflist="list", call="call", sess="ANY",
 	exdate="ANY", shortfac="numeric", geneanno="character", df="numeric",
-        summaryList="list"),
+        summaryList="list", geneExtents="GRanges", snpRanges="GRanges"),
         validity=chkeman)
 
 setClass("eqtlEstimatesManager", contains="eqtlTestsManager",
@@ -425,6 +425,8 @@ setMethod("show", "eqtlTestsManager", function(object) {
  open(fflist(object)[[1]])
  cat("some genes (out of ", length(colnames(fflist(object)[[1]])),"): ", paste(selectSome(colnames(fflist(object)[[1]])),collapse=" "), "\n", sep="")
  cat("some snps (out of ", sum(sapply(fflist(object),nrow)),  "): ", paste(selectSome(rownames(fflist(object)[[1]])),collapse=" "), "\n", sep="")
+ if (length(object@geneExtents)>0) cat("geneExtents are available.\n")
+ if (length(object@snpRanges)>0) cat("snpRanges are available.\n")
 })
 
 

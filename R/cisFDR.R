@@ -56,13 +56,13 @@ cat("\n")
 }
 
 genewiseScores = function(sms, rhs, targp=c(.95, .975, .99, .995),
-	folderstem="fdrf", geneApply=lapply, gene2snpList=NULL) {
+	folderstem="fdrf", geneApply=lapply, gene2snpList=NULL, ...) {
 #
 # factor out the obs and permute steps for genewiseFDRtab, let the 
 # permutation occur outside
 #
   gn = pm = featureNames(sms)  # gn will be filtered if necessary
-  obs = eqtlTests(sms, rhs, geneApply=geneApply, targdir=folderstem)
+  obs = eqtlTests(sms, rhs, geneApply=geneApply, targdir=folderstem, ...)
   nsnpsmgd = length(snpsManaged(obs,1))
   nprobesmgd = length(probesManaged(obs,1))
   g2l = gene2snpList  # for revision
@@ -76,6 +76,7 @@ genewiseScores = function(sms, rhs, targp=c(.95, .975, .99, .995),
     allsn = unlist(lapply(smList(sms), colnames))
     clnsnps = function(x) intersect(x, allsn)  # uses lexical scope to avoid erroneous requests
     g2l = lapply( gene2snpList, clnsnps )
+    g2l = g2l[ gn ]
     lens = sapply(g2l, length)
     bad = which(lens==0)  # may lose some genes!
     if (length(bad)>0) {
@@ -112,16 +113,16 @@ genewiseScores = function(sms, rhs, targp=c(.95, .975, .99, .995),
 }
 
 genewiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.95, .975, .99, .995),
-       folderstem="fdrf", geneApply=lapply, gene2snpList=NULL) {
+       folderstem="fdrf", geneApply=lapply, gene2snpList=NULL, ...) {
  thecall = match.call()
  obs = genewiseScores( sms=sms, rhs=rhs, targp=targp, folderstem=folderstem,
-	geneApply=geneApply, gene2snpList=gene2snpList )
+	geneApply=geneApply, gene2snpList=gene2snpList, ... )
  set.seed(seed)
  perlist = list()
  for (i in 1:nperm) {
    perlist[[i]] = genewiseScores( sms=permEx(sms), rhs=rhs, targp=targp, 
         folderstem=paste("p_", i, "_",  folderstem, sep=""),
-	geneApply=geneApply, gene2snpList=gene2snpList )
+	geneApply=geneApply, gene2snpList=gene2snpList, ... )
    }
 # nullq = quantile(per$tops, targp)
  nullq = lapply( perlist, function(x) quantile(x$tops, targp))
@@ -247,20 +248,20 @@ policywiseScores = function(sms, rhs, targp=c(.95, .975, .99, .995),
      nprobes=nprobes))
 }
 
-genewiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.95, .975, .99, .995),
-       folderstem="fdrf", geneApply=lapply, gene2snpList=NULL) {
+genewiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.9,.95, .975, .99, .995),
+       folderstem="fdrf", geneApply=lapply, gene2snpList=NULL, ...) {
 #
 # revised 3 nov 2011 with simpler false call enumeration/averaging for FDR
 #
  thecall = match.call()
  obs = genewiseScores( sms=sms, rhs=rhs, targp=targp, folderstem=folderstem,
-	geneApply=geneApply, gene2snpList=gene2snpList )
+	geneApply=geneApply, gene2snpList=gene2snpList, ... )
  set.seed(seed)
  perlist = list()
  for (i in 1:nperm) {
    perlist[[i]] = genewiseScores( sms=permEx(sms), rhs=rhs, targp=targp, 
         folderstem=paste("p_", i, "_",  folderstem, sep=""),
-	geneApply=geneApply, gene2snpList=gene2snpList )
+	geneApply=geneApply, gene2snpList=gene2snpList, ... )
    }
  #nullq = lapply( perlist, function(x) quantile(x$tops, targp))
  nullq = lapply( perlist, function(x) quantile(x$topdf$max.gwscores, targp))
@@ -274,7 +275,7 @@ genewiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.95, .975, .99, 
 ## do something here to summarize fcalls
 ##
  fdrtab = cbind(pctile=100*targp, thres=nullq, nfalse=fcalls, nsig=scalls, fdr=fcalls/scalls)
- soprobeids = obs$topdf$probes[ order(obs$topdf$max.gwscores, decreasing=TRUE) ]
+ soprobeids = obs$topdf$probes[ order(obs$topdf$max.gwscores, decreasing=TRUE) ]  # was already ordered!
  sorsid = obs$topdf$rsid[ order(obs$topdf$max.gwscores, decreasing=TRUE) ]
  sotops = sort(obs$topdf$max.gwscores, decreasing=TRUE)
  names(sotops) = soprobeids
@@ -293,6 +294,10 @@ genewiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.95, .975, .99, 
  nc10 = max(which(sfdr <= .10))
  nc12.5 = max(which(sfdr <= .125))
  nc15 = max(which(sfdr <= .15))
+ tailps = 1-targp
+ n_at_threshs = sapply(tailps, function(x)  max(which(sfdr <= x)) )
+ threshs = sapply(tailps, function(x) sptops[ max(which(sfdr <= x)) ])
+ ncalls = data.frame(ncall=n_at_threshs, fdr=tailps)
  thresh005 = sptops[nc005]
  thresh01 = sptops[nc01]
  thresh05 = sptops[nc05]
@@ -305,11 +310,82 @@ genewiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.95, .975, .99, 
  rownames(fullfdrtab) = NULL
  tlist = list(thresh005=thresh005, thresh01=thresh01, thresh10=thresh10,
 	thresh12.5=thresh12.5,thresh15=thresh15)
+
+gr = obs$mgr@geneExtents
+if (length(gr)>0) {  # have some loc info
+  gro = gr[ as.character(obs$topdf$probes) ]
+  values(gro)$chisq = obs$topdf$max.gwscores
+  values(gro)$rsid = as.character(obs$topdf$rsid)
+  sl = obs$mgr@snpRanges
+  slo = sl[ as.character(values(gro)$rsid) ]
+  values(gro)$snploc = start(slo)
+  values(gro)$score = pmax(0, pmin(16, -log10(sfdr)))
+  }
+
  new("eqtlFDRtab", list(fdrtab=fdrtab, fullfdrtab=fullfdrtab, obsmgr=obs, permmgr=perlist, 
 	unsorted.tops = obs$tops,  topdf=obs$topdf,
 	universe=obs$universe, sorted.tops=obs$sotops, sorted.av.permtops=sptops,
         nsnpsmgd = obs$nsnpsmgd, nprobes=obs$nprobes, nsnptests=obs$nsnptests,
-     	nullq = nullq, targp=targp, ncall=ncall, sfdr=sfdr,
-	nc005=nc005, nc01=nc01, nc05=nc05, nc10=nc10, nc12.5=nc12.5,
-        nc15=nc15, threshlist=tlist, thecall=thecall))
+     	nullq = nullq, targp=targp, ncall=ncall, sfdr=sfdr, threshs=threshs,
+        n_at_threshs=n_at_threshs, ncalls=ncalls, gro=gro,
+	#nc005=nc005, nc01=nc01, nc05=nc05, nc10=nc10, nc12.5=nc12.5,
+        #nc15=nc15, threshlist=tlist, gro=gro,
+     thecall=thecall))
 }
+
+policywiseScores = function(sms, rhs, targp=c(.95, .975, .99, .995),
+	folderstem="pwfdrf", geneApply=lapply, policy ) {
+#
+# a policy accepts an eqtlTestsManager instance and returns a
+#
+  gn = pm = featureNames(sms)  # gn will be filtered if necessary
+  obs = eqtlTests(sms, rhs, geneApply=geneApply, targdir=folderstem)
+  nsnpsmgd = length(snpsManaged(obs,1))
+  nprobesmgd = length(probesManaged(obs,1))
+  g2l = gene2snpList  # for revision
+  if (is.null(gene2snpList)) {
+    tops = unlist(geneApply(pm, function(x)topFeats(probeId(x), mgr=obs, ffind=1, 
+		n=1)))   # in this case, tops has names
+    }
+  else {
+    gn = intersect(names(gene2snpList), pm)
+    if (length(gn) < 1) stop("gene2snpList is non-null and has null intersection with featureNames(sms)")
+    allsn = unlist(lapply(smList(sms), colnames))
+    clnsnps = function(x) intersect(x, allsn)  # uses lexical scope to avoid erroneous requests
+    g2l = lapply( gene2snpList, clnsnps )
+    g2l = g2l[ gn ]
+    lens = sapply(g2l, length)
+    bad = which(lens==0)  # may lose some genes!
+    if (length(bad)>0) {
+      g2l = g2l[-bad]
+      gn = intersect(names(g2l), pm)
+    }
+    #tops = sapply(1:length(gn), function(z) {
+    #    rs2check = clnsnps(g2l[[ gn[z] ]])
+    #    p2check = probeId(gn[z])
+    #    max(as.numeric(unlist(obs[rs2check, p2check])))
+    #    })
+    selector = function(z) {
+        rs2check = clnsnps(g2l[[ gn[z] ]])
+        p2check = probeId(gn[z])
+        tmp = obs[rsid(rs2check), probeId(p2check)]
+        nmat = tmp[[1]][,1,drop=FALSE]  # has names, deals with single snp in range
+        ind = which.max(as.numeric(unlist(tmp)))
+        ans = nmat[ind,1]
+        names(ans) = rownames(nmat)[ind]
+        ans
+        }
+    tops = sapply(1:length(gn), selector)
+    }
+  topdf = data.frame(probes=gn, rsid=names(tops), max.gwscores=tops)  # fragile, assumes names(tops) are rsid
+  topdf = topdf[order(topdf$max.gwscores,decreasing=TRUE),]
+  scoreq = quantile(tops, targp)
+  ndistinctsnps = ifelse(is.null(g2l), nsnpsmgd, length(unique(unlist(g2l))))
+  nsnptests = ifelse(is.null(g2l), nsnpsmgd, length(unlist(g2l)))
+  nprobes = ifelse(is.null(g2l), nprobesmgd, length(g2l))
+  new("gwScores", list(mgr=obs, universe=pm, tops=tops, gn4tops=gn, topdf=topdf,  # everything should work through topdf
+     scoreq=scoreq, ndistinctsnps=ndistinctsnps, nsnptests = nsnptests,   # because metadata are there
+     nsnpsmgd = nsnpsmgd, nprobesmgd= nprobesmgd,
+     nprobes=nprobes))
+}
+

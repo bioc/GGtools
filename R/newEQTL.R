@@ -112,12 +112,33 @@ ffSnpSummary = function(sm,fn,fac=100) {
  
 eqtlTests = function(smlSet, rhs=~1-1,
    runname="foo", targdir="foo", geneApply=lapply, chromApply=lapply,
-   shortfac = 100, computeZ=FALSE, checkValid=TRUE, saveSummaries=TRUE, 
-   uncert=TRUE, family, genegran=50, prefilter=dropMonomorphies, ... ) {
+   shortfac = 100, checkValid=TRUE, saveSummaries=TRUE, 
+   uncert=TRUE, family, genegran=50, prefilter=dropMonomorphies, 
+   geneExtents, snpRanges, force.locations=TRUE, ... ) {
+ if (force.locations && (missing(geneExtents) | missing(snpRanges))) stop("force.locations = TRUE, must supply geneExtents and snpRanges as GRanges instances, but at least one is missing")
  theCall = match.call()
  if (checkValid) {
    tmp = validObject(smlSet)
    }
+ if (!missing(snpRanges)) {
+    if (is.null(names(snpRanges)) && is.character(elementMetadata(snpRanges)$RefSNP_id))
+       names(snpRanges) = paste("rs", elementMetadata(snpRanges)$RefSNP_id, sep="")
+    }
+ if (force.locations) {
+  # harmonize SnpMatrix data with locations, dropping unlocated SNP and dropping locations for ungenotyped SNP
+    sm = smList(smlSet)
+    for (j in 1:length(sm)) {
+      sm[[j]] = sm[[j]][ , intersect(colnames(sm[[j]]), names(snpRanges)) ]
+      }
+    smlSet@smlEnv$smList = sm
+    allsid = unlist(lapply(smList(smlSet), colnames))
+    snpRanges = snpRanges[allsid]  # force back the intersection on the locations
+  # harmonize expression data
+    okg = intersect( featureNames(smlSet), names(geneExtents) )
+    if (length(okg) == 0) stop("featureNames(smlSet) has null intersection with names(geneExtents)")
+    smlSet = smlSet[ probeId(okg), ]
+    geneExtents = geneExtents[ featureNames(smlSet) ]  # force intersection back
+ }
  if (!is.function(prefilter)) stop("prefilter must be a function returning smlSet on smlSet input")
  smlSet = prefilter(smlSet)
  if (missing(family)) family="gaussian"
@@ -159,18 +180,8 @@ eqtlTests = function(smlSet, rhs=~1-1,
       fmla = formula(paste("ex", paste(as.character(rhs),collapse=""), collapse=" "))
       numans = snp.rhs.tests(fmla, snp.data=snpdata, data=pData(smlSet), 
           family=family , uncertain=uncert, ...)@chisq
- #uncertain=uncert
-      if (computeZ) {
-        numans = sqrt(numans)
-        signl = snp.rhs.estimates( fmla, snp.data=snpdata, data=pData(smlSet), family=family, ... )
-        bad = which(unlist(lapply(signl, is.null)))
-        if (length(bad)>0) signl[bad] = list(beta=NA)
-        ifelse(unlist(signl)>=0, 1, -1)
-        numans = numans*signl
-      }
       miss = is.na(numans)
-      if (any(miss) & !computeZ) numans[which(miss)] = rchisq(length(which(miss)), 1)
-      if (any(miss) & computeZ) numans[which(miss)] = rnorm(length(which(miss)))
+      if (any(miss)) numans[which(miss)] = rchisq(length(which(miss)), 1)
       store[, gene, add=TRUE] = shortfac*numans
       NULL
       }) # end gene apply
@@ -184,9 +195,11 @@ eqtlTests = function(smlSet, rhs=~1-1,
   })  # end chr apply
   names(cres) = chrNames
   exdate = date()
+  if (missing(geneExtents)) geneExtents = GRanges()
+  if (missing(snpRanges)) snpRanges = GRanges()
   new("eqtlTestsManager", fflist=cres, call=theCall, sess=sess, 
         exdate=exdate, shortfac=shortfac, geneanno=annotation(smlSet),
-        df=1, summaryList=summfflist)
+        df=1, summaryList=summfflist, geneExtents=geneExtents, snpRanges=snpRanges)
 }
 
 # director for group of managers
