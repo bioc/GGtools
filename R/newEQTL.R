@@ -124,6 +124,8 @@ eqtlTests = function(smlSet, rhs=~1-1,
     if (is.null(names(snpRanges)) && is.character(elementMetadata(snpRanges)$RefSNP_id))
        names(snpRanges) = paste("rs", elementMetadata(snpRanges)$RefSNP_id, sep="")
     }
+ if (!is.function(prefilter)) stop("prefilter must be a function returning smlSet on smlSet input")
+ smlSet = prefilter(smlSet)
  if (force.locations) {
   # harmonize SnpMatrix data with locations, dropping unlocated SNP and dropping locations for ungenotyped SNP
     sm = smList(smlSet)
@@ -139,8 +141,7 @@ eqtlTests = function(smlSet, rhs=~1-1,
     smlSet = smlSet[ probeId(okg), ]
     geneExtents = geneExtents[ featureNames(smlSet) ]  # force intersection back
  }
- if (!is.function(prefilter)) stop("prefilter must be a function returning smlSet on smlSet input")
- smlSet = prefilter(smlSet)
+ if (!all(names(geneExtents) == featureNames(smlSet))) stop("feature name/location name error for genes, should not happen.")
  if (missing(family)) family="gaussian"
  geneindex <- 1
  sess = sessionInfo()

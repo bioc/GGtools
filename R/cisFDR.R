@@ -61,10 +61,13 @@ genewiseScores = function(sms, rhs, targp=c(.95, .975, .99, .995),
 # factor out the obs and permute steps for genewiseFDRtab, let the 
 # permutation occur outside
 #
-  gn = pm = featureNames(sms)  # gn will be filtered if necessary
-  obs = eqtlTests(sms, rhs, geneApply=geneApply, targdir=folderstem, ...)
+#  gn = pm = featureNames(sms)  # gn will be filtered if necessary
+# above seems problematic
+#
+  obs = eqtlTests(sms, rhs, geneApply=geneApply, targdir=folderstem, ...)  # could be filtered relative to sms on basis of ...
   nsnpsmgd = length(snpsManaged(obs,1))
-  nprobesmgd = length(probesManaged(obs,1))
+  gn <- pm <- probesManaged(obs,1)
+  nprobesmgd = length(pm)
   g2l = gene2snpList  # for revision
   if (is.null(gene2snpList)) {
     tops = unlist(geneApply(pm, function(x)topFeats(probeId(x), mgr=obs, ffind=1, 
