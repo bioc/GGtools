@@ -114,7 +114,7 @@ eqtlTests = function(smlSet, rhs=~1-1,
    runname="foo", targdir="foo", geneApply=lapply, chromApply=lapply,
    shortfac = 100, checkValid=TRUE, saveSummaries=TRUE, 
    uncert=TRUE, family, genegran=50, prefilter=dropMonomorphies, 
-   geneExtents, snpRanges, force.locations=TRUE, ... ) {
+   geneExtents, snpRanges, force.locations=FALSE, ... ) {
  if (force.locations && (missing(geneExtents) | missing(snpRanges))) stop("force.locations = TRUE, must supply geneExtents and snpRanges as GRanges instances, but at least one is missing")
  theCall = match.call()
  if (checkValid) {
@@ -141,7 +141,7 @@ eqtlTests = function(smlSet, rhs=~1-1,
     smlSet = smlSet[ probeId(okg), ]
     geneExtents = geneExtents[ featureNames(smlSet) ]  # force intersection back
  }
- if (!all(names(geneExtents) == featureNames(smlSet))) stop("feature name/location name error for genes, should not happen.")
+# if (!all(names(geneExtents) == featureNames(smlSet))) stop("feature name/location name error for genes, should not happen.")
  if (missing(family)) family="gaussian"
  geneindex <- 1
  sess = sessionInfo()

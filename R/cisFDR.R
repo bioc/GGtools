@@ -298,8 +298,9 @@ genewiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.9,.95, .975, .9
  nc12.5 = max(which(sfdr <= .125))
  nc15 = max(which(sfdr <= .15))
  tailps = 1-targp
- n_at_threshs = sapply(tailps, function(x)  max(which(sfdr <= x)) )
- threshs = sapply(tailps, function(x) sptops[ max(which(sfdr <= x)) ])
+ amax = function(x,...) ifelse(length(x)==0, NA, max(x, ...))
+ n_at_threshs = sapply(tailps, function(x)  amax(which(sfdr <= x)) )
+ threshs = sapply(tailps, function(x) sptops[ amax(which(sfdr <= x)) ])
  ncalls = data.frame(ncall=n_at_threshs, fdr=tailps)
  thresh005 = sptops[nc005]
  thresh01 = sptops[nc01]
@@ -314,6 +315,7 @@ genewiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.9,.95, .975, .9
  tlist = list(thresh005=thresh005, thresh01=thresh01, thresh10=thresh10,
 	thresh12.5=thresh12.5,thresh15=thresh15)
 
+gro = NULL
 gr = obs$mgr@geneExtents
 if (length(gr)>0) {  # have some loc info
   gro = gr[ as.character(obs$topdf$probes) ]
