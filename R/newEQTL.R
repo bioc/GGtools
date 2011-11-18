@@ -115,18 +115,22 @@ eqtlTests = function(smlSet, rhs=~1-1,
    shortfac = 100, checkValid=TRUE, saveSummaries=TRUE, 
    uncert=TRUE, family, genegran=50, prefilter=dropMonomorphies, 
    geneExtents, snpRanges, force.locations=FALSE, ... ) {
- if (force.locations && (missing(geneExtents) | missing(snpRanges))) stop("force.locations = TRUE, must supply geneExtents and snpRanges as GRanges instances, but at least one is missing")
+ if (force.locations && (missing(geneExtents) | missing(snpRanges))) 
+    stop("force.locations = TRUE, must supply geneExtents and snpRanges as GRanges instances, but at least one is missing")
  theCall = match.call()
  if (checkValid) {
    tmp = validObject(smlSet)
    }
- if (!missing(snpRanges)) {
+ if (!missing(snpRanges)) {  # assume SNPlocs package supplies SNP granges, and move the id to name with rs prefix
     if (is.null(names(snpRanges)) && is.character(elementMetadata(snpRanges)$RefSNP_id))
        names(snpRanges) = paste("rs", elementMetadata(snpRanges)$RefSNP_id, sep="")
     }
  if (!is.function(prefilter)) stop("prefilter must be a function returning smlSet on smlSet input")
  smlSet = prefilter(smlSet)
- if (force.locations) {
+ # now work with location data if supplied
+ if (force.locations | !missing(geneExtents) | !missing(snpRanges)) {
+  if (!force.locations) warning("force.locations is false, but geneExtents or snpRanges supplied, harmonizing smlSet input to these")
+  if (!missing(snpRanges)) {
   # harmonize SnpMatrix data with locations, dropping unlocated SNP and dropping locations for ungenotyped SNP
     sm = smList(smlSet)
     for (j in 1:length(sm)) {
@@ -135,14 +139,14 @@ eqtlTests = function(smlSet, rhs=~1-1,
     smlSet@smlEnv$smList = sm
     allsid = unlist(lapply(smList(smlSet), colnames))
     snpRanges = snpRanges[allsid]  # force back the intersection on the locations
+  }
+ if (!missing(geneExtents)) {
   # harmonize expression data
     okg = intersect( featureNames(smlSet), names(geneExtents) )
     if (length(okg) == 0) stop("featureNames(smlSet) has null intersection with names(geneExtents)")
     smlSet = smlSet[ probeId(okg), ]
+  }
  }
- if (!missing(geneExtents) && length(geneExtents) > 0) geneExtents = geneExtents[ intersect(featureNames(smlSet), names(geneExtents)) ]  # force intersection back
- else geneExtents = GRanges()
- if (!all(names(geneExtents) == featureNames(smlSet))) stop("feature name/location name error for genes, should not happen.")
  if (missing(family)) family="gaussian"
  geneindex <- 1
  sess = sessionInfo()
