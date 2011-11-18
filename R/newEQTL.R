@@ -139,9 +139,10 @@ eqtlTests = function(smlSet, rhs=~1-1,
     okg = intersect( featureNames(smlSet), names(geneExtents) )
     if (length(okg) == 0) stop("featureNames(smlSet) has null intersection with names(geneExtents)")
     smlSet = smlSet[ probeId(okg), ]
-    geneExtents = geneExtents[ featureNames(smlSet) ]  # force intersection back
  }
-# if (!all(names(geneExtents) == featureNames(smlSet))) stop("feature name/location name error for genes, should not happen.")
+ if (!missing(geneExtents) && length(geneExtents) > 0) geneExtents = geneExtents[ intersect(featureNames(smlSet), names(geneExtents)) ]  # force intersection back
+ else geneExtents = GRanges()
+ if (!all(names(geneExtents) == featureNames(smlSet))) stop("feature name/location name error for genes, should not happen.")
  if (missing(family)) family="gaussian"
  geneindex <- 1
  sess = sessionInfo()
@@ -196,7 +197,6 @@ eqtlTests = function(smlSet, rhs=~1-1,
   })  # end chr apply
   names(cres) = chrNames
   exdate = date()
-  if (missing(geneExtents)) geneExtents = GRanges()
   if (missing(snpRanges)) snpRanges = GRanges()
   new("eqtlTestsManager", fflist=cres, call=theCall, sess=sess, 
         exdate=exdate, shortfac=shortfac, geneanno=annotation(smlSet),
