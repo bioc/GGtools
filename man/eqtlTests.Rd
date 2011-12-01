@@ -13,9 +13,10 @@ perform genome x transcriptome eQTL searches with high-performance options
 }
 \usage{
 eqtlTests(smlSet, rhs = ~1 - 1, runname = "foo", targdir = "foo", 
-	geneApply = lapply, chromApply = lapply, shortfac = 100, computeZ = FALSE, 
+	geneApply = lapply, chromApply = lapply, shortfac = 100, 
         checkValid = TRUE, saveSummaries = TRUE, uncert=TRUE, 
-	family, genegran=50, prefilter = dropMonomorphies, ...)
+	family, genegran=50, prefilter = dropMonomorphies, geneExtents,
+	snpRanges, force.locations=FALSE, ...)
 eqtlEstimates(smlSet, rhs = ~1 - 1, 
    runname = "fooe", targdir = "fooe", 
    geneApply = lapply, chromApply = lapply, 
@@ -79,26 +80,18 @@ logical to direct calculation of Zscore instead of X2
 and allele frequency data for downstream filtering?}
   \item{uncert}{setting for value of \code{uncertain} argument in \code{\link[snpStats]{snp.rhs.tests}}}
   \item{family}{specify the GLM family to use; defaults to 'gaussian' if left missing}
-  \item{\dots}{
-parameters passed to \code{\link[snpStats]{snp.rhs.tests}}}
-%  \item{mgr}{an instance of \code{eqtlTestsManager}}
-%  \item{ffind}{index into the list of ff files managed by \code{mgr} to be used for
-%obtaining scores}
-%  \item{chr}{token identifying chromosome of interest}
-%  \item{snpGR}{instance of \code{\link[GenomicRanges]{GRanges-class}} with SNP location}
-%  \item{radius}{numeric: number of basepairs up and downstream of TSS to be used for cis filtering}
-%  \item{minMAF}{numeric: minimum minor allele frequency for inclusion of SNP in reporting}
-%  \item{minGTF}{numeric: minimum genotype frequency for inclusion of SNP in reporting}
-%  \item{applier}{function, typically either \code{lapply} or \code{mclapply} if multicore
-%services are desired}
-%\item{useEnd}{logical to request cis relative to radius
-%past entire gene sequence
-%as opposed to local to TSS}
+  \item{\dots}{not used}
  \item{genegran}{numeric value of frequency at which gene names will be catted to stdout in case
   \code{options()$verbose == TRUE}}
  \item{rules}{instance of \code{\link[snpStats]{ImputationRules-class}}}
  \item{prefilter}{function that takes and returns smlSet instance to
    be executed prior to any analysis}
+ \item{geneExtents}{if supplied, a \code{\link[GenomicRanges]{GRanges-class}} instance giving
+gene extents, to be used for cis filtering}
+ \item{snpRanges}{if supplied, a \code{\link[GenomicRanges]{GRanges-class}} instance giving
+SNP locations, to be used for cis filtering}
+ \item{force.locations}{a logical; if \code{TRUE}, it is an error to fail
+to provide both \code{geneExtents} and \code{snpRanges}}
 }
 \details{
 \code{\link[snpStats]{snp.rhs.tests}} (or

@@ -14,8 +14,8 @@ thresholds
 }
 \usage{
 genewiseFDRtab(sms, rhs, nperm = 1, seed = 1234, 
-	targp = c(0.95, 0.975, 0.99, 0.995), 
-	folderstem = "fdrf", geneApply = lapply, gene2snpList=NULL)
+	targp = c(0.9, 0.95, 0.975, 0.99, 0.995), 
+	folderstem = "fdrf", geneApply = lapply, gene2snpList=NULL, ...)
 policywiseFDRtab(sms, rhs, nperm = 1, seed = 1234, 
 	targp = c(0.95, 0.975, 0.99, 0.995), 
 	folderstem = "fdrf", geneApply = lapply, 
@@ -57,6 +57,7 @@ created by the \code{\link{proximityList}} function
   \item{policyClo}{function accepting an eqtlTests manager, returning function of argument x
 that will implement a policy of filtering scores for use in identifying genetic
 elements that are associated with expression}
+  \item{\dots}{passed to \code{\link{eqtlTests}} as run by genewiseScores}
 }
 \details{
 \code{policyFDRtab} should achieve greater flexibility at the call, allowing

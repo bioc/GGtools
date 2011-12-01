@@ -10,7 +10,8 @@ compute a named GRanges instance with extents of a set of genes
 on a chromosome
 }
 \usage{
-geneRanges(genomeOrPkgOrTxDb, chr = NULL, is.annopkg = FALSE, extend = 0)
+geneRanges(genomeOrPkgOrTxDb, chr = NULL, is.annopkg = FALSE, 
+  extend = 0, applier=lapply)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

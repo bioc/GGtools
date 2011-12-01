@@ -185,7 +185,7 @@ eqtlTests = function(smlSet, rhs=~1-1,
       ex = exprs(smlSet)[gene,]
       fmla = formula(paste("ex", paste(as.character(rhs),collapse=""), collapse=" "))
       numans = snp.rhs.tests(fmla, snp.data=snpdata, data=pData(smlSet), 
-          family=family , uncertain=uncert, ...)@chisq
+          family=family , uncertain=uncert)@chisq
       miss = is.na(numans)
       if (any(miss)) numans[which(miss)] = rchisq(length(which(miss)), 1)
       store[, gene, add=TRUE] = shortfac*numans
@@ -202,6 +202,7 @@ eqtlTests = function(smlSet, rhs=~1-1,
   names(cres) = chrNames
   exdate = date()
   if (missing(snpRanges)) snpRanges = GRanges()
+  if (missing(geneExtents)) geneExtents = GRanges()
   new("eqtlTestsManager", fflist=cres, call=theCall, sess=sess, 
         exdate=exdate, shortfac=shortfac, geneanno=annotation(smlSet),
         df=1, summaryList=summfflist, geneExtents=geneExtents, snpRanges=snpRanges)
