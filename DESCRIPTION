@@ -3,9 +3,9 @@ Title: software and data for genetics of gene expression (c) 2006 VJ Carey
 Version: 4.1.9
 Author: Vince Carey <stvjc@channing.harvard.edu>
 Description: dealing with hapmap SNP reports, GWAS, etc.
-Depends: R (>= 2.13.0), methods, Biobase (>= 1.11.26), GGBase (>= 3.13.5),
-	snpStats(>= 1.1.10), annotate, IRanges, rtracklayer, org.Hs.eg.db,
-	GenomicRanges (>= 1.3.38), ff
+Depends: R (>= 2.13.0), methods, Biobase (>= 1.11.26), GGBase (>= 3.15.2),
+	snpStats(>= 1.1.10), annotate, IRanges, rtracklayer (>= 1.15.4), 
+	org.Hs.eg.db, GenomicRanges (>= 1.7.6), ff
 Enhances: multicore, annaffy
 Suggests: illuminaHumanv1.db, org.Hs.eg.db, SNPlocs.Hsapiens.dbSNP.20100427,
 	rpart, rtracklayer, ceu1kg, SNPlocs.Hsapiens.dbSNP.20090506,
