@@ -147,7 +147,9 @@ policywiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.95, .975, .99
     sptopslist[[i]] = sort(perlist[[i]]$tops, decreasing=TRUE)
     }
  sptops = apply(sapply(sptopslist, function(x)x), 1, mean)  # check margin here, looks right
+ all.permtops = unlist(lapply(perlist, function(x)x$tops))
  sfdr = sapply(sotops, function(x) sum(sptops>x)/max(c(1,sum(sotops>x))))  # switch to > 10/oct/2011
+ sfdr2 = sapply(sotops, function(x) sum(all.permtops>x)/max(c(1,sum(sotops>x))))  # switch to > 10/oct/2011
  nf = sfdr*length(sfdr)
  ncall = 1:length(sfdr)
  nc005 = max(which(sfdr <= .005))
@@ -160,7 +162,7 @@ policywiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.95, .975, .99
 	unsorted.tops = obs$tops,  topdf=obs$topdf,
 	universe=obs$universe, sorted.tops=obs$sotops, sorted.av.permtops=sptops,
         nsnpsmgd = obs$nsnpsmgd, nprobes=obs$nprobes, nsnptests=obs$nsnptests,
-     	nullq = nullq, targp=targp, ncall=ncall, sfdr=sfdr,
+     	nullq = nullq, targp=targp, ncall=ncall, sfdr=sfdr, sfdr2=sfdr2,
 	nc005=nc005, nc01=nc01, nc05=nc05, nc10=nc10, nc12.5=nc12.5,
         nc15=nc15, thecall=thecall))
 }
@@ -271,8 +273,8 @@ if (length(gr)>0) {  # have some loc info
   }
 
  new("eqtlFDRtab", list(fdrtab=fdrtab, fullfdrtab=fullfdrtab, obsmgr=obs, permmgr=perlist, 
-	unsorted.tops = obs$tops,  topdf=obs$topdf,
-	universe=obs$universe, sorted.tops=obs$sotops, sorted.av.permtops=sptops,
+	unsorted.tops = obs$tops,  topdf=obs$topdf, nperm=nperm,
+	universe=obs$universe, sorted.tops=obs$sotops, sorted.all.permtops=sptops,
         nsnpsmgd = obs$nsnpsmgd, nprobes=obs$nprobes, nsnptests=obs$nsnptests,
      	nullq = nullq, targp=targp, ncall=ncall, sfdr=sfdr, threshs=threshs,
         n_at_threshs=n_at_threshs, ncalls=ncalls, gro=gro,

@@ -15,7 +15,7 @@ importFrom(Rsamtools, yieldTabix, TabixFile, seqnamesTabix, scanTabix)
 importFrom(stats,
            as.formula, formula, lm, resid)
 
-exportMethods(gwSnpTests, topFeats, show, vcf2sm, probesManaged, snpsManaged)
+exportMethods(gwSnpTests, topFeats, show, vcf2sm, probesManaged, snpsManaged, c)
 
 export(eqtlTests, cisProxScores, clipPCs, pcChooser, permEx, makeDiagDirector,
 	topFeats, vcf2sm, externalize, manhPlot, 
@@ -31,5 +31,5 @@ export(eqtlTests, cisProxScores, clipPCs, pcChooser, permEx, makeDiagDirector,
 
 
 exportClass(eqtlTestsManager, multiCisDirector, cisProxScores, transManager,
-	eqtlEstimatesManager, eqtlFDRtab)
+	eqtlEstimatesManager, eqtlFDRtab, eqtlFDRSummary)
 

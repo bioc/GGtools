@@ -2,7 +2,9 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{eqtlFDRtab-class}
+\alias{eqtlFDRSummary-class}
 \alias{show,eqtlFDRtab-method}
+\alias{show,eqtlFDRSummary-method}
 \alias{show,gwScores-method}
 \alias{show,pwScores-method}
 
@@ -38,6 +40,9 @@ Class \code{"\linkS4class{AssayData}"}, by class "list", distance 2.
 %%  ~~who you are~~
 }
 \note{
+\code{eqtlFDRSummary} can be used to combine multiple \code{eqtlFDRtab} instances.
+Deep information is lost, but the general statistics are suitably combined into global
+(permutation-based) FDR scores.
 %%  ~~further notes~~
 }
 
@@ -49,5 +54,6 @@ Class \code{"\linkS4class{AssayData}"}, by class "list", distance 2.
 }
 \examples{
 showClass("eqtlFDRtab")
+showClass("eqtlFDRSummary")
 }
 \keyword{classes}
