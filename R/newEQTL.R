@@ -138,7 +138,10 @@ eqtlTests = function(smlSet, rhs=~1-1,
       }
     smlSet@smlEnv$smList = sm
     allsid = unlist(lapply(smList(smlSet), colnames))
-    snpRanges = snpRanges[allsid]  # force back the intersection on the locations
+    #  snpRanges = snpRanges[allsid]  # force back the intersection on the locations
+    #  the above seems to fail idiosyncratically dec 2
+    keepers = match(allsid, names(snpRanges), nomatch=0)
+    snpRanges = snpRanges[keepers]  # force back the intersection on the locations
   }
  if (!missing(geneExtents)) {
   # harmonize expression data
