@@ -4,6 +4,7 @@
 \alias{eqtlFDRtab-class}
 \alias{eqtlFDRSummary-class}
 \alias{show,eqtlFDRtab-method}
+\alias{c,eqtlFDRtab-method}
 \alias{show,eqtlFDRSummary-method}
 \alias{show,gwScores-method}
 \alias{show,pwScores-method}
@@ -43,6 +44,11 @@ Class \code{"\linkS4class{AssayData}"}, by class "list", distance 2.
 \code{eqtlFDRSummary} can be used to combine multiple \code{eqtlFDRtab} instances.
 Deep information is lost, but the general statistics are suitably combined into global
 (permutation-based) FDR scores.
+
+The \code{c} method will combine an arbitrary number of tables and
+compute FDR on the basis of available permuted and observed scores,
+using the plug in method noted in Hastie Tibshirani and Friedman Statistical
+Learning volume.  An instance of eqtlFDRSummary is returned.
 %%  ~~further notes~~
 }
 
