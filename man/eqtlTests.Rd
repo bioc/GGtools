@@ -170,6 +170,7 @@ curd = getwd()
 setwd(td)
 time.lapply = unix.time(e1 <- eqtlTests( hm, ~male ))
 time.lapply
+if (interactive()) {
 length(probesManaged(e1,1))
 length(snpsManaged(e1,1))
 e1
@@ -177,6 +178,7 @@ dir("foo")
 time.lapply2 = unix.time(ee1 <- eqtlEstimates( hm, ~male ))
 time.lapply2
 ee1
+}
 dir("foo")
 setwd(curd)
 #

@@ -19,7 +19,7 @@ eqtlEstimates = function (smlSet, rhs = ~1 - 1, runname = "fooe", targdir = "foo
     ngenes = length(geneNames)
     nchr = length(chrNames)
     if (!file.exists(targdir)) 
-        system(paste("mkdir", targdir))
+        dir.create(targdir)
     summfflist = list()
     if (saveSummaries) {
         sumfn = paste(fnhead, chrNames, "_summ.ff", sep = "")

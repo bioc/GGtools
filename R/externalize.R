@@ -30,15 +30,15 @@ externalize = function(smlSet, packname, author="Replace Me <auth@a.b.com>",
   maintainer="Replace Me <repl@a.b.com>") {
 # creates folder structure for package
 # saves expression data as ex in data folder 
- system(paste("mkdir", packname))
- system(paste("mkdir ", packname, "/inst", sep=""))
- system(paste("mkdir ", packname, "/R", sep=""))
- system(paste("mkdir ", packname, "/inst/parts", sep=""))
+ dir.create(packname)
+ dir.create(paste(packname, "/inst", sep=""))
+ dir.create(paste(packname, "/R", sep=""))
+ dir.create(paste(packname, "/inst/parts", sep=""))
  cn = names(smList(smlSet))
  partfol = paste(packname, "inst/parts/", sep="/")
  datfol = paste(packname, "data/", sep="/")
  for (i in cn) { assign(i, smList(smlSet)[[i]]); save(list=i, file=paste(partfol, i, ".rda", sep="")) }
- system(paste("mkdir ", packname, "/data", sep=""))
+ dir.create(paste(packname, "/data", sep=""))
  ex = as(smlSet, "ExpressionSet")
  save(ex, file=paste(datfol, "eset.rda", sep=""))
  dd = readLines(system.file("extpacksupp/DESCRIPTION.proto", package="GGtools"))

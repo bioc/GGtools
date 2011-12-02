@@ -14,7 +14,7 @@
    for (i in 1:length(cand)) {
     cat(i)
     targdir = tempfile()
-    system(paste("mkdir", targdir))
+    dir.create(targdir)
     if (file.exists(targdir)) unlink(targdir, recursive=TRUE)
     ans[[i]] = cisProxScores( clipPCs(sms, 1:cand[i]), fmla, dradset=radius,
             folder=targdir, runname="pcc", geneApply=geneApply, ffind=ffind, ... )
