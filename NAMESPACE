@@ -15,7 +15,8 @@ importFrom(Rsamtools, yieldTabix, TabixFile, seqnamesTabix, scanTabix)
 importFrom(stats,
            as.formula, formula, lm, resid)
 
-exportMethods(gwSnpTests, topFeats, show, vcf2sm, probesManaged, snpsManaged, c)
+exportMethods(gwSnpTests, topFeats, show, vcf2sm, 
+   probesManaged, snpsManaged, c, fullreport)
 
 export(eqtlTests, cisProxScores, clipPCs, pcChooser, permEx, makeDiagDirector,
 	topFeats, vcf2sm, externalize, manhPlot, 
