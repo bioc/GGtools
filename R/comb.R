@@ -1,11 +1,14 @@
 
 setClass("eqtlFDRSummary", representation(
-  allpermtops="numeric", obsrd="GRanges", calls="list"))
+  allpermtops="numeric", obsrd="GRanges", calls="list",
+  theCall="call", sess="ANY", genome="character", cisRadius="numeric",
+  nperm="numeric"))
 
 setMethod("show", "eqtlFDRSummary", function(object) {
- cat("eqtlTestsSummary instance.  Best observed features:\n")
  nr = length(object@obsrd)
- todo = min(c(nr, 5))
+ cat("eqtlTestsSummary instance.  Best observed features (of", nr, 
+    "):\n", sep="")
+ todo = min(c(nr, 3))
  print(object@obsrd[1:todo])
 })
 
