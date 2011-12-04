@@ -1,6 +1,6 @@
 Package: GGtools
 Title: software and data for genetics of gene expression (c) 2006 VJ Carey
-Version: 4.1.13
+Version: 4.1.14
 Author: Vince Carey <stvjc@channing.harvard.edu>
 Description: dealing with hapmap SNP reports, GWAS, etc.
 Depends: R (>= 2.13.0), methods, Biobase (>= 1.11.26), GGBase (>= 3.15.2),
@@ -23,4 +23,5 @@ Collate: allS4.R X2chunk.R cisSnpTests.R geneTrack.R multff.R topFeats.R
 	scoresInRanges.R fullsynth.R clipPCs.R pcc.R interleave2cis.R
 	transTops.R feqtltests.R externalize.R egtset.R relocate.R
 	sumDirectors.R getTransScores.R transutils.R machutils.R
-	eqtlEstimates.R cisFDR.R probeloc.R bindScores.R comb.R zzz.R
+	eqtlEstimates.R cisFDR.R probeloc.R bindScores.R comb.R 
+	cisgetter.R zzz.R
