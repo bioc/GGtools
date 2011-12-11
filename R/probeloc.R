@@ -149,6 +149,16 @@ getGene2SnpList = function(sms, chr, genome, radius=50000,
  mapper = get(paste(gsub(".db", "", ganno), "CHR", sep=""))
  ponc = get(chr, revmap(mapper))
  ponc = intersect(featureNames(sms), ponc)
+#
+# code added here to deal with an inconsistency in lumiHumanAll, 11 dec 2011
+#
+    locmapper = get(paste(gsub(".db", "", ganno), "CHRLOC", sep = ""))
+    chk = mget(ponc, locmapper)
+    chk = sapply(chk, function(x) names(x)[1])
+    drp = which(chk != chr)
+    if (length(drp) > 0)
+        ponc = ponc[-drp]
+
  if (length(ponc) == 0) stop(paste("sms contains no probes on chromosome ", chr))
 #
 # now obtain coordinates
