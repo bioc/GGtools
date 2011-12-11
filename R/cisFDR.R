@@ -408,7 +408,6 @@ genewiseScores2 = function(sms, rhs, folderstem="fdrf", geneApply=lapply,
     gene2snpList, ... ) {
     ans = policywiseScores( sms, rhs, geneApply, policyClo = topCis.policy2( gene2snpList,
 		geneApply ), ... )
-    data.frame(
     topdf = data.frame(probes=ans$gene, rsid=ans$rsid, max.gwscores=ans$score)
     list(topdf = topdf)
 }
