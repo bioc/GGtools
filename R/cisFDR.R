@@ -331,8 +331,8 @@ policywiseScores = function(sms, rhs, targp=c(.95, .975, .99, .995),
 #
   obs = eqtlTests(sms, rhs, geneApply=geneApply, targdir=folderstem, ...)  # could be 
           # or enhanced filtered relative to sms on basis of ...
-  theSnps = GGtools:::snpsManaged(obs, 1)
-  theProbes = GGtools:::probesManaged(obs, 1)
+  theSnps = snpsManaged(obs, 1)
+  theProbes = probesManaged(obs, 1)
   nsnps = length(theSnps)
   nprobes = length(theProbes)
   new("pwScores", policyClo ( obs ))

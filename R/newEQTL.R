@@ -58,7 +58,7 @@ permuterm = function(l) {
 snpIdMap = function (ids, x) 
 {
     chrn = names(x@fflist)
-    snpnames = lapply(GGtools:::fflist(x), rownames)
+    snpnames = lapply(fflist(x), rownames)
 #    cnames = names(snpnames)
 #    findchr = function(x) {
 #        if (length(x) > 1) 

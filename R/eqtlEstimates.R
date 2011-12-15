@@ -23,16 +23,14 @@ eqtlEstimates = function (smlSet, rhs = ~1 - 1, runname = "fooe", targdir = "foo
     summfflist = list()
     if (saveSummaries) {
         sumfn = paste(fnhead, chrNames, "_summ.ff", sep = "")
-        if ("multicore" %in% search()) {
-            summfflist = multicore::mclapply(1:length(chrNames), 
-                function(i) ffSnpSummary(smList(smlSet)[[i]], 
+            summfflist = geneApply(1:length(chrNames),   # this is hokey, but geneApply is likely to be a reasonable
+                function(i) ffSnpSummary(smList(smlSet)[[i]],  # concurrent function 
                   sumfn[i], fac = shortfac))
         }
         else {
             for (i in 1:length(sumfn)) summfflist[[chrNames[i]]] = ffSnpSummary(smList(smlSet)[[i]], 
                 sumfn[i])
         }
-    }
     cres = chromApply(chrNames, function(chr) {
         snpdata = smList(smlSet)[[chr]]
         targff = paste(fnhead, "chr", chr, ".ff", sep = "")

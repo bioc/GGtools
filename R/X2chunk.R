@@ -7,8 +7,8 @@ X2chunk = function( mgr, ffind, start, end, snplocs, anno, useSym=TRUE ) {
            SF = mgr$shortfac
            }
   else if (is(mgr, "eqtlTestsManager")) {
-           FFL = GGtools:::fflist(mgr)
-           SF = GGtools:::shortfac(mgr)
+           FFL = fflist(mgr)
+           SF = shortfac(mgr)
            }
   else stop("mgr must inherit from multffManager or eqtlTestsManager")
   snpNames = rownames(FFL[[ffind]])

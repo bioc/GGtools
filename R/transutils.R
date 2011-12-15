@@ -107,7 +107,6 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
     if (length(chrnames) < 2) 
         stop("must have length(chrnames) >= 2")
     theCall = match.call()
-    require(GGtools)
 #
 # get an image of the expression+genotype data for SNP on specific chromosome snpchr
 #
@@ -216,7 +215,6 @@ mtransScores = function (smpackvec, snpchr = "chr1", rhslist, K = 20, targdirpre
     if (length(chrnames) < 2) 
         stop("must have length(chrnames) >= 2")
     theCall = match.call()
-    require(GGtools)
 #
 # get an image of the expression+genotype data for SNP on specific chromosome snpchr
 #
@@ -360,7 +358,6 @@ nthScores = function(tm, n) {
 
 
 transTab = function( x, snpchr ) {
- require(ff)
  gannopkname = x$smsanno
  K = x$K
  sids = rep(x$snpnames, each=K )

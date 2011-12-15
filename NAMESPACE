@@ -1,5 +1,6 @@
 importFrom("Biobase", "exprs")
 importFrom("GGBase", "smList")
+importFrom("GenomicRanges", "GRanges")
 importFrom("AnnotationDbi", "get", "mget")
 importFrom("ff", "ff", "ffrowapply", "[.ff", "filename", "as.ram")
 importFrom("bit", "chunk")
@@ -28,7 +29,7 @@ export(eqtlTests, cisProxScores, clipPCs, pcChooser, permEx, makeDiagDirector,
 	nthScores, eqtlEstimates, genewiseFDRtab, policywiseFDRtab,
 	probeLocations, snpLocations, probeChromosomes, proximityList,
 	transTab, tr1_perm, tr1_obs, restrictProbesToChrom,
-	getGene2SnpList, geneRanges, get.cis.eQTLs)
+	getGene2SnpList, geneRanges, get.cis.eQTLs, getCSCorrByGene)
 
 
 exportClass(eqtlTestsManager, multiCisDirector, cisProxScores, transManager,

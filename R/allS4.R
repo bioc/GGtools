@@ -580,11 +580,11 @@ setMethod("[", c("cisTransDirector", "character", "character"),
     probeListEl = sort(unique(as.integer(x@probetabref[j, ])))
     if (!all.equal(as.integer(names(spids)), probeListEl)) 
 		stop("split of gene names by director element indices has unexpected result")
-    mgrlist = lapply(probeListEl, function(z) GGtools:::mgrs(x)[[z]])
+    mgrlist = lapply(probeListEl, function(z) mgrs(x)[[z]])
     applier = lapply
     if ("multicore" %in% search()) applier = mclapply
-    ans = applier(1:length(mgrlist), function(z) GGtools:::fflist(mgrlist[[z]])[[snpListChr]][i, 
-        spids[[z]],drop=FALSE]/GGtools:::shortfac(mgrlist[[z]]))
+    ans = applier(1:length(mgrlist), function(z) fflist(mgrlist[[z]])[[snpListChr]][i, 
+        spids[[z]],drop=FALSE]/shortfac(mgrlist[[z]]))
     if (length(ans) == 1) return(ans[[1]])
     bans = ans[[1]]
     for (i in 2:length(ans)) bans = cbind(bans, ans[[i]])
@@ -712,7 +712,6 @@ setAs("cwSnpScreenResult", "GRanges", function(from) {
 setClass("transManager", representation(base="list"))
 
 setMethod("show", "transManager", function(object){
- require(ff, quietly=TRUE)
  basel = object@base
  cat("transManager instance, created", basel$date, "\n", sep=" ")
  cat("dimension of scores component:\n")
