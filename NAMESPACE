@@ -1,5 +1,6 @@
 importFrom("Biobase", "exprs")
 importFrom("GGBase", "smList")
+importFrom("IRanges", "IRanges")
 importFrom("GenomicRanges", "GRanges")
 importFrom("AnnotationDbi", "get", "mget")
 importFrom("ff", "ff", "ffrowapply", "[.ff", "filename", "as.ram")
