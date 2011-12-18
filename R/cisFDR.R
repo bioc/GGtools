@@ -56,7 +56,7 @@ cat("\n")
 }
 
 genewiseScores = function(sms, rhs, targp=c(.95, .975, .99, .995),
-	folderstem="fdrf", geneApply=lapply, gene2snpList=NULL, ...) {
+	folderstem="fdrf", chromApply=lapply, geneApply=lapply, gene2snpList=NULL, ...) {
 #
 # factor out the obs and permute steps for genewiseFDRtab, let the 
 # permutation occur outside
@@ -66,7 +66,7 @@ genewiseScores = function(sms, rhs, targp=c(.95, .975, .99, .995),
 #
 # you are pushing geneExtents and snpRanges through to eqtlTests in ...
 #
-  obs = eqtlTests(sms, rhs, geneApply=geneApply, targdir=folderstem, ...)  # could be filtered relative to sms on basis of ...
+  obs = eqtlTests(sms, rhs, chromApply=chromApply, geneApply=geneApply, targdir=folderstem, ...)  # could be filtered relative to sms on basis of ...
   nsnpsmgd = length(snpsManaged(obs,1))
   gn <- pm <- probesManaged(obs,1)
   nprobesmgd = length(pm)
@@ -173,12 +173,13 @@ policywiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.95, .975, .99
 
 
 genewiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.9,.95, .975, .99, .995),
-       folderstem="fdrf", geneApply=lapply, gene2snpList=NULL, ...) {
+       folderstem="fdrf", chromApply=lapply, geneApply=lapply, gene2snpList=NULL, ...) {
 #
 # revised 3 nov 2011 with simpler false call enumeration/averaging for FDR
 #
  thecall = match.call()
  obs = genewiseScores( sms=sms, rhs=rhs, targp=targp, folderstem=folderstem,
+ 	chromApply=chromApply,
 	geneApply=geneApply, gene2snpList=gene2snpList, ... )
  set.seed(seed)
  perlist = list()
