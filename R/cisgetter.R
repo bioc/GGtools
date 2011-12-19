@@ -16,9 +16,9 @@ getSNPgr = function(genome, chr) {
  snpgr = getter( seqnToUse, as.GRanges=TRUE )  # LAST USE of seqnToUse, reset to chr prefix below
 }
 
-get.cis.eQTLs = function(smpack, fmla, cisRadius=50000, genome="hg19", 
+best.cis.eQTLs = function(smpack, fmla, cisRadius=50000, genome="hg19", 
    exTransform = function(x)x,
-   folderstem, nperm=2, 
+   folderstem="cisScratch", nperm=2, 
    geneApply=lapply, chromApply=lapply,
    cleanChrn = function(x) gsub("chr", "", x),
    additionalSNPGR=NULL, useTxDb=FALSE, verbose=TRUE,
@@ -34,8 +34,8 @@ get.cis.eQTLs = function(smpack, fmla, cisRadius=50000, genome="hg19",
   nchr = length(chrn)
   if (verbose) cat("will run on chr\n")
   print(chrn)
-  ans = list()
-  for (i in 1:nchr) {
+  ans = chromApply(1:nchr, function(i) {
+  #for (i in 1:nchr) {
     if (verbose) cat("chr", chrn[i], "... getSS...")
     cursms = getSS(smpack, chrn[i])
     if (!require(annotation(cursms), character.only=TRUE)) 
@@ -53,7 +53,7 @@ get.cis.eQTLs = function(smpack, fmla, cisRadius=50000, genome="hg19",
     sr = getSNPgr( genome, cchrn[i] )
     g2sl = getGene2SnpList( cursms, cchrn[i], genome=genome, radius=cisRadius,
 	additionalSNPGR=additionalSNPGR, useTxDb=useTxDb)
-    ans[[i]] = genewiseFDRtab(cursms, fmla,
+    tmp = genewiseFDRtab(cursms, fmla,
         geneApply=geneApply, chromApply=chromApply,
         folderstem=folderstem, nperm=nperm, 
         geneExtents=ge, snpRanges=sr, force.locations=TRUE)
@@ -61,7 +61,8 @@ get.cis.eQTLs = function(smpack, fmla, cisRadius=50000, genome="hg19",
     dirs = c(folderstem, dirs)
     unlink(dirs, recursive=TRUE, force=TRUE)
     gc()
-    }
+    tmp
+    })
    tmp = do.call(c, ans)
    tmp@theCall = match.call()
    tmp@sess = sessionInfo()
