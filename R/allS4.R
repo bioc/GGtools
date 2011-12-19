@@ -663,6 +663,8 @@ setMethod("topSnps", "gwSnpScreenResult", function(x, n=10) {
 })
 
 setAs("cwSnpScreenResult", "RangedData", function(from) {
+  .Deprecated("use makeGRanges")
+  stop("this function is too dependent on changing approaches to SNP location management; use makeGRanges.")
   allp = p.value(from@.Data[[1]]) 
   rs = from@.Data[[1]]@snp.names
   locstr = snpLocs.Hs(chrnum(from@chrnum), rsid(rs))
@@ -683,7 +685,34 @@ setAs("cwSnpScreenResult", "RangedData", function(from) {
   rd
 })
 
+makeGRanges = function( cwssr, SNPGRanges, use.names=FALSE, maxsco=20, ... ) {
+  allp = p.value(cwssr@.Data[[1]])
+  rs = cwssr@.Data[[1]]@snp.names
+  names(allp) = rs
+
+  if (!use.names) {   # must make names
+    if (!("RefSNP_id" %in% colnames(elementMetadata(SNPGRanges))))
+        stop("'RefSNP_id' not present in elementMetadata(SNPGRanges)")
+
+    rssub = elementMetadata(SNPGRanges)$RefSNP_id
+    rssub = paste("rs", rssub, sep="")
+    names(SNPGRanges) = rssub
+  }
+
+  okids = intersect(rs, names(SNPGRanges))
+
+  allp = allp[okids]
+  bad = which(is.na(allp) | !is.finite(allp))
+  SNPGRanges = SNPGRanges[okids]
+  elementMetadata(SNPGRanges)$score = pmin(maxsco, -log10(allp))
+
+  if (length(bad)>0) SNPGRanges[-bad] else SNPGRanges
+}
+
+
 setAs("cwSnpScreenResult", "GRanges", function(from) {
+  .Deprecated("use makeGRanges")
+  stop("this function is too dependent on changing approaches to SNP location management; use makeGRanges.")
   allp = p.value(from@.Data[[1]]) # , 1) # assume 1df -- must improve
   rs = from@.Data[[1]]@snp.names
   locstr = snpLocs.Hs(chrnum(from@chrnum), rsid(rs))

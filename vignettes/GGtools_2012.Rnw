@@ -1,0 +1,229 @@
+
+%
+% NOTE -- ONLY EDIT THE .Rnw FILE!!!  The .tex file is
+% likely to be overwritten.
+%
+
+%\VignetteIndexEntry{GGtools 2012: efficient tools for eQTL discovery}
+%\VignetteDepends{GGdata}
+%\VignetteKeywords{genetics of gene expression}
+%\VignettePackage{GGtools}
+
+\documentclass[12pt]{article}
+
+\usepackage{amsmath,pstricks}
+\usepackage[authoryear,round]{natbib}
+\usepackage{hyperref}
+
+
+\textwidth=6.2in
+\textheight=8.5in
+%\parskip=.3cm
+\oddsidemargin=.1in
+\evensidemargin=.1in
+\headheight=-.3in
+
+\newcommand{\scscst}{\scriptscriptstyle}
+\newcommand{\scst}{\scriptstyle}
+
+
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textit{#1}}}
+\newcommand{\Rmethod}[1]{{\texttt{#1}}}
+\newcommand{\Rfunarg}[1]{{\texttt{#1}}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+
+\textwidth=6.2in
+
+\bibliographystyle{plainnat} 
+ 
+\begin{document}
+%\setkeys{Gin}{width=0.55\textwidth}
+
+\title{Using \textit{GGtools} for eQTL discovery and interpretation}
+\author{VJ Carey \texttt{stvjc at channing.harvard.edu}}
+\maketitle
+
+\tableofcontents
+
+\section{Overview}
+
+This document addresses data structure and analytic workflow
+for investigations of genetic sources of expression variation.
+Key background references are
+\citet{Williams:2007p21} for general biologic overview,
+\citet{Cheung:2005p446} and \citet{Stranger:2007p114} for key applications,
+and \citet{Stegle:2010p2015}, \citet{Petretto:2010p2678}, and
+\citet{Leek:2010p1819} for various methodological issues.
+\citet{Majewski:2011p3139}
+reviews  potentials of eQTL investigations with
+expression measures based on RNA sequencing. 
+
+\section{Data structures}
+
+\subsection{Reference data supplied with Bioconductor}
+
+A collection of 30 trios of central
+European ancestry was genotyped for
+4 million SNP loci in HapMap phase II.
+Immortalized B-cell lines were assayed for
+gene expression using Illumina's HumanWG6v1 bead array.
+Digital data on expression and genotype for the 90 CEU individuals
+is distributed in Bioconductor package \textit{GGdata}.
+
+Acquire the genome-wide expression data and the genotype data
+for chromosome 20 as follows:
+
+<<loadm>>=
+suppressPackageStartupMessages(library(GGtools))
+<<getd,cache=TRUE>>=
+g20 = getSS("GGdata", "20")
+@
+<<lkc>>=
+g20
+class(g20)
+@
+
+The \texttt{smlSet} class was designed in 2006 as an experiment
+in unifying high-throughput expression and genotype data.
+A key resource was the \textit{snpMatrix} (now \textit{snpStats})
+package of David Clayton, which defined an 8-bit representation of
+genotype calls (including uncertain calls obtained by statistical
+imputation), import and coercion infrastructure allowing use
+of the 8-bit representation with popular genetic data formats
+(pedfiles, mach and beagle outputs, etc.),
+and statistical testing infrastructure employing this
+representation.
+
+The expression and sample-level data are handled just as with familiar
+\texttt{ExpressionSet} instances:
+<<doex>>=
+exprs(g20)[1:5,1:5]
+pData(g20)[1:4,]
+@
+
+The genotype data are held in a list with elements intended to
+represent chromosomes, and the list is stored in an environment to
+reduce copying efforts.
+<<lksm>>=
+smList(g20)
+as(smList(g20)[[1]][1:5,1:5], "matrix")
+@
+
+The leading zeroes in the display above indicate that raw bytes are
+used to represent the genotypes per sample (rows) per SNP (columns).
+Coercions:
+
+<<lksm2>>=
+as(smList(g20)[[1]][1:5,1:5], "numeric")
+as(smList(g20)[[1]][1:5,1:5], "character")
+@
+
+Any number of chromosomes can be held in the genotype list component,
+but the design allows working with only one chromosome at a time and
+examples emphasize this approach.  Amalgamation of results across
+chromosomes is generally straightforward.
+
+\subsection{Working with your own data}
+
+The \verb+make_smlSet+ function can be used to bind a list of
+suitably named
+\texttt{SnpMatrix} instances with an \texttt{ExpressionSet} instance
+to create a single \texttt{smlSet} instance covering multiple chromosomes.
+
+The \texttt{externalize} function can be applied to such an \texttt{smlSet}
+instance to create a new \textit{package} which can be installed for use
+with \texttt{getSS}.  This is the preferred way of managing work with
+large genotyping panels (such as the 10 million locus panel achievable with
+``thousand genomes imputation'').
+
+Briefly, \texttt{externalize} arranges a DESCRIPTION file and system of
+folders that can be installed as an R package.  The expression data
+are stored as object \texttt{ex} in data/eset.rda, and the \texttt{SnpMatrix}
+instances are stored separately as .rda files in inst/parts.
+The \texttt{getSS} function will create \texttt{smlSet} instances on
+the fly from the externalize-generated package.
+
+\subsection{Post-analysis data structures}
+
+While it is possible to construe the results of an eQTL search as a
+static report, it is more productive to conceptualize the result as a
+data object for further analysis.  Unfortunately, the number of
+tests to be managed can be very large -- at least hundreds of millions,
+and these must be joinable with location metadata to be maximally useful.
+
+Several data structures for managing post-analysis results
+have emerged as this package has matured.  Of particular concern
+are those that use \textit{ff} out-of-memory archiving for
+test statistic values or effect estimates and those that use the
+\texttt{GRanges} infrastructure to facilitate efficient query
+resolution in genomic coordinates.  These will be described along
+with the related analytic workflow steps.
+
+\section{Focused analyses}
+
+A specific gene can be checked for eQTL on a given chromosome
+or set of chromosomes with
+\texttt{gwSnpTests}.  There are various convenience facilities.
+Here we use a gene symbol to pick out an expression element,
+and we adjust for gender in an additive genetic model
+for effects of B allele copy number on expression of CPNE1.
+One degree of freedom chi-squared tests are computed.
+<<dot,cache=TRUE>>=
+t1 = gwSnpTests(genesym("CPNE1")~male, g20, chrnum("20"))
+t1
+topSnps(t1)
+@ 
+It is possible to compute tests for this specific gene for association
+with SNP across several chromosomes if desired; change the value of
+the third argument to a vector.
+
+There are a few approaches to visualization of the results that are
+relevant, but complications arise in relation to choice of genomic
+coordinates.
+
+<<dopl,echo=FALSE,results=hide>>=
+pdf(file="t1.pdf")
+plot(t1)
+dev.off()
+pdf(file="t1evg.pdf")
+plot_EvG(genesym("CPNE1"), rsid("rs17093026"), g20)
+dev.off()
+@
+
+<<dol,eval=FALSE>>=
+plot(t1, "SNPlocs.Hsapiens.dbSNP.20090506")
+plot_EvG(genesym("CPNE1"), rsid("rs17093026"), g20)
+@
+
+\setkeys{Gin}{width=0.45\textwidth}
+\begin{tabular}{cc}
+\includegraphics{t1} & \includegraphics{t1evg} \\
+\end{tabular}
+
+We can also use code like the following to display
+scores ($-\log_{10} p$) on the genome browser, here with hg19 locations.
+<<doloc,eval=FALSE>>=
+library(SNPlocs.Hsapiens.dbSNP.20100427)
+S20 = getSNPlocs("ch20", as.GRanges=TRUE)
+GR20 = makeGRanges(t1, S20)
+library(rtracklayer)
+export(GR20, "~/cpne1new.wig")
+@
+
+If we use the code above,
+we will need to manually alter the chr assignment in the wig file, and
+place an informative title to get the following display.
+
+\clearpage
+
+\setkeys{Gin}{width=0.85\textwidth}
+\includegraphics{cpne1Brow}
+
+\clearpage
+
+
+\bibliography{is11ppt}
+
+\end{document}
