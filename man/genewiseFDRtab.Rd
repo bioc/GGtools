@@ -15,7 +15,8 @@ thresholds
 \usage{
 genewiseFDRtab(sms, rhs, nperm = 1, seed = 1234, 
 	targp = c(0.9, 0.95, 0.975, 0.99, 0.995), 
-	folderstem = "fdrf", geneApply = lapply, gene2snpList=NULL, ...)
+	folderstem = "fdrf", chromApply = lapply,
+	geneApply = lapply, gene2snpList=NULL, ...)
 policywiseFDRtab(sms, rhs, nperm = 1, seed = 1234, 
 	targp = c(0.95, 0.975, 0.99, 0.995), 
 	folderstem = "fdrf", geneApply = lapply, 

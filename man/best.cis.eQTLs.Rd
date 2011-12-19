@@ -1,5 +1,6 @@
 \name{best.cis.eQTLs}
 \alias{best.cis.eQTLs}
+\alias{fullreport}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 simple interface to search for cis-eQTL
@@ -15,9 +16,13 @@ best.cis.eQTLs(smpack, fmla, cisRadius = 50000,
  cleanChrn = function(x) gsub("chr", "", x), 
  additionalSNPGR = NULL, useTxDb = FALSE, 
  verbose = TRUE, dropChr = c("X", "Y", "M"))
+
+fullreport(x)
 }
+
 %- maybe also 'usage' for other objects documented here.
 \arguments{
+  \item{x}{instance of eqtlFDRSummary, to be described}
   \item{smpack}{
 character string naming a package that can be used successfully
 with \code{\link[GGBase]{getSS}}: this package has inst/parts
