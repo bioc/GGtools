@@ -70,11 +70,21 @@ European ancestry was genotyped for
 Immortalized B-cell lines were assayed for
 gene expression using Illumina's HumanWG6v1 bead array.
 Digital data on expression and genotype for the 90 CEU individuals
-is distributed in Bioconductor package \textit{GGdata}.
+is distributed in Bioconductor package \textit{GGdata}; the expression 
+data were retrieved from the GENEVAR website of Wellcome Trust, e.g.,
+\begin{verbatim} 
+ftp://ftp.sanger.ac.uk/pub/genevar/CEU_parents_norm_march2007.zip
+\end{verbatim} 
+and the genotype data were obtained directly from
+hapmap.org at build 36:
+\begin{verbatim}
+ftp://ftp.ncbi.nlm.nih.gov/hapmap/genotypes/2008-03/forward/non-redundant/
+\end{verbatim}
+The data in GGdata are likely derived from r23, while r23a is now distributed.
+Some effort at updating genotypes may be supplied in the future.
 
 Acquire the genome-wide expression data and the genotype data
 for chromosome 20 as follows:
-
 <<loadm>>=
 suppressPackageStartupMessages(library(GGtools))
 <<getd,cache=TRUE>>=
@@ -334,9 +344,35 @@ to manually harvest this.
 <<gettop,cache=TRUE>>=
 pm1 = probesManaged(e1,1)
 tops = sapply(pm1, function(x) topFeats(probeId(x), mgr=e1, ffind=1, n=1)) 
-sort(tops, decreasing=TRUE)[1:6]
+top6 = sort(tops, decreasing=TRUE)[1:6]
+print(top6)
 @
 
+R has propagated the names of probes and SNPs with the scores so that we
+can create a table as follows:
+<<gettab>>=
+nms = strsplit(names(top6), "\\.")
+gn = sapply(nms,"[",1)
+sn = sapply(nms,"[",2)
+tab = data.frame(snp=sn,score=as.numeric(top6))
+rownames(tab) = gn
+tab
+@
+
+Statistical interpretation of the scores in this table is not clear as the
+data structure includes familial aggregation in
+trios and extended pedigrees, and may include population stratification,
+Nevertheless, we can check consistency of these findings with other published
+results involving multiple populations.
+\textit{GGtools} includes a table published by Stranger and colleagues
+in 2007 enumerating multipopulation eQTL \citep{Stranger:2007p114}.
+<<ddstr>>=
+data(strMultPop)
+strMultPop[ strMultPop$rsid %in% tab$snp, ]
+@
+Thus the top two SNP in our table are identified as multipopulation eQTL by
+Stranger.  The other association scores are not very strong and likely do
+not correspond to genuine associations.
 
 
 
