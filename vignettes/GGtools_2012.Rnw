@@ -145,6 +145,81 @@ instances are stored separately as .rda files in inst/parts.
 The \texttt{getSS} function will create \texttt{smlSet} instances on
 the fly from the externalize-generated package.
 
+\subsection{Filters and permutation support}
+
+We use ``filter'' to refer to any function that processes an \texttt{smlSet}
+instance and returns an \texttt{smlSet} instance after altering the contents,
+which may involve eliminating probes or SNPs, performing numerical transformations
+to expression or genotype measures, transforming sample data or eliminating samples.
+
+\subsubsection{Bracket operations}
+
+Coordinated manipulations of genotype, expression, and phenotype
+information on samples can be accomplished with the second subscript to
+the bracket operator.  Thus \texttt{g20[,1:5]} is the restriction of \texttt{g20}
+to the first five samples.  Sample names may also be used for such manipulations.
+
+Reduction of the expression component can be accomplished with the first
+subscript to the bracket operator.  Thus \texttt{g20[1:5,]} is the restriction
+of \texttt{g20} to five expression probes; all other data are unaltered.
+If it is desired to use feature names for such manipulations, the character
+vector of feature names must be cast to class \texttt{probeId} with the \texttt{probeId()}
+method.  At present no such operations can be used to alter the genotype data contents.
+
+\subsubsection{Large scale filters}
+
+It is known that non-specific filtering (removal of probes with low variation
+across samples, without regard to sample phenotype or class information)
+can increase sensitivity and specificity of certain differential expression
+test procedures \citep{Bourgon:2010p1763}.  The \texttt{nsFilter} function of
+the \textit{genefilter} package has been adapted to work with \texttt{smlSet}
+instances.
+
+SNPs can be filtered out of the \texttt{smlSet} instance on the basis of
+observed minor allele or genotype frequencies using \texttt{MAFfilter} and
+\texttt{GTFfilter} respectively.
+
+Various approaches to reduction of ``expression heterogeneity'' can be
+examined.  \texttt{clipPCs(x, vec)} will form the singular value decomposition
+of the expression matrix and remove principal components enumerated in \texttt{vec}
+by reassembling the expression matrix after setting eigenvalues in \texttt{vec}
+to zero.  It is also possible to employ any computed quantities such as principal
+components or surrogate variables identified in SVA \citep{Leek:2007p1723}
+as covariates in the formula element of analysis functions in
+\texttt{GGtools}, but note that simple permutations
+do not lead to valid permutation tests of SNP effects in
+the presence of covariates (see \citep{Buzkova:2011p3368} who focus on
+interaction, but describe the problem for main effects models,
+with references, early in the paper.)
+
+The introduction of novel approaches to expression transformation can
+be accomplished using code similar to the following, illustrating
+of the use of PEER \citep{Stegle:2010p2015}:
+
+<<dopeer,eval=FALSE>>=
+library(peer)
+model = PEER()
+PEER_setPhenoMean(model, t(exprs(g20)))
+PEER_setNk(model, 10)
+PEER_setCovariates(model, matrix(1*g20$male,nc=1))
+PEER_update(model)
+resid=t(PEER_getResiduals(model))
+rownames(resid) = featureNames(g20)
+colnames(resid) = sampleNames(g20)
+g20peer10 = g20
+g20peer10@assayData = assayDataNew("lockedEnvironment", exprs=resid)
+@
+At this point, \texttt{g20peer10} holds expression data with 10 latent
+factors removed after adjustment for gender.
+
+\subsubsection{Permutation of expression against genotype}
+
+Because the \textit{snpStats} testing procedures defensively
+match predictor to response variable orderings using sample labels,
+special steps must be taken to ensure that tests use properly
+permuted responses.  The \texttt{permEx} function takes care of this,
+using the current state of the random number generator.  
+
 \subsection{Post-analysis data structures}
 
 While it is possible to construe the results of an eQTL search as a
@@ -218,10 +293,53 @@ place an informative title to get the following display.
 
 \clearpage
 
-\setkeys{Gin}{width=0.85\textwidth}
+\begin{center}
+\setkeys{Gin}{width=0.95\textwidth}
 \includegraphics{cpne1Brow}
+\end{center}
 
 \clearpage
+
+\section{Comprehensive surveys}
+
+\subsection{A set of genes vs. all SNP on a chromosome}
+
+The performance of \textit{snpStats} \texttt{snp.rhs.tests} is
+very good and so our principle for large-scale searches is to
+compute all association statistics, save them in truncated form,
+and filter results later.  This is carried out with the
+\texttt{eqtlTests} function.  To illustrate, we sharply filter
+the expression data to the 50 most variable genes on chromosome 20 as
+measured by cross-sample median absolute deviation, filter away SNP
+with MAF $<$ 0.05, and
+then execute all tests.
+
+<<do20,cache=TRUE,keep.source=TRUE>>=
+g20 = restrictProbesToChrom(g20, "20")
+mads = apply(exprs(g20),1,mad)
+oo = order(mads, decreasing=TRUE)
+g20 = g20[oo[1:50],]
+library(parallel)
+e1 = eqtlTests(MAFfilter(g20, lower=0.05), ~male, 
+    geneApply=mclapply, targdir="dem1")
+e1
+@
+On a two-core macbook pro, this computation takes well under a minute.
+The details of the underlying data structure are involved.  Briefly,
+a short integer is used to represent each chi-squared statistic
+obtained in the \Sexpr{length(probesManaged(e1,1)*snpsManaged(e1,1)}
+tests computed, in an \texttt{ff} archive.  We use \texttt{topFeats}
+to manually harvest this.
+
+<<gettop,cache=TRUE>>=
+pm1 = probesManaged(e1,1)
+tops = sapply(pm1, function(x) topFeats(probeId(x), mgr=f1, ffind=1, n=1)) 
+sort(tops, decreasing=TRUE)[1:6]
+@
+
+
+
+
 
 
 \bibliography{is11ppt}
