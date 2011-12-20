@@ -327,13 +327,13 @@ e1
 On a two-core macbook pro, this computation takes well under a minute.
 The details of the underlying data structure are involved.  Briefly,
 a short integer is used to represent each chi-squared statistic
-obtained in the \Sexpr{length(probesManaged(e1,1)*snpsManaged(e1,1)}
+obtained in the \Sexpr{length(probesManaged(e1,1))*length(snpsManaged(e1,1))}
 tests computed, in an \texttt{ff} archive.  We use \texttt{topFeats}
 to manually harvest this.
 
 <<gettop,cache=TRUE>>=
 pm1 = probesManaged(e1,1)
-tops = sapply(pm1, function(x) topFeats(probeId(x), mgr=f1, ffind=1, n=1)) 
+tops = sapply(pm1, function(x) topFeats(probeId(x), mgr=e1, ffind=1, n=1)) 
 sort(tops, decreasing=TRUE)[1:6]
 @
 
