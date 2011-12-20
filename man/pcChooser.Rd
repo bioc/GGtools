@@ -72,9 +72,12 @@ results
 %\author{
 %%  ~~who you are~~
 %}
-%\note{
-%%  ~~further notes~~
-%}
+
+\note{
+This will be removed in GGtools 4.x; tuning with best.cis.eQTLs will be
+exemplified in the vignette.
+}
+
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 

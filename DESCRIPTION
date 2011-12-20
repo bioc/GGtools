@@ -6,7 +6,7 @@ Description: dealing with hapmap SNP reports, GWAS, etc.
 Depends: R (>= 2.13.0), methods, GGBase (>= 3.15.4),
 	snpStats(>= 1.5.2), GenomicRanges
 Imports: AnnotationDbi, IRanges (>= 1.1.6), rtracklayer, bit,
-	Rsamtools, ff, BiocGenerics, Matrix
+	Rsamtools, ff, BiocGenerics, Matrix, Biobase
 Suggests: annotate, rtracklayer (>= 1.15.4), 
 	org.Hs.eg.db, GenomicRanges (>= 1.7.6), 
 	illuminaHumanv1.db, org.Hs.eg.db, SNPlocs.Hsapiens.dbSNP.20100427,

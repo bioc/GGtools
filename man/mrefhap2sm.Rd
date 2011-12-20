@@ -37,9 +37,9 @@ an instance of \code{\link[snpStats]{SnpMatrix-class}}
 \author{
 VJ Carey
 }
-%\note{
-%%%  ~~further notes~~
-%}
+\note{
+ancient legacy, to be removed in GGtools 4.x
+}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
@@ -47,11 +47,13 @@ VJ Carey
 %%% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
+\dontrun{
 smhapf = system.file("machHap/c20small.hap.gz", package="GGtools")
 snidf = gzfile(system.file("machHap/chr20.snps.gz", package="GGtools"))
 snids = scan(snidf, "")
 sm = mrefhap2sm( smhapf, snids )
 sm
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

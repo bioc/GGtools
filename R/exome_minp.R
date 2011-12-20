@@ -15,6 +15,7 @@ exome_minpORIG = function( smlSet, fmla, targdir, runname, snpl, mgr=NULL, ... )
 exome_minp = function (smlSet, fmla, targdir, runname, snpl, feat = NULL,
     mgr = NULL, scoreApply=lapply, ...)
 {
+    .Deprecated("use ordinary eqtlTests functionality")
     if (is.null(mgr) && length(smList(smlSet)) > 1)
         stop("requires a chromosome-unified smlSet [length smList == 1]")
     if (!is.null(mgr) && length(mgr@fflist) > 1)

@@ -42,9 +42,10 @@ a new manager instance
 %\author{
 %%%  ~~who you are~~
 %}
-%\note{
-%%%  ~~further notes~~
-%}
+\note{
+will not be exported in GGtools 4.x
+}
+
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 

@@ -77,16 +77,17 @@ selection policies to be defined over SNP.
 %\author{
 %%%  ~~who you are~~
 %}
-%\note{
-%%%  ~~further notes~~
-%}
+\note{
+This function will not be exported in GGtools 4.x
+}
 %
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{best.cis.eQTLs}}
 }
 \examples{
+\dontrun{
 data(smlSet.example)
 applier = lapply
 if ("multicore" \%in\% installed.packages()[,1] & .Platform$OS.type != "windows") {
@@ -100,6 +101,7 @@ setwd(td)
 f1 = genewiseFDRtab( smlSet.example[1:30,] , ~male, geneApply=applier )
 f1
 setwd(curd)
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

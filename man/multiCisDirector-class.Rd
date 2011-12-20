@@ -33,6 +33,9 @@ Objects can be created by calls of the form \code{new("multiCisDirector", ...)}.
 \note{
 \code{makeDiagDirector} is a tool that will generate all same-chromosome
 eqtlTests from an smlSet instance or package and will create a director of this type.
+
+makeDiagDirector and this class will be removed in GGtools 4.x;
+use eqtlTests and best.cis.eQTLs for comparable functionality.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~

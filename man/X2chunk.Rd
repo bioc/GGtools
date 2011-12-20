@@ -63,6 +63,8 @@ numeric lower bound on minimum genotype frequency of SNPs to be considered
   \item{\dots}{ see comment in USAGE and entries above }
 }
 \details{
+Dropped from export in GGtools 4.x.
+
 X2chunk will obtain RAM resources for material on disk, so use with caution
 
 Note that gene symbols may map to multiple probes.  The first hit is used

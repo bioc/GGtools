@@ -52,9 +52,9 @@ A names GRanges instance.
 %\author{
 %%%  ~~who you are~~
 %}
-%\note{
-%%%  ~~further notes~~
-%}
+\note{
+This function will not be exported in GGtools 4.x.
+}
 %
 %%% ~Make other sections like Warning with \section{Warning }{....} ~
 %
@@ -62,9 +62,11 @@ A names GRanges instance.
 %%% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
+\dontrun{
 if (require(org.Hs.eg.db)) {
   geneRanges("org.Hs.eg.db", is.annopkg=TRUE, chr="chr20")
   }
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

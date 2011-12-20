@@ -50,9 +50,10 @@ instance of cisTransDirector class
 \author{
 VJ Carey <stvjc@channing.harvard.edu?
 }
-%\note{
-%%  ~~further notes~~
-%}
+\note{
+This will not be exported in GGtools 4.x
+}
+
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 

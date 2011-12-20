@@ -97,8 +97,13 @@ exportMethods(gwSnpTests, topSnps, topFeats, show, vcf2sm,
 #
 
 export(eqtlTests, clipPCs, permEx, externalize,
-	manhPlot, transScores, dropMonomorphies,
-	transTab, best.cis.eQTLs, getGene2SnpList, makeGRanges)
+	manhPlot, transScores, dropMonomorphies, eqtlEstimates,
+	transTab, best.cis.eQTLs, getGene2SnpList, makeGRanges,
+	makeCommonSNPs, checkCommonSNPs,
+# some of the following are general infrastructure and should move
+	probeLocations, probeChromosomes, probeSequences,
+	snpLocations, proximityList, getGene2SnpList, restrictProbesToChrom)
+
 
 #exportClass(eqtlTestsManager, multiCisDirector, cisProxScores, transManager,
 #	eqtlEstimatesManager, eqtlFDRtab, eqtlFDRSummary)

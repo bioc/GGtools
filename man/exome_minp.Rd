@@ -63,9 +63,9 @@ parameters passed to eqtlTests
 %\author{
 %%%  ~~who you are~~
 %}
-%\note{
-%%%  ~~further notes~~
-%}
+\note{
+Deprecated as of Bioconductor 2.10 -- the \code{\link{best.cis.eQTLs}} functionality is sufficient.
+}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
@@ -73,6 +73,7 @@ parameters passed to eqtlTests
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
+\dontrun{
 if (!exists("hmceuB36.2021")) hmceuB36.2021 <- getSS("GGtools", c("20", "21"))
 hmlit = hmceuB36.2021[ chrnum(20), ]
 library(illuminaHumanv1.db)
@@ -87,6 +88,7 @@ sl = split(sl, rep(1:20, each=4))
 names(sl) = featureNames(hm)
 e1 = exome_minp( hm, ~male, "ex1", "ex1", sl )
 e1
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
