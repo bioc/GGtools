@@ -87,6 +87,7 @@ Acquire the genome-wide expression data and the genotype data
 for chromosome 20 as follows:
 <<loadm>>=
 suppressPackageStartupMessages(library(GGtools))
+library(parallel)
 <<getd,cache=TRUE>>=
 g20 = getSS("GGdata", "20")
 @
@@ -157,7 +158,7 @@ the fly from the externalize-generated package.
 
 \subsection{Filters and permutation support}
 
-We use ``filter'' to refer to any function that processes an \texttt{smlSet}
+Here ``filter'' is used to refer to any function that processes an \texttt{smlSet}
 instance and returns an \texttt{smlSet} instance after altering the contents,
 which may involve eliminating probes or SNPs, performing numerical transformations
 to expression or genotype measures, transforming sample data or eliminating samples.
@@ -251,8 +252,9 @@ with the related analytic workflow steps.
 A specific gene can be checked for eQTL on a given chromosome
 or set of chromosomes with
 \texttt{gwSnpTests}.  There are various convenience facilities.
-Here we use a gene symbol to pick out an expression element,
-and we adjust for gender in an additive genetic model
+In the call to \texttt{gwSnpTests} below,
+a gene symbol is used to pick out an expression element,
+and adjustment for gender is commodated in an additive genetic model
 for effects of B allele copy number on expression of CPNE1.
 One degree of freedom chi-squared tests are computed.
 <<dot,cache=TRUE>>=
@@ -270,7 +272,7 @@ coordinates.
 
 <<dopl,echo=FALSE,results=hide>>=
 pdf(file="t1.pdf")
-plot(t1)
+plot(t1, "SNPlocs.Hsapiens.dbSNP.20100427")
 dev.off()
 pdf(file="t1evg.pdf")
 plot_EvG(genesym("CPNE1"), rsid("rs17093026"), g20)
@@ -287,7 +289,7 @@ plot_EvG(genesym("CPNE1"), rsid("rs17093026"), g20)
 \includegraphics{t1} & \includegraphics{t1evg} \\
 \end{tabular}
 
-We can also use code like the following to display
+Code like the following can be used to display
 scores ($-\log_{10} p$) on the genome browser, here with hg19 locations.
 <<doloc,eval=FALSE>>=
 library(SNPlocs.Hsapiens.dbSNP.20100427)
@@ -297,8 +299,8 @@ library(rtracklayer)
 export(GR20, "~/cpne1new.wig")
 @
 
-If we use the code above,
-we will need to manually alter the chr assignment in the wig file, and
+With this code, it will be necessary
+to manually alter the chr assignment in the wig file, and
 place an informative title to get the following display.
 
 \clearpage
@@ -318,18 +320,18 @@ The performance of \textit{snpStats} \texttt{snp.rhs.tests} is
 very good and so our principle for large-scale searches is to
 compute all association statistics, save them in truncated form,
 and filter results later.  This is carried out with the
-\texttt{eqtlTests} function.  To illustrate, we sharply filter
-the expression data to the 50 most variable genes on chromosome 20 as
-measured by cross-sample median absolute deviation, filter away SNP
-with MAF $<$ 0.05, and
-then execute all tests.
+\texttt{eqtlTests} function.  To illustrate, 
+the expression data is sharply filtered
+to the 50 most variable genes on chromosome 20 as
+measured by cross-sample median absolute deviation, SNP
+with MAF $<$ 0.05 are removed, and
+then all SNP-gene association tests are executed.
 
 <<do20,cache=TRUE,keep.source=TRUE>>=
 g20 = restrictProbesToChrom(g20, "20")
 mads = apply(exprs(g20),1,mad)
 oo = order(mads, decreasing=TRUE)
 g20 = g20[oo[1:50],]
-library(parallel)
 e1 = eqtlTests(MAFfilter(g20, lower=0.05), ~male, 
     geneApply=mclapply, targdir="dem1")
 e1
@@ -338,7 +340,7 @@ On a two-core macbook pro, this computation takes well under a minute.
 The details of the underlying data structure are involved.  Briefly,
 a short integer is used to represent each chi-squared statistic
 obtained in the \Sexpr{length(probesManaged(e1,1))*length(snpsManaged(e1,1))}
-tests computed, in an \texttt{ff} archive.  We use \texttt{topFeats}
+tests computed, in an \texttt{ff} archive.  Use \texttt{topFeats}
 to manually harvest this.
 
 <<gettop,cache=TRUE>>=
@@ -348,8 +350,8 @@ top6 = sort(tops, decreasing=TRUE)[1:6]
 print(top6)
 @
 
-R has propagated the names of probes and SNPs with the scores so that we
-can create a table as follows:
+R has propagated the names of probes and SNPs with the scores so that 
+a table can be created as follows:
 <<gettab>>=
 nms = strsplit(names(top6), "\\.")
 gn = sapply(nms,"[",1)
@@ -362,25 +364,39 @@ tab
 Statistical interpretation of the scores in this table is not clear as the
 data structure includes familial aggregation in
 trios and extended pedigrees, and may include population stratification,
-Nevertheless, we can check consistency of these findings with other published
-results involving multiple populations.
+Nevertheless, consistency of these findings with other published
+results involving multiple populations can be checked.
 \textit{GGtools} includes a table published by Stranger and colleagues
 in 2007 enumerating multipopulation eQTL \citep{Stranger:2007p114}.
 <<ddstr>>=
 data(strMultPop)
 strMultPop[ strMultPop$rsid %in% tab$snp, ]
 @
-Thus the top two SNP in our table are identified as multipopulation eQTL by
+Thus the top two SNP in the table computed here are identified as multipopulation eQTL by
 Stranger.  The other association scores are not very strong and likely do
 not correspond to genuine associations.
 
-\subsection{Tabulating best associated rSNP with permutation-based FDR}
+\subsection{Tabulating best associated rSNP with permutation-based FDR: small example}
 
-b1 = best.cis.eQTLs("GGdata", ~male,  genome="hg19", useTxDb=TRUE,
+The workhorse for identifying genes to which can be associated putatively regulating
+SNP (rSNP) is \texttt{best.cis.eQTLs}.  This can be used for genome-wide analysis,
+but here we create an alternative table for the sharply filtered chromosome 20 data
+given above.  This call says that gene location information will be acquired from
+the Bioconductor TxDb.Hsapiens annotation package for hg19 UCSC known genes,
+and that tests for association within 1 Mbase  of the coding region for each gene
+will be considered.  The expression data will be permuted against genotype data
+in two independent draws to assemble the null reference distribution for
+association scores.  
+<<doc,cache=TRUE,keep.source=TRUE>>=
+b1 = best.cis.eQTLs("GGdata", ~male,  genome="hg19", 
+   useTxDb=TRUE, cisRadius=1e6,
    folderstem="db2", nperm=2, geneApply=mclapply,
    exTransform= function(x)
     MAFfilter(x[probeId(featureNames(g20)),], lower=0.05),
    dropChr=c(as.character(1:19),"21", "22", "X", "Y"))
+<<lkc>>=
+b1
+@
       
 
 
