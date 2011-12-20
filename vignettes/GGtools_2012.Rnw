@@ -374,6 +374,14 @@ Thus the top two SNP in our table are identified as multipopulation eQTL by
 Stranger.  The other association scores are not very strong and likely do
 not correspond to genuine associations.
 
+\subsection{Tabulating best associated rSNP with permutation-based FDR}
+
+b1 = best.cis.eQTLs("GGdata", ~male,  genome="hg19", useTxDb=TRUE,
+   folderstem="db2", nperm=2, geneApply=mclapply,
+   exTransform= function(x)
+    MAFfilter(x[probeId(featureNames(g20)),], lower=0.05),
+   dropChr=c(as.character(1:19),"21", "22", "X", "Y"))
+      
 
 
 

@@ -56,7 +56,8 @@ best.cis.eQTLs = function(smpack, fmla, cisRadius=50000, genome="hg19",
     tmp = genewiseFDRtab(cursms, fmla,
         geneApply=geneApply, chromApply=chromApply,
         folderstem=folderstem, nperm=nperm, 
-        geneExtents=ge, snpRanges=sr, force.locations=TRUE)
+        geneExtents=ge, snpRanges=sr, force.locations=TRUE,
+        gene2snpList=g2sl)
     dirs = paste("p", 1:nperm, folderstem, sep="_")
     dirs = c(folderstem, dirs)
     unlink(dirs, recursive=TRUE, force=TRUE)
