@@ -22,7 +22,11 @@ best.cis.eQTLs = function(smpack, fmla, cisRadius=50000, genome="hg19",
    geneApply=lapply, chromApply=lapply,
    cleanChrn = function(x) gsub("chr", "", x),
    additionalSNPGR=NULL, useTxDb=FALSE, verbose=TRUE,
-   dropChr = c("X", "Y", "M")) {
+   dropChr = c("X", "Y", "M"), unlink.fast=TRUE) {
+  if (!identical(chromApply, lapply) && unlink.fast==TRUE) {
+      warning("you seem to have non-sequential iteration over chromosomes, setting unlink.fast to FALSE")
+      unlink.fast = FALSE
+      }
   smparts = dir(system.file("parts", package=smpack))
   chrn = gsub(".rda", "", smparts)
   cchrn = cleanChrn(chrn)
@@ -60,7 +64,7 @@ best.cis.eQTLs = function(smpack, fmla, cisRadius=50000, genome="hg19",
         gene2snpList=g2sl)
     dirs = paste("p", 1:nperm, folderstem, sep="_")
     dirs = c(folderstem, dirs)
-    unlink(dirs, recursive=TRUE, force=TRUE)
+    if (identical(chromApply, lapply) && unlink.fast==TRUE) unlink(dirs, recursive=TRUE, force=TRUE)
     gc()
     tmp
     })
@@ -70,5 +74,10 @@ best.cis.eQTLs = function(smpack, fmla, cisRadius=50000, genome="hg19",
    tmp@genome=genome
    tmp@cisRadius=cisRadius
    tmp@nperm=nperm
+   if (!unlink.fast) {
+    dirs = paste("p", 1:nperm, folderstem, sep="_")
+    dirs = c(folderstem, dirs)
+    unlink(dirs, recursive=TRUE, force=TRUE)
+    }
    tmp
 }
