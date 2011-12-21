@@ -15,7 +15,7 @@ best.cis.eQTLs(smpack, fmla, cisRadius = 50000,
  geneApply = lapply, chromApply = lapply, 
  cleanChrn = function(x) gsub("chr", "", x), 
  additionalSNPGR = NULL, useTxDb = FALSE, 
- verbose = TRUE, dropChr = c("X", "Y", "M"))
+ verbose = TRUE, dropChr = c("X", "Y", "M"), unlink.fast=TRUE)
 
 fullreport(x)
 }
@@ -85,6 +85,9 @@ logical: if TRUE, provide real time details
 string vector identifying parts (such as chromosomes X, Y) that
 are not to be analyzed
 }
+  \item{unlink.fast}{logical; if TRUE, will unlink scratch space as soon
+as not needed; should be FALSE if chromApply implies parallel processing
+of multiple chromosomes, in which case scratch space is dropped at end.}
 }
 \details{
 The intention is to simplify cis eQTL searches, relying as much as possible
