@@ -54,7 +54,7 @@ best.cis.eQTLs = function(smpack, fmla, cisRadius=50000, genome="hg19",
     g2sl = getGene2SnpList( cursms, cchrn[i], genome=genome, radius=cisRadius,
 	additionalSNPGR=additionalSNPGR, useTxDb=useTxDb)
     tmp = genewiseFDRtab(cursms, fmla,
-        geneApply=geneApply, chromApply=chromApply,
+        geneApply=geneApply, chromApply=lapply, # at this point you are just running one chromosome
         folderstem=folderstem, nperm=nperm, 
         geneExtents=ge, snpRanges=sr, force.locations=TRUE,
         gene2snpList=g2sl)
