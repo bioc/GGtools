@@ -376,7 +376,7 @@ Thus the top two SNP in the table computed here are identified as multipopulatio
 Stranger.  The other association scores are not very strong and likely do
 not correspond to genuine associations.
 
-\subsection{Tabulating best associated rSNP with permutation-based FDR: small example}
+\subsection{Tabulating best associated cis-rSNP with permutation-based FDR: small example}
 
 The workhorse for identifying genes to which can be associated putatively regulating
 SNP (rSNP) is \texttt{best.cis.eQTLs}.  This can be used for genome-wide analysis,
@@ -386,7 +386,10 @@ the Bioconductor TxDb.Hsapiens annotation package for hg19 UCSC known genes,
 and that tests for association within 1 Mbase  of the coding region for each gene
 will be considered.  The expression data will be permuted against genotype data
 in two independent draws to assemble the null reference distribution for
-association scores.  
+association scores; these are used to enumerate false significance claims
+at various magnitudes of the distribution of association scores.  The plug-in
+procedure for estimating FDR XXX cite Hastie Tibs Friedman is used.
+
 <<doc,cache=TRUE,keep.source=TRUE>>=
 b1 = best.cis.eQTLs("GGdata", ~male,  genome="hg19", 
    useTxDb=TRUE, cisRadius=1e6,
