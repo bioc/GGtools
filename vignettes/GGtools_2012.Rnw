@@ -11,7 +11,8 @@
 
 \documentclass[12pt]{article}
 
-\usepackage{amsmath,pstricks}
+%\usepackage{amsmath,pstricks}
+\usepackage{amsmath}
 \usepackage[authoryear,round]{natbib}
 \usepackage{hyperref}
 
@@ -406,6 +407,7 @@ b1
 
 <<domo,cache=TRUE, keep.source=TRUE>>=
 exTx = function(x) MAFfilter( clipPCs(x)[fn, ], lower=0.05)
+@
 
 
 
