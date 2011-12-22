@@ -391,16 +391,21 @@ at various magnitudes of the distribution of association scores.  The plug-in
 procedure for estimating FDR XXX cite Hastie Tibs Friedman is used.
 
 <<doc,cache=TRUE,keep.source=TRUE>>=
+fn = probeId(featureNames(g20))
+exTx = function(x) MAFfilter( x[fn, ], lower=0.05)
 b1 = best.cis.eQTLs("GGdata", ~male,  genome="hg19", 
    useTxDb=TRUE, cisRadius=1e6,
    folderstem="db2", nperm=2, geneApply=mclapply,
-   exTransform= function(x)
-    MAFfilter(x[probeId(featureNames(g20)),], lower=0.05),
+   exTransform= exTx,
    dropChr=c(as.character(1:19),"21", "22", "X", "Y"))
 <<lkc>>=
 b1
 @
       
+\subsection{Removal of expression heterogeneity}
+
+<<domo,cache=TRUE, keep.source=TRUE>>=
+exTx = function(x) MAFfilter( clipPCs(x)[fn, ], lower=0.05)
 
 
 
