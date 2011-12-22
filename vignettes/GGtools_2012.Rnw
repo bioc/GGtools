@@ -11,8 +11,8 @@
 
 \documentclass[12pt]{article}
 
-%\usepackage{amsmath,pstricks}
-\usepackage{amsmath}
+\usepackage{auto-pst-pdf}
+\usepackage{amsmath,pstricks}
 \usepackage[authoryear,round]{natbib}
 \usepackage{hyperref}
 
@@ -48,7 +48,7 @@
 
 \tableofcontents
 
-\section{Overview}
+\section{Overview and installation}
 
 This document addresses data structure and analytic workflow
 for investigations of genetic sources of expression variation.
@@ -60,6 +60,17 @@ and \citet{Stegle:2010p2015}, \citet{Petretto:2010p2678}, and
 \citet{Majewski:2011p3139}
 reviews  potentials of eQTL investigations with
 expression measures based on RNA sequencing. 
+
+This document is constructed using R version 
+\Sexpr{version$major}.\Sexpr{version$minor}.
+See the session information
+at the end of the document for full details.  Using a comparable
+version of R, you can obtain the software needed for the production
+of this document using
+\begin{verbatim}
+source("http://www.bioconductor.org/biocLite.R")
+biocLite("GGtools", dependencies=TRUE)
+@
 
 \section{Data structures}
 
@@ -348,6 +359,8 @@ to manually harvest this.
 pm1 = probesManaged(e1,1)
 tops = sapply(pm1, function(x) topFeats(probeId(x), mgr=e1, ffind=1, n=1)) 
 top6 = sort(tops, decreasing=TRUE)[1:6]
+@
+<<dopr6>>=
 print(top6)
 @
 
@@ -403,13 +416,47 @@ b1 = best.cis.eQTLs("GGdata", ~male,  genome="hg19",
 b1
 @
       
-\subsection{Removal of expression heterogeneity}
+\subsection{Removal of empirically identified expression heterogeneity}
+
+\citet{Leek:2010p1819} describe implications of
+batch effects in high-throughput experimental contexts.
+Various methods for adjustment of responses have been proposed;
+a very simple but evidently risky approach is nonspecific removal
+of principal components of variation.  We maximize information
+on batch effects by working from the entire expression matrix,
+subsetting to desired samples and probes subsequently.
 
 <<domo,cache=TRUE, keep.source=TRUE>>=
-exTx = function(x) MAFfilter( clipPCs(x)[fn, ], lower=0.05)
+exTx = function(x) MAFfilter( clipPCs(x,1:10)[fn, ], lower=0.05)
 @
 
+\section{Exercises}
 
+\begin{enumerate}
+\item All computations performed above ignore familial structure
+in the data that can be determined using the \texttt{famid}, 
+\texttt{mothid}, \texttt{fathid}
+variables in the \texttt{pData(g20)}.  Reduce the
+\texttt{smlSet} instance used
+for eQTL testing to parents only, who have parent identifiers
+equal to zero, and recompute the main tables.
+\item For selected eQTLs that are were significant
+with low FDR in the full data ignoring, but are
+not significant in the analysis of the
+reduced data, use a reasonably specified variance components
+model on the full data with familial structure and compute
+a third test statistic.  Is the restriction to parents only
+a good policy for eQTL discovery?  Is there evidence of substantial
+familial aggregation in expression after heterogeneity reduction?
+\item How can we select in a principled way the number of principal components
+to be removed for heterogeneity reduction?
+\end{enumerate}
+
+
+\section{Session information}
+<<getss>>=
+toLatex(sessionInfo())
+@
 
 
 \bibliography{ggtvig}
