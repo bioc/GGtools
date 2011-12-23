@@ -70,7 +70,7 @@ of this document using
 \begin{verbatim}
 source("http://www.bioconductor.org/biocLite.R")
 biocLite("GGtools", dependencies=TRUE)
-@
+\end{verbatim}
 
 \section{Data structures}
 
