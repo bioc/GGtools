@@ -56,6 +56,8 @@ importFrom(Biobase, assayDataNew, selectSome)
 
 importFrom(bit, chunk)
 
+importFrom(limma, lmFit)
+
 importFrom(ff, as.ram, ff, ffrowapply, filename)
 
 importFrom(GenomicRanges, GRanges)

@@ -1,12 +1,12 @@
 Package: GGtools
 Title: software and data for genetics of gene expression (c) 2006 VJ Carey
-Version: 4.1.28
+Version: 4.1.29
 Author: Vince Carey <stvjc@channing.harvard.edu>
 Description: dealing with hapmap SNP reports, GWAS, etc.
 Depends: R (>= 2.13.0), methods, GGBase (>= 3.15.4),
 	snpStats(>= 1.5.2), GenomicRanges
 Imports: AnnotationDbi, IRanges (>= 1.1.6), rtracklayer, bit,
-	Rsamtools, ff, BiocGenerics, Matrix, Biobase
+	Rsamtools, ff, BiocGenerics, Matrix, Biobase, limma
 Suggests: annotate, rtracklayer (>= 1.15.4), 
 	org.Hs.eg.db, GenomicRanges (>= 1.7.6), 
 	illuminaHumanv1.db, org.Hs.eg.db, SNPlocs.Hsapiens.dbSNP.20100427,
@@ -25,4 +25,4 @@ Collate: allS4.R X2chunk.R cisSnpTests.R geneTrack.R multff.R topFeats.R
 	transTops.R feqtltests.R externalize.R egtset.R relocate.R
 	sumDirectors.R getTransScores.R transutils.R machutils.R
 	eqtlEstimates.R cisFDR.R probeloc.R bindScores.R comb.R 
-	cisgetter.R zzz.R
+	cisgetter.R regressOut.R zzz.R

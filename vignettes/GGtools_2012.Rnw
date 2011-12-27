@@ -394,7 +394,7 @@ not correspond to genuine associations.
 
 The workhorse for identifying genes to which can be associated putatively regulating
 SNP (rSNP) is \texttt{best.cis.eQTLs}.  This can be used for genome-wide analysis,
-but here we create an alternative table for the sharply filtered chromosome 20 data
+but here an alternative table is created for the sharply filtered chromosome 20 data
 given above.  This call says that gene location information will be acquired from
 the Bioconductor TxDb.Hsapiens annotation package for hg19 UCSC known genes,
 and that tests for association within 1 Mbase  of the coding region for each gene
@@ -422,14 +422,53 @@ b1
 batch effects in high-throughput experimental contexts.
 Various methods for adjustment of responses have been proposed;
 a very simple but evidently risky approach is nonspecific removal
-of principal components of variation.  We maximize information
-on batch effects by working from the entire expression matrix,
-subsetting to desired samples and probes subsequently.
+of principal components of variation.  To maximize information
+on possible batch effects, the entire expression matrix is restored and
+decomposed for principal component removal.
 
 <<domo,cache=TRUE, keep.source=TRUE>>=
+g20 = getSS("GGdata", "20")
 exTx = function(x) MAFfilter( clipPCs(x,1:10)[fn, ], lower=0.05)
+b2 = best.cis.eQTLs("GGdata", ~male,  genome="hg19", 
+   useTxDb=TRUE, cisRadius=1e6,
+   folderstem="db2", nperm=2, geneApply=mclapply,
+   exTransform= exTx,
+   dropChr=c(as.character(1:19),"21", "22", "X", "Y"))
+<<lkc2>>=
+b2
 @
 
+An improvement in sensitivity is seen after this adjustment.  The
+probes with FDR at 0.001 or lower are identified by the helper
+function
+<<ggg>>=
+goodProbes = function(x) names(x@obsrd[elementMetadata(x@obsrd)$score>3])
+@
+All probes identified as significant
+(at FDR $\leq 0.001$) before the PCA adjustment
+are identified as such after it:
+<<chkp>>=
+setdiff(goodProbes(b1), goodProbes(b2))
+@
+
+The effects of the adjustment for
+genes that were significant only in the
+adjusted analysis can be visualized:
+
+\setkeys{Gin}{width=.95\textwidth}
+<<domopic,fig=TRUE>>=
+newp = setdiff(goodProbes(b2), goodProbes(b1))
+np = length(newp)
+bestSnp = function(pn, esm) elementMetadata(esm@obsrd[pn])$rsid
+par(mfrow=c(2,2))
+plot_EvG(probeId(newp[1]), rsid(bestSnp(newp[1], b2)), g20, main="raw")
+plot_EvG(probeId(newp[1]), rsid(bestSnp(newp[1], b2)), g20f, main="PC-adjusted")
+plot_EvG(probeId(newp[np]), rsid(bestSnp(newp[np], b2)), g20, main="raw")
+plot_EvG(probeId(newp[np]), rsid(bestSnp(newp[np], b2)), g20f, main="PC-adjusted")
+@
+
+
+\clearpage
 \section{Exercises}
 
 \begin{enumerate}
@@ -453,8 +492,9 @@ to be removed for heterogeneity reduction?
 \end{enumerate}
 
 
+\clearpage
 \section{Session information}
-<<getss>>=
+<<getss,results=tex>>=
 toLatex(sessionInfo())
 @
 
