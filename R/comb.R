@@ -2,7 +2,7 @@
 setClass("eqtlFDRSummary", representation(
   allpermtops="numeric", obsrd="GRanges", calls="list", nperm="numeric",
   theCall="call", sess="ANY", genome="character", cisRadius="numeric",
-  nperm="numeric", nat05="numeric", nat01="numeric"))
+  nat05="numeric", nat01="numeric"))
 
 setGeneric("fullreport", function(x) standardGeneric("fullreport"))
 setMethod("fullreport", "eqtlFDRSummary", function(x)
@@ -59,6 +59,7 @@ setMethod("c", "eqtlFDRtab", function(x, ..., recursive=FALSE) {
 
 setMethod("c", "eqtlFDRSummary", function(x, ..., recursive=FALSE) {
  if (recursive) stop("recursive mode not implemented")
+ thecall = match.call()
  args = unname(list(x, ...))
  cls = sapply(args, class)
  if (!all(cls[1] == cls)) stop("all args to c for eqtlFDRSummary must have same class")
@@ -76,5 +77,5 @@ setMethod("c", "eqtlFDRSummary", function(x, ..., recursive=FALSE) {
  nat01 = sum(elementMetadata(rd)$score >= 2)
  nat05 = sum(elementMetadata(rd)$score >= -log10(0.05))
  new("eqtlFDRSummary", allpermtops=alp, obsrd=rd, calls=calls, nperm=nperm,
-          nat01=nat01, nat05=nat05)
+          nat01=nat01, nat05=nat05, theCall=thecall)
 })

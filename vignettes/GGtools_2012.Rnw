@@ -429,6 +429,7 @@ decomposed for principal component removal.
 <<domo,cache=TRUE, keep.source=TRUE>>=
 g20 = getSS("GGdata", "20")
 exTx = function(x) MAFfilter( clipPCs(x,1:10)[fn, ], lower=0.05)
+g20f = exTx(g20)
 b2 = best.cis.eQTLs("GGdata", ~male,  genome="hg19", 
    useTxDb=TRUE, cisRadius=1e6,
    folderstem="db2", nperm=2, geneApply=mclapply,
