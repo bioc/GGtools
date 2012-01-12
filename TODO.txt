@@ -1,3 +1,5 @@
+dec 2011 -- compare permutation performance with regressOut to use of
+	covariates
 Oct 2010 -- need to allow the eqtlTestsManagers to be "indexed" by GenomicRanges instances
 	so that lookups can be more driven by genomic contexts, less by
         character matching

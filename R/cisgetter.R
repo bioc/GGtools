@@ -81,3 +81,59 @@ best.cis.eQTLs = function(smpack, fmla, cisRadius=50000, genome="hg19",
     }
    tmp
 }
+
+all.cis.eQTLs = function(smpack, fmla, cisRadius=50000, genome="hg19", 
+   exTransform = function(x)x,
+   folderstem="cisScratch", 
+   geneApply=lapply, chromApply=lapply,
+   cleanChrn = function(x) gsub("chr", "", x),
+   additionalSNPGR=NULL, useTxDb=FALSE, verbose=TRUE,
+   dropChr = c("X", "Y", "M"), unlink.fast=TRUE) {
+  if (!identical(chromApply, lapply) && unlink.fast==TRUE) {
+      warning("you seem to have non-sequential iteration over chromosomes, setting unlink.fast to FALSE")
+      unlink.fast = FALSE
+      }
+  smparts = dir(system.file("parts", package=smpack))
+  chrn = gsub(".rda", "", smparts)
+  cchrn = cleanChrn(chrn)
+  bad = which(cchrn %in% dropChr)
+  if (length(bad) != 0) {
+     cchrn = cchrn[-bad]
+     chrn = chrn[-bad]
+     }
+  nchr = length(chrn)
+  if (verbose) cat("will run on chr\n")
+  print(chrn)
+  g2smaps = list()
+  ans = chromApply(1:nchr, function(i) {
+  #for (i in 1:nchr) {
+    if (verbose) cat("chr", chrn[i], "... getSS...")
+    cursms = getSS(smpack, chrn[i])
+    if (!require(annotation(cursms), character.only=TRUE)) 
+      stop(paste("got annotation(sms) == ",
+          annotation(cursms), "but need a .db annotation package\n",
+	  " for the expression component of smpack"))
+    if (verbose) cat("exTransform ...")
+    # this exTrans operation could be done once at top, but should be fast...
+    cursms = exTransform(cursms) # should work on full expression component,
+			# for best heterogenity reduction, var filtering...
+    cursms = restrictProbesToChrom( cursms, cchrn[i] ) # should be late
+    if (verbose) cat("gene2snp map ...\n")
+    ge = geneRanges( annotation(cursms), paste("chr", cchrn[i], sep=""),
+       is.annopkg=TRUE )
+    sr = getSNPgr( genome, cchrn[i] )
+    g2sl = getGene2SnpList( cursms, cchrn[i], genome=genome, radius=cisRadius,
+	additionalSNPGR=additionalSNPGR, useTxDb=useTxDb)
+    tmp = eqtlTests(cursms, fmla,
+        geneApply=geneApply, chromApply=lapply, # at this point you are just running one chromosome
+        targdir=folderstem)
+    gn = probesManaged(tmp, 1)
+    okrs = snpsManaged(tmp, 1)
+    g2sl = g2sl[intersect(names(g2sl), gn)]
+    g2sl = lapply( g2sl, function(x) intersect(x, okrs))
+    tmp = lapply(names(g2sl), function(x) tmp[rsid(g2sl[[x]]), probeId(x) ])
+    unlink(folderstem, recursive=TRUE)
+    tmp
+    })
+   ans
+}

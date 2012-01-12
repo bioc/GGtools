@@ -443,6 +443,7 @@ setMethod("[", c("eqtlTestsManager"), # , "rsid", "probeId"),
 #
 # you should not rebind i below...
 #
+ if (length(i) == 0 | length(j) == 0) return(NULL)
  if (!missing(i) & missing(j)) {
   if (!is(i, "rsid")) stop("subscript 1 must be rsid instance")
   m1 = snpIdMap( as(i, "character"), x )

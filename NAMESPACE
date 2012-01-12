@@ -105,7 +105,7 @@ export(eqtlTests, clipPCs, permEx, externalize,
 # some of the following are general infrastructure and should move
 	probeLocations, probeChromosomes, probeSequences,
 	snpLocations, proximityList, getGene2SnpList, restrictProbesToChrom,
-	regressOut)
+	regressOut, all.cis.eQTLs)
 
 
 #exportClass(eqtlTestsManager, multiCisDirector, cisProxScores, transManager,
