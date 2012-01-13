@@ -188,7 +188,6 @@ genewiseFDRtab = function(sms, rhs, nperm=1, seed=1234, targp=c(.9,.95, .975, .9
         folderstem=paste("p_", i, "_",  folderstem, sep=""),
 	geneApply=geneApply, gene2snpList=gene2snpList, ... )
    }
- #nullq = lapply( perlist, function(x) quantile(x$tops, targp))
  nullq = lapply( perlist, function(x) quantile(x$topdf$max.gwscores, targp))
  fcalls = sapply(1:length(perlist), 
      function(i) sapply(nullq[[i]], function(x)sum(perlist[[i]]$topdf$max.gwscores>x)))  # need to squelch list character
@@ -248,15 +247,15 @@ if (length(gr)>0) {  # have some loc info
   values(gro)$snploc = start(slo)
   values(gro)$score = pmax(0, pmin(16, -log10(sfdr)))
   }
+ extras = list(...)
 
  new("eqtlFDRtab", list(fdrtab=fdrtab, fullfdrtab=fullfdrtab, obsmgr=obs, permmgr=perlist, 
 	unsorted.tops = obs$tops,  topdf=obs$topdf, nperm=nperm,
 	universe=obs$universe, sorted.tops=obs$sotops, sorted.all.permtops=sptops,
         nsnpsmgd = obs$nsnpsmgd, nprobes=obs$nprobes, nsnptests=obs$nsnptests,
      	nullq = nullq, targp=targp, ncall=ncall, sfdr=sfdr, threshs=threshs,
-        n_at_threshs=n_at_threshs, ncalls=ncalls, gro=gro,
-	#nc005=nc005, nc01=nc01, nc05=nc05, nc10=nc10, nc12.5=nc12.5,
-        #nc15=nc15, threshlist=tlist, gro=gro,
+        n_at_threshs=n_at_threshs, ncalls=ncalls, gro=gro, gene2snpList=gene2snpList,
+	rhs=rhs, geneApply=geneApply, chromApply=chromApply, extras=extras,
      thecall=thecall))
 }
 

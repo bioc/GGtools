@@ -2,7 +2,7 @@
 setClass("eqtlFDRSummary", representation(
   allpermtops="numeric", obsrd="GRanges", calls="list", nperm="numeric",
   theCall="call", sess="ANY", genome="character", cisRadius="numeric",
-  nat05="numeric", nat01="numeric"))
+  nat05="numeric", nat01="numeric", gene2snpList="list", exTransform="function"))
 
 setGeneric("fullreport", function(x) standardGeneric("fullreport"))
 setMethod("fullreport", "eqtlFDRSummary", function(x)
@@ -40,6 +40,7 @@ setMethod("c", "eqtlFDRtab", function(x, ..., recursive=FALSE) {
  alp = unlist(lapply(args, function(x) x$sorted.all.permtops))
  rd = do.call(c, lapply(args, function(x) x$gro))
  np = do.call(c, lapply(args, function(x) x$nperm))
+ g2sls = do.call(c, lapply(args, function(x)x$gene2snpList))
  if (!(all(np[1] == np))) warning("different numbers of permutations in different eqtlFDRtab, using max")
  nperm = max(np)
  calls = lapply(args, function(x) x$thecall)
@@ -54,7 +55,7 @@ setMethod("c", "eqtlFDRtab", function(x, ..., recursive=FALSE) {
  nat01 = sum(elementMetadata(rd)$score >= 2)
  nat05 = sum(elementMetadata(rd)$score >= -log10(0.05))
  new("eqtlFDRSummary", allpermtops=alp, obsrd=rd, calls=calls, nperm=nperm,
-          nat01=nat01, nat05=nat05)
+          nat01=nat01, nat05=nat05, gene2snpList=g2sls)
 })
 
 setMethod("c", "eqtlFDRSummary", function(x, ..., recursive=FALSE) {
@@ -72,10 +73,11 @@ setMethod("c", "eqtlFDRSummary", function(x, ..., recursive=FALSE) {
  obstops = elementMetadata(rd)$chisq
  sfdr = sapply(obstops, function(x) (sum(alp > x)/nperm)/max(c(1,sum(obstops>x))))
  calls = do.call(c, lapply(args, function(x) x@calls))
+ g2sls = do.call(c, lapply(args, function(x) x@gene2snpList))
  lsfdr = ifelse(sfdr==0, 16, -log10(sfdr))
  elementMetadata(rd)$score = lsfdr
  nat01 = sum(elementMetadata(rd)$score >= 2)
  nat05 = sum(elementMetadata(rd)$score >= -log10(0.05))
  new("eqtlFDRSummary", allpermtops=alp, obsrd=rd, calls=calls, nperm=nperm,
-          nat01=nat01, nat05=nat05, theCall=thecall)
+          nat01=nat01, nat05=nat05, theCall=thecall, gene2snpList=g2sls)
 })
