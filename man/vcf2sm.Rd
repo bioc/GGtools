@@ -7,8 +7,7 @@
 generate a SnpMatrix instance on the basis of a VCF (4.0) file
 }
 \description{
-generate a SnpMatrix instance on the basis of a VCF (4.0) file. NOTE: the
-tabix utility must be installed and be invocable via system().
+generate a SnpMatrix instance on the basis of a VCF (4.0) file. 
 }
 \usage{
 vcf2sm(tbxfi, ..., gr, nmetacol)
