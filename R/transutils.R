@@ -1,3 +1,15 @@
+intersectSnps = function( listOfSms ) {
+  nsms = length(listOfSms)
+  nchr = length(smList(listOfSms[[1]]))
+  chnames = names(smList(listOfSms[[1]]))
+  rsidlist = lapply(smList(listOfSms[[1]]), colnames)
+  if (length(listOfSms) == 1) return(rsidlist)
+  for (j in 2:nsms)
+    for (k in 1:length(rsidlist))
+      rsidlist[[k]]  = intersect(rsidlist[[k]], colnames(smList(listOfSms[[j]])[[k]]))
+  rsidlist
+}
+
 makeCommonSNPs = function( listOfSms ) {
   rsidlist = intersectSnps( listOfSms )
   trimSnps( listOfSms, rsidlist )

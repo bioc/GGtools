@@ -98,7 +98,7 @@ Some effort at updating genotypes may be supplied in the future.
 Acquire the genome-wide expression data and the genotype data
 for chromosome 20 as follows:
 <<loadm>>=
-suppressPackageStartupMessages(library(ggtools2))
+suppressPackageStartupMessages(library(GGtools))
 library(parallel)
 <<getd,cache=TRUE>>=
 g20 = getSS("GGdata", "20")
@@ -340,7 +340,7 @@ with MAF $<$ 0.05 are removed, and
 then all SNP-gene association tests are executed.
 
 <<do20,cache=TRUE,keep.source=TRUE>>=
-g20 = ggtools2:::restrictProbesToChrom(g20, "20")
+g20 = GGtools:::restrictProbesToChrom(g20, "20")
 mads = apply(exprs(g20),1,mad)
 oo = order(mads, decreasing=TRUE)
 g20 = g20[oo[1:50],]

@@ -81,7 +81,7 @@ VJ Carey <stvjc@channing.harvard.edu>
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
-hm2ceuSMS = getSS("ggtools2", c("20"), renameChrs=c("chr20"))
+hm2ceuSMS = getSS("GGtools", c("20"), renameChrs=c("chr20"))
 library(illuminaHumanv1.db)
 cptag = get("CPNE1", revmap(illuminaHumanv1SYMBOL))
 indc = which(featureNames(hm2ceuSMS) == cptag[1])

@@ -23,7 +23,7 @@ instance of \code{\linkS4class{probeId}} or
 \code{\linkS4class{genesym}}
 }
   \item{sms}{
-instance of \code{\link[ggbase2]{smlSet-class}}
+instance of \code{\link[GGBase]{smlSet-class}}
 }
   \item{x}{instance of \code{gwSnpScreenResult}}
   \item{n}{integer, number of test results to be reported,
