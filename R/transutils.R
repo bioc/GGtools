@@ -1,3 +1,22 @@
+trimSnps = function( listOfSms, rsidlist ) {
+  ans = list()
+  cat("making smlSets with common SNPs: \n")
+  for (j in 1:length(listOfSms)) {
+    cat("smlSet", j, "\nchrom ")
+    tmp = listOfSms[[j]]
+    for (k in 1:length(rsidlist)) {
+      cat(k)
+      tmp@smlEnv$smList[[k]] = listOfSms[[j]]@smlEnv$smList[[k]][, rsidlist[[k]]]
+      }
+    ans[[j]] = tmp
+    cat("\n")
+    }
+  names(ans) = names(listOfSms)
+  cat("done.\n")
+  gc()
+  ans
+}
+
 intersectSnps = function( listOfSms ) {
   nsms = length(listOfSms)
   nchr = length(smList(listOfSms[[1]]))
