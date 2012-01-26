@@ -1,0 +1,27 @@
+
+importFrom(snpStats, snp.rhs.tests, p.value, col.summary)
+
+importFrom(ff, ff, as.ram, ffrowapply, filename)
+
+importFrom(AnnotationDbi, get, mget, revmap, mappedkeys)
+
+importFrom(IRanges, elementMetadata, matchMatrix, findOverlaps, "elementMetadata<-",
+	RangedData, IRanges, as.data.frame, values)
+
+importFrom(Biobase, featureNames, annotation, pData)
+
+importFrom(GenomicRanges, seqnames, GRanges)
+
+importClassFrom(GenomicRanges, GRanges)
+
+importClassFrom(Rsamtools, TabixFile)
+
+importClassFrom(IRanges, RangedData, DataTable, List, Vector, Annotated, 
+	DataTableORNULL)
+
+exportMethods("gwSnpTests", "show", "topFeats")
+
+exportClasses("eqtlTestsManager", "eqtlEstimatesManager", "mcwBestCis")
+
+export(gwSnpTests, topSnps, eqtlTests, topFeats, getCisMap, pData, plot,
+	best.cis.eQTLs, chromsUsed, fullreport)
