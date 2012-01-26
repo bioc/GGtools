@@ -98,7 +98,7 @@ Some effort at updating genotypes may be supplied in the future.
 Acquire the genome-wide expression data and the genotype data
 for chromosome 20 as follows:
 <<loadm>>=
-suppressPackageStartupMessages(library(GGtools))
+suppressPackageStartupMessages(library(ggtools2))
 library(parallel)
 <<getd,cache=TRUE>>=
 g20 = getSS("GGdata", "20")
@@ -340,7 +340,7 @@ with MAF $<$ 0.05 are removed, and
 then all SNP-gene association tests are executed.
 
 <<do20,cache=TRUE,keep.source=TRUE>>=
-g20 = restrictProbesToChrom(g20, "20")
+g20 = ggtools2:::restrictProbesToChrom(g20, "20")
 mads = apply(exprs(g20),1,mad)
 oo = order(mads, decreasing=TRUE)
 g20 = g20[oo[1:50],]
@@ -351,13 +351,13 @@ e1
 On a two-core macbook pro, this computation takes well under a minute.
 The details of the underlying data structure are involved.  Briefly,
 a short integer is used to represent each chi-squared statistic
-obtained in the \Sexpr{length(probesManaged(e1,1))*length(snpsManaged(e1,1))}
+obtained in the \Sexpr{length(nrow(e1@fffile)*ncol(e1@fffile))}
 tests computed, in an \texttt{ff} archive.  Use \texttt{topFeats}
 to manually harvest this.
 
 <<gettop,cache=TRUE>>=
-pm1 = probesManaged(e1,1)
-tops = sapply(pm1, function(x) topFeats(probeId(x), mgr=e1, ffind=1, n=1)) 
+pm1 = colnames(e1@fffile)
+tops = sapply(pm1, function(x) topFeats(probeId(x), mgr=e1, n=1)) 
 top6 = sort(tops, decreasing=TRUE)[1:6]
 @
 <<dopr6>>=
@@ -407,11 +407,9 @@ procedure for estimating FDR XXX cite Hastie Tibs Friedman is used.
 <<doc,cache=TRUE,keep.source=TRUE>>=
 fn = probeId(featureNames(g20))
 exTx = function(x) MAFfilter( x[fn, ], lower=0.05)
-b1 = best.cis.eQTLs("GGdata", ~male,  genome="hg19", 
-   useTxDb=TRUE, cisRadius=1e6,
+b1 = best.cis.eQTLs("GGdata", ~male,  radius=1e6,
    folderstem="db2", nperm=2, geneApply=mclapply,
-   exTransform= exTx,
-   dropChr=c(as.character(1:19),"21", "22", "X", "Y"))
+   smFilter= exTx, chrnames="20")
 <<lkc>>=
 b1
 @
@@ -430,12 +428,10 @@ decomposed for principal component removal.
 g20 = getSS("GGdata", "20")
 exTx = function(x) MAFfilter( clipPCs(x,1:10)[fn, ], lower=0.05)
 g20f = exTx(g20)
-b2 = best.cis.eQTLs("GGdata", ~male,  genome="hg19", 
-   useTxDb=TRUE, cisRadius=1e6,
+<<lkc2,cache=TRUE>>=
+b2 = best.cis.eQTLs("GGdata", ~male,  radius=1e6,
    folderstem="db2", nperm=2, geneApply=mclapply,
-   exTransform= exTx,
-   dropChr=c(as.character(1:19),"21", "22", "X", "Y"))
-<<lkc2>>=
+   smFilter= exTx, chrnames="20")
 b2
 @
 
@@ -443,7 +439,7 @@ An improvement in sensitivity is seen after this adjustment.  The
 probes with FDR at 0.001 or lower are identified by the helper
 function
 <<ggg>>=
-goodProbes = function(x) names(x@obsrd[elementMetadata(x@obsrd)$score>3])
+goodProbes = function(x) names(x@scoregr[elementMetadata(x@scoregr)$fdr<0.001])
 @
 All probes identified as significant
 (at FDR $\leq 0.001$) before the PCA adjustment
@@ -460,7 +456,7 @@ adjusted analysis can be visualized:
 <<domopic,fig=TRUE>>=
 newp = setdiff(goodProbes(b2), goodProbes(b1))
 np = length(newp)
-bestSnp = function(pn, esm) elementMetadata(esm@obsrd[pn])$rsid
+bestSnp = function(pn, esm) elementMetadata(esm@scoregr[pn])$snpid
 par(mfrow=c(2,2))
 plot_EvG(probeId(newp[1]), rsid(bestSnp(newp[1], b2)), g20, main="raw")
 plot_EvG(probeId(newp[1]), rsid(bestSnp(newp[1], b2)), g20f, main="PC-adjusted")
