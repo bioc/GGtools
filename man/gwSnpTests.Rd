@@ -3,7 +3,10 @@
 \alias{gwSnpTests,formula,smlSet,missing-method}
 \alias{gwSnpTests,formula,smlSet-method}
 \alias{topSnps}
+\alias{gwSnpScreenResult-class}
 \alias{topSnps,gwSnpScreenResult-method}
+\alias{plot,gwSnpScreenResult,character-method}
+\alias{show,gwSnpScreenResult,character-method}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 execute a series of
@@ -33,9 +36,11 @@ sorted decreasing from the most significant}
 not used
 }
 }
-%\details{
-%%  ~~ If necessary, more details than the description above ~~
-%}
+\details{
+The \code{plot} method for \code{gwSnpScreenResult} instances
+takes a second argument, the name of a Bioconductor SNPlocs.*
+package.
+}
 \value{
 an instance of the gwSnpScreenResult class,
 to be examined by \code{topSnps}
@@ -60,6 +65,9 @@ statistics based on score tests.
 s20 = getSS("GGtools", "20")
 t1 = gwSnpTests(genesym("CPNE1")~male, s20)
 topSnps(t1)
+\dontrun{
+plot(t1, "SNPlocs.Hsapiens.dbSNP.20100427")
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

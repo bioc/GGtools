@@ -145,7 +145,7 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
     targdir = paste(targdirpref, snpchr, sep="")
     inimgr = eqtlTests(sms[probeId(pnameList[[chrnames[1]]]),   # start the sifting through transcriptome
         ], rhs, targdir = targdir, runname = paste("tsc_", chrnames[1],  # testing on genes in chrom 1
-        sep = ""), geneApply = geneApply, saveSummaries = FALSE, genegran=genegran, shortfac=shortfac)
+        sep = ""), geneApply = geneApply, shortfac=shortfac)
     if (snpchr == chrnames[1]) {
         if (is.null(geneRanges) || is.null(snpRanges)) 
             stop("ranges must be supplied to exclude cis tests")
@@ -163,8 +163,8 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
         gc()
         nxtmgr = eqtlTests(sms[probeId(pnameList[[chrnames[j]]]), 
             ], rhs, targdir = targdir, runname = paste("tsctmp", 
-            j, sep = ""), geneApply = geneApply, saveSummaries = FALSE,
-            genegran=genegran, shortfac=shortfac)
+            j, sep = ""), geneApply = geneApply, 
+            shortfac=shortfac)
         if (snpchr == chrnames[j]) {
             if (is.null(geneRanges) || is.null(snpRanges)) 
                 stop("ranges must be supplied to exclude cis tests")

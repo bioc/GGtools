@@ -4,6 +4,8 @@ importFrom(snpStats, snp.rhs.tests, p.value, col.summary)
 
 importFrom(ff, ff, as.ram, ffrowapply, filename)
 
+importFrom(bit, chunk)
+
 importFrom(AnnotationDbi, get, mget, revmap, mappedkeys)
 
 importFrom(IRanges, elementMetadata, matchMatrix, findOverlaps, "elementMetadata<-",
@@ -22,7 +24,8 @@ importClassFrom(IRanges, RangedData, DataTable, List, Vector, Annotated,
 
 exportMethods("gwSnpTests", "show", "topFeats", "plot")
 
-exportClasses("eqtlTestsManager", "eqtlEstimatesManager", "mcwBestCis")
+exportClasses("eqtlTestsManager", "eqtlEstimatesManager", "mcwBestCis",
+   "gwSnpScreenResult")
 
 export(gwSnpTests, topSnps, eqtlTests, topFeats, getCisMap, pData, plot,
 	best.cis.eQTLs, chromsUsed, fullreport)

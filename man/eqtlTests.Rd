@@ -12,7 +12,7 @@ smlSet instance, using out-of-memory storage
 \usage{
 eqtlTests(smlSet, rhs = ~1 - 1, runname = "foo", 
 	targdir = "foo", geneApply = lapply, 
-	chromApply = lapply, shortfac = 100, 
+	shortfac = 100, 
 	checkValid = TRUE, useUncertain = TRUE, 
 	glmfamily = "gaussian")
 }
@@ -33,10 +33,6 @@ string naming the folder where ff outputs will reside
 }
   \item{geneApply}{
 analog to \code{lapply} to drive iteration over probes
-}
-  \item{chromApply}{
-analog to \code{lapply} to drive iteration of chromosomes (really,
-elements of \code{smList(smlSet)}
 }
   \item{shortfac}{
 ff contents will be multiplied by this quantity and stored as
