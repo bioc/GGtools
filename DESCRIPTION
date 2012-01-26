@@ -14,6 +14,6 @@ Packaged: 2012-01-18 03:39:51 UTC; stvjc
 Collate: AllClasses.R AllGenerics.R eqtlTests.R             
 	managers.R topFeats.R gwSnpTests.R snpsCisToGenes.R
 	relocate.R topSnps.R trackSet.R
-	transutils.R vcfutils.R
+	transutils.R vcfutils.R eqtlEstimates.R
 
 

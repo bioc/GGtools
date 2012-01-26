@@ -7,7 +7,7 @@ ExpressionSet instance for illustrating integrative smlSet container
 \description{
 ExpressionSet instance for illustrating integrative smlSet container
 }
-\usage{data(ex)}
+\usage{data(eset)}
 \format{
   The format is:
 Formal class 'ExpressionSet' [package "Biobase"] with 7 slots
@@ -81,6 +81,6 @@ ftp://ftp.sanger.ac.uk/pub/genevar/CEU_parents_norm_march2007.zip
 %%  ~~ possibly secondary sources and usages ~~
 %}
 \examples{
-data(ex)
+data(eset) # yields ExpressionSet instance called ex
 }
 \keyword{datasets}

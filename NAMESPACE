@@ -28,4 +28,4 @@ exportClasses("eqtlTestsManager", "eqtlEstimatesManager", "mcwBestCis",
    "gwSnpScreenResult")
 
 export(gwSnpTests, topSnps, eqtlTests, topFeats, getCisMap, pData, plot,
-	best.cis.eQTLs, chromsUsed, fullreport)
+	best.cis.eQTLs, chromsUsed, fullreport, eqtlEstimates)
