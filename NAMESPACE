@@ -1,3 +1,4 @@
+importFrom(graphics, plot)
 
 importFrom(snpStats, snp.rhs.tests, p.value, col.summary)
 
@@ -19,7 +20,7 @@ importClassFrom(Rsamtools, TabixFile)
 importClassFrom(IRanges, RangedData, DataTable, List, Vector, Annotated, 
 	DataTableORNULL)
 
-exportMethods("gwSnpTests", "show", "topFeats")
+exportMethods("gwSnpTests", "show", "topFeats", "plot")
 
 exportClasses("eqtlTestsManager", "eqtlEstimatesManager", "mcwBestCis")
 
