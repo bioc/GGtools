@@ -1,5 +1,5 @@
 setClass("eqtlEstimatesManager",
- representation(fffile="ff_matrix", call="call", sess="ANY",
+ representation(fffile="ff_array", call="call", sess="ANY",
         exdate="ANY", shortfac="numeric", geneanno="character", df="numeric",
         summaryList="list"),
         validity=chkeman)
@@ -7,7 +7,7 @@ setClass("eqtlEstimatesManager",
 eqtlEstimates = function(smlSet, rhs=~1-1,
    runname="foo", targdir="fooe", 
    geneApply=lapply, 
-   shortfac = 100, checkValid=TRUE, 
+   shortfac = 10000, checkValid=TRUE, 
    useUncertain=TRUE, 
    glmfamily="gaussian") {
 # record call and session information
@@ -76,13 +76,13 @@ eqtlEstimates = function(smlSet, rhs=~1-1,
                 numans[badests] = NA
                 numans = unlist(numans)
           }
-      numans.se = sapply(numans.full, "[[", "Var.beta")
-      if (any(badses <- sapply(numans.se, is.null))) {
-                numans.se[badses] = NA
-                numans.se = sqrt(unlist(numans.se))
+      numans.var = sapply(numans.full, "[[", "Var.beta")
+      if (any(badses <- sapply(numans.var, is.null))) {
+                numans.var[badses] = NA
+                numans.var = unlist(numans.var)
             }
       store[, gene, 1, add = TRUE] = shortfac * numans
-      store[, gene, 2, add = TRUE] = shortfac * numans.se
+      store[, gene, 2, add = TRUE] = shortfac * sqrt(numans.var)
       NULL
       }) # end gene apply
  close(store)

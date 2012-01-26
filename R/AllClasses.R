@@ -7,6 +7,7 @@ setClass("gwSnpScreenResult", contains="list",
         sessionInfo="SessionInfo")) #, modFmla="formula"))
 
 setOldClass("ff_matrix")
+setOldClass("ff_array")
 
 chkeman = function(object){
 # eqtlTestsManager validity test

@@ -1,16 +1,24 @@
 \name{eqtlTests}
 \alias{eqtlTests}
+\alias{eqtlEstimates}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 compute association statistics between all probes and SNP in an
 smlSet instance
 }
 \description{
-compute association statistics between all probes and SNP in an
+compute association statistics (or point estimates
+and standard errors) between all probes and SNP in an
 smlSet instance, using out-of-memory storage
 }
 \usage{
 eqtlTests(smlSet, rhs = ~1 - 1, runname = "foo", 
+	targdir = "foo", geneApply = lapply, 
+	shortfac = 100, 
+	checkValid = TRUE, useUncertain = TRUE, 
+	glmfamily = "gaussian")
+
+eqtlEstimates(smlSet, rhs = ~1 - 1, runname = "foo", 
 	targdir = "foo", geneApply = lapply, 
 	shortfac = 100, 
 	checkValid = TRUE, useUncertain = TRUE, 
@@ -51,12 +59,17 @@ family specification for \code{\link[snpStats]{snp.rhs.tests}}
 }
 }
 \details{
-The purpose of this function is to allow very substantial eQTL search 
+The purpose of the \code{eqtlTests} function is to allow 
+very substantial eQTL search 
 processes to occur with R.  For several million SNP and tens of thousands
 of probes, the storage of test results requires attention to parsimony.
 The storage occurs out of memory, using the ff package, and employs
 short integers to represent chi squared statistics.  These are scaled
 up prior to storage, and will be scaled down prior to use.
+
+\code{eqtlEstimates} will use compact storage for both the
+point estimates and standard errors of association estimated
+under an additive genetic model
 }
 \value{
 returns an instance of \code{eqtlTestsManager}

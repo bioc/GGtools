@@ -1,6 +1,6 @@
 importFrom(graphics, plot)
 
-importFrom(snpStats, snp.rhs.tests, p.value, col.summary)
+importFrom(snpStats, snp.rhs.tests, p.value, col.summary, snp.rhs.estimates)
 
 importFrom(ff, ff, as.ram, ffrowapply, filename)
 
