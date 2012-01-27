@@ -28,6 +28,8 @@ exportClasses("eqtlTestsManager", "eqtlEstimatesManager", "mcwBestCis",
    "gwSnpScreenResult", transManager)
 
 export(gwSnpTests, topSnps, eqtlTests, topFeats, getCisMap, pData, plot,
-	best.cis.eQTLs, chromsUsed, fullreport, eqtlEstimates, probesManaged, snpsManaged,
-	topScores, topGenes, locusNames, geneNames, geneIndcol, nthScores) 
+	best.cis.eQTLs, chromsUsed, fullreport, 
+	eqtlEstimates, probesManaged, snpsManaged,
+	topScores, topGenes, locusNames, geneNames, geneIndcol, nthScores,
+	vcf2sm) 
 
