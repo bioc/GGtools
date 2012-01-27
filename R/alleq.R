@@ -1,0 +1,92 @@
+fdr = function(x) elementMetadata(x@scoregr)$fdr
+minchisqAtFDR = function(x, maxfdr=0.05) min(elementMetadata(x@scoregr)$score[
+    fdr(x) <= maxfdr ])
+
+probesWeqtl = function(x, maxfdr=0.05) {
+ names(x@scoregr[ fdr(x) <= maxfdr ])
+}
+
+all.cis.eQTLs = function (maxfdr = 0.05, inbestcis = NULL, smpack = "GGdata", 
+  rhs = ~1, folderstem = "cisScratch", 
+  radius = 50000, chrnames = as.character(1:22), smchrpref = "", 
+  gchrpref = "", schrpref = "ch", geneApply = lapply, 
+  geneannopk = "illuminaHumanv1.db", 
+  snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427", 
+  smFilter4cis = function(x) nsFilter(MAFfilter(clipPCs(x, 1:10),
+  lower = 0.05), var.cutoff = 0.85), 
+  smFilter4all = function(x) MAFfilter(clipPCs(x, 1:10),
+  lower = 0.05),
+  nperm = 2, cisMapList = NULL) {
+cat("PHASE 1: determining cis threshold...\n")
+ if (is.null(inbestcis)) {
+  btmp = best.cis.eQTLs( smpack=smpack,
+    rhs=rhs, folderstem=folderstem, 
+    radius=radius, chrnames=chrnames, smchrpref=smchrpref,
+    gchrpref = gchrpref, schrpref = schrpref, geneApply=geneApply,
+    geneannopk = geneannopk, snpannopk = snpannopk,
+    smFilter=smFilter4cis, nperm=nperm, cisMapList = cisMapList)
+    }
+ else btmp = inbestcis
+ kp = probesWeqtl(btmp, maxfdr=maxfdr)
+ if (length(kp)<1) stop("no probes meet FDR criterion")
+ minchisq = minchisqAtFDR(btmp, maxfdr=maxfdr)
+cat("PHASE 2: extracting associations passing cis threshold...\n")
+ RDL = list()
+ for (i in 1:length(chrnames)) {
+    cat("build map...")
+#
+# annotation-based list of SNP within radius of coding region
+#
+    gchr = paste(gchrpref, chrnames[i], sep="")
+    schr = paste(schrpref, chrnames[i], sep="")
+    smchr = paste(smchrpref, chrnames[i], sep="")
+    if (is.null(cisMapList)) cismapObj = getCisMap(radius = radius, 
+        gchr = gchr, schr = schr,
+        geneannopk = geneannopk, snpannopk = snpannopk)
+    else cismapObj = cisMapList[[gchr]]
+    cismap = GGtools:::namelist(cismapObj)
+    cokp = intersect(kp, names(cismap))  # mapped probes w/ cis snp on this chr
+#
+# reduce set of probes
+#
+     cat("getSS/filter the probes ...")
+     try(unlink(folderstem, recursive=TRUE))
+     curss = smFilter4all(getSS(smpack, smchr))
+     curss = curss[ probeId( intersect( featureNames(curss), cokp ) ), ]
+#
+#
+     cat("test...")
+     tmpt = eqtlTests( curss, rhs, 
+        targdir=folderstem, runname="all",
+	geneApply=geneApply )
+#
+# grab hits
+#
+     ptested = probesManaged(tmpt)
+     satcis = geneApply(1:length(ptested), function(pr) {
+        curpr = ptested[pr]
+        oksn = snpsManaged(tmpt)
+        allscores = as.ram( tmpt[, curpr] )
+        names(allscores) = oksn
+        cisscores = allscores[ intersect(oksn, cismap[[curpr]] ) ]
+        ans = cisscores[ cisscores >= minchisq ]
+        ans
+    })
+    satsnp = lapply(satcis, names)
+    satpro = rep(ptested, sapply(satsnp,length))
+    cat("done.\n")
+    ans = data.frame(chr=gchr, probe = satpro, snpid = unlist(satsnp), score = as.numeric(unlist(satcis)),
+        stringsAsFactors=FALSE)
+    scoredf = ans[order(ans$score, decreasing=TRUE),]
+    fullans = RangedData(seqnames=gchr, ranges=cismapObj@generanges[scoredf$probe])
+    fullans$score = scoredf$score   # we are assuming that the RangedDat construction does not alter row order!
+    fullans$snpid = scoredf$snpid
+    fullans$probeid = scoredf$probe
+    fullans$snploc = start(cismapObj@snplocs[scoredf$snpid])
+    fullans$radiusUsed = rep(radius, nrow(fullans))
+    unlink(folderstem, recursive=TRUE)
+    RDL[[i]] = fullans
+    }
+  do.call(c, RDL)
+}
+
