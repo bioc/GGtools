@@ -1,12 +1,12 @@
 
 relocate = function(old, new, obj, ffind=1) {
-# do the fflist component
- inst = obj@fflist[[ffind]]
+# do the fffile component
+ inst = obj@fffile
  fref = attr(attributes(inst)[["physical"]], "filename")
  ans = gsub(old, new, fref)
  attr(attributes(inst)[["physical"]], "filename") = ans
- obj@fflist[[ffind]] = inst
-# do the summary component (MAF, RAF)
+ obj@fffile = inst
+# do the summary component (MAF, RAF) -- still a list but could simplify
  inst = obj@summaryList[[ffind]]
  fref = attr(attributes(inst)[["physical"]], "filename")
  ans = gsub(old, new, fref)

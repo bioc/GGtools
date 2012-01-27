@@ -5,6 +5,8 @@
 \alias{[,eqtlTestsManager,ANY,ANY,ANY-method}
 \alias{show,eqtlTestsManager-method}
 \alias{topFeats}
+\alias{probesManaged}
+\alias{snpsManaged}
 \alias{topFeats,probeId,eqtlTestsManager-method}
 \alias{topFeats,rsid,eqtlTestsManager-method}
 

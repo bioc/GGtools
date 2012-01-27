@@ -33,3 +33,16 @@ setClass("cwBestCis", contains="RangedData")
 setClass("mcwBestCis", representation(scoregr = "GRanges",
  allperm="numeric", extra="ANY", chromUsed="ANY", theCall="call"))
 
+
+setClass("transManager", representation(base="list"))
+
+setMethod("show", "transManager", function(object){
+ basel = object@base
+ cat("transManager instance, created", basel$date, "\n", sep=" ")
+ cat("dimension of scores component:\n")
+ cat(" number of loci checked: ", nrow(basel$scores),
+   "; genes retained: ", ncol(basel$scores), "\n", sep="")
+ cat("the call was:\n")
+ print(basel$call)
+})
+

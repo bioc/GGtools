@@ -58,3 +58,6 @@ setMethod("[", c("eqtlTestsManager"), # , "rsid", "probeId"),
  else j = ff::hi(1, length(pn))
  x@fffile[i,j, ..., drop=drop]/x@shortfac
 })
+
+probesManaged = function(x, ...) colnames(x@fffile)
+snpsManaged = function(x, ...) rownames(x@fffile)
