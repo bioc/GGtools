@@ -32,6 +32,12 @@ setClass("cisMap", representation(namelist="list",
 setClass("cwBestCis", contains="RangedData")
 setClass("mcwBestCis", representation(scoregr = "GRanges",
  allperm="numeric", extra="ANY", chromUsed="ANY", theCall="call"))
+setClass("allSigCis", representation(fulllist = "RangedData", bestcis="mcwBestCis",
+ chromUsed="ANY", theCall="call"))
+#
+# could compute an approximate FDR for all elements of the allBestCis using the
+# allperm component of the mcwBestCis component
+#
 
 
 setClass("transManager", representation(base="list"))

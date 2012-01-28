@@ -17,6 +17,8 @@ all.cis.eQTLs = function (maxfdr = 0.05, inbestcis = NULL, smpack = "GGdata",
   smFilter4all = function(x) MAFfilter(clipPCs(x, 1:10),
   lower = 0.05),
   nperm = 2, cisMapList = NULL) {
+ theCall = match.call()
+ exdate = date()
 cat("PHASE 1: determining cis threshold...\n")
  if (is.null(inbestcis)) {
   btmp = best.cis.eQTLs( smpack=smpack,
@@ -76,7 +78,7 @@ cat("PHASE 2: extracting associations passing cis threshold...\n")
     satpro = rep(ptested, sapply(satsnp,length))
     cat("done.\n")
     ans = data.frame(chr=gchr, probe = satpro, snpid = unlist(satsnp), score = as.numeric(unlist(satcis)),
-        stringsAsFactors=FALSE)
+        maxfdr=maxfdr, stringsAsFactors=FALSE)
     scoredf = ans[order(ans$score, decreasing=TRUE),]
     fullans = RangedData(seqnames=gchr, ranges=cismapObj@generanges[scoredf$probe])
     fullans$score = scoredf$score   # we are assuming that the RangedDat construction does not alter row order!
@@ -84,9 +86,20 @@ cat("PHASE 2: extracting associations passing cis threshold...\n")
     fullans$probeid = scoredf$probe
     fullans$snploc = start(cismapObj@snplocs[scoredf$snpid])
     fullans$radiusUsed = rep(radius, nrow(fullans))
+    fullans$apxfdr = approx(elementMetadata(btmp@scoregr)$score, fdr(btmp), xout=fullans$score)$y
+    fullans$maxfdr = rep(maxfdr, nrow(fullans))
     unlink(folderstem, recursive=TRUE)
     RDL[[i]] = fullans
     }
-  do.call(c, RDL)
+  fulll = do.call(c, RDL)
+  new("allSigCis", fulllist=fulll, bestcis=btmp, chromUsed=chrnames,
+          theCall = theCall )
 }
 
+setMethod("show", "allSigCis", function(object) {
+ nr = nrow(object@fulllist)
+ cat("all.cis.eQTL output (first", min(c(4,nr)), "rows):\n")
+ show(object@fulllist[1:min(4,nr),])
+ cat("the call was:\n")
+ print(object@theCall)
+})
