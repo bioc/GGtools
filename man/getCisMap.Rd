@@ -41,30 +41,37 @@ logical telling whether a GRangesList should be returned
 }
 }
 \details{
-
+This is a utility that the developer would rather
+not export.  The complexity of harmonizing queries among
+probe and SNP annotation resources leads to a somewhat fragile
+product.  Users who have their own gene ranges and SNP
+locations can examine the namelist component of the
+output of the
+default call to see what is expected for
+the *.cis.eQTLs function.  For the set of
+chromosomes to be analyzed, there will be a list
+of chromosome specific namelist-like lists. 
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+Instance of \code{cisMap} class, which will retain
+SNP location, gene range, and radius information for
+auditing.
 }
-\references{
+%\references{
 %% ~put references to the literature/web site here ~
-}
-\author{
+%}
+%\author{
 %%  ~~who you are~~
-}
-\note{
+%}
+%\note{
 %%  ~~further notes~~
-}
+%}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-\seealso{
+%\seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
-}
+%}
 \examples{
  \dontrun{
   getCisMap()

@@ -98,7 +98,7 @@ cat("PHASE 2: extracting associations passing cis threshold...\n")
 
 setMethod("show", "allSigCis", function(object) {
  nr = nrow(object@fulllist)
- cat("all.cis.eQTL output (first", min(c(4,nr)), "rows):\n")
+ cat("all.cis.eQTL output (first", min(c(4,nr)), " of", nr, "rows):\n")
  show(object@fulllist[1:min(4,nr),])
  cat("the call was:\n")
  print(object@theCall)

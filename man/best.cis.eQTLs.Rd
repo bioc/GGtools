@@ -1,5 +1,6 @@
 \name{best.cis.eQTLs}
 \alias{best.cis.eQTLs}
+\alias{all.cis.eQTLs}
 \alias{mcwBestCis-class}
 \alias{chromsUsed}
 \alias{chromsUsed,mcwBestCis-method}
@@ -22,6 +23,19 @@ best.cis.eQTLs(smpack = "GGdata", rhs = ~1,
   geneApply = lapply, geneannopk = "illuminaHumanv1.db", 
   snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427", 
   smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97), nperm = 2, cisMapList = NULL)
+
+all.cis.eQTLs(maxfdr = 0.05, inbestcis = NULL, smpack = "GGdata", 
+    rhs = ~1, folderstem = "cisScratch", radius = 50000, 
+    chrnames = as.character(1:22), 
+    smchrpref = "", gchrpref = "", schrpref = "ch", 
+    geneApply = lapply, geneannopk = "illuminaHumanv1.db", 
+    snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427", 
+    smFilter4cis = function(x) nsFilter(MAFfilter(clipPCs(x, 
+        1:10), lower = 0.05), var.cutoff = 0.85), 
+    smFilter4all = function(x) MAFfilter(clipPCs(x, 
+        1:10), lower = 0.05), 
+    nperm = 2, cisMapList = NULL) 
+
 
 chromsUsed(x)
 
@@ -91,6 +105,24 @@ probe element's content is a vector of SNP identifiers that are
 deemed `cis'.  This list will be computed using annotation resources
 if this argument is left missing.
 }
+\item{maxfdr}{Used in \code{all.cis.eQTLs}.  The process
+of identifying ``best'' cis eQTL per probe leads to a probe-specific
+FDR.  In \code{all.cis.eQTLs} we enumerate all probes and all SNP
+with FDR at most \code{maxfdr}, not just the best scoring
+SNP per probe.}
+\item{inbestcis}{Used in \code{all.cis.eQTLs}.  An instance
+of \code{\linkS4class{mcwBestCis}} that can be used
+to speed up the extraction of all cis eQTL.}
+\item{smFilter4cis}{Used in \code{all.cis.eQTLs}.  
+A function accepting and returning an smlSet instance.
+When
+\code{inbestcis} parameter is NULL, this filter will be used
+for identifying the best SNP per probe.}
+\item{smFilter4all}{Used in \code{all.cis.eQTLs}.  A function
+accepting and returning an smlSet instance.
+This filter will be used
+for identifying the best SNP per probe.  This filter
+should not affect the number of probes.}
   \item{x}{instance of \code{mcwBestCis}}
   \item{type}{character, either 'data.frame' or 'GRanges'}
 }
@@ -100,6 +132,10 @@ in a multicore context.
 
 \code{mcwBestCis} stands for 'multi-chromosome-wide best cis'
 eQTL report container.
+
+It is possible that the filtering processes should
+be broken into genotype filtering and expression probe
+filtering.
 }
 \value{
 an instance of \code{\linkS4class{mcwBestCis}}
