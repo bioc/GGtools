@@ -103,7 +103,7 @@ setMethod("show", "allSigCis", function(object) {
  cat("the call was:\n")
  fd = fdr(object@bestcis)
  cat("there were ", sum(fd < 0.05), " probes with FDR < 0.05.\n")
- cat("note: gene ranges shown are extended by radius (", radius, ").\n")
+ cat("note: gene ranges shown are extended by radius (", object@fulllist$radiusUsed[1], ").\n")
  cat("use getCall(), getBest(), getAll() etc. for more info.\n")
 })
 
