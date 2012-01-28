@@ -201,7 +201,7 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
     }
     baseout = list(scores = topKscores, inds = topKinds, guniv = guniv, K=K,
 	smsanno = annotation(sms),
-        snpnames = rownames(inimgr@file), call = theCall, date=date(), shortfac=shortfac)
+        snpnames = rownames(inimgr@fffile), call = theCall, date=date(), shortfac=shortfac)
     new("transManager", base=baseout)
 }
 
