@@ -49,7 +49,7 @@ topKfeats = function(mgr, K, fn="inds1.ff", batchsize=200,
 # it would of course be very nice to compute the order once and apply it to both
 # the scores and the names simultaneously.  i am not sure it will be beneficial
 #
-     intests = mgr@fflist[[ffind]]
+     intests = mgr@fffile
      #thevmode = "short"
      #if (feat == "ind" | feat == "geneind") thevmode = "integer"
      if (feat == "score") op = function(x)sort(x, decreasing=TRUE)[1:K]
@@ -92,7 +92,7 @@ cisZero = function(mgr, snpRanges, geneRanges, radius) {
 #
 # given a manager, all tests for SNP within radius of each gene are set to zero
 #
-        dimnt = dimnames(mgr@fflist[[1]])
+        dimnt = dimnames(mgr@fffile)
         oks = gsub("rs", "", dimnt[[1]])
         okg = dimnt[[2]]
         srids = values(snpRanges)$RefSNP_id
@@ -102,11 +102,11 @@ cisZero = function(mgr, snpRanges, geneRanges, radius) {
              }
         if (length(srids) > 0) warning("had to take snp names from names(snpRanges)")
         if (!isTRUE(all(okg %in% names(geneRanges))))  {
-            warning("geneRanges does not include names/ranges for all colnames of mgr fflist")
+            warning("geneRanges does not include names/ranges for all colnames of mgr fffile")
             okg = intersect( okg, names(geneRanges))
             }
         if (!isTRUE(all(oks %in% srids)))  {
-            warning("snpRanges does not include names/ranges for all rownames of mgr fflist")
+            warning("snpRanges does not include names/ranges for all rownames of mgr fffile")
  # match and numeric indexing much more efficient than names for large objects
             oks = match(oks, srids, nomatch=0)
             if (length(oks) == 0) stop("snpRanges does not include any snps in mgr")
@@ -116,7 +116,7 @@ cisZero = function(mgr, snpRanges, geneRanges, radius) {
             radius)
         matm = matchMatrix(ol)
         if (nrow(matm) > 0) {
-            mgr@fflist[[1]][matm] = 0
+            mgr@fffile[matm] = 0
         }
     }
 
@@ -176,7 +176,7 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
     topKscores = topKfeats(inimgr, K = K, fn = paste(targdir, 
         "/", snpchr, "_tssco1_1.ff", sep = ""), feat = "score", 
         ginds = genemap[[1]], batchsize=batchsize)
-    unlink(filename(inimgr@fflist[[1]]))
+    unlink(filename(inimgr@fffile))
     for (j in 2:nchr_genes) {    # continue sifting through transcriptome
         cat(j)
         gc()
@@ -195,13 +195,13 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
             "scoscratch.ff", sep = ""), feat = "score", ginds = genemap[[j]],
                 batchsize=batchsize)
         updateKfeats(topKscores, nxtKscores, topKinds, nxtKinds, batchsize=batchsize)  
-        unlink(filename(nxtmgr@fflist[[1]]))   # kill off scratch materials
+        unlink(filename(nxtmgr@fffile))   # kill off scratch materials
         unlink(paste(targdir, "indscratch.ff", sep = ""))
         unlink(paste(targdir, "scoscratch.ff", sep = ""))
     }
     baseout = list(scores = topKscores, inds = topKinds, guniv = guniv, K=K,
 	smsanno = annotation(sms),
-        snpnames = rownames(inimgr@fflist[[1]]), call = theCall, date=date(), shortfac=shortfac)
+        snpnames = rownames(inimgr@file), call = theCall, date=date(), shortfac=shortfac)
     new("transManager", base=baseout)
 }
 
@@ -240,7 +240,7 @@ bindSnpRanges2mgr = function (mgr, snpRanges, badstart=-2, badend=-1)
 #
 # this will get a GRanges instance from snpRanges congruent to mgr snp info
 #
-    dimnt = dimnames(mgr@fflist[[1]])
+    dimnt = dimnames(mgr@fffile)
     snpsInMgr = dimnt[[1]]
     if (!is.null(values(snpRanges)$RefSNP_id)) {
         snpsInMgr = gsub("rs", "", snpsInMgr)
@@ -263,7 +263,7 @@ bindGeneRanges2mgr = function (mgr, geneRanges, badstart=-6, badend=-5)
 #
 # this will get a GRanges instance from geneRanges congruent to mgr gene info
 #
-    dimnt = dimnames(mgr@fflist[[1]])
+    dimnt = dimnames(mgr@ffile)
     genesInMgr = dimnt[[2]]
     fullgr = IRanges(rep(badstart, length(genesInMgr)), rep(badend, length(genesInMgr)))
     sn = seqnames(geneRanges)[1]
@@ -289,7 +289,7 @@ cisZero = function (mgr, snpRanges, geneRanges, radius)
         radius)
     matm = matchMatrix(ol)
     if (nrow(matm) > 0) {
-        mgr@fflist[[1]][matm] = 0
+        mgr@ffile[matm] = 0
     }
 }
 

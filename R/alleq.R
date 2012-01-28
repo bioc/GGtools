@@ -101,5 +101,12 @@ setMethod("show", "allSigCis", function(object) {
  cat("all.cis.eQTL output (first", min(c(4,nr)), " of", nr, "rows):\n")
  show(object@fulllist[1:min(4,nr),])
  cat("the call was:\n")
- print(object@theCall)
+ fd = fdr(object@bestcis)
+ cat("there were ", sum(fd < 0.05), " probes with FDR < 0.05.\n")
+ cat("note: gene ranges shown are extended by radius (", radius, ").\n")
+ cat("use getCall(), getBest(), getAll() etc. for more info.\n")
 })
+
+getBest = function(x) x@bestcis
+getCall = function(x) x@theCall
+getAll = function(x) x@fulllist
