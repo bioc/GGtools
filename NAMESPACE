@@ -22,7 +22,7 @@ importClassFrom(Rsamtools, TabixFile)
 importClassFrom(IRanges, RangedData, DataTable, List, Vector, Annotated, 
 	DataTableORNULL)
 
-exportMethods("gwSnpTests", "show", "topFeats", "plot")
+exportMethods("gwSnpTests", "show", "topFeats", "plot", transTab)
 
 exportClasses("eqtlTestsManager", "eqtlEstimatesManager", "mcwBestCis",
    "gwSnpScreenResult", transManager, allSigCis)
@@ -31,5 +31,5 @@ export(gwSnpTests, topSnps, eqtlTests, topFeats, getCisMap, pData, plot,
 	best.cis.eQTLs, chromsUsed, fullreport, 
 	eqtlEstimates, probesManaged, snpsManaged,
 	topScores, topGenes, locusNames, geneNames, geneIndcol, nthScores,
-	vcf2sm, all.cis.eQTLs, fdr, transScores, getBest, getAll, getCall) 
+	vcf2sm, all.cis.eQTLs, fdr, transScores, getBest, getAll, getCall, transTab, meqtlTests) 
 

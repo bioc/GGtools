@@ -199,7 +199,8 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
         unlink(paste(targdir, "indscratch.ff", sep = ""))
         unlink(paste(targdir, "scoscratch.ff", sep = ""))
     }
-    baseout = list(scores = topKscores, inds = topKinds, guniv = guniv, K=K,
+    baseout = list(scores = topKscores, inds = topKinds, guniv = guniv, K=K, snpchr=snpchr,
+        chrnames=chrnames,
 	smsanno = annotation(sms),
         snpnames = rownames(inimgr@fffile), call = theCall, date=date(), shortfac=shortfac)
     new("transManager", base=baseout)
@@ -308,7 +309,12 @@ nthScores = function(tm, n) {
 
 
 
-transTab = function( x, snpchr ) {
+setGeneric("transTab", function(x)standardGeneric("transTab"))
+setMethod("transTab", "transManager", function(x) {
+ .transTab(x@base)
+})
+
+.transTab = function( x ) {
  gannopkname = x$smsanno
  K = x$K
  sids = rep(x$snpnames, each=K )
@@ -323,7 +329,7 @@ transTab = function( x, snpchr ) {
  gchr = gchr[ theinds ]
  gsym = gsym[ theinds ]
  gent = gent[ theinds ]
- data.frame(snp=sids, sumchisq=thescos, probeid=gn , probechr=gchr,
+ data.frame(snp=sids, sumchisq=thescos, probeid=gn , probechr=gchr, snpchr=x$snpchr,
     sym=gsym, entrez=gent)
 }
 
@@ -359,4 +365,190 @@ tr1_obs = function ()
     ans = get(load(system.file("transObjs/tr1.rda", package = "GGtools")))
     treloc("@@REPLACE_BY_RELOCATE@@", system.file(package = "GGtools"), 
         ans)
+}
+
+
+mtransScores = function (smpackvec, snpchr = "chr1", rhslist, K = 20, targdirpref = "multtsco", 
+    geneApply = lapply, chrnames = paste("chr", as.character(1:22), sep=""), 
+    geneRanges = NULL, snpRanges = NULL, radius = 2e+06, renameChrs=NULL,
+    batchsize=200, genegran=50, probesToKeep=NULL, shortfac=10, wrapperEndo=NULL) 
+{
+#
+# objective is a small-footprint accumulation of trans-eQTL tests 
+#      summed over different cohorts
+#  smpackvec is a vector of lightweight smlSet package name
+#  snpchr is the chromosome for which SNPs will be tested
+#  rhslist is the right hand side of formula for snp.rhs.tests in snpTests
+#  K is the number of best features to be retained as we explore the transcriptome
+#
+#
+    if (length(chrnames) < 2) 
+        stop("must have length(chrnames) >= 2")
+    theCall = match.call()
+    require(GGtools)
+#
+# get an image of the expression+genotype data for SNP on specific chromosome snpchr
+#
+    smsl = lapply(smpackvec, function(x) getSS(x, snpchr, renameChrs=renameChrs,
+       probesToKeep=probesToKeep, wrapperEndo=wrapperEndo))
+    if (!is.null(renameChrs)) snpchr=renameChrs
+    smsl = makeCommonSNPs(smsl) # could be optional
+    names(smsl) = smpackvec
+    sms = smsl[[1]]
+    guniv = featureNames(sms)   # universe of probes
+    smanno = gsub(".db", "", annotation(sms))
+    require(paste(smanno, ".db", sep = ""), character.only = TRUE)
+    clcnames = gsub("chr", "", chrnames)  # typical chrom nomenclature of bioconductor
+    pnameList = mget(clcnames, revmap(get(paste(smanno, "CHR", 
+        sep = ""))))
+ # be sure to use only genes that are on arrays in sms
+    pnameList = lapply(pnameList, function(x) intersect(x, guniv))
+    names(pnameList) = chrnames  # now the universe of probes is split into chromsomes
+    todrop = which(sapply(pnameList, length)==0)
+    if (length(todrop)>0) pnameList = pnameList[-todrop]
+    genemap = lapply(pnameList, function(x) match(x, guniv))  # numerical indices for probes
+    nchr_genes = length(names(pnameList))
+    targdir = paste(targdirpref, snpchr, sep="")
+    cursmsl = lapply(smsl, function(x) x[probeId(pnameList[[chrnames[1]]]),])
+    inimgr = meqtlTests(cursmsl,   # start the sifting through transcriptome
+         rhslist, targdir = targdir, runname = paste("tsc_", chrnames[1],  # testing on genes in chrom 1
+        sep = ""), geneApply = geneApply, 
+        saveSummaries = FALSE, genegran=genegran, shortfac=shortfac)
+    rm(cursmsl); gc()
+    if (snpchr == chrnames[1]) {
+        if (is.null(geneRanges) || is.null(snpRanges)) 
+            stop("ranges must be supplied to exclude cis tests")
+        cisZero(inimgr, snpRanges, geneRanges, radius)   # if SNP are on chrom 1, exclude cis
+    }
+    topKinds = topKfeats(inimgr, K = K, fn = paste(targdir, "/",  # sort and save
+        snpchr, "_tsinds1_1.ff", sep = ""), feat = "geneind", 
+        ginds = genemap[[1]], batchsize=batchsize)
+    topKscores = topKfeats(inimgr, K = K, fn = paste(targdir, 
+        "/", snpchr, "_tssco1_1.ff", sep = ""), feat = "score", 
+        ginds = genemap[[1]], batchsize=batchsize)
+    unlink(filename(inimgr@fflist[[1]]))
+    for (j in 2:nchr_genes) {    # continue sifting through transcriptome
+        cat(j)
+        gc()
+        cursmsl = lapply(smsl, function(x) x[probeId(pnameList[[chrnames[j]]]),])
+        nxtmgr = meqtlTests(cursmsl, rhslist, targdir = targdir, 
+            runname = paste("tsctmp", 
+            j, sep = ""), geneApply = geneApply, 
+		saveSummaries = FALSE, genegran=genegran, shortfac=shortfac)
+        rm(cursmsl); gc()
+        if (snpchr == chrnames[j]) {
+            if (is.null(geneRanges) || is.null(snpRanges)) 
+                stop("ranges must be supplied to exclude cis tests")
+            cisZero(nxtmgr, snpRanges, geneRanges, radius)
+            }
+        nxtKinds = topKfeats(nxtmgr, K = K, fn = paste(targdir, 
+            "indscratch.ff", sep = ""), feat = "geneind", ginds = genemap[[j]], batchsize=batchsize)
+        nxtKscores = topKfeats(nxtmgr, K = K, fn = paste(targdir, 
+            "scoscratch.ff", sep = ""), feat = "score", ginds = genemap[[j]], batchsize=batchsize)
+        updateKfeats(topKscores, nxtKscores, topKinds, nxtKinds, batchsize=batchsize)  
+        unlink(filename(nxtmgr@fflist[[1]]))   # kill off scratch materials
+        unlink(paste(targdir, "indscratch.ff", sep = ""))
+        unlink(paste(targdir, "scoscratch.ff", sep = ""))
+    }
+
+    baseout = list(scores = topKscores, inds = topKinds, guniv = guniv, K=K, snpchr=snpchr,
+        chrnames=chrnames,
+	smsanno = annotation(sms),
+        snpnames = rownames(inimgr@fffile), call = theCall, date=date(), shortfac=shortfac)
+    new("transManager", base=baseout)
+}
+
+reduceGenes = function( listOfSms, geneinds )
+  lapply( listOfSms, function(x) x[ geneinds, ] )
+
+
+meqtlTests = function(listOfSmls, rhslist,
+   runname="mfoo", targdir="mfoo", geneApply=lapply, 
+   shortfac = 100, computeZ=FALSE, uncert=TRUE, 
+   saveSummaries=TRUE, family, genegran=50, ... ) {
+ theCall = match.call()
+ sess = sessionInfo()
+ geneindex <- 1
+ if (missing(family)) family="gaussian"
+ allfeat = lapply(listOfSmls, featureNames)
+ smlSet1 = listOfSmls[[1]]
+ fint = allfeat[[1]]
+ for (i in 2:length(allfeat)) fint = intersect(fint, allfeat[[i]])
+ if (length(fint)==0) stop("null intersection of featureNames for smlSet list elements")
+ listOfSmls = reduceGenes( listOfSmls, probeId(fint) )
+ listOfSmls = makeCommonSNPs( listOfSmls )
+
+ smlSet1 = listOfSmls[[1]]
+ fnhead = paste(targdir, "/", runname, "_", sep="")
+ geneNames = featureNames(smlSet1)
+ chrName = names(smList(smlSet1))
+ cnames = lapply(listOfSmls, function(x) names(smList(x)))
+ clens = sapply(cnames,length)
+ if (any(clens != 1)) stop("all smlSets must have smList of length 1")
+ ngenes = length(geneNames)
+ nchr = 1
+ system(paste("mkdir", targdir))
+
+# there will be one ff file per chromosome which will accumulate
+# all information across smlSets
+
+ targff = paste( fnhead, "chr", chrName, ".ff", sep="" )
+ allSnpnames = colnames(smList(listOfSmls[[1]])[[1]])
+ fffile =
+    ff( initdata = 0, dim=c( length(allSnpnames), ngenes),
+        dimnames = list(allSnpnames, geneNames), vmode="short",
+        filename=targff )
+ 
+# chopped from eqtlTests -- but won't work as such.  hack -- just
+# develop summaries on first smlSet in list.  they don't seem to be
+# used anyway, except in topFeats for minMAF or minGTF settings...
+ summfflist = list()
+ if (saveSummaries) {
+  # get MAF and minGTF for all SNP
+  sumfn = paste(fnhead, chrName, "_summ.ff", sep="")
+  if ("multicore" %in% search()) {
+    summfflist = geneApply( 1:length(chrName), function(i) ffSnpSummary(smList(smlSet1)[[i]], sumfn[i],
+         fac=shortfac))
+    } else {
+          for (i in 1:length(sumfn))
+              summfflist[[chrName[i]]] = ffSnpSummary(smList(smlSet1)[[i]], sumfn[i])
+          }
+  # ok, now just save references in object
+  }
+
+
+  store = fffile
+  for (theSS in 1:length(listOfSmls)) {
+   smlSet = listOfSmls[[theSS]]
+   snpdata = smList(smlSet)[[1]]
+   gfun = function(gene) {
+     if (options()$verbose & geneindex %% genegran == 0) cat(gene, "..")
+     geneindex <- geneindex + 1
+     if (options()$verbose & geneindex %% 8*genegran == 0) cat("\n")
+     ex = exprs(smlSet)[gene,]
+     fmla = formula(paste("ex", paste(as.character(rhslist[[theSS]]),collapse=""), collapse=" "))
+     numans = snp.rhs.tests(fmla, snp.data=snpdata, 
+         data=pData(smlSet), family=family, uncertain=uncert, ...)@chisq
+     if (computeZ) {
+       numans = sqrt(numans)
+       signl = snp.rhs.estimates( fmla, snp.data=snpdata, data=pData(smlSet), family=family, ... )
+       bad = which(unlist(lapply(signl, is.null)))
+       if (length(bad)>0) signl[bad] = list(beta=NA)
+       ifelse(unlist(signl)>=0, 1, -1)
+       numans = numans*signl
+     }
+     miss = is.na(numans)
+     print(sum(miss))
+     if (any(miss) & !computeZ) numans[which(miss)] = rchisq(length(which(miss)), 1)
+     if (any(miss) & computeZ) numans[which(miss)] = rnorm(length(which(miss)))
+     store[, gene, add=TRUE] = as.integer(shortfac*numans)
+     NULL
+    }
+    #debug(gfun)
+    geneApply( geneNames, gfun ) 
+   } # end iterate over smlSet list
+  exdate = date()
+  new("eqtlTestsManager", fffile=store, call=theCall, sess=sess, 
+        exdate=exdate, shortfac=shortfac, geneanno=annotation(smlSet1),
+        df=length(listOfSmls), summaryList=summfflist)
 }
