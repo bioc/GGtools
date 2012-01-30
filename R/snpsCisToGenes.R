@@ -108,7 +108,7 @@ setMethod("show", "mcwBestCis", function(object) {
  cat("use chromsUsed(), fullreport(), etc. for additional information.\n")
 })
 
-best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScratch",
+best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScratch", shortfac=100,
     radius = 50000, smchr = "20", gchr = "20", schr = "ch20",
     geneApply = lapply, geneannopk = "illuminaHumanv1.db", snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
     smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05),
@@ -156,7 +156,7 @@ best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScr
 #
     cat("tests...")
     mgr = eqtlTests(fsms, rhs, targdir = folderstem,
-        runname = "cis", geneApply = geneApply)
+        runname = "cis", geneApply = geneApply, shortfac=shortfac)
     mff = fffile(mgr)
     oksn = rownames(mff) 
     cismap = lapply(cismap, function(y)intersect(y,oksn))
@@ -190,7 +190,7 @@ best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScr
     fullans
 }
 
-best.cis.eQTLs.mchr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScratch",
+best.cis.eQTLs.mchr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScratch", shortfac=100,
     radius = 50000, 
     chrnames = as.character(1:22),
     smchrpref = "", gchrpref = "", schrpref = "ch",
@@ -204,7 +204,7 @@ best.cis.eQTLs.mchr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisSc
             gchr = paste(gchrpref, ch, sep="")
             schr = paste(schrpref, ch, sep="")
             best.cis.eQTLs.chr(smpack = smpack, rhs = rhs, 
-             folderstem = folderstem, radius=radius,
+             folderstem = folderstem, radius=radius, shortfac=shortfac,
              smchr = smchr, gchr = gchr, schr = schr,
              geneApply = geneApply, geneannopk = geneannopk, 
              snpannopk = snpannopk, smFilter=smFilter, cisMapList=cisMapList )
@@ -214,7 +214,7 @@ best.cis.eQTLs.mchr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisSc
 }
     
 best.cis.eQTLs = function(smpack = "GGdata",
-   rhs=~1, folderstem="cisScratch", radius=50000,
+   rhs=~1, folderstem="cisScratch", radius=50000, shortfac=100,
     chrnames = as.character(1:22),
     smchrpref = "", gchrpref = "", schrpref = "ch",
     geneApply = lapply, 
@@ -224,14 +224,14 @@ best.cis.eQTLs = function(smpack = "GGdata",
         var.cutoff=.97), nperm=2, cisMapList=NULL) {
     theCall = match.call()
     obs = best.cis.eQTLs.mchr( smpack = smpack,
-          rhs=rhs, folderstem=folderstem, radius=radius,
+          rhs=rhs, folderstem=folderstem, radius=radius, shortfac=shortfac,
           chrnames = chrnames, smchrpref=smchrpref,
 	  gchrpref=gchrpref, schrpref=schrpref, geneApply=geneApply,
           geneannopk = geneannopk, snpannopk=snpannopk, smFilter = smFilter, cisMapList=cisMapList)
     permans = list()
     for (j in 1:nperm) {
       permans[[j]] = best.cis.eQTLs.mchr( smpack = smpack,
-          rhs=rhs, folderstem=folderstem, radius=radius,
+          rhs=rhs, folderstem=folderstem, radius=radius, shortfac=shortfac,
           chrnames = chrnames, smchrpref=smchrpref,
 	  gchrpref=gchrpref, schrpref=schrpref, geneApply=geneApply,
           geneannopk = geneannopk, snpannopk=snpannopk, 
