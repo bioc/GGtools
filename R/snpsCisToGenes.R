@@ -131,9 +131,12 @@ best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScr
 # assumption is that we will compute cis snp to gene mapping ourselves with getCisMap
 # or user has supplied a genome-wide list (one elem per chrom) of cisMap instances
 #
-    if (is.null(cisMapList)) cismapObj = getCisMap(radius = radius, gchr = gchr, schr = schr,
+    if (is.null(cisMapList)) {
+        cismapObj = getCisMap(radius = radius, gchr = gchr, schr = schr,
         geneannopk = geneannopk, snpannopk = snpannopk)
-    else cismapObj = cisMapList[[gchr]]
+        }
+    else cismapObj = new("cisMap", namelist=cisMapList[[gchr]],
+        snplocs=GRanges(), generanges=GRanges(), radiusUsed=radius)
     cismap = namelist(cismapObj)
 ##
 ## use of gchr here for annotation package
