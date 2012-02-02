@@ -246,7 +246,7 @@ best.cis.eQTLs = function(smpack = "GGdata",
     obs = obs[order(elementMetadata(obs)$fdr),]
 #    list(obs=obs, all.permuted.scores=alls) #permans=permans)
     new("mcwBestCis", scoregr=obs, allperm=alls, theCall=theCall,
-      chromUsed=chrnames)
+      chromUsed=chrnames, smFilter=smFilter)
 }
 
 setMethod("chromsUsed", "mcwBestCis", function(x)x@chromUsed)
