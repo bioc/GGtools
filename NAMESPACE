@@ -9,7 +9,7 @@ importFrom(bit, chunk)
 importFrom(AnnotationDbi, get, mget, revmap, mappedkeys)
 
 importFrom(IRanges, elementMetadata, matchMatrix, findOverlaps, "elementMetadata<-",
-	RangedData, IRanges, as.data.frame, values)
+	RangedData, IRanges, as.data.frame, values, start)
 
 importFrom(Biobase, featureNames, annotation, pData)
 
