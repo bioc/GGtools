@@ -16,7 +16,7 @@ all.cis.eQTLs = function (maxfdr = 0.05, inbestcis = NULL, smpack = "GGdata",
   lower = 0.05), var.cutoff = 0.85), 
   smFilter4all = function(x) MAFfilter(clipPCs(x, 1:10),
   lower = 0.05),
-  nperm = 2, cisMapList = NULL) {
+  nperm = 2) {
  theCall = match.call()
  exdate = date()
 cat("PHASE 1: determining cis threshold...\n")
@@ -26,7 +26,7 @@ cat("PHASE 1: determining cis threshold...\n")
     radius=radius, chrnames=chrnames, smchrpref=smchrpref,
     gchrpref = gchrpref, schrpref = schrpref, geneApply=geneApply,
     geneannopk = geneannopk, snpannopk = snpannopk,
-    smFilter=smFilter4cis, nperm=nperm, cisMapList = cisMapList)
+    smFilter=smFilter4cis, nperm=nperm)
     }
  else btmp = inbestcis
  kp = probesWeqtl(btmp, maxfdr=maxfdr)
@@ -42,10 +42,8 @@ cat("PHASE 2: extracting associations passing cis threshold...\n")
     gchr = paste(gchrpref, chrnames[i], sep="")
     schr = paste(schrpref, chrnames[i], sep="")
     smchr = paste(smchrpref, chrnames[i], sep="")
-    if (is.null(cisMapList)) cismapObj = getCisMap(radius = radius, 
-        gchr = gchr, schr = schr,
+    cismapObj = getCisMap(radius = radius, gchr = gchr, schr = schr,
         geneannopk = geneannopk, snpannopk = snpannopk)
-    else cismapObj = cisMapList[[gchr]]
     cismap = GGtools:::namelist(cismapObj)
     cokp = intersect(kp, names(cismap))  # mapped probes w/ cis snp on this chr
 #

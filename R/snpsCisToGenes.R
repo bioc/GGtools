@@ -86,9 +86,11 @@ getCisMap = function( radius=50000, gchr="20",
     gend = gend[-which(bad)]
     ponc = ponc[-which(bad)]
     }
-  slocdf = getSNPlocs(schr)
-  sids = paste("rs", slocdf$RefSNP_id, sep="")
-  slocs = slocdf$loc
+  slocgr = getSNPlocs(schr, as.GRanges=TRUE)
+  if (is.null(names(slocgr))) 
+     sids = paste("rs", values(slocdf)$RefSNP_id, sep="")
+  else sids = names(slocgr)
+  slocs = start(slocgr)
   snpsCisToGenes( radius, gchr, ponc, gstart, gend, sids, slocs, as.GRangesList=as.GRangesList )
 }
 
@@ -112,12 +114,8 @@ best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScr
     radius = 50000, smchr = "20", gchr = "20", schr = "ch20",
     geneApply = lapply, geneannopk = "illuminaHumanv1.db", snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
     smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05),
-        var.cutoff = 0.97), cisMapList=NULL)
+        var.cutoff = 0.97))
 {
-#
-# cisMapList can be a named list with one element per chromosome, with names corresponding
-# to gchr notation (chromosome names used in mapping probes to chromosomes); each element is 
-# a cisMap instance
 #
 #
     unlink(folderstem, recursive=TRUE)
@@ -129,15 +127,9 @@ best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScr
 # of gene
 #
 # assumption is that we will compute cis snp to gene mapping ourselves with getCisMap
-# or user has supplied a genome-wide list (one elem per chrom) of cisMap instances
 #
-    if (is.null(cisMapList)) {
-        cismapObj = getCisMap(radius = radius, gchr = gchr, schr = schr,
+    cismapObj = getCisMap(radius = radius, gchr = gchr, schr = schr,
         geneannopk = geneannopk, snpannopk = snpannopk)
-        }
-    else cismapObj = new("cisMap", namelist=cisMapList[[gchr]],
-        snplocs=GRanges(), generanges=GRanges(), radiusUsed=radius)
-    cismap = namelist(cismapObj)
 ##
 ## use of gchr here for annotation package
 ##
@@ -201,7 +193,7 @@ best.cis.eQTLs.mchr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisSc
       geneannopk = "illuminaHumanv1.db", 
       snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
     smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05),
-        var.cutoff = 0.97), cisMapList=NULL) {
+        var.cutoff = 0.97)) {
     ans = lapply( chrnames, function(ch) {
             smchr = paste(smchrpref, ch, sep="")
             gchr = paste(gchrpref, ch, sep="")
@@ -210,7 +202,7 @@ best.cis.eQTLs.mchr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisSc
              folderstem = folderstem, radius=radius, shortfac=shortfac,
              smchr = smchr, gchr = gchr, schr = schr,
              geneApply = geneApply, geneannopk = geneannopk, 
-             snpannopk = snpannopk, smFilter=smFilter, cisMapList=cisMapList )
+             snpannopk = snpannopk, smFilter=smFilter)
             })
     ans = as(do.call(c, ans), "GRanges")  # RangedData just need c for combination; then mix spaces
     ans[order(elementMetadata(ans)$score, decreasing=TRUE),]
@@ -224,13 +216,13 @@ best.cis.eQTLs = function(smpack = "GGdata",
       geneannopk = "illuminaHumanv1.db", 
       snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
     smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05),
-        var.cutoff=.97), nperm=2, cisMapList=NULL) {
+        var.cutoff=.97), nperm=2) {
     theCall = match.call()
     obs = best.cis.eQTLs.mchr( smpack = smpack,
           rhs=rhs, folderstem=folderstem, radius=radius, shortfac=shortfac,
           chrnames = chrnames, smchrpref=smchrpref,
 	  gchrpref=gchrpref, schrpref=schrpref, geneApply=geneApply,
-          geneannopk = geneannopk, snpannopk=snpannopk, smFilter = smFilter, cisMapList=cisMapList)
+          geneannopk = geneannopk, snpannopk=snpannopk, smFilter = smFilter)
     permans = list()
     for (j in 1:nperm) {
       permans[[j]] = best.cis.eQTLs.mchr( smpack = smpack,
@@ -238,7 +230,7 @@ best.cis.eQTLs = function(smpack = "GGdata",
           chrnames = chrnames, smchrpref=smchrpref,
 	  gchrpref=gchrpref, schrpref=schrpref, geneApply=geneApply,
           geneannopk = geneannopk, snpannopk=snpannopk, 
-          smFilter = function(x) permEx(smFilter(x)), cisMapList=cisMapList)
+          smFilter = function(x) permEx(smFilter(x)))
       }
     alls = unlist(lapply(permans, function(x)elementMetadata(x)$score))
     fdrs = sapply(elementMetadata(obs)$score, function(x) (sum(alls>=x)/nperm)/sum(elementMetadata(obs)$score>=x))
