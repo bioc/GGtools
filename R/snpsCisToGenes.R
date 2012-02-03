@@ -130,6 +130,7 @@ best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScr
 #
     cismapObj = getCisMap(radius = radius, gchr = gchr, schr = schr,
         geneannopk = geneannopk, snpannopk = snpannopk)
+    cismap = namelist(cismap)
 ##
 ## use of gchr here for annotation package
 ##
