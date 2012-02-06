@@ -2,7 +2,11 @@
 \alias{best.cis.eQTLs}
 \alias{all.cis.eQTLs}
 \alias{mcwBestCis-class}
+\alias{show,mcwBestCis-method}
+\alias{show,cwBestCis-method}
+\alias{show,allCigCis-method}
 \alias{chromsUsed}
+\alias{fdr}
 \alias{chromsUsed,mcwBestCis-method}
 \alias{fullreport}
 \alias{fullreport,mcwBestCis,missing-method}
@@ -18,11 +22,12 @@ collect genewise best scoring eQTL
 \usage{
 best.cis.eQTLs(smpack = "GGdata", rhs = ~1, 
   folderstem = "cisScratch", radius = 50000, 
+  shortfac = 100,
   chrnames = as.character(1:22), 
   smchrpref = "", gchrpref = "", schrpref = "ch", 
   geneApply = lapply, geneannopk = "illuminaHumanv1.db", 
   snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427", 
-  smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97), nperm = 2, cisMapList = NULL)
+  smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97), nperm = 2)
 
 all.cis.eQTLs(maxfdr = 0.05, inbestcis = NULL, smpack = "GGdata", 
     rhs = ~1, folderstem = "cisScratch", radius = 50000, 
@@ -34,10 +39,12 @@ all.cis.eQTLs(maxfdr = 0.05, inbestcis = NULL, smpack = "GGdata",
         1:10), lower = 0.05), var.cutoff = 0.85), 
     smFilter4all = function(x) MAFfilter(clipPCs(x, 
         1:10), lower = 0.05), 
-    nperm = 2, cisMapList = NULL) 
+    nperm = 2)
 
 
 chromsUsed(x)
+
+fdr(x)
 
 fullreport(x, type)
 }
@@ -61,6 +68,9 @@ coding extent of each gene will be extended in both directions by
 \code{radius} bases, and only SNP within these limits are
 used for selecting best hits for the gene
 }
+  \item{shortfac}{a numeric that will scale up the
+chi-squared statistic before it is converted to 
+short integer for storage in ff array}
   \item{chrnames}{
 character vector of chromosome identifiers, to be manipulated
 for certain query resolutions by the following parameters
@@ -136,6 +146,12 @@ eQTL report container.
 It is possible that the filtering processes should
 be broken into genotype filtering and expression probe
 filtering.
+
+\code{fdr(x)} will return a numeric vector of
+plug-in FDR estimates corresponding to probe:association tests
+as ordered in the fullreport of a *Cis container.
+More metadata should be attached to the output of this
+function.
 }
 \value{
 an instance of \code{\linkS4class{mcwBestCis}}
@@ -147,7 +163,6 @@ an instance of \code{\linkS4class{mcwBestCis}}
 VJ Carey <stvjc@channing.harvard.edu>
 }
 %\note{
-%%  ~~further notes~~
 %}
 %
 %%% ~Make other sections like Warning with \section{Warning }{....} ~

@@ -1,3 +1,6 @@
+
+importFrom(stats, IQR, aggregate)
+
 importFrom(graphics, plot)
 
 importFrom(snpStats, snp.rhs.tests, p.value, col.summary, snp.rhs.estimates)
@@ -8,14 +11,17 @@ importFrom(bit, chunk)
 
 importFrom(AnnotationDbi, get, mget, revmap, mappedkeys)
 
-importFrom(IRanges, elementMetadata, matchMatrix, findOverlaps, "elementMetadata<-",
-	RangedData, IRanges, as.data.frame, values, start, ranges)
+importFrom(IRanges, RangedData, IRanges)
+
+importMethodsFrom(IRanges, elementMetadata, matchMatrix, findOverlaps, "elementMetadata<-",
+	as.data.frame, values, start, ranges)
 
 importFrom(Biobase, featureNames, annotation, pData)
 
-importFrom(GenomicRanges, seqnames, GRanges)
+importMethodsFrom(GenomicRanges, seqnames)
+importFrom(GenomicRanges, GRanges)
 
-importFrom(Rsamtools, scanTabix)
+importMethodsFrom(Rsamtools, scanTabix)
 
 importClassFrom(GenomicRanges, GRanges)
 
@@ -35,6 +41,5 @@ export(gwSnpTests, topSnps, eqtlTests, topFeats, getCisMap, pData, plot,
 	best.cis.eQTLs, chromsUsed, fullreport, 
 	eqtlEstimates, probesManaged, snpsManaged,
 	topScores, topGenes, locusNames, geneNames, geneIndcol, nthScores,
-	vcf2sm, all.cis.eQTLs, fdr, transScores, getBest, getAll, getCall, transTab, meqtlTests,
-	GRanges, IRanges, scanTabix) 
+	vcf2sm, all.cis.eQTLs, fdr, transScores, getBest, getAll, getCall, transTab, meqtlTests)
 

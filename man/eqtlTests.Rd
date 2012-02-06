@@ -13,8 +13,8 @@ smlSet instance, using out-of-memory storage
 }
 \usage{
 eqtlTests(smlSet, rhs = ~1 - 1, runname = "foo", 
-	targdir = "foo", geneApply = lapply, 
-	shortfac = 100, 
+	targdir = "fooe", geneApply = lapply, 
+	shortfac = 10000, 
 	checkValid = TRUE, useUncertain = TRUE, 
 	glmfamily = "gaussian")
 

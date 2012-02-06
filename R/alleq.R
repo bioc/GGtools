@@ -8,7 +8,7 @@ probesWeqtl = function(x, maxfdr=0.05) {
 
 all.cis.eQTLs = function (maxfdr = 0.05, inbestcis = NULL, smpack = "GGdata", 
   rhs = ~1, folderstem = "cisScratch", 
-  radius = 50000, chrnames = as.character(1:22), smchrpref = "", 
+  radius = 50000, shortfac=100, chrnames = as.character(1:22), smchrpref = "", 
   gchrpref = "", schrpref = "ch", geneApply = lapply, 
   geneannopk = "illuminaHumanv1.db", 
   snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427", 
@@ -23,7 +23,7 @@ cat("PHASE 1: determining cis threshold...\n")
  if (is.null(inbestcis)) {
   btmp = best.cis.eQTLs( smpack=smpack,
     rhs=rhs, folderstem=folderstem, 
-    radius=radius, chrnames=chrnames, smchrpref=smchrpref,
+    radius=radius, shortfac=shortfac, chrnames=chrnames, smchrpref=smchrpref,
     gchrpref = gchrpref, schrpref = schrpref, geneApply=geneApply,
     geneannopk = geneannopk, snpannopk = snpannopk,
     smFilter=smFilter4cis, nperm=nperm)
@@ -58,7 +58,7 @@ cat("PHASE 2: extracting associations passing cis threshold...\n")
      cat("test...")
      tmpt = eqtlTests( curss, rhs, 
         targdir=folderstem, runname="all",
-	geneApply=geneApply )
+	geneApply=geneApply , shortfac=shortfac)
 #
 # grab hits
 #
