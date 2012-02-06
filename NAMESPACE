@@ -9,15 +9,19 @@ importFrom(bit, chunk)
 importFrom(AnnotationDbi, get, mget, revmap, mappedkeys)
 
 importFrom(IRanges, elementMetadata, matchMatrix, findOverlaps, "elementMetadata<-",
-	RangedData, IRanges, as.data.frame, values, start)
+	RangedData, IRanges, as.data.frame, values, start, ranges)
 
 importFrom(Biobase, featureNames, annotation, pData)
 
 importFrom(GenomicRanges, seqnames, GRanges)
 
+importFrom(Rsamtools, scanTabix)
+
 importClassFrom(GenomicRanges, GRanges)
 
 importClassFrom(Rsamtools, TabixFile)
+
+importFrom(VariantAnnotation, scanVcfHeader)
 
 importClassFrom(IRanges, RangedData, DataTable, List, Vector, Annotated, 
 	DataTableORNULL)
@@ -31,5 +35,6 @@ export(gwSnpTests, topSnps, eqtlTests, topFeats, getCisMap, pData, plot,
 	best.cis.eQTLs, chromsUsed, fullreport, 
 	eqtlEstimates, probesManaged, snpsManaged,
 	topScores, topGenes, locusNames, geneNames, geneIndcol, nthScores,
-	vcf2sm, all.cis.eQTLs, fdr, transScores, getBest, getAll, getCall, transTab, meqtlTests) 
+	vcf2sm, all.cis.eQTLs, fdr, transScores, getBest, getAll, getCall, transTab, meqtlTests,
+	GRanges, IRanges, scanTabix) 
 

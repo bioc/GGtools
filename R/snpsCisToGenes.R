@@ -88,7 +88,7 @@ getCisMap = function( radius=50000, gchr="20",
     }
   slocgr = getSNPlocs(schr, as.GRanges=TRUE)
   if (is.null(names(slocgr))) 
-     sids = paste("rs", values(slocdf)$RefSNP_id, sep="")
+     sids = paste("rs", values(slocgr)$RefSNP_id, sep="")
   else sids = names(slocgr)
   slocs = start(slocgr)
   snpsCisToGenes( radius, gchr, ponc, gstart, gend, sids, slocs, as.GRangesList=as.GRangesList )
@@ -130,7 +130,7 @@ best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScr
 #
     cismapObj = getCisMap(radius = radius, gchr = gchr, schr = schr,
         geneannopk = geneannopk, snpannopk = snpannopk)
-    cismap = namelist(cismap)
+    cismap = namelist(cismapObj)
 ##
 ## use of gchr here for annotation package
 ##
