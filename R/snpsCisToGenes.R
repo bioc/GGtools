@@ -1,3 +1,5 @@
+messageCache = new.env(hash=TRUE,parent=emptyenv())
+
 restrictProbesToChrom = function(smlSet, chrom) {
 #
 # will use CHRLOC for consistency with range computations
@@ -56,7 +58,15 @@ snpsCisToGenes = function( radius, chr, geneids, genestart, geneend, snpids, snp
   glens = sapply(list(geneids, genestart, geneend), length)
   if (!all(glens==glens[1])) stop("lengths of gene ids, starts, ends must be identical")
   if (!(length(snpids) == length(snpaddr))) stop("lengths of snpids != length snpaddr")
-  geneGR = GRanges(seqnames=chr, IRanges(genestart, geneend) ) + radius
+  expranges = IRanges(genestart, geneend)  + radius
+  if (any(start(expranges) < 1)) {
+    if (!isTRUE(messageCache$negstart)) {
+       message(paste("NOTE: expanding gene ranges by radius", radius, "leads to negative start positions that are reset to 1.", sep=" "))
+       messageCache$negstart = TRUE
+       }
+    start(expranges) = pmax(1, start(expranges))
+    }
+  geneGR = GRanges(seqnames=chr, expranges)
   names(geneGR) = geneids
   snpGR = GRanges(seqnames=chr, IRanges(snpaddr, width=1) )
   names(snpGR) = snpids
