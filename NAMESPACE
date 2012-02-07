@@ -13,7 +13,7 @@ importFrom(AnnotationDbi, get, mget, revmap, mappedkeys)
 
 importFrom(IRanges, RangedData, IRanges)
 
-importMethodsFrom(IRanges, elementMetadata, matchMatrix, findOverlaps, "elementMetadata<-",
+importMethodsFrom(IRanges, elementMetadata, as.matrix, findOverlaps, "elementMetadata<-",
 	as.data.frame, values, start, ranges)
 
 importFrom(Biobase, featureNames, annotation, pData)

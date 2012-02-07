@@ -114,7 +114,7 @@ cisZero = function(mgr, snpRanges, geneRanges, radius) {
  # can't use zero indices in subsetting GRanges...
         ol = findOverlaps(snpRanges[oks[oks>0]], geneRanges[okg] + 
             radius)
-        matm = matchMatrix(ol)
+        matm = as.matrix(ol)
         if (nrow(matm) > 0) {
             mgr@fffile[matm] = 0
         }
@@ -123,8 +123,15 @@ cisZero = function(mgr, snpRanges, geneRanges, radius) {
 transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsco", 
     geneApply = lapply, chrnames = paste("chr", as.character(1:22), sep=""), 
     geneRanges = NULL, snpRanges = NULL, radius = 2e+06, renameChrs=NULL, 
-    probesToKeep=NULL, batchsize=200, genegran=50, shortfac=10, wrapperEndo=NULL)
+    probesToKeep=NULL, batchsize=200, genegran=50, shortfac=10, wrapperEndo=NULL,
+    geneannopk = "illuminaHumanv1.db", snpannopk = "SNPlocs.Hsapiens.dbSNP.20110815",
+    gchrpref = "", schrpref="ch")
 {
+
+#getCisMap = function( radius=50000, gchr="20",
+#  schr="ch20", geneannopk="illuminaHumanv1.db",
+#     snpannopk="SNPlocs.Hsapiens.dbSNP.20100427", as.GRangesList=FALSE ) {
+
 #
 # objective is a small-footprint accumulation of trans-eQTL tests
 #  smpack is a lightweight smlSet package name
@@ -140,8 +147,8 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
 #  batchsize is for applications of ffrowapply
 #  genegran is for reporting as eqtlTests runs, if options()$verbose is TRUE
 #
-    if (length(chrnames) < 2) 
-        stop("must have length(chrnames) >= 2")
+    #if (length(chrnames) < 2) 
+    #    stop("must have length(chrnames) >= 2")
     theCall = match.call()
 #
 # get an image of the expression+genotype data for SNP on specific chromosome snpchr
@@ -162,13 +169,17 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
     genemap = lapply(pnameList, function(x) match(x, guniv))  # numerical indices for probes
     nchr_genes = length(names(pnameList))
     targdir = paste(targdirpref, snpchr, sep="")
+#
+# start with first element of chrnames vector
+#
     inimgr = eqtlTests(sms[probeId(pnameList[[chrnames[1]]]),   # start the sifting through transcriptome
         ], rhs, targdir = targdir, runname = paste("tsc_", chrnames[1],  # testing on genes in chrom 1
         sep = ""), geneApply = geneApply, shortfac=shortfac)
     if (snpchr == chrnames[1]) {
-        if (is.null(geneRanges) || is.null(snpRanges)) 
-            stop("ranges must be supplied to exclude cis tests")
-        cisZero(inimgr, snpRanges, geneRanges, radius)   # if SNP are on chrom 1, exclude cis
+        mapobj = getCisMap( radius = radius, gchr = paste(gchrpref, chrnames[1], sep=""),
+                  schr = paste(schrpref, snpchr, sep=""), geneannopk=geneannopk, snpannopk = snpannopk )
+        cisZero(inimgr, mapobj@snplocs, mapobj@generanges, radius=0)   # if SNP are on chrom 1, exclude cis
+                             # the gene ranges supplied are already augmented by radius
     }
     topKinds = topKfeats(inimgr, K = K, fn = paste(targdir, "/",  # sort and save
         snpchr, "_tsinds1_1.ff", sep = ""), feat = "geneind", 
@@ -185,10 +196,11 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
             j, sep = ""), geneApply = geneApply, 
             shortfac=shortfac)
         if (snpchr == chrnames[j]) {
-            if (is.null(geneRanges) || is.null(snpRanges)) 
-                stop("ranges must be supplied to exclude cis tests")
-            cisZero(nxtmgr, snpRanges, geneRanges, radius)
-            }
+            mapobj = getCisMap( radius = radius, gchr = paste(gchrpref, chrnames[j], sep=""),
+                  schr = paste(schrpref, snpchr, sep=""), geneannopk=geneannopk, snpannopk = snpannopk )
+            cisZero(inimgr, mapobj@snplocs, mapobj@generanges, radius=0)   # if SNP are on chrom 1, exclude cis
+                             # the gene ranges supplied are already augmented by radius
+        }
         nxtKinds = topKfeats(nxtmgr, K = K, fn = paste(targdir, 
             "indscratch.ff", sep = ""), feat = "geneind", ginds = genemap[[j]], 		batchsize=batchsize)
         nxtKscores = topKfeats(nxtmgr, K = K, fn = paste(targdir, 
@@ -264,7 +276,7 @@ bindGeneRanges2mgr = function (mgr, geneRanges, badstart=-6, badend=-5)
 #
 # this will get a GRanges instance from geneRanges congruent to mgr gene info
 #
-    dimnt = dimnames(mgr@ffile)
+    dimnt = dimnames(mgr@fffile)
     genesInMgr = dimnt[[2]]
     fullgr = IRanges(rep(badstart, length(genesInMgr)), rep(badend, length(genesInMgr)))
     sn = seqnames(geneRanges)[1]
@@ -284,13 +296,18 @@ cisZero = function (mgr, snpRanges, geneRanges, radius)
 # find tests of SNPs in these intervals
 # set their scores in mgr to zero
 #
+
+#getCisMap = function( radius=50000, gchr="20",
+#  schr="ch20", geneannopk="illuminaHumanv1.db",
+#     snpannopk="SNPlocs.Hsapiens.dbSNP.20100427", as.GRangesList=FALSE ) {
+
     realSnpRanges = bindSnpRanges2mgr( mgr, snpRanges )
     realGeneRanges = bindGeneRanges2mgr( mgr, geneRanges )
     ol = findOverlaps(realSnpRanges, realGeneRanges +
         radius)
-    matm = matchMatrix(ol)
+    matm = as.matrix(ol)
     if (nrow(matm) > 0) {
-        mgr@ffile[matm] = 0
+        mgr@fffile[matm] = 0
     }
 }
 

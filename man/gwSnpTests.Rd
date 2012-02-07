@@ -7,6 +7,7 @@
 \alias{topSnps,gwSnpScreenResult-method}
 \alias{plot,gwSnpScreenResult,character-method}
 \alias{show,gwSnpScreenResult,character-method}
+\alias{show,gwSnpScreenResult-method}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 execute a series of

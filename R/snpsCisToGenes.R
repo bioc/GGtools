@@ -39,7 +39,7 @@ setMethod("initialize", "cisMap", function(.Object, namelist=list(),
    if (is.null(names(generanges))) names(generanges) = as.character(1:length(generanges))
    fo = findOverlaps(generanges, snplocs, ...)
    sn = names(snplocs)
-   mm = matchMatrix(fo)
+   mm = as.matrix(fo)
    if (prod(dim(mm))==0) stop("no matchMatrix generated in findOverlaps")
 #   mmo = mm[order(mm[,2]), ]
    GN = names(generanges)[mm[,1]]
