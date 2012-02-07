@@ -447,7 +447,7 @@ All probes identified as significant
 (at FDR $\leq 0.001$) before the PCA adjustment
 are identified as such after it:
 <<chkp>>=
-setdiff(goodProbes(b1), goodProbes(b2))
+setdiff(goodProbes(b2), goodProbes(b1))
 @
 
 The effects of the adjustment for
