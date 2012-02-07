@@ -6,7 +6,7 @@ probesWeqtl = function(x, maxfdr=0.05) {
  names(x@scoregr[ fdr(x) <= maxfdr ])
 }
 
-all.cis.eQTLs = function (maxfdr = 0.05, inbestcis = NULL, smpack = "GGdata", 
+All.cis.eQTLs = function (maxfdr = 0.05, inbestcis = NULL, smpack = "GGdata", 
   rhs = ~1, folderstem = "cisScratch", 
   radius = 50000, shortfac=100, chrnames = as.character(1:22), smchrpref = "", 
   gchrpref = "", schrpref = "ch", geneApply = lapply, 
@@ -96,7 +96,7 @@ cat("PHASE 2: extracting associations passing cis threshold...\n")
 
 setMethod("show", "allSigCis", function(object) {
  nr = nrow(object@fulllist)
- cat("all.cis.eQTL output (first", min(c(4,nr)), " of", nr, "rows):\n")
+ cat("All.cis.eQTL output (first", min(c(4,nr)), " of", nr, "rows):\n")
  show(object@fulllist[1:min(4,nr),])
  cat("the call was:\n")
  fd = fdr(object@bestcis)

@@ -1,7 +1,9 @@
 \name{best.cis.eQTLs}
 \alias{best.cis.eQTLs}
-\alias{all.cis.eQTLs}
+\alias{All.cis.eQTLs}
 \alias{mcwBestCis-class}
+\alias{allSigCis-class}
+\alias{show,allSigCis-method}
 \alias{show,mcwBestCis-method}
 \alias{show,cwBestCis-method}
 \alias{show,allCigCis-method}
@@ -11,6 +13,9 @@
 \alias{fullreport}
 \alias{fullreport,mcwBestCis,missing-method}
 \alias{fullreport,mcwBestCis,character-method}
+\alias{getAll}
+\alias{getBest}
+\alias{getCall}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -29,8 +34,9 @@ best.cis.eQTLs(smpack = "GGdata", rhs = ~1,
   snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427", 
   smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97), nperm = 2)
 
-all.cis.eQTLs(maxfdr = 0.05, inbestcis = NULL, smpack = "GGdata", 
+All.cis.eQTLs(maxfdr = 0.05, inbestcis = NULL, smpack = "GGdata", 
     rhs = ~1, folderstem = "cisScratch", radius = 50000, 
+    shortfac = 100,
     chrnames = as.character(1:22), 
     smchrpref = "", gchrpref = "", schrpref = "ch", 
     geneApply = lapply, geneannopk = "illuminaHumanv1.db", 
@@ -47,6 +53,12 @@ chromsUsed(x)
 fdr(x)
 
 fullreport(x, type)
+
+getAll(x)
+
+getBest(x)
+
+getCall(x)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -107,28 +119,28 @@ instance
   \item{nperm}{
 number of permutations to be used for plug-in FDR computation
 }
-  \item{cisMapList}{
-if supplied, must be a list with one element per element of
-\code{chrnames}; each element is a list with one element per
-probe resident on the corresponding chromosome, and the
-probe element's content is a vector of SNP identifiers that are
-deemed `cis'.  This list will be computed using annotation resources
-if this argument is left missing.
-}
-\item{maxfdr}{Used in \code{all.cis.eQTLs}.  The process
+%  \item{cisMapList}{
+%if supplied, must be a list with one element per element of
+%\code{chrnames}; each element is a list with one element per
+%probe resident on the corresponding chromosome, and the
+%probe element's content is a vector of SNP identifiers that are
+%deemed `cis'.  This list will be computed using annotation resources
+%if this argument is left missing.
+%}
+\item{maxfdr}{Used in \code{All.cis.eQTLs}.  The process
 of identifying ``best'' cis eQTL per probe leads to a probe-specific
-FDR.  In \code{all.cis.eQTLs} we enumerate all probes and all SNP
+FDR.  In \code{All.cis.eQTLs} we enumerate all probes and all SNP
 with FDR at most \code{maxfdr}, not just the best scoring
 SNP per probe.}
-\item{inbestcis}{Used in \code{all.cis.eQTLs}.  An instance
+\item{inbestcis}{Used in \code{All.cis.eQTLs}.  An instance
 of \code{\linkS4class{mcwBestCis}} that can be used
-to speed up the extraction of all cis eQTL.}
-\item{smFilter4cis}{Used in \code{all.cis.eQTLs}.  
+to speed up the extraction of All.cis eQTL.}
+\item{smFilter4cis}{Used in \code{All.cis.eQTLs}.  
 A function accepting and returning an smlSet instance.
 When
 \code{inbestcis} parameter is NULL, this filter will be used
 for identifying the best SNP per probe.}
-\item{smFilter4all}{Used in \code{all.cis.eQTLs}.  A function
+\item{smFilter4all}{Used in \code{All.cis.eQTLs}.  A function
 accepting and returning an smlSet instance.
 This filter will be used
 for identifying the best SNP per probe.  This filter

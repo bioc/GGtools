@@ -2,6 +2,7 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{eqtlTestsManager-class}
+\alias{eqtlEstimatesManager-class}
 \alias{[,eqtlTestsManager,ANY,ANY,ANY-method}
 \alias{show,eqtlTestsManager-method}
 \alias{topFeats}

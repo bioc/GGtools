@@ -8,17 +8,17 @@ tabulate results of transScores run
 tabulate results of transScores run
 }
 \usage{
-transTab(x, snpchr)
+transTab(x)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
 a list, as returned by slot(y, "base"), where y is a transManager instance.
 }
-  \item{snpchr}{
+%  \item{snpchr}{
 %%%     ~~Describe \code{snpchr} here~~
-string denoting the chromosome from which SNP genotypes were drawn for trans-association with gene expression
-}
+%string denoting the chromosome from which SNP genotypes were drawn for trans-association with gene expression
+%}
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~

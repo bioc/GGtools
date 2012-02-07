@@ -1,5 +1,6 @@
 \name{eqtlTests}
 \alias{eqtlTests}
+\alias{meqtlTests}
 \alias{eqtlEstimates}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -13,14 +14,14 @@ smlSet instance, using out-of-memory storage
 }
 \usage{
 eqtlTests(smlSet, rhs = ~1 - 1, runname = "foo", 
-	targdir = "fooe", geneApply = lapply, 
-	shortfac = 10000, 
+	targdir = "foo", geneApply = lapply, 
+	shortfac = 100, 
 	checkValid = TRUE, useUncertain = TRUE, 
 	glmfamily = "gaussian")
 
 eqtlEstimates(smlSet, rhs = ~1 - 1, runname = "foo", 
-	targdir = "foo", geneApply = lapply, 
-	shortfac = 100, 
+	targdir = "fooe", geneApply = lapply, 
+	shortfac = 10000, 
 	checkValid = TRUE, useUncertain = TRUE, 
 	glmfamily = "gaussian")
 }

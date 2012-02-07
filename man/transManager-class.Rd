@@ -3,6 +3,12 @@
 \docType{class}
 \alias{transManager-class}
 \alias{show,transManager-method}
+\alias{transTab,transManager-method}
+\alias{topGenes}
+\alias{topScores}
+\alias{nthScores}
+\alias{geneIndcol}
+\alias{geneNames}
 
 \title{Class \code{"transManager"}}
 \description{
