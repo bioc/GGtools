@@ -41,5 +41,5 @@ export(gwSnpTests, topSnps, eqtlTests, topFeats, getCisMap, pData, plot,
 	best.cis.eQTLs, chromsUsed, fullreport, 
 	eqtlEstimates, probesManaged, snpsManaged,
 	topScores, topGenes, locusNames, geneNames, geneIndcol, nthScores,
-	vcf2sm, all.cis.eQTLs, fdr, transScores, getBest, getAll, getCall, transTab, meqtlTests)
+	vcf2sm, All.cis.eQTLs, fdr, transScores, getBest, getAll, getCall, transTab, meqtlTests)
 
