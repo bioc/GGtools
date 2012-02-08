@@ -407,6 +407,7 @@ at various magnitudes of the distribution of association scores.  The plug-in
 procedure for estimating FDR XXX cite Hastie Tibs Friedman is used.
 
 <<doc,cache=TRUE,keep.source=TRUE>>=
+if (file.exists("db2")) unlink("db2", recursive=TRUE)
 fn = probeId(featureNames(g20))
 exTx = function(x) MAFfilter( x[fn, ], lower=0.05)
 b1 = best.cis.eQTLs("GGdata", ~male,  radius=1e6,
@@ -427,6 +428,7 @@ on possible batch effects, the entire expression matrix is restored and
 decomposed for principal component removal.
 
 <<domo,cache=TRUE, keep.source=TRUE>>=
+if (file.exists("db2")) unlink("db2", recursive=TRUE)
 g20 = getSS("GGdata", "20")
 exTx = function(x) MAFfilter( clipPCs(x,1:10)[fn, ], lower=0.05)
 g20f = exTx(g20)
