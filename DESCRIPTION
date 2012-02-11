@@ -15,6 +15,5 @@ Collate: AllClasses.R AllGenerics.R eqtlTests.R
 	managers.R topFeats.R gwSnpTests.R snpsCisToGenes.R
 	relocate.R topSnps.R 
 	transutils.R vcfutils.R eqtlEstimates.R alleq.R meta.R
-	zzz.R
 
 
