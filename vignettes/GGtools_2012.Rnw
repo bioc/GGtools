@@ -340,14 +340,15 @@ with MAF $<$ 0.05 are removed, and
 then all SNP-gene association tests are executed.
 
 <<prep,echo=FALSE,results=hide>>=
-if (file.exists("dem1")) unlink("dem1", recursive=TRUE)
 <<do20,cache=TRUE,keep.source=TRUE>>=
 g20 = GGtools:::restrictProbesToChrom(g20, "20")
 mads = apply(exprs(g20),1,mad)
 oo = order(mads, decreasing=TRUE)
 g20 = g20[oo[1:50],]
+tf = tempfile()
+dir.create(tf)
 e1 = eqtlTests(MAFfilter(g20, lower=0.05), ~male, 
-    geneApply=mclapply, targdir="dem1")
+    geneApply=mclapply, targdir=tf)
 e1
 @
 On a two-core macbook pro, this computation takes well under a minute.
