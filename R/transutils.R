@@ -429,8 +429,7 @@ mtransScores = function (smpackvec, snpchr = "chr1", rhslist, K = 20, targdirpre
     cursmsl = lapply(smsl, function(x) x[probeId(pnameList[[chrnames[1]]]),])
     inimgr = meqtlTests(cursmsl,   # start the sifting through transcriptome
          rhslist, targdir = targdir, runname = paste("tsc_", chrnames[1],  # testing on genes in chrom 1
-        sep = ""), geneApply = geneApply, 
-        saveSummaries = FALSE, genegran=genegran, shortfac=shortfac)
+        sep = ""), geneApply = geneApply, shortfac=shortfac)
     rm(cursmsl); gc()
     if (snpchr == chrnames[1]) {
         if (is.null(geneRanges) || is.null(snpRanges)) 
@@ -450,8 +449,7 @@ mtransScores = function (smpackvec, snpchr = "chr1", rhslist, K = 20, targdirpre
         cursmsl = lapply(smsl, function(x) x[probeId(pnameList[[chrnames[j]]]),])
         nxtmgr = meqtlTests(cursmsl, rhslist, targdir = targdir, 
             runname = paste("tsctmp", 
-            j, sep = ""), geneApply = geneApply, 
-		saveSummaries = FALSE, genegran=genegran, shortfac=shortfac)
+            j, sep = ""), geneApply = geneApply, shortfac=shortfac)
         rm(cursmsl); gc()
         if (snpchr == chrnames[j]) {
             if (is.null(geneRanges) || is.null(snpRanges)) 

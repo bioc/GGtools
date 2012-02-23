@@ -178,10 +178,12 @@ setMethod("vcf2sm", c("TabixFile", "GRanges", "integer"),
      out = list()
      trk = 0
      for (i in 1:length(chunk)) {
+       if (length(chunk[[i]]) == 0) next
        out[[i]] = lapply( chunk[[i]], function(x) { trk <<- trk+1; if (options()$verbose) if (trk %% 100 == 0) cat(trk);
                     parseVCFrec( x, nmetacol=nmetacol, makelocpref="chr" ) })
        }
      out = unlist(out, recursive=FALSE)
+     if (length(out) == 0) return(NULL)
      rsid = sapply(out, "[[", "id")
      nsnp = length(out)
      mat = matrix(as.raw(0), nr=length(sampids), ncol=nsnp)

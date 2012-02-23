@@ -9,6 +9,7 @@
 \alias{nthScores}
 \alias{geneIndcol}
 \alias{geneNames}
+\alias{locusNames}
 
 \title{Class \code{"transManager"}}
 \description{
