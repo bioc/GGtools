@@ -86,6 +86,22 @@ passed to \code{\link{eqtlTests}}
   \item{wrapperEndo}{
 a function accepting and returning an smlSet instance
 }
+  \item{gchrpref}{
+prefix to convert \code{chrnames} into appropriate tokens for
+obtaining gene metadata; in future this may need to be a string
+transformation function
+}
+  \item{schrpref}{
+prefix to convert \code{chrnames} into appropriate tokens for
+use with \code{getSNPlocs} for the SNP location information
+package identified in \code{snpannopack} parameter below
+}
+  \item{geneannopk}{
+character string naming a Bioconductor .db expression chip annotation package
+}
+  \item{snpannopk}{
+character string naming a Bioconductor SNPlocs.* SNP metadata package
+}
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
@@ -100,6 +116,7 @@ giving the kth largest score statistic for association}
 \item{guniv}{the vector of gene identifiers defining the universe of genes tested}
 \item{snpnames}{vector of SNP identifiers}
 \item{call}{the call used to create the result}
+
 }
 %\references{
 %% ~put references to the literature/web site here ~

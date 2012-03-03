@@ -2,7 +2,6 @@
 \docType{methods}
 \alias{vcf2sm-methods}
 \alias{vcf2sm,TabixFile,GRanges,integer-method}
-\alias{vcf2sm}
 \title{  Methods for Function \code{vcf2sm} in Package \pkg{GGtools} }
 \description{
 A provisional transformer from tabix-indexed VCF to SnpMatrix instances

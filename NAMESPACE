@@ -1,7 +1,9 @@
 
-importFrom(stats, IQR, aggregate)
+importFrom(stats, IQR)
 
 importFrom(graphics, plot)
+
+importFrom(BiocGenerics, NROW)
 
 importFrom(snpStats, snp.rhs.tests, p.value, col.summary, snp.rhs.estimates)
 
@@ -10,6 +12,8 @@ importFrom(ff, ff, as.ram, ffrowapply, filename)
 importFrom(bit, chunk)
 
 importFrom(AnnotationDbi, get, mget, revmap, mappedkeys)
+
+importMethodsFrom(IRanges, aggregate)
 
 importFrom(IRanges, RangedData, IRanges)
 
@@ -44,5 +48,5 @@ export(gwSnpTests, topSnps, eqtlTests, topFeats, getCisMap, pData, plot,
 	eqtlEstimates, probesManaged, snpsManaged,
 	topScores, topGenes, locusNames, geneNames, geneIndcol, nthScores,
 	vcf2sm, All.cis.eQTLs, fdr, transScores, getBest, getAll, 
-	getCall, transTab, meqtlTests, TabixFile, GRanges, IRanges)
+	getCall, transTab, meqtlTests)
 
