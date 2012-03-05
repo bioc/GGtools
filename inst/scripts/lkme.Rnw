@@ -1,0 +1,162 @@
+%\VignetteIndexEntry{Notes for eSet developers}
+%\VignetteDepends{}
+%\VignetteKeywords{Expression Analysis}
+%\VignettePackage{Biobase}
+
+
+%
+% NOTE -- ONLY EDIT THE .Rnw FILE!!!  The .tex file is
+% likely to be overwritten.
+%
+\documentclass[12pt]{article}
+
+\usepackage{amsmath,pstricks}
+\usepackage[authoryear,round]{natbib}
+\usepackage{hyperref}
+
+
+\textwidth=6.2in
+\textheight=8.5in
+%\parskip=.3cm
+\oddsidemargin=.1in
+\evensidemargin=.1in
+\headheight=-.3in
+
+\newcommand{\scscst}{\scriptscriptstyle}
+\newcommand{\scst}{\scriptstyle}
+
+
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textit{#1}}}
+\newcommand{\Rmethod}[1]{{\texttt{#1}}}
+\newcommand{\Rfunarg}[1]{{\texttt{#1}}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+
+\textwidth=6.2in
+
+\bibliographystyle{plainnat} 
+ 
+\begin{document}
+%\setkeys{Gin}{width=0.55\textwidth}
+
+\title{Exploring MatrixEQTL with GGtools}
+\author{VJ Carey}
+\maketitle
+
+\section{Introduction}
+
+This document illustrates use of a very rudimentary interface between Bioconductor GGtools (default
+tests based on snpStats package of D. Clayton) and MatrixEQTL from A. Shabalin.  The objective is
+to assess the impact of choice of test procedure on speed and content of results of a search for
+cis eQTL on data on human chromosomes 17-20, using illumina expression data on immortalized
+B cells from GENEVAR project, and Phase 2 HapMap genotypes, on cells extracted from the HapMap CEU
+cohort, N=90 individuals.
+
+
+\section{Setup}
+
+<<doset>>=
+library(parallel)
+options(mc.cores=12)
+suppressPackageStartupMessages(library(GGtools))
+library(MatrixEQTL)
+@
+
+\section{Default GGtools run}
+
+Objective is enumeration of genes on chroms 17-20 that a) have overall variation across
+samples in the top 40\% of the distribution of IQR (non-specific filtering), b) show evidence of
+association of mean expression and genotype for at least one SNP within 50000 bases of the
+coding extents for the gene.  Expression values are pre-filtered to remove
+expression heterogeneity by removing the first 10 principal components from the full,
+column-centered $90 \times 47K$ expression matrix.
+
+Test statistics are score statistics for the additive genetic model (linear regression
+with count of the number of alphabetically later nucleotides in diallelic SNP as predictor
+of mean expression).  Plug-in estimate of FDR is obtained with 2 permutations of expression
+against genotype.
+<<gg1,results=hide,keep.source=TRUE>>=
+set.seed(1234)
+u1b = unix.time(b1b <<- best.cis.eQTLs(smpack="GGdata", rhs=~1, 
+ chrnames=c("17", "18", "19", "20"), geneApply=mclapply,
+ smFilter=function(x) nsFilter(MAFfilter(
+    clipPCs(x, 1:10), lower = 0.05), var.cutoff = 0.6)))
+<<lkres1>>=
+u1b
+b1b
+sum(fdr(b1b)<=0.05)
+save(b1b, file="b1b.rda")
+save(u1b, file="u1b.rda")
+@
+
+\section{GGtools run modified to use MatrixEQTL test statistics}
+
+Same objective as above, but the correlation-based statistics of MatrixEQTL.
+Currently hardwired to use
+\begin{verbatim}
+  useModel = modelLINEAR; # modelANOVA or modelLINEAR
+
+  snps = SlicedData$new();
+  snps$fileDelimiter = '\t'; # the TAB character
+  snps$fileOmitCharacters = 'NA'; # denote missing values;
+  snps$fileSkipRows = 1; # one row of column labels
+  snps$fileSkipColumns = 1; # one column of row labels
+  snps$fileSliceSize = 2000; # read file in pieces 
+ ...
+
+me = Matrix_eQTL_engine(
+        snps,
+        gene,
+        cvrt,
+        output_file_name = outfile(mefob),
+        pvOutputThreshold = .2,
+        useModel = modelLINEAR,
+        errorCovariance = numeric(),
+        verbose = FALSE, #TRUE,
+        pvalue.hist = 10);
+\end{verbatim}
+to collect the statistics; passage of control parameters up to the main interface is pending.
+
+To manage the voluminous output results, \textit{ff} archives of short ints are populated with
+\begin{verbatim}
+me$all$eqtls[, "statistic"] * shortfac
+\end{verbatim}
+where \texttt{shortfac} upscales the statistic for truncation to short integer storage.  This helps
+reduce both RAM and disk requirements of storing comprehensive feature x feature test outputs.
+
+<<gg2,results=hide>>=
+set.seed(1234)
+u2b = unix.time(b2b <<- best.cis.eQTLs(chrnames=c("17", "18", "19", "20"), geneApply=mclapply,
+ smFilter=function(x) nsFilter(MAFfilter(clipPCs(x, 1:10), lower = 0.05), var.cutoff = 0.6),
+ useME=TRUE))
+@
+<<lkres2>>=
+u2b
+b2b
+save(u2b, file="u2b.rda")
+save(b2b, file="b2b.rda")
+sum(fdr(b2b)<=0.05)
+ok1 = which(fdr(b1b)<=0.05)
+ok2 = which(fdr(b2b)<=0.05)
+setdiff(names(fullreport(b1b))[ok1], names(fullreport(b2b))[ok2])
+setdiff(names(fullreport(b2b))[ok2], names(fullreport(b1b))[ok1])
+@
+
+\section{Comment}
+
+The statistics in use differ but there is little indication of differential sensitivity
+for this application.
+
+I made no attempt to parallelize any of the MatrixEQTL computations, which could easily be accomplished
+by splitting the gene set for example, and dispatching to cores as the default GGtools procedure does.
+
+In summary, there should be good performance benefit for
+basing eQTL searches on the MatrixEQTL package tools.  The use of external files as data sources is
+probably inevitable, but flexible feature filtering is easier if we do this in the R context.  Some filtering
+tasks will involve multiple passes, so efficiencies of such processes should be considered as the package
+evolves.
+
+\end{document}
+
+
