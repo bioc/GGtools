@@ -32,7 +32,8 @@ best.cis.eQTLs(smpack = "GGdata", rhs = ~1,
   smchrpref = "", gchrpref = "", schrpref = "ch", 
   geneApply = lapply, geneannopk = "illuminaHumanv1.db", 
   snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427", 
-  smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97), nperm = 2)
+  smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97), nperm = 2,
+  useME=FALSE)
 
 All.cis.eQTLs(maxfdr = 0.05, inbestcis = NULL, smpack = "GGdata", 
     rhs = ~1, folderstem = "cisScratch", radius = 50000, 
@@ -118,6 +119,8 @@ instance
 }
   \item{nperm}{
 number of permutations to be used for plug-in FDR computation
+  \item{useME}{logical; if TRUE, use the rudimentary interface
+to the MatrixEQTL package from A. Shabalin on CRAN }
 }
 %  \item{cisMapList}{
 %if supplied, must be a list with one element per element of

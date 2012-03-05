@@ -1,12 +1,13 @@
 Package: GGtools
 Title: software and data for analyses in genetics of gene expression
-Version: 4.2.37
+Version: 4.2.38
 Author: VJ Carey <stvjc@channing.harvard.edu>
 Description: software and data for analyses in genetics of gene expression
 Suggests: GGdata, illuminaHumanv1.db
 Depends: R (>= 2.14), GGBase (>= 3.16.1), IRanges, GenomicRanges, Rsamtools
 Imports: methods, utils, stats, BiocGenerics, snpStats, ff, 
 	AnnotationDbi, Biobase, bit, VariantAnnotation
+Enhances: MatrixEQTL
 Maintainer: VJ Carey <stvjc@channing.harvard.edu>
 License: Artistic-2.0
 LazyLoad: yes
@@ -14,6 +15,6 @@ Packaged: 2012-01-18 03:39:51 UTC; stvjc
 Collate: AllClasses.R AllGenerics.R eqtlTests.R             
 	managers.R topFeats.R gwSnpTests.R snpsCisToGenes.R
 	relocate.R topSnps.R 
-	transutils.R vcfutils.R eqtlEstimates.R alleq.R meta.R
+	transutils.R vcfutils.R eqtlEstimates.R alleq.R meta.R eqME.R
 
 

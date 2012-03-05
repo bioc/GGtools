@@ -124,7 +124,7 @@ best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScr
     radius = 50000, smchr = "20", gchr = "20", schr = "ch20",
     geneApply = lapply, geneannopk = "illuminaHumanv1.db", snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
     smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05),
-        var.cutoff = 0.97))
+        var.cutoff = 0.97), useME=FALSE)
 {
 #
 #
@@ -161,7 +161,9 @@ best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScr
 # map now agrees with probes in expression component
 #
     cat("tests...")
-    mgr = eqtlTests(fsms, rhs, targdir = folderstem,
+    if (useME) mgr = eqtlTests.me(fsms, rhs, targdir = folderstem,
+        runname = "cis", geneApply = geneApply, shortfac=shortfac)
+    else mgr = eqtlTests(fsms, rhs, targdir = folderstem,
         runname = "cis", geneApply = geneApply, shortfac=shortfac)
     mff = fffile(mgr)
     oksn = rownames(mff) 
@@ -204,7 +206,7 @@ best.cis.eQTLs.mchr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisSc
       geneannopk = "illuminaHumanv1.db", 
       snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
     smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05),
-        var.cutoff = 0.97)) {
+        var.cutoff = 0.97), useME=FALSE) {
     ans = lapply( chrnames, function(ch) {
             smchr = paste(smchrpref, ch, sep="")
             gchr = paste(gchrpref, ch, sep="")
@@ -213,7 +215,7 @@ best.cis.eQTLs.mchr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisSc
              folderstem = folderstem, radius=radius, shortfac=shortfac,
              smchr = smchr, gchr = gchr, schr = schr,
              geneApply = geneApply, geneannopk = geneannopk, 
-             snpannopk = snpannopk, smFilter=smFilter)
+             snpannopk = snpannopk, smFilter=smFilter, useME=useME)
             })
     ans = as(do.call(c, ans), "GRanges")  # RangedData just need c for combination; then mix spaces
     ans[order(elementMetadata(ans)$score, decreasing=TRUE),]
@@ -227,13 +229,13 @@ best.cis.eQTLs = function(smpack = "GGdata",
       geneannopk = "illuminaHumanv1.db", 
       snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
     smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05),
-        var.cutoff=.97), nperm=2) {
+        var.cutoff=.97), nperm=2, useME=FALSE) {
     theCall = match.call()
     obs = best.cis.eQTLs.mchr( smpack = smpack,
           rhs=rhs, folderstem=folderstem, radius=radius, shortfac=shortfac,
           chrnames = chrnames, smchrpref=smchrpref,
 	  gchrpref=gchrpref, schrpref=schrpref, geneApply=geneApply,
-          geneannopk = geneannopk, snpannopk=snpannopk, smFilter = smFilter)
+          geneannopk = geneannopk, snpannopk=snpannopk, smFilter = smFilter, useME=useME)
     permans = list()
     for (j in 1:nperm) {
       permans[[j]] = best.cis.eQTLs.mchr( smpack = smpack,
@@ -241,7 +243,7 @@ best.cis.eQTLs = function(smpack = "GGdata",
           chrnames = chrnames, smchrpref=smchrpref,
 	  gchrpref=gchrpref, schrpref=schrpref, geneApply=geneApply,
           geneannopk = geneannopk, snpannopk=snpannopk, 
-          smFilter = function(x) permEx(smFilter(x)))
+          smFilter = function(x) permEx(smFilter(x)), useME=useME)
       }
     alls = unlist(lapply(permans, function(x)elementMetadata(x)$score))
     fdrs = sapply(elementMetadata(obs)$score, function(x) (sum(alls>=x)/nperm)/sum(elementMetadata(obs)$score>=x))
