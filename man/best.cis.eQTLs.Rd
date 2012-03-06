@@ -1,5 +1,6 @@
 \name{best.cis.eQTLs}
 \alias{best.cis.eQTLs}
+\alias{meta.best.cis.eQTLs}
 \alias{All.cis.eQTLs}
 \alias{mcwBestCis-class}
 \alias{allSigCis-class}
@@ -48,6 +49,14 @@ All.cis.eQTLs(maxfdr = 0.05, inbestcis = NULL, smpack = "GGdata",
         1:10), lower = 0.05), 
     nperm = 2)
 
+meta.best.cis.eQTLs(smpackvec = c("GGdata", "hmyriB36"), rhslist = list(~1, 
+    ~1), folderstem = "cisScratch", radius = 50000, shortfac = 100, 
+    chrnames = as.character(1:22), smchrpref = "", gchrpref = "", 
+    schrpref = "ch", geneApply = lapply, geneannopk = "illuminaHumanv1.db", 
+    snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427", smFilter = function(x) nsFilter(MAFfilter(x, 
+        lower = 0.05), var.cutoff = 0.97), nperm = 2) 
+
+
 
 chromsUsed(x)
 
@@ -67,11 +76,16 @@ getCall(x)
 character string naming a package to which \code{\link[GGBase]{getSS}}
 can be applied to extract \code{\link[GGBase]{smlSet-class}} instances
 }
+  \item{smpackvec}{vector of character strings naming packages
+that can be used as \code{smpack} values in a series of
+\code{best.cis.eQTLs} calls, one per population for meta-analysis}
   \item{rhs}{
 R model formula, with no dependent variable, that will be used with
 \code{\link[snpStats]{snp.rhs.tests}} to adjust GWAS tests for
 each expression probe
 }
+  \item{rhslist}{a list of model formulae to be used as \code{rhs}
+in a series of \code{best.cis.eQTLs} calls, one per population for meta-analysis}
   \item{folderstem}{
 prefix of the folder name to be used to hold ff archives of
 test results
