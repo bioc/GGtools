@@ -103,9 +103,9 @@ character string naming a Bioconductor .db expression chip annotation package
 character string naming a Bioconductor SNPlocs.* SNP metadata package
 }
 }
-\details{
+%\details{
 %%  ~~ If necessary, more details than the description above ~~
-}
+%}
 \value{
 a list with elements
 \item{scores}{an S by K ff matrix where S is number of SNPs, K is number of best features to

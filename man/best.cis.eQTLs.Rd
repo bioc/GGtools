@@ -132,7 +132,7 @@ function accepting and returning an \code{\link[GGBase]{smlSet-class}}
 instance
 }
   \item{nperm}{
-number of permutations to be used for plug-in FDR computation
+number of permutations to be used for plug-in FDR computation}
   \item{useME}{logical; if TRUE, use the rudimentary interface
 to the MatrixEQTL package from A. Shabalin on CRAN }
 }
