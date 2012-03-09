@@ -20,9 +20,22 @@ textAndSlice = function(sms, cind=1) {
 }
 
 
+.slicedDataDefaults = list(
+  fileDelimiter = "\t",
+  fileOmitCharacters = "NA",
+  fileSkipRows = 1,
+  fileSkipColumns = 1,
+  fileSliceSize = 2000)
+
 eqtlTests.me = function( smlSet, runname="20", targdir="cisScratch.me",
       geneApply=lapply, shortfac = 100, checkValid = TRUE, useUncertain= TRUE,
-      glmfamily = "gaussian", scoretx = abs ) {
+      glmfamily = "gaussian", scoretx = abs,
+      matrixEQTL.engine.control = list(output_file_name = outfile(mefob), pvOutputThreshold=1e-5,
+         useModel=modelLINEAR, errorCovariance=numeric(), verbose=FALSE, pvalue.hist=FALSE),
+      snpSlicedData.control=.slicedDataDefaults,
+      geneSlicedData.control=.slicedDataDefaults,
+      covarSlicedData.control=.slicedDataDefaults,
+      covariates_file_name = character() ) {
 #
 # this is a very preliminary interface to MatrixEQTL testing procedure
 # for performance and inference comparisons
@@ -36,49 +49,28 @@ eqtlTests.me = function( smlSet, runname="20", targdir="cisScratch.me",
   useModel = modelLINEAR; # modelANOVA or modelLINEAR
 
   snps = SlicedData$new();
-  snps$fileDelimiter = '\t'; # the TAB character
-  snps$fileOmitCharacters = 'NA'; # denote missing values;
-  snps$fileSkipRows = 1; # one row of column labels
-  snps$fileSkipColumns = 1; # one column of row labels
-  snps$fileSliceSize = 2000; # read file in pieces of 2,000 rows
+  do.call(snps$initFields, snpSlicedData.control )
   snps$LoadFile(gtfile(mefob))
 
 ## Load gene expression data
 
   gene = SlicedData$new();
-  gene$fileDelimiter = '\t'; # the TAB character
-  gene$fileOmitCharacters = 'NA'; # denote missing values;
-  gene$fileSkipRows = 1; # one row of column labels
-  gene$fileSkipColumns = 1; # one column of row labels
-  gene$fileSliceSize = 2000; # read file in pieces of 2,000 rows
+  do.call(gene$initFields, geneSlicedData.control )
   gene$LoadFile(exfile(mefob))
 
 ## Load covariates
 
-  covariates_file_name = character()
   cvrt = SlicedData$new();
-  cvrt$fileDelimiter = '\t'; # the TAB character
-  cvrt$fileOmitCharacters = 'NA'; # denote missing values;
-  cvrt$fileSkipRows = 1; # one row of column labels
-  cvrt$fileSkipColumns = 1; # one column of row labels
-  cvrt$fileSliceSize = 2000; # read file in one piece
+  do.call(cvrt$initFields, covarSlicedData.control )
   if(length(covariates_file_name)>0) {
   	cvrt$LoadFile(covariates_file_name);
   }
 
 ## Run the analysis
 
-me = Matrix_eQTL_engine(
-	snps,
-	gene,
-	cvrt,
-	output_file_name = outfile(mefob),
-	pvOutputThreshold = .2,
-	useModel = modelLINEAR, 
-	errorCovariance = numeric(), 
-	verbose = FALSE, #TRUE,
-	pvalue.hist = 10);
-
+me = do.call(Matrix_eQTL_engine, c(list(snps, gene, cvrt), 
+      matrixEQTL.engine.control) )
+ 
 geneNames = featureNames(smlSet)
 
 snpids = colnames(smList(smlSet)[[1]])

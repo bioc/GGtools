@@ -92,31 +92,8 @@ save(u1b, file="u1b.rda")
 
 \section{GGtools run modified to use MatrixEQTL test statistics}
 
-Same objective as above, but the correlation-based statistics of MatrixEQTL.
-Currently hardwired to use
-\begin{verbatim}
-  useModel = modelLINEAR; # modelANOVA or modelLINEAR
-
-  snps = SlicedData$new();
-  snps$fileDelimiter = '\t'; # the TAB character
-  snps$fileOmitCharacters = 'NA'; # denote missing values;
-  snps$fileSkipRows = 1; # one row of column labels
-  snps$fileSkipColumns = 1; # one column of row labels
-  snps$fileSliceSize = 2000; # read file in pieces 
- ...
-
-me = Matrix_eQTL_engine(
-        snps,
-        gene,
-        cvrt,
-        output_file_name = outfile(mefob),
-        pvOutputThreshold = .2,
-        useModel = modelLINEAR,
-        errorCovariance = numeric(),
-        verbose = FALSE, #TRUE,
-        pvalue.hist = 10);
-\end{verbatim}
-to collect the statistics; passage of control parameters up to the main interface is pending.
+Same objective as above, but use the correlation-based statistics of MatrixEQTL
+to collect the statistics.
 
 To manage the voluminous output results, \textit{ff} archives of short ints are populated with
 \begin{verbatim}

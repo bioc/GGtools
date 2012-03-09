@@ -1,6 +1,6 @@
 Package: GGtools
 Title: software and data for analyses in genetics of gene expression
-Version: 4.2.42
+Version: 4.2.44
 Author: VJ Carey <stvjc@channing.harvard.edu>
 Description: software and data for analyses in genetics of gene expression
 Suggests: GGdata, illuminaHumanv1.db
