@@ -135,15 +135,6 @@ instance
 number of permutations to be used for plug-in FDR computation}
   \item{useME}{logical; if TRUE, use the rudimentary interface
 to the MatrixEQTL package from A. Shabalin on CRAN }
-}
-%  \item{cisMapList}{
-%if supplied, must be a list with one element per element of
-%\code{chrnames}; each element is a list with one element per
-%probe resident on the corresponding chromosome, and the
-%probe element's content is a vector of SNP identifiers that are
-%deemed `cis'.  This list will be computed using annotation resources
-%if this argument is left missing.
-%}
 \item{maxfdr}{Used in \code{All.cis.eQTLs}.  The process
 of identifying ``best'' cis eQTL per probe leads to a probe-specific
 FDR.  In \code{All.cis.eQTLs} we enumerate all probes and all SNP

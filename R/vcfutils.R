@@ -173,7 +173,7 @@ setMethod("vcf2sm", c("TabixFile", "GRanges", "integer"),
      if (Rsamtools:::isOpen(tbxfi)) Rsamtools:::close.TabixFile(tbxfi)
      Rsamtools:::open.TabixFile(tbxfi)
      head = scanVcfHeader(tbxfi)  # you are positioned at data
-     sampids = head[[1]][["Sample"]] # some reflectance
+     sampids = head@samples # head[[1]][["Sample"]] # some reflectance
      chunk = scanTabix(tbxfi, param=gr)  # list of vectors of strings, one list elem per range in gr
      out = list()
      trk = 0
