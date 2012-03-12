@@ -284,7 +284,7 @@ coordinates.
 
 <<dopl,echo=FALSE,results=hide>>=
 pdf(file="t1.pdf")
-plot(t1, "SNPlocs.Hsapiens.dbSNP.20100427")
+plot(t1, "SNPlocs.Hsapiens.dbSNP.20110815")
 dev.off()
 pdf(file="t1evg.pdf")
 plot_EvG(genesym("CPNE1"), rsid("rs17093026"), g20)
@@ -292,7 +292,7 @@ dev.off()
 @
 
 <<dol,eval=FALSE>>=
-plot(t1, "SNPlocs.Hsapiens.dbSNP.20090506")
+plot(t1, "SNPlocs.Hsapiens.dbSNP.20110815")
 plot_EvG(genesym("CPNE1"), rsid("rs17093026"), g20)
 @
 
@@ -304,7 +304,7 @@ plot_EvG(genesym("CPNE1"), rsid("rs17093026"), g20)
 Code like the following can be used to display
 scores ($-\log_{10} p$) on the genome browser, here with hg19 locations.
 <<doloc,eval=FALSE>>=
-library(SNPlocs.Hsapiens.dbSNP.20100427)
+library(SNPlocs.Hsapiens.dbSNP.20110815)
 S20 = getSNPlocs("ch20", as.GRanges=TRUE)
 GR20 = makeGRanges(t1, S20)
 library(rtracklayer)

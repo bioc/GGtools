@@ -31,7 +31,7 @@ setClass("cisMap", representation(namelist="list",
 
 setClass("cwBestCis", contains="RangedData")
 setClass("mcwBestCis", representation(scoregr = "GRanges",
- allperm="numeric", extra="ANY", chromUsed="ANY", theCall="call", smFilter="function"))
+ allperm="numeric", extra="ANY", chromUsed="ANY", theCall="call", smFilter="function", nperm="numeric"))
 setClass("allSigCis", representation(fulllist = "RangedData", bestcis="mcwBestCis",
  chromUsed="ANY", theCall="call"))
 #
@@ -51,4 +51,17 @@ setMethod("show", "transManager", function(object){
  cat("the call was:\n")
  print(basel$call)
 })
+
+combine2 = function( mcw1, mcw2 ) {
+# rudimentary combination
+ thecall = match.call()
+ nperm = 2  # FIXME NEED TO PULL FROM A NEW SLOT!
+ obs = suppressWarnings(c(mcw1@scoregr, mcw2@scoregr)) # uses different seq sets
+ alls = c( mcw1@allperm, mcw2@allperm )
+ fdrs = sapply(elementMetadata(obs)$score, function(x) (sum(alls>=x)/nperm)/sum(elementMetadata(obs)$score>=x))
+ elementMetadata(obs)$fdr = fdrs
+ obs = obs[ order(elementMetadata(obs)$fdr) , ]
+ new("mcwBestCis", scoregr = obs, allperm = alls, theCall = thecall, chromUsed = c(mcw1@chromUsed, mcw2@chromUsed),
+   smFilter = function() { list(mcw1@smFilter, mcw2@smFilter) } )
+}
 
