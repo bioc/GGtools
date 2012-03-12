@@ -1,6 +1,7 @@
 \name{best.cis.eQTLs}
 \alias{best.cis.eQTLs}
 \alias{meta.best.cis.eQTLs}
+\alias{meta.All.cis.eQTLs}
 \alias{All.cis.eQTLs}
 \alias{mcwBestCis-class}
 \alias{allSigCis-class}
@@ -56,6 +57,17 @@ meta.best.cis.eQTLs(smpackvec = c("GGdata", "hmyriB36"), rhslist = list(~1,
     snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427", smFilter = function(x) nsFilter(MAFfilter(x, 
         lower = 0.05), var.cutoff = 0.97), nperm = 2) 
 
+meta.All.cis.eQTLs(maxfdr = 0.05, inbestcis = NULL, smpackvec = c("GGdata", "hmyriB36"),
+  rhslist = list(~1, ~1), folderstem = "cisScratch",
+  radius = 50000, shortfac=100, chrnames = as.character(1:22), smchrpref = "",
+  gchrpref = "", schrpref = "ch", geneApply = lapply,
+  geneannopk = "illuminaHumanv1.db",
+  snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
+  smFilter4cis = function(x) nsFilter(MAFfilter(clipPCs(x, 1:10),
+  lower = 0.05), var.cutoff = 0.85),
+  smFilter4all = function(x) MAFfilter(clipPCs(x, 1:10),
+  lower = 0.05),
+  nperm = 2)
 
 
 chromsUsed(x)
