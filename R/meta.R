@@ -229,6 +229,6 @@ meta.best.cis.eQTLs = function(smpackvec = c("GGdata", "hmyriB36"),
     obs = obs[order(elementMetadata(obs)$fdr),]
 #    list(obs=obs, all.permuted.scores=alls) #permans=permans)
     new("mcwBestCis", scoregr=obs, allperm=alls, theCall=theCall,
-      chromUsed=chrnames)
+      chromUsed=chrnames, nperm=nperm)
 }
 
