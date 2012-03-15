@@ -55,13 +55,14 @@ setMethod("show", "transManager", function(object){
 combine2 = function( mcw1, mcw2 ) {
 # rudimentary combination
  thecall = match.call()
- nperm = 2  # FIXME NEED TO PULL FROM A NEW SLOT!
+ nperm = mcw1@nperm  # FIXME NEED TO PULL FROM A NEW SLOT!
+ if (nperm != mcw2@nperm) stop("two inputs have different nperm fields")
  obs = suppressWarnings(c(mcw1@scoregr, mcw2@scoregr)) # uses different seq sets
  alls = c( mcw1@allperm, mcw2@allperm )
  fdrs = sapply(elementMetadata(obs)$score, function(x) (sum(alls>=x)/nperm)/sum(elementMetadata(obs)$score>=x))
  elementMetadata(obs)$fdr = fdrs
  obs = obs[ order(elementMetadata(obs)$fdr) , ]
  new("mcwBestCis", scoregr = obs, allperm = alls, theCall = thecall, chromUsed = c(mcw1@chromUsed, mcw2@chromUsed),
-   smFilter = function() { list(mcw1@smFilter, mcw2@smFilter) } )
+   extra = list(mcw1@smFilter, mcw2@smFilter), nperm=nperm )
 }
 
