@@ -175,7 +175,7 @@ best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScr
     ptested = names(cismap)
     if (length(ptested) == 0) stop("filtering cismap leads to no mapped probes")
     cat("filter...")
-    bestcis = geneApply(1:length(ptested), function(pr) {
+    bestcis = lapply(1:length(ptested), function(pr) {
         curpr = ptested[pr]
         topind = which.max(mgr[ cismap[[curpr]], curpr])
         bestrs = cismap[[curpr]][topind]
