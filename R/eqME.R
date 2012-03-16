@@ -19,6 +19,14 @@ textAndSlice = function(sms, cind=1) {
  new("meFiles", exfile=exfile, gtfile=gtfile, outfile=outfile)
 }
 
+getAsSlicedData = function(sms, SNPtarget, cind=1) {
+ if (!is(SNPtarget, "SlicedData")) stop("target must be SlicedData instance")
+ ex = exprs(sms)
+ gt = as(t(smList(sms)[[cind]]), "numeric")
+ target$CreateFromMatrix(gt)
+ new("meFiles", exfile=exfile, gtfile=gtfile, outfile=outfile)
+}
+
 
 .slicedDataDefaults = list(
   fileDelimiter = "\t",
@@ -27,7 +35,7 @@ textAndSlice = function(sms, cind=1) {
   fileSkipColumns = 1,
   fileSliceSize = 2000)
 
-eqtlTests.me = function( smlSet, runname="20", targdir="cisScratch.me",
+eqtlTests.meText = function( smlSet, runname="20", targdir="cisScratch.me",
       geneApply=lapply, shortfac = 100, checkValid = TRUE, useUncertain= TRUE,
       glmfamily = "gaussian", scoretx = abs,
       matrixEQTL.engine.control = list(output_file_name = outfile(mefob), pvOutputThreshold=1e-5,
@@ -39,6 +47,12 @@ eqtlTests.me = function( smlSet, runname="20", targdir="cisScratch.me",
 #
 # this is a very preliminary interface to MatrixEQTL testing procedure
 # for performance and inference comparisons
+#
+# the premise here was that keeping the big data in text files
+# was advantageous for reducing memory consumption but this was
+# a misconception.  current engine behavior assumes all slices in memory
+# -- the eqtlTests.me below does not use text interface but
+# directly converts matrices
 #
   require(MatrixEQTL)
   thecall = match.call()
@@ -64,6 +78,79 @@ eqtlTests.me = function( smlSet, runname="20", targdir="cisScratch.me",
   do.call(cvrt$initFields, covarSlicedData.control )
   if(length(covariates_file_name)>0) {
   	cvrt$LoadFile(covariates_file_name);
+  }
+
+## Run the analysis
+
+me = do.call(Matrix_eQTL_engine, c(list(snps, gene, cvrt), 
+      matrixEQTL.engine.control) )
+ 
+geneNames = featureNames(smlSet)
+
+snpids = colnames(smList(smlSet)[[1]])
+
+ngenes = length(geneNames)
+nsnps = length(snpids)
+
+unlink(targdir, recursive=TRUE)
+dir.create(targdir)
+targff = paste(targdir, "/", runname, ".ff", sep="")
+
+store = ff( initdata=0,
+        dim=c(nsnps, ngenes),
+        dimnames=list(snpids, geneNames),
+        vmode="short",
+        filename = targff )
+
+cat("populating store...")
+store[ cbind(me$all$eqtls[,"snps.id"],  me$all$eqtls[, "gene.id" ]) ] =
+   scoretx ( me$all$eqtls[, "statistic"] * shortfac )
+cat("done.\n")
+
+new("eqtlTestsManager", fffile=store, call=thecall, sess=sessionInfo(),
+  exdate=date(), shortfac=shortfac, geneanno=smlSet@annotation, df=1 )
+}
+
+eqtlTests.me = function( smlSet, rhs=~1, runname="20", targdir="cisScratch.me",
+      geneApply=lapply, shortfac = 100, checkValid = TRUE, useUncertain= TRUE,
+      glmfamily = "gaussian", scoretx = abs,
+      matrixEQTL.engine.control = list( output_file_name=tempfile(), pvOutputThreshold=1e-5,
+         useModel=modelLINEAR, errorCovariance=numeric(), verbose=FALSE, pvalue.hist=FALSE),
+      snpSlicedData.control=.slicedDataDefaults,
+      geneSlicedData.control=.slicedDataDefaults,
+      covarSlicedData.control=.slicedDataDefaults,
+      covariates_file_name = character() ) {
+#
+# this is a very preliminary interface to MatrixEQTL testing procedure
+# for performance and inference comparisons
+#
+  if (length(smList(sms)) != 1) stop("please supply smlSet with smList of length 1")
+  require(MatrixEQTL)
+  thecall = match.call()
+  cat("converting SNP data...")
+  snps = SlicedData$new();
+  do.call(snps$initFields, snpSlicedData.control )
+  snps$CreateFromMat( as(t(smList(sms)[[1]])), "numeric" )
+
+  useModel = modelLINEAR; # modelANOVA or modelLINEAR
+
+
+## Load gene expression data
+
+  gene = SlicedData$new();
+  cat("converting expression data...")
+  do.call(gene$initFields, geneSlicedData.control )
+  gene$CreateFromMat(exprs(sms))
+
+## Load covariates
+
+  cvrt = SlicedData$new();
+  do.call(cvrt$initFields, covarSlicedData.control )
+  cat("converting covariate data...")
+  if(!identical(rhs, ~1)){
+        dmat = try(model.matrix(rhs, data=pData(sms)))
+	if (inherits(dmat, "try-error")) stop("rhs could not define model.matrix from pData(sms) without error")
+  	cvrt$CreateFromMat(dmat)
   }
 
 ## Run the analysis
