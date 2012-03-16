@@ -14,13 +14,16 @@ ffSnpSummary = function(sm,fn,fac=100) {
  dat = col.summary(sm)
  maf = fac*dat[,"MAF"]
  mingtf = fac*apply(dat[,c(5:7)],1,min,na.rm=TRUE)
+ FFOVERWRITE = FALSE
+ if (.Platform$OS.type == "windows") FFOVERWRITE = TRUE
  if (file.exists(fn)) {
     warning(paste("found existing", fn, "removing..."))
     unlink(fn, recursive=TRUE)
-    return(ff( vmode="short", dim=c(length(maf),2),filename=fn,
+    return(ff( vmode="short", dim=c(length(maf),2),filename=fn, overwrite=FFOVERWRITE,
      dimnames=list(colnames(sm), c("MAF", "mGTF"))))
  }
  ff(initdata=cbind(maf,mingtf), vmode="short", dim=c(length(maf),2),filename=fn,
+     overwrite=FFOVERWRITE,
      dimnames=list(colnames(sm), c("MAF", "mGTF")))
 }
 
@@ -72,7 +75,9 @@ eqtlTests = function(smlSet, rhs=~1-1,
  snpnames = colnames(snpdata)
  nsnps = ncol(snpdata)
  targff = paste( fnhead, "chr", chrNames, ".ff" , sep="" )
- store = ff( initdata=0, 
+ FFOVERWRITE = FALSE
+ if (.Platform$OS.type == "windows") FFOVERWRITE = TRUE
+ store = ff( initdata=0, overwrite=FFOVERWRITE,
 	dim=c(nsnps, ngenes), 
 	dimnames=list(snpnames, geneNames), 
   	vmode="short",

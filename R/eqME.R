@@ -124,13 +124,13 @@ eqtlTests.me = function( smlSet, rhs=~1, runname="20", targdir="cisScratch.me",
 # this is a very preliminary interface to MatrixEQTL testing procedure
 # for performance and inference comparisons
 #
-  if (length(smList(sms)) != 1) stop("please supply smlSet with smList of length 1")
+  if (length(smList(smlSet)) != 1) stop("please supply smlSet with smList of length 1")
   require(MatrixEQTL)
   thecall = match.call()
-  cat("converting SNP data...")
+#  cat("converting SNP data...")
   snps = SlicedData$new();
   do.call(snps$initFields, snpSlicedData.control )
-  snps$CreateFromMat( as(t(smList(sms)[[1]])), "numeric" )
+  snps$CreateFromMatrix( as(t(smList(smlSet)[[1]]), "numeric" ) )
 
   useModel = modelLINEAR; # modelANOVA or modelLINEAR
 
@@ -138,19 +138,19 @@ eqtlTests.me = function( smlSet, rhs=~1, runname="20", targdir="cisScratch.me",
 ## Load gene expression data
 
   gene = SlicedData$new();
-  cat("converting expression data...")
+#  cat("converting expression data...")
   do.call(gene$initFields, geneSlicedData.control )
-  gene$CreateFromMat(exprs(sms))
+  gene$CreateFromMatrix(exprs(smlSet))
 
 ## Load covariates
 
   cvrt = SlicedData$new();
   do.call(cvrt$initFields, covarSlicedData.control )
-  cat("converting covariate data...")
+#  cat("converting covariate data...")
   if(!identical(rhs, ~1)){
-        dmat = try(model.matrix(rhs, data=pData(sms)))
-	if (inherits(dmat, "try-error")) stop("rhs could not define model.matrix from pData(sms) without error")
-  	cvrt$CreateFromMat(dmat)
+        dmat = try(model.matrix(rhs, data=pData(smlSet)))
+	if (inherits(dmat, "try-error")) stop("rhs could not define model.matrix from pData(smlSet) without error")
+  	cvrt$CreateFromMatrix(t(dmat))
   }
 
 ## Run the analysis

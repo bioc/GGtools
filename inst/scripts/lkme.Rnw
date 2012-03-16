@@ -106,7 +106,7 @@ reduce both RAM and disk requirements of storing comprehensive feature x feature
 set.seed(1234)
 u2b = unix.time(b2b <<- best.cis.eQTLs(chrnames=c("17", "18", "19", "20"), geneApply=mclapply,
  smFilter=function(x) nsFilter(MAFfilter(clipPCs(x, 1:10), lower = 0.05), var.cutoff = 0.6),
- useME=TRUE))
+ useME=TRUE, rhs=~as.numeric(male)-1))
 @
 <<lkres2>>=
 u2b
