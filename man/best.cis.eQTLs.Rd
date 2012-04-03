@@ -35,7 +35,7 @@ best.cis.eQTLs(smpack = "GGdata", rhs = ~1,
   geneApply = lapply, geneannopk = "illuminaHumanv1.db", 
   snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427", 
   smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97), nperm = 2,
-  useME=FALSE)
+  useME=FALSE, excludeRadius=NULL)
 
 All.cis.eQTLs(maxfdr = 0.05, inbestcis = NULL, smpack = "GGdata", 
     rhs = ~1, folderstem = "cisScratch", radius = 50000, 
@@ -167,6 +167,9 @@ for identifying the best SNP per probe.  This filter
 should not affect the number of probes.}
   \item{x}{instance of \code{mcwBestCis}}
   \item{type}{character, either 'data.frame' or 'GRanges'}
+  \item{excludeRadius}{numeric, defaulting to NULL; if non-null,
+defines radius around gene region that is excluded for cis SNP
+scoring; must be less than radius}
 }
 \details{
 \code{geneApply} can be set to \code{parallel::mclapply}, for example,

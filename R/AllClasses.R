@@ -27,7 +27,7 @@ setClass("eqtlEstimatesManager", contains="eqtlTestsManager",
         validity=chkeeman)
 
 setClass("cisMap", representation(namelist="list",
-   snplocs="GRanges", generanges="GRanges", radiusUsed="numeric"))
+   snplocs="GRanges", generanges="GRanges", radiusUsed="numeric", excludeRadius="numeric"))
 
 setClass("cwBestCis", contains="RangedData")
 setClass("mcwBestCis", representation(scoregr = "GRanges",
