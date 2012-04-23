@@ -144,13 +144,13 @@ best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScr
     radius = 50000, smchr = "20", gchr = "20", schr = "ch20",
     geneApply = lapply, geneannopk = "illuminaHumanv1.db", snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
     smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05),
-        var.cutoff = 0.97), useME=FALSE, excludeRadius=NULL)
+        var.cutoff = 0.97), useME=FALSE, excludeRadius=NULL, exFilter=function(x)x)
 {
 #
 #
     unlink(folderstem, recursive=TRUE)
     cat("get data...")
-    sms = getSS(smpack, smchr)
+    sms = getSS(smpack, smchr, exFilter=exFilter)
     cat("build map...")
 #
 # annotation-based list of SNP within radius of coding region
@@ -226,7 +226,7 @@ best.cis.eQTLs.mchr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisSc
       geneannopk = "illuminaHumanv1.db", 
       snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
     smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05),
-        var.cutoff = 0.97), useME=FALSE, excludeRadius=NULL) {
+        var.cutoff = 0.97), useME=FALSE, excludeRadius=NULL, exFilter=function(x)x) {
     ans = lapply( chrnames, function(ch) {
             smchr = paste(smchrpref, ch, sep="")
             gchr = paste(gchrpref, ch, sep="")
@@ -249,13 +249,14 @@ best.cis.eQTLs = function(smpack = "GGdata",
       geneannopk = "illuminaHumanv1.db", 
       snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
     smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05),
-        var.cutoff=.97), nperm=2, useME=FALSE, excludeRadius=NULL) {
+        var.cutoff=.97), nperm=2, useME=FALSE, excludeRadius=NULL, exFilter=function(x)x) {
     theCall = match.call()
     obs = best.cis.eQTLs.mchr( smpack = smpack,
           rhs=rhs, folderstem=folderstem, radius=radius, shortfac=shortfac,
           chrnames = chrnames, smchrpref=smchrpref,
 	  gchrpref=gchrpref, schrpref=schrpref, geneApply=geneApply,
-          geneannopk = geneannopk, snpannopk=snpannopk, smFilter = smFilter, useME=useME, excludeRadius=excludeRadius)
+          geneannopk = geneannopk, snpannopk=snpannopk, smFilter = smFilter, useME=useME, 
+		excludeRadius=excludeRadius, exFilter=exFilter)
     permans = list()
     for (j in 1:nperm) {
       permans[[j]] = best.cis.eQTLs.mchr( smpack = smpack,
@@ -264,7 +265,7 @@ best.cis.eQTLs = function(smpack = "GGdata",
 	  gchrpref=gchrpref, schrpref=schrpref, geneApply=geneApply,
           geneannopk = geneannopk, snpannopk=snpannopk, 
           smFilter = function(x) permEx(smFilter(x)), useME=useME, 
-          excludeRadius=excludeRadius)
+          excludeRadius=excludeRadius, exFilter=exFilter)
       }
     alls = unlist(lapply(permans, function(x)elementMetadata(x)$score))
     fdrs = sapply(elementMetadata(obs)$score, function(x) (sum(alls>=x)/nperm)/sum(elementMetadata(obs)$score>=x))

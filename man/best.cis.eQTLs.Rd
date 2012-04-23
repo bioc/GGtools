@@ -54,8 +54,10 @@ meta.best.cis.eQTLs(smpackvec = c("GGdata", "hmyriB36"), rhslist = list(~1,
     ~1), folderstem = "cisScratch", radius = 50000, shortfac = 100, 
     chrnames = as.character(1:22), smchrpref = "", gchrpref = "", 
     schrpref = "ch", geneApply = lapply, geneannopk = "illuminaHumanv1.db", 
-    snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427", smFilter = function(x) nsFilter(MAFfilter(x, 
-        lower = 0.05), var.cutoff = 0.97), nperm = 2) 
+    snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427", smFilterList = list( 
+   function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97), 
+   function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97) ),
+ nperm = 2) 
 
 meta.All.cis.eQTLs(maxfdr = 0.05, inbestcis = NULL, smpackvec = c("GGdata", "hmyriB36"),
   rhslist = list(~1, ~1), folderstem = "cisScratch",
@@ -141,6 +143,11 @@ obtaining
 }
   \item{smFilter}{
 function accepting and returning an \code{\link[GGBase]{smlSet-class}}
+instance
+}
+  \item{smFilterList}{
+list of functions, one element per smlSet package used in meta analysis,
+ accepting and returning an \code{\link[GGBase]{smlSet-class}}
 instance
 }
   \item{nperm}{
