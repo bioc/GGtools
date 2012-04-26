@@ -132,7 +132,8 @@ setMethod("show", "cwBestCis", function(object){
 setMethod("show", "mcwBestCis", function(object) {
  cat("GGtools mcwBestCis instance.  The call was:\n")
  print(object@theCall)
- cat("Best loci for ", np <- length(object@scoregr), " are recorded.\n", sep="")
+ cat("Best loci for ", np <- length(object@scoregr), " probes are recorded.\n", sep="")
+ cat("There were ", object@testCount, " gene:snp tests.\n", sep="")
  toshow = min(np, 4)
  cat("Top ", toshow, "probe:SNP combinations:\n")
  show(object@scoregr[1:toshow])
@@ -144,7 +145,7 @@ best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScr
     radius = 50000, smchr = "20", gchr = "20", schr = "ch20",
     geneApply = lapply, geneannopk = "illuminaHumanv1.db", snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
     smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05),
-        var.cutoff = 0.97), useME=FALSE, excludeRadius=NULL, exFilter=function(x)x)
+        var.cutoff = 0.97), useME=FALSE, excludeRadius=NULL, exFilter=function(x)x, mapCache=new.env())
 {
 #
 #
@@ -161,6 +162,7 @@ best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScr
     cismapObj = getCisMap(radius = radius, gchr = gchr, schr = schr,
         geneannopk = geneannopk, snpannopk = snpannopk, excludeRadius=excludeRadius)
     cismap = namelist(cismapObj)
+    if (is.null(mapCache[[gchr]])) mapCache[[gchr]] = cismap  # load cache once for later report, not otherwise reused 4/25/2012
 ##
 ## use of gchr here for annotation package
 ##
@@ -226,7 +228,7 @@ best.cis.eQTLs.mchr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisSc
       geneannopk = "illuminaHumanv1.db", 
       snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
     smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05),
-        var.cutoff = 0.97), useME=FALSE, excludeRadius=NULL, exFilter=function(x)x) {
+        var.cutoff = 0.97), useME=FALSE, excludeRadius=NULL, exFilter=function(x)x, mapCache= new.env()) {
     ans = lapply( chrnames, function(ch) {
             smchr = paste(smchrpref, ch, sep="")
             gchr = paste(gchrpref, ch, sep="")
@@ -235,7 +237,7 @@ best.cis.eQTLs.mchr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisSc
              folderstem = folderstem, radius=radius, shortfac=shortfac,
              smchr = smchr, gchr = gchr, schr = schr,
              geneApply = geneApply, geneannopk = geneannopk, 
-             snpannopk = snpannopk, smFilter=smFilter, useME=useME, excludeRadius=excludeRadius)
+             snpannopk = snpannopk, smFilter=smFilter, useME=useME, excludeRadius=excludeRadius, mapCache=mapCache)
             })
     ans = as(do.call(c, ans), "GRanges")  # RangedData just need c for combination; then mix spaces
     ans[order(elementMetadata(ans)$score, decreasing=TRUE),]
@@ -251,12 +253,13 @@ best.cis.eQTLs = function(smpack = "GGdata",
     smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05),
         var.cutoff=.97), nperm=2, useME=FALSE, excludeRadius=NULL, exFilter=function(x)x) {
     theCall = match.call()
+    mapCache = new.env()
     obs = best.cis.eQTLs.mchr( smpack = smpack,
           rhs=rhs, folderstem=folderstem, radius=radius, shortfac=shortfac,
           chrnames = chrnames, smchrpref=smchrpref,
 	  gchrpref=gchrpref, schrpref=schrpref, geneApply=geneApply,
           geneannopk = geneannopk, snpannopk=snpannopk, smFilter = smFilter, useME=useME, 
-		excludeRadius=excludeRadius, exFilter=exFilter)
+		excludeRadius=excludeRadius, exFilter=exFilter, mapCache)
     permans = list()
     for (j in 1:nperm) {
       permans[[j]] = best.cis.eQTLs.mchr( smpack = smpack,
@@ -272,11 +275,8 @@ best.cis.eQTLs = function(smpack = "GGdata",
     elementMetadata(obs)$fdr = fdrs
     obs = obs[order(elementMetadata(obs)$fdr),]
 #    list(obs=obs, all.permuted.scores=alls) #permans=permans)
-    cismapObj = getCisMap(radius = radius, gchr = gchr, schr = schr,
-        geneannopk = geneannopk, snpannopk = snpannopk, excludeRadius=excludeRadius)
-    cismap = namelist(cismapObj)
     new("mcwBestCis", scoregr=obs, allperm=alls, theCall=theCall,
-      chromUsed=chrnames, smFilter=smFilter, nperm=nperm, globalMap=cismap)
+      chromUsed=chrnames, smFilter=smFilter, nperm=nperm, globalMap=mapCache, testCount=length(unlist(as.list(mapCache))))
 }
 
 setMethod("chromsUsed", "mcwBestCis", function(x)x@chromUsed)
