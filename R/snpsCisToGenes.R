@@ -272,8 +272,11 @@ best.cis.eQTLs = function(smpack = "GGdata",
     elementMetadata(obs)$fdr = fdrs
     obs = obs[order(elementMetadata(obs)$fdr),]
 #    list(obs=obs, all.permuted.scores=alls) #permans=permans)
+    cismapObj = getCisMap(radius = radius, gchr = gchr, schr = schr,
+        geneannopk = geneannopk, snpannopk = snpannopk, excludeRadius=excludeRadius)
+    cismap = namelist(cismapObj)
     new("mcwBestCis", scoregr=obs, allperm=alls, theCall=theCall,
-      chromUsed=chrnames, smFilter=smFilter, nperm=nperm)
+      chromUsed=chrnames, smFilter=smFilter, nperm=nperm, globalMap=cismap)
 }
 
 setMethod("chromsUsed", "mcwBestCis", function(x)x@chromUsed)

@@ -31,7 +31,7 @@ setClass("cisMap", representation(namelist="list",
 
 setClass("cwBestCis", contains="RangedData")
 setClass("mcwBestCis", representation(scoregr = "GRanges",
- allperm="numeric", extra="ANY", chromUsed="ANY", theCall="call", smFilter="function", nperm="numeric"))
+ allperm="numeric", extra="ANY", chromUsed="ANY", theCall="call", smFilter="function", nperm="numeric", globalMap="list"))
 setClass("allSigCis", representation(fulllist = "RangedData", bestcis="mcwBestCis",
  chromUsed="ANY", theCall="call"))
 #
