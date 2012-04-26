@@ -279,7 +279,7 @@ best.cis.eQTLs = function(smpack = "GGdata",
     testCount = length(unlist(as.list(mapCache)))
     if (!keepMapCache) mapCache = new.env()
     new("mcwBestCis", scoregr=obs, allperm=alls, theCall=theCall,
-      chromUsed=chrnames, smFilter=smFilter, nperm=nperm, globalMap=mapCache, testCount=length(unlist(as.list(mapCache))))
+      chromUsed=chrnames, smFilter=smFilter, nperm=nperm, globalMap=mapCache, testCount=testCount)
 }
 
 setMethod("chromsUsed", "mcwBestCis", function(x)x@chromUsed)
