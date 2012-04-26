@@ -35,7 +35,7 @@ best.cis.eQTLs(smpack = "GGdata", rhs = ~1,
   geneApply = lapply, geneannopk = "illuminaHumanv1.db", 
   snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427", 
   smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97), nperm = 2,
-  useME=FALSE, excludeRadius=NULL)
+  useME=FALSE, excludeRadius=NULL, exFilter=function(x)x)
 
 All.cis.eQTLs(maxfdr = 0.05, inbestcis = NULL, smpack = "GGdata", 
     rhs = ~1, folderstem = "cisScratch", radius = 50000, 
@@ -48,13 +48,13 @@ All.cis.eQTLs(maxfdr = 0.05, inbestcis = NULL, smpack = "GGdata",
         1:10), lower = 0.05), var.cutoff = 0.85), 
     smFilter4all = function(x) MAFfilter(clipPCs(x, 
         1:10), lower = 0.05), 
-    nperm = 2)
+    nperm = 2, excludeRadius=NULL, exFilter=function(x)x)
 
 meta.best.cis.eQTLs(smpackvec = c("GGdata", "hmyriB36"), rhslist = list(~1, 
     ~1), folderstem = "cisScratch", radius = 50000, shortfac = 100, 
     chrnames = as.character(1:22), smchrpref = "", gchrpref = "", 
     schrpref = "ch", geneApply = lapply, geneannopk = "illuminaHumanv1.db", 
-    snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427", smFilterList = list( 
+    snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427", SMFilterList = list( 
    function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97), 
    function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97) ),
  nperm = 2) 
@@ -145,7 +145,7 @@ obtaining
 function accepting and returning an \code{\link[GGBase]{smlSet-class}}
 instance
 }
-  \item{smFilterList}{
+  \item{SMFilterList}{
 list of functions, one element per smlSet package used in meta analysis,
  accepting and returning an \code{\link[GGBase]{smlSet-class}}
 instance

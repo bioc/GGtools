@@ -20,9 +20,9 @@ a list, as returned by slot(y, "base"), where y is a transManager instance.
 %string denoting the chromosome from which SNP genotypes were drawn for trans-association with gene expression
 %}
 }
-\details{
+%\details{
 %%  ~~ If necessary, more details than the description above ~~
-}
+%}
 \value{
 data.frame instance
 %%  ~Describe the value returned

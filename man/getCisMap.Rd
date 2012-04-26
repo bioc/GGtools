@@ -13,7 +13,7 @@ create a structure that enumerates SNP in the vicinity of ('cis' to) genes
 getCisMap(radius = 50000, gchr = "20", 
   schr = "ch20", geneannopk = "illuminaHumanv1.db", 
   snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427", 
-  as.GRangesList = FALSE)
+  as.GRangesList = FALSE, excludeRadius=NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -38,6 +38,10 @@ character string naming a Bioconductor SNPlocs.* SNP metadata package
 }
   \item{as.GRangesList}{
 logical telling whether a GRangesList should be returned
+}
+  \item{excludeRadius}{
+numeric or NULL: radius of interval around gene extent from
+which SNP will be excluded, required to be less than \code{radius}
 }
 }
 \details{
