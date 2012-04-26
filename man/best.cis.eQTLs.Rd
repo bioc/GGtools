@@ -35,7 +35,7 @@ best.cis.eQTLs(smpack = "GGdata", rhs = ~1,
   geneApply = lapply, geneannopk = "illuminaHumanv1.db", 
   snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427", 
   smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97), nperm = 2,
-  useME=FALSE, excludeRadius=NULL, exFilter=function(x)x)
+  useME=FALSE, excludeRadius=NULL, exFilter=function(x)x, keepMapCache=FALSE)
 
 All.cis.eQTLs(maxfdr = 0.05, inbestcis = NULL, smpack = "GGdata", 
     rhs = ~1, folderstem = "cisScratch", radius = 50000, 
@@ -177,6 +177,9 @@ should not affect the number of probes.}
   \item{excludeRadius}{numeric, defaulting to NULL; if non-null,
 defines radius around gene region that is excluded for cis SNP
 scoring; must be less than radius}
+  \item{keepMapCache}{logical, if TRUE, returned \code{mcwBestCis} object will include an environment
+loaded with chromosome-specific lists of maps from genes to cis SNP names;
+if FALSE, the mapCache environment returned will be empty}
 }
 \details{
 \code{geneApply} can be set to \code{parallel::mclapply}, for example,

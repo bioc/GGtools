@@ -251,7 +251,8 @@ best.cis.eQTLs = function(smpack = "GGdata",
       geneannopk = "illuminaHumanv1.db", 
       snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
     smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05),
-        var.cutoff=.97), nperm=2, useME=FALSE, excludeRadius=NULL, exFilter=function(x)x) {
+        var.cutoff=.97), nperm=2, useME=FALSE, excludeRadius=NULL, exFilter=function(x)x,
+	keepMapCache=FALSE) {
     theCall = match.call()
     mapCache = new.env()
     obs = best.cis.eQTLs.mchr( smpack = smpack,
@@ -275,6 +276,8 @@ best.cis.eQTLs = function(smpack = "GGdata",
     elementMetadata(obs)$fdr = fdrs
     obs = obs[order(elementMetadata(obs)$fdr),]
 #    list(obs=obs, all.permuted.scores=alls) #permans=permans)
+    testCount = length(unlist(as.list(mapCache)))
+    if (!keepMapCache) mapCache = new.env()
     new("mcwBestCis", scoregr=obs, allperm=alls, theCall=theCall,
       chromUsed=chrnames, smFilter=smFilter, nperm=nperm, globalMap=mapCache, testCount=length(unlist(as.list(mapCache))))
 }
