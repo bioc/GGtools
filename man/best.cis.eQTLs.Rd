@@ -179,7 +179,11 @@ defines radius around gene region that is excluded for cis SNP
 scoring; must be less than radius}
   \item{keepMapCache}{logical, if TRUE, returned \code{mcwBestCis} object will include an environment
 loaded with chromosome-specific lists of maps from genes to cis SNP names;
-if FALSE, the mapCache environment returned will be empty}
+if FALSE, the mapCache environment returned will be empty -- NB, this
+feature has been found to add too much volume to returned
+objects and is suspended...}
+ \item{exFilter}{this function is passed to
+\code{\link[GGBase]{getSS}}; see Details}
 }
 \details{
 \code{geneApply} can be set to \code{parallel::mclapply}, for example,
@@ -197,6 +201,13 @@ plug-in FDR estimates corresponding to probe:association tests
 as ordered in the fullreport of a *Cis container.
 More metadata should be attached to the output of this
 function.
+
+\code{exFilter} may seem redundant with \code{smFilter}, but
+its existence allows simpler management of multitissue
+expression archives (which may have several records per individual)
+with germ line genotype data (which will have only one record
+per individual).  In this setting, use exFilter to select records for the tissue
+of interest; this will occur early in the smlSet generation process.
 }
 \value{
 an instance of \code{\linkS4class{mcwBestCis}}
