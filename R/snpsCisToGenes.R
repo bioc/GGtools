@@ -162,7 +162,9 @@ best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScr
     cismapObj = getCisMap(radius = radius, gchr = gchr, schr = schr,
         geneannopk = geneannopk, snpannopk = snpannopk, excludeRadius=excludeRadius)
     cismap = namelist(cismapObj)
-    if (is.null(mapCache[[gchr]])) mapCache[[gchr]] = cismap  # load cache once for later report, not otherwise reused 4/25/2012
+#
+# prior to may 4 2012 this was run too early... see below
+#    if (is.null(mapCache[[gchr]])) mapCache[[gchr]] = cismap  # load cache once for later report, not otherwise reused 4/25/2012
 ##
 ## use of gchr here for annotation package
 ##
@@ -193,6 +195,10 @@ best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScr
     lc = sapply(cismap, length)
     nullc = which(lc == 0)
     if (length(nullc)>0) cismap = cismap[-nullc]
+#
+# now filter has been applied
+#
+    if (is.null(mapCache[[gchr]])) mapCache[[gchr]] = cismap  # load cache once for later report, not otherwise reused 4/25/2012
     # genes to use are now names of cismap
     ptested = names(cismap)
     if (length(ptested) == 0) stop("filtering cismap leads to no mapped probes")
