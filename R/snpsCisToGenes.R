@@ -268,6 +268,8 @@ best.cis.eQTLs = function(smpack = "GGdata",
           geneannopk = geneannopk, snpannopk=snpannopk, smFilter = smFilter, useME=useME, 
 		excludeRadius=excludeRadius, exFilter=exFilter, mapCache)
     permans = list()
+ alls = rep(as.numeric(NA), length(obs))  # initialize in case nperm == 0
+  if (nperm > 0) {
     for (j in 1:nperm) {
       permans[[j]] = best.cis.eQTLs.mchr( smpack = smpack,
           rhs=rhs, folderstem=folderstem, radius=radius, shortfac=shortfac,
@@ -277,11 +279,11 @@ best.cis.eQTLs = function(smpack = "GGdata",
           smFilter = function(x) permEx(smFilter(x)), useME=useME, 
           excludeRadius=excludeRadius, exFilter=exFilter)
       }
-    alls = unlist(lapply(permans, function(x)elementMetadata(x)$score))
-    fdrs = sapply(elementMetadata(obs)$score, function(x) (sum(alls>=x)/nperm)/sum(elementMetadata(obs)$score>=x))
-    elementMetadata(obs)$fdr = fdrs
-    obs = obs[order(elementMetadata(obs)$fdr),]
-#    list(obs=obs, all.permuted.scores=alls) #permans=permans)
+      alls = unlist(lapply(permans, function(x)elementMetadata(x)$score))
+      fdrs = sapply(elementMetadata(obs)$score, function(x) (sum(alls>=x)/nperm)/sum(elementMetadata(obs)$score>=x))
+      elementMetadata(obs)$fdr = fdrs
+      obs = obs[order(elementMetadata(obs)$fdr),]
+    } # end nperm > 0 block
     testCount = length(unlist(as.list(mapCache)))
     if (!keepMapCache) mapCache = new.env()
     new("mcwBestCis", scoregr=obs, allperm=alls, theCall=theCall,
