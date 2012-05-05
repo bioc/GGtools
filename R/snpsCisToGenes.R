@@ -145,7 +145,8 @@ best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScr
     radius = 50000, smchr = "20", gchr = "20", schr = "ch20",
     geneApply = lapply, geneannopk = "illuminaHumanv1.db", snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
     smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05),
-        var.cutoff = 0.97), useME=FALSE, excludeRadius=NULL, exFilter=function(x)x, mapCache=new.env())
+        var.cutoff = 0.97), useME=FALSE, excludeRadius=NULL, exFilter=function(x)x, mapCache=new.env(),
+	getDFFITS=FALSE)
 {
 #
 #
@@ -222,8 +223,19 @@ best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScr
     fullans$snpid = scoredf$snpid
     fullans$snploc = start(cismapObj@snplocs[scoredf$snpid])
     fullans$radiusUsed = rep(radius, nrow(fullans))
+    # dffits option
+    if (getDFFITS) fullans$dffits = get.dffits( fsms, ans$probe, ans$snpid )
     unlink(folderstem, recursive=TRUE)
     fullans
+}
+
+get.dffits = function( sms, probes, snps ) {
+ if (length(probes) != length(snps) ) stop("length probes != length snps")
+ numgt = as( smList(sms)[[1]][,snps], "numeric" )
+ ex = exprs( sms )[probes,]
+ if (!(ncol(numgt) == nrow(ex))) stop("subsetting to probes and snps fails")
+ maxdf = function(mod) max(dffits(mod),na.rm=TRUE)
+ unlist(sapply(1:nrow(ex), function(i) maxdf(lm(ex[i,,drop=TRUE]~numgt[,i,drop=TRUE]))))
 }
 
 best.cis.eQTLs.mchr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScratch", shortfac=100,
@@ -234,8 +246,10 @@ best.cis.eQTLs.mchr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisSc
       geneannopk = "illuminaHumanv1.db", 
       snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
     smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05),
-        var.cutoff = 0.97), useME=FALSE, excludeRadius=NULL, exFilter=function(x)x, mapCache= new.env()) {
-    ans = lapply( chrnames, function(ch) {
+        var.cutoff = 0.97), useME=FALSE, 
+    excludeRadius=NULL, exFilter=function(x)x, mapCache= new.env(),
+    getDFFITS=FALSE) {
+       ans = lapply( chrnames, function(ch) {
             smchr = paste(smchrpref, ch, sep="")
             gchr = paste(gchrpref, ch, sep="")
             schr = paste(schrpref, ch, sep="")
@@ -243,7 +257,9 @@ best.cis.eQTLs.mchr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisSc
              folderstem = folderstem, radius=radius, shortfac=shortfac,
              smchr = smchr, gchr = gchr, schr = schr,
              geneApply = geneApply, geneannopk = geneannopk, 
-             snpannopk = snpannopk, smFilter=smFilter, useME=useME, excludeRadius=excludeRadius, mapCache=mapCache)
+             snpannopk = snpannopk, smFilter=smFilter, 
+	     useME=useME, excludeRadius=excludeRadius, mapCache=mapCache,
+		getDFFITS=getDFFITS)
             })
     ans = as(do.call(c, ans), "GRanges")  # RangedData just need c for combination; then mix spaces
     ans[order(elementMetadata(ans)$score, decreasing=TRUE),]
@@ -258,7 +274,7 @@ best.cis.eQTLs = function(smpack = "GGdata",
       snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
     smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05),
         var.cutoff=.97), nperm=2, useME=FALSE, excludeRadius=NULL, exFilter=function(x)x,
-	keepMapCache=FALSE) {
+	keepMapCache=FALSE, getDFFITS=FALSE) {
     theCall = match.call()
     mapCache = new.env()
     obs = best.cis.eQTLs.mchr( smpack = smpack,
@@ -266,7 +282,8 @@ best.cis.eQTLs = function(smpack = "GGdata",
           chrnames = chrnames, smchrpref=smchrpref,
 	  gchrpref=gchrpref, schrpref=schrpref, geneApply=geneApply,
           geneannopk = geneannopk, snpannopk=snpannopk, smFilter = smFilter, useME=useME, 
-		excludeRadius=excludeRadius, exFilter=exFilter, mapCache)
+		excludeRadius=excludeRadius, exFilter=exFilter, 
+		mapCache=mapCache, getDFFITS=getDFFITS)
     permans = list()
  alls = rep(as.numeric(NA), length(obs))  # initialize in case nperm == 0
   if (nperm > 0) {
@@ -277,7 +294,7 @@ best.cis.eQTLs = function(smpack = "GGdata",
 	  gchrpref=gchrpref, schrpref=schrpref, geneApply=geneApply,
           geneannopk = geneannopk, snpannopk=snpannopk, 
           smFilter = function(x) permEx(smFilter(x)), useME=useME, 
-          excludeRadius=excludeRadius, exFilter=exFilter)
+          excludeRadius=excludeRadius, exFilter=exFilter, getDFFITS=getDFFITS)
       }
       alls = unlist(lapply(permans, function(x)elementMetadata(x)$score))
       fdrs = sapply(elementMetadata(obs)$score, function(x) (sum(alls>=x)/nperm)/sum(elementMetadata(obs)$score>=x))
