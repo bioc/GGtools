@@ -35,7 +35,8 @@ best.cis.eQTLs(smpack = "GGdata", rhs = ~1,
   geneApply = lapply, geneannopk = "illuminaHumanv1.db", 
   snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427", 
   smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97), nperm = 2,
-  useME=FALSE, excludeRadius=NULL, exFilter=function(x)x, keepMapCache=FALSE)
+  useME=FALSE, excludeRadius=NULL, exFilter=function(x)x, keepMapCache=FALSE,
+  getDFFITS=FALSE)
 
 All.cis.eQTLs(maxfdr = 0.05, inbestcis = NULL, smpack = "GGdata", 
     rhs = ~1, folderstem = "cisScratch", radius = 50000, 
@@ -184,6 +185,8 @@ feature has been found to add too much volume to returned
 objects and is suspended...}
  \item{exFilter}{this function is passed to
 \code{\link[GGBase]{getSS}}; see Details}
+ \item{getDFFITS}{logical; a component storing max DFFITS value for
+each gene will be retained if this argument TRUE}
 }
 \details{
 \code{geneApply} can be set to \code{parallel::mclapply}, for example,
