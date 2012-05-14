@@ -17,6 +17,7 @@ SIGNIFICANT USER-VISIBLE CHANGES
        representation.  gwSnpScreen is main interface
 
 INFRASTRUCTURE CHANGES
+    o  manage warnings of ff.[ a bit better, May 13 2012
 
     o  racExSet is not a primary tool any more; smlSet is
 
