@@ -224,7 +224,7 @@ best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScr
     fullans$snploc = start(cismapObj@snplocs[scoredf$snpid])
     fullans$radiusUsed = rep(radius, nrow(fullans))
     # dffits option
-    if (getDFFITS) fullans$dffits = get.dffits( fsms, ans$probe, ans$snpid )
+    if (getDFFITS) fullans$dffits = get.dffits( fsms, rownames(fullans), fullans$snpid )
     unlink(folderstem, recursive=TRUE)
     fullans
 }

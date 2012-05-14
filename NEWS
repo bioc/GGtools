@@ -7,6 +7,8 @@
 
 
 SIGNIFICANT USER-VISIBLE CHANGES
+    o  may 2012: best.cis.eQTLs has getDFFITS option
+
     o  march 2010: gwSnpTests and so forth will be deprecated in favor
        of simpler interfaces that can be more readily parallelized.  New
        IRanges-based computations for cis restrictions will be introduced
