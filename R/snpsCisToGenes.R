@@ -257,7 +257,7 @@ best.cis.eQTLs.mchr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisSc
              folderstem = folderstem, radius=radius, shortfac=shortfac,
              smchr = smchr, gchr = gchr, schr = schr,
              geneApply = geneApply, geneannopk = geneannopk, 
-             snpannopk = snpannopk, smFilter=smFilter, 
+             snpannopk = snpannopk, smFilter=smFilter, exFilter=exFilter,
 	     useME=useME, excludeRadius=excludeRadius, mapCache=mapCache,
 		getDFFITS=getDFFITS)
             })
@@ -309,10 +309,10 @@ best.cis.eQTLs = function(smpack = "GGdata",
 
 setMethod("chromsUsed", "mcwBestCis", function(x)x@chromUsed)
 
-setMethod("fullreport", c("mcwBestCis", "missing"), function(x, type) {
+setMethod("fullreport", c("mcwBestCis", "missing"), function(x, type, ...) {
  x@scoregr
 })
-setMethod("fullreport", c("mcwBestCis", "character"), function(x, type) {
+setMethod("fullreport", c("mcwBestCis", "character"), function(x, type, ...) {
   if (type == "data.frame") {
    tmp = IRanges:::as.data.frame(x@scoregr)
    probeid = rownames(tmp)

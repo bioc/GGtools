@@ -7,6 +7,7 @@
 
 
 SIGNIFICANT USER-VISIBLE CHANGES
+
     o  may 2012: best.cis.eQTLs has getDFFITS option
 
     o  march 2010: gwSnpTests and so forth will be deprecated in favor
@@ -17,6 +18,8 @@ SIGNIFICANT USER-VISIBLE CHANGES
        representation.  gwSnpScreen is main interface
 
 INFRASTRUCTURE CHANGES
+    o  june 2012: exFilter facility properly handled in best.cis.eQTLs.mchr
+
     o  manage warnings of ff.[ a bit better, May 13 2012
 
     o  racExSet is not a primary tool any more; smlSet is
