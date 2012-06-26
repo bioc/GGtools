@@ -108,7 +108,7 @@ meta.best.cis.eQTLs.chr = function (smpackvec = c("GGdata", "hmyriB36"), rhslist
     unlink(folderstem, recursive=TRUE)
     cat("get data...")
     smsList = lapply(1:length(smpackvec), function(x) getSS(
-                smpackvec[i], smchr, exFilter=exFilterList[[i]]))
+                smpackvec[x], smchr, exFilter=exFilterList[[x]]))
     cat("run smFilter...")   # run earlier than in eqtlTests
     for (i in 1:length(smsList))
          smsList[[i]] =  SMFilterList[[i]](smsList[[i]])
