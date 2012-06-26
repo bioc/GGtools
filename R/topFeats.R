@@ -70,9 +70,9 @@ sym2id = function (syms, annopkg)
   if (!(numsupp == 1)) stop("only one of snpid and probeid are allowed")
   curff = mgr@fffile
   on.exit(try(close(mgr@fffile)))
-  if (!open(curff)) {
+  if (!is.open(curff)) {
      tmp = open(curff)
-     if (!tmp) stop("failed to open ff archive")
+     if (!is.open(curff)) stop("failed to open ff archive")
      }
   snpn = rownames(curff)
   proben = colnames(curff)

@@ -41,9 +41,9 @@ setMethod("show", "eqtlTestsManager", function(object) {
 setMethod("[", c("eqtlTestsManager"), # , "rsid", "probeId"),
  function(x, i, j, ..., drop=FALSE) {
  on.exit(try(close(x@fffile)))  # new 13 may 2012 -- more consistent open/close for ff
- if (!open(x@fffile)) { # squelch ff warning by explicitly opening
+ if (!is.open(x@fffile)) { # squelch ff warning by explicitly opening
    tmp = open(x@fffile)
-   if (!tmp) stop("failed to open ff archive")
+   if (!is.open(x@fffile)) stop("failed to open ff archive")
    }
  sn = rownames(x@fffile)
  pn = colnames(x@fffile)

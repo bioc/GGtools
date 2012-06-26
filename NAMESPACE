@@ -7,7 +7,7 @@ importFrom(BiocGenerics, NROW)
 
 importFrom(snpStats, snp.rhs.tests, p.value, col.summary, snp.rhs.estimates)
 
-importFrom(ff, ff, as.ram, ffrowapply, filename)
+importFrom(ff, ff, as.ram, ffrowapply, filename, is.open)
 
 importFrom(bit, chunk)
 

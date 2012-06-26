@@ -36,7 +36,7 @@ meqtlTests = function(listOfSmls, rhslist,
  if (any(clens != 1)) stop("all smlSets must have smList of length 1")
  ngenes = length(geneNames)
  nchr = 1
- system(paste("mkdir", targdir))
+ if (!file.exists(targdir)) dir.create(targdir)
 
 # there will be one ff file per chromosome which will accumulate
 # all information across smlSets
@@ -157,6 +157,7 @@ meta.best.cis.eQTLs.chr = function (smpackvec = c("GGdata", "hmyriB36"), rhslist
     cat("filter...")
     bestcis = geneApply(1:length(ptested), function(pr) {
         curpr = ptested[pr]
+        open(mff)
         topind = which.max(mgr[ cismap[[curpr]], curpr])
         bestrs = cismap[[curpr]][topind]
         ans = as.ram(mgr[bestrs, curpr])
