@@ -99,14 +99,16 @@ meta.best.cis.eQTLs.chr = function (smpackvec = c("GGdata", "hmyriB36"), rhslist
     geneApply = lapply, geneannopk = "illuminaHumanv1.db", snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
     SMFilterList = list( 
   function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97),
-  function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97) )
+  function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97) ),
+   exFilterList = list(function(x)x, function(x)x)
 )
 {
 #
 #
     unlink(folderstem, recursive=TRUE)
     cat("get data...")
-    smsList = lapply(smpackvec, getSS, smchr)
+    smsList = lapply(1:length(smpackvec), function(x) getSS(
+                smpackvec[i], smchr, exFilter=exFilterList[[i]]))
     cat("run smFilter...")   # run earlier than in eqtlTests
     for (i in 1:length(smsList))
          smsList[[i]] =  SMFilterList[[i]](smsList[[i]])
@@ -186,7 +188,8 @@ meta.best.cis.eQTLs.mchr = function (smpackvec = c("GGdata", "hmyriB36"), rhslis
       snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
     SMFilterList = list( 
   function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97),
-  function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97) )
+  function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97) ),
+    exFilterList=list(function(x)x, function(x)x)
         ) {
     ans = lapply( chrnames, function(ch) {
             smchr = paste(smchrpref, ch, sep="")
@@ -196,7 +199,8 @@ meta.best.cis.eQTLs.mchr = function (smpackvec = c("GGdata", "hmyriB36"), rhslis
              folderstem = folderstem, radius=radius, shortfac=shortfac,
              smchr = smchr, gchr = gchr, schr = schr,
              geneApply = geneApply, geneannopk = geneannopk,
-             snpannopk = snpannopk, SMFilterList=SMFilterList )
+             snpannopk = snpannopk, SMFilterList=SMFilterList,
+		exFilterList=exFilterList )
             })
     ans = as(do.call(c, ans), "GRanges")  # RangedData just need c for combination; then mix spaces
     ans[order(elementMetadata(ans)$score, decreasing=TRUE),]
@@ -211,20 +215,22 @@ meta.best.cis.eQTLs = function(smpackvec = c("GGdata", "hmyriB36"),
       snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
     SMFilterList = list( 
   function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97),
-  function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97) ), nperm=2) {
+  function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97) ), 
+  exFilterList=list(function(x)x, function(x)x), nperm=2) {
     theCall = match.call()
     obs = meta.best.cis.eQTLs.mchr( smpackvec = smpackvec,
           rhslist=rhslist, folderstem=folderstem, radius=radius, shortfac=shortfac,
           chrnames = chrnames, smchrpref=smchrpref,
           gchrpref=gchrpref, schrpref=schrpref, geneApply=geneApply,
-          geneannopk = geneannopk, snpannopk=snpannopk, SMFilterList = SMFilterList)
+          geneannopk = geneannopk, snpannopk=snpannopk, 
+		SMFilterList = SMFilterList, exFilterList=exFilterList)
     permans = list()
     for (j in 1:nperm) {
       permans[[j]] = meta.best.cis.eQTLs.mchr( smpackvec = smpackvec,
           rhslist=rhslist, folderstem=folderstem, radius=radius, shortfac=shortfac,
           chrnames = chrnames, smchrpref=smchrpref,
           gchrpref=gchrpref, schrpref=schrpref, geneApply=geneApply,
-          geneannopk = geneannopk, snpannopk=snpannopk,
+          geneannopk = geneannopk, snpannopk=snpannopk, exFilterList=exFilterList,
           SMFilterList = lapply(SMFilterList, function(z) function(y) permEx(z(y))))  # apply permEx over each filter
       }
     alls = unlist(lapply(permans, function(x)elementMetadata(x)$score))
