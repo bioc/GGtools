@@ -99,8 +99,8 @@ meta.best.cis.eQTLs.chr = function (smpackvec = c("GGdata", "hmyriB36"), rhslist
     geneApply = lapply, geneannopk = "illuminaHumanv1.db", snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
     SMFilterList = list( 
   function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97),
-  function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97), doPerm=FALSE ),
-   exFilterList = list(function(x)x, function(x)x)
+  function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97)), 
+   exFilterList = list(function(x)x, function(x)x), doPerm=FALSE
 )
 {
 #
