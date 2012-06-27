@@ -99,7 +99,7 @@ meta.best.cis.eQTLs.chr = function (smpackvec = c("GGdata", "hmyriB36"), rhslist
     geneApply = lapply, geneannopk = "illuminaHumanv1.db", snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
     SMFilterList = list( 
   function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97),
-  function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97) ),
+  function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97), doPerm=FALSE ),
    exFilterList = list(function(x)x, function(x)x)
 )
 {
@@ -142,6 +142,10 @@ meta.best.cis.eQTLs.chr = function (smpackvec = c("GGdata", "hmyriB36"), rhslist
 #
 # map now agrees with probes in expression component
 #
+    if (doPerm) {
+       cat("permute...")
+       smsList = lapply(smsList, permEx)
+       }
     cat("tests...")
     mgr = meqtlTests(smsList, rhslist, targdir = folderstem,
         runname = "cis", geneApply = geneApply, shortfac=shortfac)
@@ -190,7 +194,7 @@ meta.best.cis.eQTLs.mchr = function (smpackvec = c("GGdata", "hmyriB36"), rhslis
     SMFilterList = list( 
   function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97),
   function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97) ),
-    exFilterList=list(function(x)x, function(x)x)
+    exFilterList=list(function(x)x, function(x)x), doPerm=FALSE
         ) {
     ans = lapply( chrnames, function(ch) {
             smchr = paste(smchrpref, ch, sep="")
@@ -201,7 +205,7 @@ meta.best.cis.eQTLs.mchr = function (smpackvec = c("GGdata", "hmyriB36"), rhslis
              smchr = smchr, gchr = gchr, schr = schr,
              geneApply = geneApply, geneannopk = geneannopk,
              snpannopk = snpannopk, SMFilterList=SMFilterList,
-		exFilterList=exFilterList )
+		exFilterList=exFilterList, doPerm=doPerm )
             })
     ans = as(do.call(c, ans), "GRanges")  # RangedData just need c for combination; then mix spaces
     ans[order(elementMetadata(ans)$score, decreasing=TRUE),]
@@ -232,7 +236,7 @@ meta.best.cis.eQTLs = function(smpackvec = c("GGdata", "hmyriB36"),
           chrnames = chrnames, smchrpref=smchrpref,
           gchrpref=gchrpref, schrpref=schrpref, geneApply=geneApply,
           geneannopk = geneannopk, snpannopk=snpannopk, exFilterList=exFilterList,
-          SMFilterList = lapply(SMFilterList, function(z) function(y) permEx(z(y))))  # apply permEx over each filter
+          SMFilterList = SMFilterList, doPerm=TRUE)  # apply permEx over each filter
       }
     alls = unlist(lapply(permans, function(x)elementMetadata(x)$score))
     fdrs = sapply(elementMetadata(obs)$score, function(x) (sum(alls>=x)/nperm)/sum(elementMetadata(obs)$score>=x))
