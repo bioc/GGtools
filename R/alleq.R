@@ -109,7 +109,7 @@ getBest = function(x) x@bestcis
 getCall = function(x) x@theCall
 getAll = function(x) x@fulllist
 
-meta.All.cis.eQTLs = function (maxfdr = 0.05, inbestcis = NULL, smpackvec = c("GGdata", "hmyriB36"), 
+old.meta.All.cis.eQTLs = function (maxfdr = 0.05, inbestcis = NULL, smpackvec = c("GGdata", "hmyriB36"), 
   rhslist = list(~1, ~1), folderstem = "cisScratch", 
   radius = 50000, shortfac=100, chrnames = as.character(1:22), smchrpref = "", 
   gchrpref = "", schrpref = "ch", geneApply = lapply, 
