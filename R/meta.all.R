@@ -70,7 +70,7 @@ meta.all.cis.eQTLs.chr = function (minchisq, smpackvec = c("GGdata", "hmyriB36")
      satcis = geneApply(1:length(ptested), function(pr) {
         curpr = ptested[pr]
         oksn = snpsManaged(mgr)
-        allscores = as.ram( tmpt[, curpr] )
+        allscores = as.ram( mgr[, curpr] )
         names(allscores) = oksn
         cisscores = allscores[ intersect(oksn, cismap[[curpr]] ) ]
         ans = cisscores[ cisscores >= minchisq ]
