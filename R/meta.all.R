@@ -80,7 +80,7 @@ meta.all.cis.eQTLs.chr = function (minchisq, smpackvec = c("GGdata", "hmyriB36")
     satpro = rep(ptested, sapply(satsnp,length))
     cat("done.\n")
     ans = data.frame(chr=gchr, probe = satpro, snpid = unlist(satsnp), score = as.numeric(unlist(satcis)),
-        maxfdr=maxfdr, stringsAsFactors=FALSE)
+        minchisq=minchisq, stringsAsFactors=FALSE)
     scoredf = ans[order(ans$score, decreasing=TRUE),]
 # end new
 
