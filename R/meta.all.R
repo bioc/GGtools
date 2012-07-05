@@ -73,13 +73,21 @@ meta.all.cis.eQTLs.chr = function (minchisq, smpackvec = c("GGdata", "hmyriB36")
         allscores = as.ram( mgr[, curpr] )
         names(allscores) = oksn
         cisscores = allscores[ intersect(oksn, cismap[[curpr]] ) ]
-        ans = cisscores[ cisscores >= minchisq ]
+        if (any(cisscores>=minchisq)) ans = cisscores[ which(cisscores >= minchisq) ]
+        else ans = NA
         ans
     })
+    bad = unique(c(which(sapply(satcis,length) == 0), which(sapply(satcis,
+      function(x)is.na(x[1])))))
+    if (length(bad)>0) {
+         satcis = satcis[-bad]
+         ptested = ptested[-bad] # now a lie, was tested but none survived
+         }
     satsnp = lapply(satcis, names)
     satpro = rep(ptested, sapply(satsnp,length))
     cat("done.\n")
-    ans = data.frame(chr=gchr, probe = satpro, snpid = unlist(satsnp), score = as.numeric(unlist(satcis)),
+    ans = data.frame(chr=gchr, probe = satpro, 
+        snpid = unlist(satsnp), score = as.numeric(unlist(satcis)),
         minchisq=minchisq, stringsAsFactors=FALSE)
     scoredf = ans[order(ans$score, decreasing=TRUE),]
 # end new
