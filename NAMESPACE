@@ -33,7 +33,7 @@ importClassFrom(GenomicRanges, GRanges)
 
 importClassFrom(Rsamtools, TabixFile)
 
-importFrom(VariantAnnotation, scanVcfHeader)
+#importFrom(VariantAnnotation, scanVcfHeader)
 
 importClassFrom(IRanges, RangedData, DataTable, List, Vector, Annotated, 
 	DataTableORNULL)

@@ -100,7 +100,7 @@ meta.best.cis.eQTLs.chr = function (smpackvec = c("GGdata", "hmyriB36"), rhslist
     SMFilterList = list( 
   function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97),
   function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97)), 
-   exFilterList = list(function(x)x, function(x)x), doPerm=FALSE
+   exFilterList = list(function(x)x, function(x)x), doPerm=FALSE, excludeRadius=NULL
 )
 {
 #
@@ -126,7 +126,7 @@ meta.best.cis.eQTLs.chr = function (smpackvec = c("GGdata", "hmyriB36"), rhslist
 # of gene
 #
     cismapObj = getCisMap(radius = radius, gchr = gchr, schr = schr,
-        geneannopk = geneannopk, snpannopk = snpannopk)
+        geneannopk = geneannopk, snpannopk = snpannopk, excludeRadius=excludeRadius)
     cismap = namelist(cismapObj)
 # map done
 # now ensure commonality of mapped probes
@@ -194,7 +194,7 @@ meta.best.cis.eQTLs.mchr = function (smpackvec = c("GGdata", "hmyriB36"), rhslis
     SMFilterList = list( 
   function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97),
   function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97) ),
-    exFilterList=list(function(x)x, function(x)x), doPerm=FALSE
+    exFilterList=list(function(x)x, function(x)x), doPerm=FALSE, excludeRadius=NULL
         ) {
     ans = lapply( chrnames, function(ch) {
             smchr = paste(smchrpref, ch, sep="")
@@ -205,7 +205,7 @@ meta.best.cis.eQTLs.mchr = function (smpackvec = c("GGdata", "hmyriB36"), rhslis
              smchr = smchr, gchr = gchr, schr = schr,
              geneApply = geneApply, geneannopk = geneannopk,
              snpannopk = snpannopk, SMFilterList=SMFilterList,
-		exFilterList=exFilterList, doPerm=doPerm )
+		exFilterList=exFilterList, doPerm=doPerm, excludeRadius=excludeRadius )
             })
     ans = as(do.call(c, ans), "GRanges")  # RangedData just need c for combination; then mix spaces
     ans[order(elementMetadata(ans)$score, decreasing=TRUE),]
@@ -221,14 +221,14 @@ meta.best.cis.eQTLs = function(smpackvec = c("GGdata", "hmyriB36"),
     SMFilterList = list( 
   function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97),
   function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97) ), 
-  exFilterList=list(function(x)x, function(x)x), nperm=2) {
+  exFilterList=list(function(x)x, function(x)x), nperm=2, excludeRadius=NULL) {
     theCall = match.call()
     obs = meta.best.cis.eQTLs.mchr( smpackvec = smpackvec,
           rhslist=rhslist, folderstem=folderstem, radius=radius, shortfac=shortfac,
           chrnames = chrnames, smchrpref=smchrpref,
           gchrpref=gchrpref, schrpref=schrpref, geneApply=geneApply,
           geneannopk = geneannopk, snpannopk=snpannopk, 
-		SMFilterList = SMFilterList, exFilterList=exFilterList)
+		SMFilterList = SMFilterList, exFilterList=exFilterList, excludeRadius=excludeRadius)
     permans = list()
     for (j in 1:nperm) {
       permans[[j]] = meta.best.cis.eQTLs.mchr( smpackvec = smpackvec,
@@ -236,7 +236,7 @@ meta.best.cis.eQTLs = function(smpackvec = c("GGdata", "hmyriB36"),
           chrnames = chrnames, smchrpref=smchrpref,
           gchrpref=gchrpref, schrpref=schrpref, geneApply=geneApply,
           geneannopk = geneannopk, snpannopk=snpannopk, exFilterList=exFilterList,
-          SMFilterList = SMFilterList, doPerm=TRUE)  # apply permEx over each filter
+          SMFilterList = SMFilterList, doPerm=TRUE, excludeRadius=excludeRadius)  # apply permEx over each filter
       }
     alls = unlist(lapply(permans, function(x)elementMetadata(x)$score))
     fdrs = sapply(elementMetadata(obs)$score, function(x) (sum(alls>=x)/nperm)/sum(elementMetadata(obs)$score>=x))
