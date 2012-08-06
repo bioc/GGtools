@@ -341,7 +341,8 @@ setMethod("transTab", "transManager", function(x) {
  ganno = gsub(".db", "", gannopkname )
  gchr = sapply(mget(x$guniv, get(paste(ganno, "CHR", sep="")), ifnotfound=NA), "[", 1)
  gsym = sapply(mget(x$guniv, get(paste(ganno, "SYMBOL", sep="")), ifnotfound=NA), "[", 1)
- gent = sapply(mget(x$guniv, get(paste(ganno, "ENTREZID", sep="")), ifnotfound=NA), "[", 1)
+ if (gannopkname != "org.Hs.eg.db") gent = sapply(mget(x$guniv, get(paste(ganno, "ENTREZID", sep="")), ifnotfound=NA), "[", 1)
+ else gent = x$guniv
  gn = x$guniv[ theinds ]
  gchr = gchr[ theinds ]
  gsym = gsym[ theinds ]
