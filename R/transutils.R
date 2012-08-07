@@ -125,7 +125,7 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
     geneRanges = NULL, snpRanges = NULL, radius = 2e+06, renameChrs=NULL, 
     probesToKeep=NULL, batchsize=200, genegran=50, shortfac=10, wrapperEndo=NULL,
     geneannopk = "illuminaHumanv1.db", snpannopk = "SNPlocs.Hsapiens.dbSNP.20110815",
-    gchrpref = "", schrpref="ch")
+    gchrpref = "", schrpref="ch", exFilter=function(x)x)
 {
 
 #getCisMap = function( radius=50000, gchr="20",
@@ -153,7 +153,8 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
 #
 # get an image of the expression+genotype data for SNP on specific chromosome snpchr
 #
-    sms = getSS(smpack, snpchr, renameChrs=renameChrs, probesToKeep=probesToKeep, wrapperEndo=wrapperEndo)
+    sms = getSS(smpack, snpchr, renameChrs=renameChrs, probesToKeep=probesToKeep, 
+       wrapperEndo=wrapperEndo, exFilter=exFilter)
     if (!is.null(renameChrs)) snpchr=renameChrs
     guniv = featureNames(sms)   # universe of probes
     smanno = gsub(".db", "", annotation(sms))
