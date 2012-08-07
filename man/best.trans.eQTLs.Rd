@@ -100,9 +100,11 @@ nsFilter2 = function(sms, var.cutoff=.5) {
  sms[ which(alliq > qs), ]
 }
 thefilt = function(x) GTFfilter( nsFilter2 (clipPCs(x, 1:10), var.cutoff=.9 ), lower=.05 )
+tfile = tempfile()
+tfold = dir.create(tfile)
 t1 = best.trans.eQTLs( "GGdata", ~1, as.character(20:22), "22",
         geneannopk="illuminaHumanv1.db", snpannopk= "SNPlocs.Hsapiens.dbSNP.20111119",
-        smFilter=thefilt, snploadprefix="", snplocprefix="ch")
+        smFilter=thefilt, snploadprefix="", snplocprefix="ch", targdirpref=tfile)
 tt1 = transTab(t1)
 tt1o = tt1[ order(tt1[,"sumchisq"], decreasing=TRUE), ][1:10,]
 tt1o
