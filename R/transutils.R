@@ -178,7 +178,7 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
         sep = ""), geneApply = geneApply, shortfac=shortfac)
     if (gsub("chr", "", snpchr) == gsub("chr", "", chrnames[1])) {
         mapobj = getCisMap( radius = radius, gchr = paste(gchrpref, chrnames[1], sep=""),
-                  schr = paste(schrpref, snpchr, sep=""), geneannopk=geneannopk, snpannopk = snpannopk )
+                  schr = paste(schrpref, gsub("chr", "", snpchr), sep=""), geneannopk=geneannopk, snpannopk = snpannopk )
         cisZero(inimgr, mapobj@snplocs, mapobj@generanges, radius=0)   # if SNP are on chrom 1, exclude cis
                              # the gene ranges supplied are already augmented by radius
     }
@@ -198,7 +198,7 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
             shortfac=shortfac)
         if (gsub("chr", "", snpchr) == gsub("chr", "", chrnames[j])) {
             mapobj = getCisMap( radius = radius, gchr = paste(gchrpref, chrnames[j], sep=""),
-                  schr = paste(schrpref, snpchr, sep=""), geneannopk=geneannopk, snpannopk = snpannopk )
+                  schr = paste(schrpref, gsub("chr", "", snpchr), sep=""), geneannopk=geneannopk, snpannopk = snpannopk )
             cisZero(inimgr, mapobj@snplocs, mapobj@generanges, radius=0)   # if SNP are on chrom 1, exclude cis
                              # the gene ranges supplied are already augmented by radius
         }
