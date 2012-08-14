@@ -176,7 +176,7 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
     inimgr = eqtlTests(sms[probeId(pnameList[[chrnames[1]]]),   # start the sifting through transcriptome
         ], rhs, targdir = targdir, runname = paste("tsc_", chrnames[1],  # testing on genes in chrom 1
         sep = ""), geneApply = geneApply, shortfac=shortfac)
-    if (snpchr == chrnames[1]) {
+    if (gsub("chr", "", snpchr) == gsub("chr", "", chrnames[1])) {
         mapobj = getCisMap( radius = radius, gchr = paste(gchrpref, chrnames[1], sep=""),
                   schr = paste(schrpref, snpchr, sep=""), geneannopk=geneannopk, snpannopk = snpannopk )
         cisZero(inimgr, mapobj@snplocs, mapobj@generanges, radius=0)   # if SNP are on chrom 1, exclude cis
@@ -189,14 +189,14 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
         "/", snpchr, "_tssco1_1.ff", sep = ""), feat = "score", 
         ginds = genemap[[1]], batchsize=batchsize)
     unlink(filename(inimgr@fffile))
-    for (j in 2:nchr_genes) {    # continue sifting through transcriptome
+    if (nchr_genes > 1) for (j in 2:nchr_genes) {    # continue sifting through transcriptome
         cat(j)
         gc()
         nxtmgr = eqtlTests(sms[probeId(pnameList[[chrnames[j]]]), 
             ], rhs, targdir = targdir, runname = paste("tsctmp", 
             j, sep = ""), geneApply = geneApply, 
             shortfac=shortfac)
-        if (snpchr == chrnames[j]) {
+        if (gsub("chr", "", snpchr) == gsub("chr", "", chrnames[j])) {
             mapobj = getCisMap( radius = radius, gchr = paste(gchrpref, chrnames[j], sep=""),
                   schr = paste(schrpref, snpchr, sep=""), geneannopk=geneannopk, snpannopk = snpannopk )
             cisZero(inimgr, mapobj@snplocs, mapobj@generanges, radius=0)   # if SNP are on chrom 1, exclude cis
@@ -433,7 +433,7 @@ mtransScores = function (smpackvec, snpchr = "chr1", rhslist, K = 20, targdirpre
          rhslist, targdir = targdir, runname = paste("tsc_", chrnames[1],  # testing on genes in chrom 1
         sep = ""), geneApply = geneApply, shortfac=shortfac)
     rm(cursmsl); gc()
-    if (snpchr == chrnames[1]) {
+    if (gsub("chr", "", snpchr) == gsub("chr", "", chrnames[1])) {
         if (is.null(geneRanges) || is.null(snpRanges)) 
             stop("ranges must be supplied to exclude cis tests")
         cisZero(inimgr, snpRanges, geneRanges, radius)   # if SNP are on chrom 1, exclude cis
@@ -453,7 +453,7 @@ mtransScores = function (smpackvec, snpchr = "chr1", rhslist, K = 20, targdirpre
             runname = paste("tsctmp", 
             j, sep = ""), geneApply = geneApply, shortfac=shortfac)
         rm(cursmsl); gc()
-        if (snpchr == chrnames[j]) {
+        if (gsub("chr", "", snpchr) == gsub("chr", "", chrnames[j])) {
             if (is.null(geneRanges) || is.null(snpRanges)) 
                 stop("ranges must be supplied to exclude cis tests")
             cisZero(nxtmgr, snpRanges, geneRanges, radius)
