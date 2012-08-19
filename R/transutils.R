@@ -249,10 +249,13 @@ updateKfeats = function( sco1, sco2, ind1, ind2, batchsize=200 ) {
 }
 
 
-bindSnpRanges2mgr = function (mgr, snpRanges, badstart=-2, badend=-1)
+bindSnpRanges2mgr = function (mgr, snpRanges, badstart=0, badend=2e9) # longer than longest chr
 {
 #
 # this will get a GRanges instance from snpRanges congruent to mgr snp info
+# aug 20 2012
+# when a SNP is not given location in snpRanges, it will be assumed cis to any gene on same chr
+# as it will be given a long interval for findOverlaps
 #
     dimnt = dimnames(mgr@fffile)
     snpsInMgr = dimnt[[1]]
