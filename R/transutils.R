@@ -343,6 +343,7 @@ setMethod("transTab", "transManager", function(x) {
  theinds = as.numeric(t(as.ram(x$inds)))
  require( gannopkname, character.only=TRUE)
  ganno = gsub(".db", "", gannopkname )
+ gloc = sapply(mget(x$guniv, get(paste(ganno, "CHRLOC", sep="")), ifnotfound=NA), "[", 1)
  gchr = sapply(mget(x$guniv, get(paste(ganno, "CHR", sep="")), ifnotfound=NA), "[", 1)
  gsym = sapply(mget(x$guniv, get(paste(ganno, "SYMBOL", sep="")), ifnotfound=NA), "[", 1)
  if (gannopkname != "org.Hs.eg.db") gent = sapply(mget(x$guniv, get(paste(ganno, "ENTREZID", sep="")), ifnotfound=NA), "[", 1)
@@ -351,8 +352,9 @@ setMethod("transTab", "transManager", function(x) {
  gchr = gchr[ theinds ]
  gsym = gsym[ theinds ]
  gent = gent[ theinds ]
+ gloc = gloc[ theinds ]
  data.frame(snp=sids, sumchisq=thescos, probeid=gn , probechr=gchr, snpchr=x$snpchr,
-    sym=gsym, entrez=gent)
+    sym=gsym, entrez=gent, geneloc=gloc)
 }
 
 
