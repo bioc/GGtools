@@ -188,6 +188,7 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
     topKscores = topKfeats(inimgr, K = K, fn = paste(targdir, 
         "/", snpchr, "_tssco1_1.ff", sep = ""), feat = "score", 
         ginds = genemap[[1]], batchsize=batchsize)
+    kpsnpnames = rownames(inimgr@fffile)
     unlink(filename(inimgr@fffile))
     if (nchr_genes > 1) for (j in 2:nchr_genes) {    # continue sifting through transcriptome
         cat(j)
@@ -199,7 +200,10 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
         if (gsub("chr", "", snpchr) == gsub("chr", "", chrnames[j])) {
             mapobj = getCisMap( radius = radius, gchr = paste(gchrpref, chrnames[j], sep=""),
                   schr = paste(schrpref, gsub("chr", "", snpchr), sep=""), geneannopk=geneannopk, snpannopk = snpannopk )
-            cisZero(inimgr, mapobj@snplocs, mapobj@generanges, radius=0)   # if SNP are on chrom 1, exclude cis
+#
+# huge bug below, nxtmgr was previously inimgr ... found Aug 21 2012
+#
+            cisZero(nxtmgr, mapobj@snplocs, mapobj@generanges, radius=0)   # if SNP are on chrom 1, exclude cis
                              # the gene ranges supplied are already augmented by radius
         }
         nxtKinds = topKfeats(nxtmgr, K = K, fn = paste(targdir, 
@@ -215,7 +219,9 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
     baseout = list(scores = topKscores, inds = topKinds, guniv = guniv, K=K, snpchr=snpchr,
         chrnames=chrnames,
 	smsanno = annotation(sms),
-        snpnames = rownames(inimgr@fffile), call = theCall, date=date(), shortfac=shortfac)
+# previous to 21 aug 2012 snpnames were assigned here from rownames inimgr@fffile; these are now
+# memoed above
+        snpnames = kpsnpnames, call = theCall, date=date(), shortfac=shortfac)
     new("transManager", base=baseout)
 }
 
@@ -249,7 +255,7 @@ updateKfeats = function( sco1, sco2, ind1, ind2, batchsize=200 ) {
 }
 
 
-bindSnpRanges2mgr = function (mgr, snpRanges, badstart=0, badend=2e9) # longer than longest chr
+bindSnpRanges2mgr = function (mgr, snpRanges, badstart=0L, badend=1e9L) # longer than longest chr
 {
 #
 # this will get a GRanges instance from snpRanges congruent to mgr snp info
