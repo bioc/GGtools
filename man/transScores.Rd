@@ -17,7 +17,7 @@ transScores(smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsco", geneAppl
   genegran = 50, shortfac = 10, wrapperEndo = NULL, 
   geneannopk = "illuminaHumanv1.db", 
   snpannopk = "SNPlocs.Hsapiens.dbSNP.20110815", gchrpref = "",
-                 schrpref = "ch")
+                 schrpref = "ch", exFilter=function(x)x)
 
 mtransScores (smpackvec, snpchr = "chr1", rhslist, K = 20, targdirpref = "multtsco",
     geneApply = lapply, chrnames = paste("chr", as.character(1:22), sep=""),
@@ -102,6 +102,8 @@ character string naming a Bioconductor .db expression chip annotation package
   \item{snpannopk}{
 character string naming a Bioconductor SNPlocs.* SNP metadata package
 }
+  \item{exFilter}{function to transform ExpressionSet component of
+retrieved smlSet, to reduce probe sets in use, for example}
 }
 %\details{
 %%  ~~ If necessary, more details than the description above ~~

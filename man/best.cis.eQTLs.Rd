@@ -58,18 +58,21 @@ meta.best.cis.eQTLs(smpackvec = c("GGdata", "hmyriB36"), rhslist = list(~1,
     snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427", SMFilterList = list( 
    function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97), 
    function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97) ),
- nperm = 2) 
+    exFilterList = list(function(x)x, function(x)x),
+   nperm = 2, excludeRadius=NULL) 
 
-meta.All.cis.eQTLs(maxfdr = 0.05, inbestcis = NULL, smpackvec = c("GGdata", "hmyriB36"),
+meta.All.cis.eQTLs(minchisq, smpackvec = c("GGdata", "hmyriB36"),
   rhslist = list(~1, ~1), folderstem = "cisScratch",
   radius = 50000, shortfac=100, chrnames = as.character(1:22), smchrpref = "",
   gchrpref = "", schrpref = "ch", geneApply = lapply,
   geneannopk = "illuminaHumanv1.db",
   snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
-  smFilter4cis = function(x) nsFilter(MAFfilter(clipPCs(x, 1:10),
-  lower = 0.05), var.cutoff = 0.85),
-  smFilter4all = function(x) MAFfilter(clipPCs(x, 1:10),
-  lower = 0.05),
+  SMFilterList = list(function(x) nsFilter(MAFfilter(x,
+                 lower = 0.05), var.cutoff = 0.97), function(x)
+                 nsFilter(MAFfilter(x, lower = 0.05), var.cutoff =
+                 0.97)), 
+  exFilterList = list(function(x) x, function(x)
+                 x),
   nperm = 2)
 
 
@@ -77,7 +80,7 @@ chromsUsed(x)
 
 fdr(x)
 
-fullreport(x, type)
+fullreport(x, type, ...)
 
 getAll(x)
 
@@ -151,6 +154,8 @@ list of functions, one element per smlSet package used in meta analysis,
  accepting and returning an \code{\link[GGBase]{smlSet-class}}
 instance
 }
+  \item{minchisq}{threshold on test statistic value that must
+be met to include records on SNPs in the All.cis.eQTLs report}
   \item{nperm}{
 number of permutations to be used for plug-in FDR computation}
   \item{useME}{logical; if TRUE, use the rudimentary interface
@@ -184,6 +189,10 @@ if FALSE, the mapCache environment returned will be empty -- NB, this
 feature has been found to add too much volume to returned
 objects and is suspended...}
  \item{exFilter}{this function is passed to
+\code{\link[GGBase]{getSS}}; see Details}
+ \item{exFilterList}{for metaanalytic applications,
+a list of functions in correspondence with the elements of
+\code{smpackvec} to be passed to
 \code{\link[GGBase]{getSS}}; see Details}
  \item{getDFFITS}{logical; a component storing max DFFITS value for
 each gene will be retained if this argument TRUE}
