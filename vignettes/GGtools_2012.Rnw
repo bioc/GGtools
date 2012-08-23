@@ -413,7 +413,7 @@ fn = probeId(featureNames(g20))
 exTx = function(x) MAFfilter( x[fn, ], lower=0.05)
 b1 = best.cis.eQTLs("GGdata", ~male,  radius=1e6,
    folderstem="db2", nperm=2, geneApply=mclapply,
-   smFilter= exTx, chrnames="20")
+   smFilter= exTx, chrnames="20", snpannopk="SNPlocs.Hsapiens.dbSNP.20111119")
 <<lkc>>=
 b1
 @
@@ -518,8 +518,38 @@ familial aggregation in expression after heterogeneity reduction?
 to be removed for heterogeneity reduction?
 \end{enumerate}
 
+\clearpage
+
+\section{Appendix: building your own structures}
+
+The following code illustrates construction of a minimal
+smlSet instance.
+<<domoo>>=
+library(Biobase)
+suppressPackageStartupMessages(library(GGtools))
+ex = matrix(0, nr=5, nc=3)
+pd = data.frame(v1 = 1:3, v2=5:7)
+colnames(ex) = rownames(pd) = LETTERS[1:3]
+adf = AnnotatedDataFrame(pd)
+rownames(ex) = letters[1:5]
+es = ExpressionSet(ex, phenoData=adf)
+exprs(es)
+pData(es)
+library(snpStats)
+mysnps = matrix(rep(1:3, 10), nr=3)  # note 1=A/A, ... 0 = NA
+rownames(mysnps) = colnames(ex)
+mysm = new("SnpMatrix", mysnps)
+as(mysm, "character")
+as(mysm, "numeric")
+ssm(library(GGtools))
+sml = make_smlSet(es, list(c1=mysm))
+annotation(sml)
+colnames(smList(sml)[[1]])
+@
+
 
 \clearpage
+
 \section{Session information}
 <<getss,results=tex>>=
 toLatex(sessionInfo())
