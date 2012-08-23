@@ -461,7 +461,7 @@ g20f = exTx(g20)
 <<lkc2,cache=TRUE>>=
 b2 = best.cis.eQTLs("GGdata", ~male,  radius=1e6,
    folderstem="db2", nperm=2, geneApply=mclapply,
-   smFilter= exTx, chrnames="20")
+   smFilter= exTx, chrnames="20", snpannopk="SNPlocs.Hsapiens.dbSNP.20111119")
 b2
 @
 
