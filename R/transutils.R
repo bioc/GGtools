@@ -336,12 +336,15 @@ nthScores = function(tm, n) {
 
 
 
-setGeneric("transTab", function(x)standardGeneric("transTab"))
-setMethod("transTab", "transManager", function(x) {
- .transTab(x@base)
+setGeneric("transTab", function(x, snps2keep, ...)standardGeneric("transTab"))
+setMethod("transTab", c("transManager", "missing"), function(x, snps2keep, ...) {
+ .transTab(x@base, NULL, ...)
+})
+setMethod("transTab", c("transManager", "character"), function(x, snps2keep, ...) {
+ .transTab(x@base, snps2keep, ...)
 })
 
-.transTab = function( x ) {
+.transTab = function( x, snps2keep=NULL, ... ) {
  gannopkname = x$smsanno
  K = x$K
  sids = rep(x$snpnames, each=K )
@@ -359,8 +362,10 @@ setMethod("transTab", "transManager", function(x) {
  gsym = gsym[ theinds ]
  gent = gent[ theinds ]
  gloc = gloc[ theinds ]
- data.frame(snp=sids, sumchisq=thescos, probeid=gn , probechr=gchr, snpchr=x$snpchr,
-    sym=gsym, entrez=gent, geneloc=gloc)
+ okinds = 1:length(sids)
+ if (!is.null(snps2keep)) okinds = which(sids %in% snps2keep) 
+ data.frame(snp=sids[okinds], sumchisq=thescos[okinds], probeid=gn[okinds] , probechr=gchr[okinds], snpchr=x$snpchr,
+    sym=gsym[okinds], entrez=gent[okinds], geneloc=gloc[okinds])
 }
 
 

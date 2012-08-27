@@ -8,12 +8,16 @@ tabulate results of transScores run
 tabulate results of transScores run
 }
 \usage{
-transTab(x)
+transTab(x, snps2keep=NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-a list, as returned by slot(y, "base"), where y is a transManager instance.
+a transManager instance.
+}
+  \item{snps2keep}{
+character vector used for filtering snps whose scores will be retained;
+intersection with snps named in x will be used.
 }
 %  \item{snpchr}{
 %%%     ~~Describe \code{snpchr} here~~
