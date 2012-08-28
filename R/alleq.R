@@ -78,7 +78,11 @@ cat("PHASE 2: extracting associations passing cis threshold...\n")
     ans = data.frame(chr=gchr, probe = satpro, snpid = unlist(satsnp), score = as.numeric(unlist(satcis)),
         maxfdr=maxfdr, stringsAsFactors=FALSE)
     scoredf = ans[order(ans$score, decreasing=TRUE),]
-    fullans = RangedData(seqnames=gchr, ranges=cismapObj@generanges[scoredf$probe])
+    tmpr = cismapObj@generanges[scoredf$probe]
+    svnm = names(tmpr)
+    names(tmpr) = NULL
+    fullans = RangedData(seqnames=gchr, ranges=tmpr)
+    rownames(fullans) = make.names(svnm, unique=TRUE)
     fullans$score = scoredf$score   # we are assuming that the RangedDat construction does not alter row order!
     fullans$snpid = scoredf$snpid
     fullans$probeid = scoredf$probe
