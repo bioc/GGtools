@@ -1,5 +1,6 @@
 \name{transScores}
 \alias{transScores}
+\alias{meta.transScores}
 \alias{mtransScores}
 \alias{tr1_obs}
 \alias{tr1_perm}
@@ -19,10 +20,15 @@ transScores(smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsco", geneAppl
   snpannopk = "SNPlocs.Hsapiens.dbSNP.20110815", gchrpref = "",
                  schrpref = "ch", exFilter=function(x)x)
 
-mtransScores (smpackvec, snpchr = "chr1", rhslist, K = 20, targdirpref = "multtsco",
-    geneApply = lapply, chrnames = paste("chr", as.character(1:22), sep=""),
-    geneRanges = NULL, snpRanges = NULL, radius = 2e+06, renameChrs=NULL,
-    batchsize=200, genegran=50, probesToKeep=NULL, shortfac=10, wrapperEndo=NULL)
+meta.transScores (smpackvec = c("GGdata", "hmyriB36"),
+    snpchr = "22", rhsList=list(~1, ~1), K = 20, targdirpref = "mtsco",
+    geneApply = lapply, chrnames = as.character(21:22),
+    radius = 2e+06, renameChrs=NULL,
+    probesToKeep=NULL, batchsize=200, genegran=50, shortfac=10, wrapperEndo=NULL,
+    geneannopk = "illuminaHumanv1.db", snpannopk = "SNPlocs.Hsapiens.dbSNP.20110815",
+    gchrpref = "", schrpref="ch",
+    exFilterList= list(function(x)x, function(x)x),
+    SMFilterList = list(function(x)x, function(x)x))
 
 }
 %- maybe also 'usage' for other objects documented here.
@@ -84,7 +90,9 @@ passed to \code{\link{eqtlTests}}
 passed to \code{\link{eqtlTests}}
 }
   \item{wrapperEndo}{
-a function accepting and returning an smlSet instance
+a function accepting and returning an smlSet instance, evaluated
+before numerical analysis of associations, which will be executed
+on the output of this function
 }
   \item{gchrpref}{
 prefix to convert \code{chrnames} into appropriate tokens for
@@ -104,6 +112,10 @@ character string naming a Bioconductor SNPlocs.* SNP metadata package
 }
   \item{exFilter}{function to transform ExpressionSet component of
 retrieved smlSet, to reduce probe sets in use, for example}
+    \item{exFilterList}{list of functions serving as exFilters for
+each of the elements of smpackvec}
+    \item{SMFilterList}{list of functions servicing as wrapperEndos
+for each of the elements of smpackvec}
 }
 %\details{
 %%  ~~ If necessary, more details than the description above ~~
