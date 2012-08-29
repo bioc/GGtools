@@ -3,7 +3,7 @@ meta.transScores = function (smpackvec = c("GGdata", "hmyriB36"),
     geneApply = lapply, chrnames = as.character(21:22), 
     radius = 2e+06, renameChrs=NULL, 
     probesToKeep=NULL, batchsize=200, genegran=50, shortfac=10, wrapperEndo=NULL,
-    geneannopk = "illuminaHumanv1.db", snpannopk = "SNPlocs.Hsapiens.dbSNP.20110815",
+    geneannopk = "illuminaHumanv1.db", snpannopk = "SNPlocs.Hsapiens.dbSNP.20111119",
     gchrpref = "", schrpref="ch", 
     exFilterList= list(function(x)x, function(x)x),
     SMFilterList = list(function(x)x, function(x)x))
