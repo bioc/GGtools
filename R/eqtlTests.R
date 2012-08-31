@@ -88,7 +88,7 @@ eqtlTests = function(smlSet, rhs=~1-1,
       numans = snp.rhs.tests(fmla, snp.data=snpdata, data=pData(smlSet), 
           family=glmfamily , uncertain=useUncertain)@chisq
       miss = is.na(numans)
-      if (any(miss)) numans[which(miss)] = rchisq(length(which(miss)), 1)
+      if (any(miss)) numans[which(miss)] = 0 #rchisq(length(which(miss)), 1)
       store[, gene, add=TRUE] = shortfac*numans
       NULL
       }) # end gene apply
@@ -163,7 +163,7 @@ eqtlTests2 = function(smlSet, rhs=~1-1,
       numans = snp.rhs.tests(fmla, snp.data=snpdata, data=pData(smlSet), 
           family=glmfamily , uncertain=useUncertain)@chisq
       miss = is.na(numans)
-      if (any(miss)) numans[which(miss)] = rchisq(length(which(miss)), 1)
+      if (any(miss)) numans[which(miss)] = 0 #rchisq(length(which(miss)), 1)
       store[, gene, add=TRUE] = shortfac*numans
       NULL
       }) # end gene apply

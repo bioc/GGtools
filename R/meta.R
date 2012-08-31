@@ -80,7 +80,7 @@ meqtlTests = function(listOfSmls, rhslist,
      numans = snp.rhs.tests(fmla, snp.data=snpdata, 
          data=pData(smlSet), family=glmfamily, uncertain=useUncertain)@chisq
      miss = is.na(numans)
-     if (any(miss)) numans[which(miss)] = rchisq(length(which(miss)), 1)
+     if (any(miss)) numans[which(miss)] = 0 #rchisq(length(which(miss)), 1)
      store[, gene, add=TRUE] = as.integer(shortfac*numans)
      NULL
     }

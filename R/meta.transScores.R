@@ -64,14 +64,15 @@ meta.transScores = function (smpackvec = c("GGdata", "hmyriB36"),
     nchr_genes = length(names(pnameList))
     targdir = paste(targdirpref, snpchr, sep="")
 #
-#  sanitize smList probes
+#  sanitize smList probes for current chromosome
 #
-    smsList = lapply(smsList, function(x) x[probeId(pnameList[[chrnames[1] ]]) ] )
+    cursmsList = lapply(smsList, function(x) x[probeId(pnameList[[chrnames[1] ]]) ] )
     
 #
 # start with first element of chrnames vector
 #
-    inimgr = meqtlTests(listOfSmls=smsList,   # start the sifting through transcriptome
+#eqtlTests(sms[probeId(pnameList[[chrnames[j]]]), ]...
+    inimgr = meqtlTests(listOfSmls=cursmsList,   # start the sifting through transcriptome
         rhslist=rhsList, targdir = targdir, 
         runname = paste("mtsc_", chrnames[1],  sep = ""), 
         geneApply = geneApply, shortfac=shortfac)
@@ -92,7 +93,10 @@ meta.transScores = function (smpackvec = c("GGdata", "hmyriB36"),
     if (nchr_genes > 1) for (j in 2:nchr_genes) {    # continue sifting through transcriptome
         cat(j)
         gc()
-       nxtmgr = meqtlTests(listOfSmls=smsList,   # start the sifting through transcriptome
+#  sanitize smList probes for current chromosome
+#
+       cursmsList = lapply(smsList, function(x) x[probeId(pnameList[[chrnames[j] ]]) ] )
+       nxtmgr = meqtlTests(listOfSmls=cursmsList,   # start the sifting through transcriptome
           rhslist=rhsList, targdir = targdir,
           runname = paste("mtsc_", chrnames[j],  sep = ""), 
           geneApply = geneApply, shortfac=shortfac)
