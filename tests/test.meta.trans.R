@@ -1,5 +1,6 @@
 
 heavyTest = function() {
+library(GGtools)
 
 # verifies that transScores agrees with snp.rhs.tests to obtain best
 # trans scores
