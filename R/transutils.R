@@ -124,7 +124,7 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
     geneApply = lapply, chrnames = paste("chr", as.character(1:22), sep=""), 
     geneRanges = NULL, snpRanges = NULL, radius = 2e+06, renameChrs=NULL, 
     probesToKeep=NULL, batchsize=200, genegran=50, shortfac=10, wrapperEndo=NULL,
-    geneannopk = "illuminaHumanv1.db", snpannopk = "SNPlocs.Hsapiens.dbSNP.20110815",
+    geneannopk = "illuminaHumanv1.db", snpannopk = "SNPlocs.Hsapiens.dbSNP.20111119",
     gchrpref = "", schrpref="ch", exFilter=function(x)x)
 {
 

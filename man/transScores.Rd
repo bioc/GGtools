@@ -47,7 +47,7 @@ name or vector of chromosome names of SNPs of interest
   \item{rhs}{
 right hand side of snp.rhs.tests model for which expression is left hand side, e.g., covariates other than genotype
 }
-  \item{rhslist}{
+  \item{rhsList}{
 list of right hand side of snp.rhs.tests model for which expression is left hand side, e.g., covariates other than genotype,
 one per element of \code{smpackvec}
 }

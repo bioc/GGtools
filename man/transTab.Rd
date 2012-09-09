@@ -8,7 +8,7 @@ tabulate results of transScores run
 tabulate results of transScores run
 }
 \usage{
-transTab(x, snps2keep=NULL)
+transTab(x, snps2keep, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -19,6 +19,7 @@ a transManager instance.
 character vector used for filtering snps whose scores will be retained;
 intersection with snps named in x will be used.
 }
+  \item{\dots}{not used}
 %  \item{snpchr}{
 %%%     ~~Describe \code{snpchr} here~~
 %string denoting the chromosome from which SNP genotypes were drawn for trans-association with gene expression
