@@ -196,6 +196,7 @@ a list of functions in correspondence with the elements of
 \code{\link[GGBase]{getSS}}; see Details}
  \item{getDFFITS}{logical; a component storing max DFFITS value for
 each gene will be retained if this argument TRUE}
+ \item{\dots}{not used}
 }
 \details{
 \code{geneApply} can be set to \code{parallel::mclapply}, for example,

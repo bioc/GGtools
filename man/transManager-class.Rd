@@ -3,7 +3,6 @@
 \docType{class}
 \alias{transManager-class}
 \alias{show,transManager-method}
-\alias{transTab,transManager-method}
 \alias{topGenes}
 \alias{topScores}
 \alias{nthScores}
@@ -42,10 +41,11 @@ to scores, and other metadata about the run }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-%\seealso{
+\seealso{
+\code{\link{transTab}}
 %%%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
 %%%  ~~or \code{\linkS4class{CLASSNAME}} for links to other classes ~~~
-%}
+}
 \examples{
 showClass("transManager")
 }

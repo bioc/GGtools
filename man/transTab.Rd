@@ -1,5 +1,7 @@
 \name{transTab}
 \alias{transTab}
+\alias{transTab,transManager,character-method}
+\alias{transTab,transManager,missing-method}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 tabulate results of transScores run
