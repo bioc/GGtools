@@ -1,24 +1,36 @@
-                        Dear Emacs, please make this -*-Text-*- mode!
-        **************************************************
-        *                                                *
-        *        News for GGtools in Bioc (devel)        *
-        *                                                *
-        **************************************************
+CHANGES IN VERSION 4.6
+----------------------
 
+    o  The primary tools for one-population analyses are best.cis.eQTLs and
+       transScores.  Multipopulation analyses are handled with 
+       meta.best.cis.eQTLs and meta.transScores.
 
-SIGNIFICANT USER-VISIBLE CHANGES
+    o  High volume genotype data has been addressed by packaging ExpressionSet
+       and chromosome-specific SnpMatrix instances; requests for expression
+       plus genotype data are directed to packages mediated through 
+       GGBase::getSS.
+
+    o  Two species of data filtering parameters that may be used jointly 
+       in the primary tools are exFilter, which operates on expression 
+       component prior to any analyses, and smFilter, which operates on the
+       entire smlSet.  exFilter may be used to isolate samples of interest
+       early in the workflow, for example when an expression plus genotype
+       package includes samples from distinct tissues on the same individuals.
+
+    o  june 2012: exFilter facility properly handled in best.cis.eQTLs.mchr
 
     o  may 2012: best.cis.eQTLs has getDFFITS option
 
-    o  march 2010: gwSnpTests and so forth will be deprecated in favor
+    o  march 2010: gwSnpTests and so forth are deprecated in favor
        of simpler interfaces that can be more readily parallelized.  New
        IRanges-based computations for cis restrictions will be introduced
 
+
+CHANGES IN VERSION 3.0
+----------------------
+
     o  march 2008: complete overhaul to use snpMatrix genotype 
        representation.  gwSnpScreen is main interface
-
-INFRASTRUCTURE CHANGES
-    o  june 2012: exFilter facility properly handled in best.cis.eQTLs.mchr
 
     o  manage warnings of ff.[ a bit better, May 13 2012
 
