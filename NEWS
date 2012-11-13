@@ -1,3 +1,9 @@
+CHANGES IN VERSION 4.7
+----------------------
+
+    o  The sensanal() function now operates on a sensiCisInput instance to
+       help provide an overview of sensitivity analysis for cis-eQTL searches
+
 CHANGES IN VERSION 4.6
 ----------------------
 
