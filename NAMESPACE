@@ -41,7 +41,8 @@ importClassFrom(IRanges, RangedData, DataTable, List, Vector, Annotated,
 exportMethods("gwSnpTests", "show", "topFeats", "plot", transTab)
 
 exportClasses("eqtlTestsManager", "eqtlEstimatesManager", "mcwBestCis",
-   "gwSnpScreenResult", transManager, allSigCis)
+   "gwSnpScreenResult", transManager, allSigCis, sensiCisInput,
+   sensiCisOutput)
 
 export(gwSnpTests, topSnps, eqtlTests, topFeats, getCisMap, pData, plot,
 	best.cis.eQTLs, chromsUsed, fullreport, 
@@ -49,6 +50,6 @@ export(gwSnpTests, topSnps, eqtlTests, topFeats, getCisMap, pData, plot,
 	topScores, topGenes, locusNames, geneNames, geneIndcol, nthScores,
 	vcf2sm, All.cis.eQTLs, fdr, transScores, getBest, getAll, 
 	getCall, transTab, meqtlTests, meta.best.cis.eQTLs, meta.All.cis.eQTLs,
-	meta.transScores, annotation)
+	meta.transScores, annotation, sensanal)
 
 export(best.trans.eQTLs)
