@@ -14,8 +14,8 @@ bindmaf(smpack = "GGdata", smchr = "20", obj)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{smpack}{
-name of a package to which \code{\link[GGBase]}{getSS} can be applied
-to generate an instance of \code{\link[GGBase}{smlSet-class}
+name of a package to which \code{\link[GGBase]{getSS}} can be applied
+to generate an instance of \code{\link[GGBase]{smlSet-class}}
 }
   \item{smchr}{
 the chromosome name as used in the names of the \code{smList} output for
