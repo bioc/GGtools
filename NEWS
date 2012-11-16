@@ -1,5 +1,7 @@
 CHANGES IN VERSION 4.7
 ----------------------
+    o  The snplocsDefault() function has been added to simplify appropriate
+       selection of SNPlocs.Hsapiens.dbSNP.* to a common value for all usages
 
     o  The sensanal() function now operates on a sensiCisInput instance to
        help provide an overview of sensitivity analysis for cis-eQTL searches
