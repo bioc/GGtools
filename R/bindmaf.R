@@ -23,3 +23,15 @@
   fr
  }
 
+richNull = function(..., MAFlb=.01, npc=10, radius=250000,
+   nperm=1, innerFilt=function(x)x) {
+  bigfilt = function(z) MAFfilter(clipPCs(permEx(innerFilt(z)), 1:npc), lower=MAFlb)
+  inargs = list(...)
+  if (any(names(inargs) %in% c("nperm", "npc", "radius", "MAFlb", "innerFilt"))) stop(
+		"reserving argnames 'nperm', 'npc', 'radius', 'MAFlb', 'innerFilt', please resubmit without using these")
+  lapply(1:nperm, function(x)
+    bindmaf(smpack=inargs$smpack,
+            smchr=inargs$chrnames, 
+            obj=best.cis.eQTLs( ..., smFilter=bigfilt, nperm=1 )))
+}
+ 
