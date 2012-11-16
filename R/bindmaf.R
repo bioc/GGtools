@@ -15,7 +15,12 @@
   names(fr) = toget
   fr = fr[ok]
   values(fr)$MAF = mafs
-  ranges(fr) = ranges(fr)-rad
+#
+# FIXME: need to get more detail for distances near chromosome end
+# for now, just take midpoint of expanded interval as gene location
+# for reported distance to SNP
+#
+  ranges(fr) = ranges(fr)-pmin(.5*width(fr), rad)
   mindist = pmin(abs(fr$snploc-start(fr)), abs(fr$snploc-end(fr)))
   swithing = which((fr$snploc >= start(fr)) & (fr$snploc <= end(fr)))
   if (length(swithing)>0) mindist[swithing] = 0
