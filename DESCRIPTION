@@ -1,6 +1,6 @@
 Package: GGtools
 Title: software and data for analyses in genetics of gene expression
-Version: 4.7.1
+Version: 4.7.2
 Author: VJ Carey <stvjc@channing.harvard.edu>
 Description: software and data for analyses in genetics of gene expression
 Suggests: GGdata, illuminaHumanv1.db, SNPlocs.Hsapiens.dbSNP.20111119
@@ -16,6 +16,6 @@ LazyLoad: yes
 Packaged: 2012-01-18 03:39:51 UTC; stvjc
 Collate: AllClasses.R AllGenerics.R eqtlTests.R             
 	managers.R topFeats.R gwSnpTests.R snpsCisToGenes.R
-	relocate.R topSnps.R 
+	relocate.R topSnps.R snplocsDefault.R
 	transutils.R vcfutils.R eqtlEstimates.R alleq.R meta.R eqME.R
-	meta.all.R best.trans.eQTLs.R meta.transScores.R summInfra.R
+	meta.all.R best.trans.eQTLs.R meta.transScores.R summInfra.R bindmaf.R

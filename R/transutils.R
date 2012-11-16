@@ -124,13 +124,13 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
     geneApply = lapply, chrnames = paste("chr", as.character(1:22), sep=""), 
     geneRanges = NULL, snpRanges = NULL, radius = 2e+06, renameChrs=NULL, 
     probesToKeep=NULL, batchsize=200, genegran=50, shortfac=10, wrapperEndo=NULL,
-    geneannopk = "illuminaHumanv1.db", snpannopk = "SNPlocs.Hsapiens.dbSNP.20111119",
+    geneannopk = "illuminaHumanv1.db", snpannopk = snplocsDefault(),
     gchrpref = "", schrpref="ch", exFilter=function(x)x)
 {
 
 #getCisMap = function( radius=50000, gchr="20",
 #  schr="ch20", geneannopk="illuminaHumanv1.db",
-#     snpannopk="SNPlocs.Hsapiens.dbSNP.20100427", as.GRangesList=FALSE ) {
+#     snpannopk=snplocsDefault(), as.GRangesList=FALSE ) {
 
 #
 # objective is a small-footprint accumulation of trans-eQTL tests
@@ -309,7 +309,7 @@ cisZero = function (mgr, snpRanges, geneRanges, radius)
 
 #getCisMap = function( radius=50000, gchr="20",
 #  schr="ch20", geneannopk="illuminaHumanv1.db",
-#     snpannopk="SNPlocs.Hsapiens.dbSNP.20100427", as.GRangesList=FALSE ) {
+#     snpannopk=snplocsDefault(), as.GRangesList=FALSE ) {
 
     realSnpRanges = bindSnpRanges2mgr( mgr, snpRanges )
     realGeneRanges = bindGeneRanges2mgr( mgr, geneRanges )

@@ -50,6 +50,6 @@ export(gwSnpTests, topSnps, eqtlTests, topFeats, getCisMap, pData, plot,
 	topScores, topGenes, locusNames, geneNames, geneIndcol, nthScores,
 	vcf2sm, All.cis.eQTLs, fdr, transScores, getBest, getAll, 
 	getCall, transTab, meqtlTests, meta.best.cis.eQTLs, meta.All.cis.eQTLs,
-	meta.transScores, annotation, sensanal)
+	meta.transScores, annotation, sensanal, snplocsDefault, bindmaf)
 
 export(best.trans.eQTLs)

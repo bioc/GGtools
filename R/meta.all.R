@@ -1,7 +1,7 @@
 
 meta.all.cis.eQTLs.chr = function (minchisq, smpackvec = c("GGdata", "hmyriB36"), rhslist = list(~1, ~1), folderstem = "mcisScratch",
     radius = 50000, smchr = "20", gchr = "20", schr = "ch20", shortfac=100,
-    geneApply = lapply, geneannopk = "illuminaHumanv1.db", snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
+    geneApply = lapply, geneannopk = "illuminaHumanv1.db", snpannopk = snplocsDefault(),
     SMFilterList = list( 
   function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97),
   function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97)), 
@@ -108,7 +108,7 @@ meta.all.cis.eQTLs.mchr = function (minchisq, smpackvec = c("GGdata", "hmyriB36"
     smchrpref = "", gchrpref = "", schrpref = "ch",
     geneApply = lapply,
       geneannopk = "illuminaHumanv1.db",
-      snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
+      snpannopk = snplocsDefault(),
     SMFilterList = list( 
   function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97),
   function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97) ),
@@ -135,7 +135,7 @@ meta.All.cis.eQTLs = function(minchisq, smpackvec = c("GGdata", "hmyriB36"),
     smchrpref = "", gchrpref = "", schrpref = "ch",
     geneApply = lapply,
       geneannopk = "illuminaHumanv1.db",
-      snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
+      snpannopk = snplocsDefault(),
     SMFilterList = list( 
   function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97),
   function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97) ), 

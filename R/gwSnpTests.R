@@ -129,7 +129,7 @@ setMethod("plot", c("gwSnpScreenResult", "character"),  # y bound to location pa
 #
 # for deprecation in 2012 -- use tracks!
 #
-  function(x, y="SNPlocs.Hsapiens.dbSNP.20100427", noSmooth=FALSE, npts=500, ...) {
+  function(x, y=snplocsDefault(), noSmooth=FALSE, npts=500, ...) {
    allpv = snpStats:::p.value(x@.Data[[1]])
    rsn = x@.Data[[1]]@snp.names
    names(allpv) = rsn

@@ -75,7 +75,7 @@ snpsCisToGenes = function( radius, chr, geneids, genestart, geneend, snpids, snp
   
 getCisMap = function( radius=50000, gchr="20", 
   schr="ch20", geneannopk="illuminaHumanv1.db", 
-     snpannopk="SNPlocs.Hsapiens.dbSNP.20100427", as.GRangesList=FALSE,
+     snpannopk=snplocsDefault(), as.GRangesList=FALSE,
      excludeRadius=NULL ) {
 #
 # acquires cis map for one chromosome
@@ -143,7 +143,7 @@ setMethod("show", "mcwBestCis", function(object) {
 
 best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScratch", shortfac=100,
     radius = 50000, smchr = "20", gchr = "20", schr = "ch20",
-    geneApply = lapply, geneannopk = "illuminaHumanv1.db", snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
+    geneApply = lapply, geneannopk = "illuminaHumanv1.db", snpannopk = snplocsDefault(),
     smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05),
         var.cutoff = 0.97), useME=FALSE, excludeRadius=NULL, exFilter=function(x)x, mapCache=new.env(),
 	getDFFITS=FALSE)
@@ -244,7 +244,7 @@ best.cis.eQTLs.mchr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisSc
     smchrpref = "", gchrpref = "", schrpref = "ch",
     geneApply = lapply, 
       geneannopk = "illuminaHumanv1.db", 
-      snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
+      snpannopk = snplocsDefault(),
     smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05),
         var.cutoff = 0.97), useME=FALSE, 
     excludeRadius=NULL, exFilter=function(x)x, mapCache= new.env(),
@@ -271,7 +271,7 @@ best.cis.eQTLs = function(smpack = "GGdata",
     smchrpref = "", gchrpref = "", schrpref = "ch",
     geneApply = lapply, 
       geneannopk = "illuminaHumanv1.db", 
-      snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
+      snpannopk = snplocsDefault(),
     smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05),
         var.cutoff=.97), nperm=2, useME=FALSE, excludeRadius=NULL, exFilter=function(x)x,
 	keepMapCache=FALSE, getDFFITS=FALSE) {
