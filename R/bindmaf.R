@@ -33,6 +33,6 @@ richNull = function(..., MAFlb=.01, npc=10, radius=250000,
   lapply(1:nperm, function(x)
     bindmaf(smpack=inargs$smpack,
             smchr=inargs$chrnames, 
-            obj=best.cis.eQTLs( ..., smFilter=bigfilt, nperm=1 )))
+            obj=best.cis.eQTLs( ..., smFilter=bigfilt, nperm=0 )))
 }
  
