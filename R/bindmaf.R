@@ -29,8 +29,8 @@
  }
 
 richNull = function(..., MAFlb=.01, npc=10, radius=250000,
-   nperm=1, innerFilt=function(x)x) {
-  bigfilt = function(z) MAFfilter(clipPCs(permEx(innerFilt(z)), 1:npc), lower=MAFlb)
+   nperm=1, innerFilt=function(x)x, outerfilt=function(x)x) {
+  bigfilt = function(z) outerfilt(MAFfilter(clipPCs(permEx(innerFilt(z)), 1:npc), lower=MAFlb))
   inargs = list(...)
   if (any(names(inargs) %in% c("nperm", "npc", "radius", "MAFlb", "innerFilt"))) stop(
 		"reserving argnames 'nperm', 'npc', 'radius', 'MAFlb', 'innerFilt', please resubmit without using these")
