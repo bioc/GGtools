@@ -8,23 +8,32 @@
   toget = togetv$snpid
   togetloc = togetv$snploc
   smls = getSS(smpack, smchr)
+  probeanno = annotation(smls)
+  glocenv = get(paste(gsub(".db", "", probeanno), "CHRLOC", sep=""))
+  glocendenv = get(paste(gsub(".db", "", probeanno), "CHRLOCEND", sep=""))
   summ = col.summary(smList(smls)[[smchr]])
   rn = rownames(summ)
   ok = intersect(toget, rn)
   mafs = summ[ok,"MAF"]
   names(fr) = toget
-  fr = fr[ok]
+  fr = fr[ok]  #  now we have the right set of probe ids
+  okpr = values(fr)$probeid
+  gstarts = sapply(mget(okpr, glocenv), "[", 1)
+  gends = sapply(mget(okpr, glocendenv), "[", 1)
+  strand = ifelse(gstarts<0, "-", "+")
+  if (any(is.na(strand))) {
+    warning("strand unknown for some gene, setting to +")
+    strand[which(is.na(strand))] = "+" # FIXME
+    }
+  strand(fr) = strand
   values(fr)$MAF = mafs
-#
-# FIXME: need to get more detail for distances near chromosome end
-# for now, just take midpoint of expanded interval as gene location
-# for reported distance to SNP
-#
-  ranges(fr) = ranges(fr)-pmin(.5*width(fr), rad)
-  mindist = pmin(abs(fr$snploc-start(fr)), abs(fr$snploc-end(fr)))
-  swithing = which((fr$snploc >= start(fr)) & (fr$snploc <= end(fr)))
-  if (length(swithing)>0) mindist[swithing] = 0
-  values(fr)$dist.out = mindist
+#  will measure distance of SNP to midpoint of gene coding region
+#  so that SNP within the gene have some distance too
+  gmids = abs(gstarts) + .5*(abs(gends)-abs(gstarts))
+  dist.mid = fr$snploc - gmids
+  if (any(strand=="-"))   # use negative distance to denote SNP upstream (5') to midpoint of gene
+    dist.mid[ which(strand == "-") ] = -dist.mid[which(strand=="-")]
+  values(fr)$dist.mid = dist.mid
   fr
  }
 
@@ -33,7 +42,7 @@ richNull = function(..., MAFlb=.01, npc=10, radius=250000,
   bigfilt = function(z) outerFilt(MAFfilter(clipPCs(permEx(innerFilt(z)), 1:npc), lower=MAFlb))
   inargs = list(...)
   if (any(names(inargs) %in% c("nperm", "npc", "radius", "MAFlb", "innerFilt"))) stop(
-		"reserving argnames 'nperm', 'npc', 'radius', 'MAFlb', 'innerFilt', please resubmit without using these")
+		"reserving argnames 'nperm', 'npc', 'radius', 'MAFlb', 'innerFilt', should not occur in ...")
   if (!(all(c("smpack", "chrnames") %in% names(inargs)))) stop("'smpack' and 'chrnames' are obligatory args")
   lapply(1:nperm, function(x)
     bindmaf(smpack=inargs$smpack,
