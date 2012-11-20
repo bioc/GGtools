@@ -102,7 +102,7 @@ unified.col.summary = function(smpackvec, smchr) {
  oksn = colnames(smats[[1]])
  for (i in 2:npacks)
   oksn = intersect(oksn, colnames(smats[[i]]))
- summs = lapply(smats, col.summary)
+ summs = lapply(smats, function(x) col.summary(smList(x)[[1]]))
  outmafs = matrix(NA, nr=length(oksn), nc=npacks)
  for (ind in 1:npacks)  outmafs[,ind] = summs[[ind]][,"MAF"]
  ans = data.frame(MAF=apply(outmafs,1,min,na.rm=TRUE))
