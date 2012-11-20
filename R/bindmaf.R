@@ -9,6 +9,7 @@
   togetloc = togetv$snploc
   smls = getSS(smpack, smchr)
   probeanno = annotation(smls)
+  require(probeanno, character.only=TRUE)
   glocenv = get(paste(gsub(".db", "", probeanno), "CHRLOC", sep=""))
   glocendenv = get(paste(gsub(".db", "", probeanno), "CHRLOCEND", sep=""))
   summ = col.summary(smList(smls)[[smchr]])
@@ -62,6 +63,7 @@ richNull = function(..., MAFlb=.01, npc=10, radius=250000,
   togetloc = togetv$snploc
   smls = getSS(smpackvec[1], smchr)
   probeanno = annotation(smls)
+  require(probeanno, character.only=TRUE)
   glocenv = get(paste(gsub(".db", "", probeanno), "CHRLOC", sep=""))
   glocendenv = get(paste(gsub(".db", "", probeanno), "CHRLOCEND", sep=""))
 #
@@ -97,12 +99,12 @@ richNull = function(..., MAFlb=.01, npc=10, radius=250000,
  }
 
 unified.col.summary = function(smpackvec, smchr) {
- smats = lapply(smpackvec, function(x) getSS(x, smchr))
+ smats = lapply(smpackvec, function(x) smList(getSS(x, smchr))[[1]])
  npacks = length(smpackvec)
  oksn = colnames(smats[[1]])
  for (i in 2:npacks)
   oksn = intersect(oksn, colnames(smats[[i]]))
- summs = lapply(smats, function(x) col.summary(smList(x)[[1]]))
+ summs = lapply(smats, col.summary)
  outmafs = matrix(NA, nr=length(oksn), nc=npacks)
  for (ind in 1:npacks)  outmafs[,ind] = summs[[ind]][,"MAF"]
  ans = data.frame(MAF=apply(outmafs,1,min,na.rm=TRUE))
