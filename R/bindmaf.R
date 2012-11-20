@@ -118,9 +118,9 @@ meta.richNull = function(..., MAFlb=.01, npc=10, radius=250000,
   inargs = list(...)
   if (any(names(inargs) %in% c("nperm", "npc", "radius", "MAFlb", "innerFilt"))) stop(
 		"reserving argnames 'nperm', 'npc', 'radius', 'MAFlb', 'innerFilt', should not occur in ...")
-  if (!(all(c("smpack", "chrnames") %in% names(inargs)))) stop("'smpack' and 'chrnames' are obligatory args")
+  if (!(all(c("smpackvec", "chrnames") %in% names(inargs)))) stop("'smpack' and 'chrnames' are obligatory args")
   lapply(1:nperm, function(x)
-    bindmaf(smpack=inargs$smpack,
+    meta.bindmaf(smpackvec=inargs$smpackvec,
             smchr=inargs$chrnames, 
-            obj=best.cis.eQTLs( ..., smFilter=bigfilt, nperm=0, radius=radius )))
+            obj=meta.best.cis.eQTLs( ..., smFilter=bigfilt, nperm=0, radius=radius )))
 }
