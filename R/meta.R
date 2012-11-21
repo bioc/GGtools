@@ -230,19 +230,22 @@ meta.best.cis.eQTLs = function(smpackvec = c("GGdata", "hmyriB36"),
           geneannopk = geneannopk, snpannopk=snpannopk, 
 		SMFilterList = SMFilterList, exFilterList=exFilterList, excludeRadius=excludeRadius)
     permans = list()
-    for (j in 1:nperm) {
-      permans[[j]] = meta.best.cis.eQTLs.mchr( smpackvec = smpackvec,
+    alls = numeric()
+    fdrs = numeric()
+    if (nperm > 0) {
+      for (j in 1:nperm) {
+        permans[[j]] = meta.best.cis.eQTLs.mchr( smpackvec = smpackvec,
           rhslist=rhslist, folderstem=folderstem, radius=radius, shortfac=shortfac,
           chrnames = chrnames, smchrpref=smchrpref,
           gchrpref=gchrpref, schrpref=schrpref, geneApply=geneApply,
           geneannopk = geneannopk, snpannopk=snpannopk, exFilterList=exFilterList,
           SMFilterList = SMFilterList, doPerm=TRUE, excludeRadius=excludeRadius)  # apply permEx over each filter
-      }
-    alls = unlist(lapply(permans, function(x)elementMetadata(x)$score))
-    fdrs = sapply(elementMetadata(obs)$score, function(x) (sum(alls>=x)/nperm)/sum(elementMetadata(obs)$score>=x))
-    elementMetadata(obs)$fdr = fdrs
-    obs = obs[order(elementMetadata(obs)$fdr),]
-#    list(obs=obs, all.permuted.scores=alls) #permans=permans)
+        }
+      alls = unlist(lapply(permans, function(x)elementMetadata(x)$score))
+      fdrs = sapply(elementMetadata(obs)$score, function(x) (sum(alls>=x)/nperm)/sum(elementMetadata(obs)$score>=x))
+      elementMetadata(obs)$fdr = fdrs
+      obs = obs[order(elementMetadata(obs)$fdr),]
+    }  # if nperm == 0, most of following will be empty, but just want scoregr
     new("mcwBestCis", scoregr=obs, allperm=alls, theCall=theCall,
       chromUsed=chrnames, nperm=nperm)
 }
