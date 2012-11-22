@@ -14,7 +14,12 @@
   glocendenv = get(paste(gsub(".db", "", probeanno), "CHRLOCEND", sep=""))
   summ = col.summary(smList(smls)[[smchr]])
   rn = rownames(summ)
-  ok = toget[ toget %in% rn ] # intersect(toget, rn) # BADD, kill shared SNP
+#  ok = toget[ toget %in% rn ] # intersect(toget, rn) -- retain shared SNP
+  if (!all(toget %in% rn)) stop("some SNP not available in getSS result ... shouldn't happen")
+  mafs = summ[match(toget, rn),"MAF"]
+#  names(fr) = toget
+#  fr = fr[ok]  #  now we have the right set of probe ids
+  if (!all.equal(names(fr), values(fr)$probeid)) stop("probeides went out of sync")
   mafs = summ[ok,"MAF"]
   names(fr) = toget
   fr = fr[ok]  #  now we have the right set of probe ids
@@ -59,7 +64,8 @@ richNull = function(..., MAFlb=.01, npc=10, radius=250000,
   pro = names(fr)
   values(fr)$probeid = pro
   togetv = values(fr)
-  toget = togetv$snpid
+  toget = togetv$snpid  # these need not be unique.  two genes can 
+           # share one best snp
   togetloc = togetv$snploc
   smls = getSS(smpackvec[1], smchr)
   probeanno = annotation(smls)
@@ -74,10 +80,12 @@ richNull = function(..., MAFlb=.01, npc=10, radius=250000,
 #
 #
 #
-  ok = toget[ toget %in% rn ] # intersect(toget, rn) -- retain shared SNP
-  mafs = summ[ok,"MAF"]
-  names(fr) = toget
-  fr = fr[ok]  #  now we have the right set of probe ids
+#  ok = toget[ toget %in% rn ] # intersect(toget, rn) -- retain shared SNP
+  if (!all(toget %in% rn)) stop("some SNP not available in getSS result ... shouldn't happen")
+  mafs = summ[match(toget, rn),"MAF"]
+#  names(fr) = toget
+#  fr = fr[ok]  #  now we have the right set of probe ids
+  if (!all.equal(names(fr), values(fr)$probeid)) stop("probeides went out of sync")
   okpr = values(fr)$probeid
   gstarts = sapply(mget(okpr, glocenv), "[", 1)
   gends = sapply(mget(okpr, glocendenv), "[", 1)
