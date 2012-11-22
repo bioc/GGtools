@@ -14,7 +14,7 @@
   glocendenv = get(paste(gsub(".db", "", probeanno), "CHRLOCEND", sep=""))
   summ = col.summary(smList(smls)[[smchr]])
   rn = rownames(summ)
-  ok = intersect(toget, rn)
+  ok = toget[ toget %in% rn ] # intersect(toget, rn) # BADD, kill shared SNP
   mafs = summ[ok,"MAF"]
   names(fr) = toget
   fr = fr[ok]  #  now we have the right set of probe ids
@@ -74,7 +74,7 @@ richNull = function(..., MAFlb=.01, npc=10, radius=250000,
 #
 #
 #
-  ok = intersect(toget, rn)
+  ok = toget[ toget %in% rn ] # intersect(toget, rn) -- retain shared SNP
   mafs = summ[ok,"MAF"]
   names(fr) = toget
   fr = fr[ok]  #  now we have the right set of probe ids
