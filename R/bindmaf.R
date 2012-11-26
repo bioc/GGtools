@@ -2,6 +2,7 @@
  bindmaf = function(smpack="GGdata", smchr="20", obj) {
   rad = values(obj@scoregr)$radiusUsed[1]
   fr = fullreport(obj)
+  fr = fr[ which(as.character(seqnames(fr)) == smchr) ]
   pro = names(fr)
   values(fr)$probeid = pro
   togetv = values(fr)
@@ -16,13 +17,10 @@
   rn = rownames(summ)
 #  ok = toget[ toget %in% rn ] # intersect(toget, rn) -- retain shared SNP
   if (!all(toget %in% rn)) stop("some SNP not available in getSS result ... shouldn't happen")
-  mafs = summ[match(toget, rn),"MAF"]
 #  names(fr) = toget
 #  fr = fr[ok]  #  now we have the right set of probe ids
   if (!all.equal(names(fr), values(fr)$probeid)) stop("probeides went out of sync")
-  mafs = summ[ok,"MAF"]
-  names(fr) = toget
-  fr = fr[ok]  #  now we have the right set of probe ids
+  mafs = summ[match(toget, rn),"MAF"]
   okpr = values(fr)$probeid
   gstarts = sapply(mget(okpr, glocenv), "[", 1)
   gends = sapply(mget(okpr, glocendenv), "[", 1)
@@ -61,6 +59,7 @@ richNull = function(..., MAFlb=.01, npc=10, radius=250000,
      smchr="20", obj) {
   rad = values(obj@scoregr)$radiusUsed[1]
   fr = fullreport(obj)
+  fr = fr[ which(as.character(seqnames(fr)) == smchr) ]
   pro = names(fr)
   values(fr)$probeid = pro
   togetv = values(fr)
