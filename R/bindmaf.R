@@ -56,7 +56,7 @@ richNull = function(..., MAFlb=.01, npc=10, radius=250000,
  
 
  meta.bindmaf = function(smpackvec=c("GGdata", "hmyriB36"), 
-     smchr="20", obj) {
+     smchr="20", obj, usemaxMAF=FALSE) {
   rad = values(obj@scoregr)$radiusUsed[1]
   fr = fullreport(obj)
   fr = fr[ which(as.character(seqnames(fr)) == smchr) ]
@@ -74,7 +74,7 @@ richNull = function(..., MAFlb=.01, npc=10, radius=250000,
 #
 # here need to generate minimum MAF over populations
 #
-  summ = unified.col.summary(smpackvec, smchr) #smList(smls)[[smchr]])
+  summ = unified.col.summary(smpackvec, smchr, usemax=usemaxMAF) #smList(smls)[[smchr]])
   rn = rownames(summ)
 #
 #
