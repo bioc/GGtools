@@ -105,16 +105,27 @@ richNull = function(..., MAFlb=.01, npc=10, radius=250000,
   fr
  }
 
-unified.col.summary = function(smpackvec, smchr) {
+unified.col.summary = function(smpackvec, smchr, usemax=FALSE) {
+##
+## usemax = TRUE -> take max MAF over all populations
+## otherwise compute the MAF for the combined samples
+##
  smats = lapply(smpackvec, function(x) smList(getSS(x, smchr))[[1]])
  npacks = length(smpackvec)
  oksn = colnames(smats[[1]])
  for (i in 2:npacks)
   oksn = intersect(oksn, colnames(smats[[i]]))
- summs = lapply(smats, col.summary)
- outmafs = matrix(NA, nr=length(oksn), nc=npacks)
- for (ind in 1:npacks)  outmafs[,ind] = summs[[ind]][oksn,"MAF"]
- ans = data.frame(MAF=apply(outmafs,1,min,na.rm=TRUE))
+ if (usemax) {
+   summs = lapply(smats, col.summary)
+   outmafs = matrix(NA, nr=length(oksn), nc=npacks)
+   for (ind in 1:npacks)  outmafs[,ind] = summs[[ind]][oksn,"MAF"]
+   ans = data.frame(MAF=apply(outmafs,1,max,na.rm=TRUE))
+   }
+ else {
+   fullmat = do.call( rbind, smats )
+   summs = col.summary( fullmat )
+   ans = data.frame(MAF=summs[oksn, "MAF"])
+   }
  rownames(ans) = oksn
  ans
 }
