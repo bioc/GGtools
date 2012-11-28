@@ -202,6 +202,7 @@ best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScr
     if (is.null(mapCache[[gchr]])) mapCache[[gchr]] = cismap  # load cache once for later report, not otherwise reused 4/25/2012
     # genes to use are now names of cismap
     ptested = names(cismap)
+    lc = sapply(cismap, length)  # now use this for |s(g)|
     if (length(ptested) == 0) stop("filtering cismap leads to no mapped probes")
     cat("filter...")
     bestcis = lapply(1:length(ptested), function(pr) {
@@ -215,7 +216,7 @@ best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScr
     bestsnp = sapply(bestcis, names)
     names(bestcis) = ptested
     cat("done.\n")
-    ans = data.frame(chr=gchr, probe = ptested, snpid = bestsnp, score = as.numeric(bestcis),
+    ans = data.frame(chr=gchr, probe = ptested, snpid = bestsnp, score = as.numeric(bestcis), nsnp=lc,
 	stringsAsFactors=FALSE)
     scoredf = ans[order(ans$score, decreasing=TRUE),]
     fullans = RangedData(seqnames=gchr, ranges=cismapObj@generanges[scoredf$probe])
@@ -223,6 +224,7 @@ best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScr
     fullans$snpid = scoredf$snpid
     fullans$snploc = start(cismapObj@snplocs[scoredf$snpid])
     fullans$radiusUsed = rep(radius, nrow(fullans))
+    fullans$nsnp = scoredf$nsnp
     # dffits option
     if (getDFFITS) fullans$dffits = get.dffits( fsms, rownames(fullans), fullans$snpid )
     unlink(folderstem, recursive=TRUE)

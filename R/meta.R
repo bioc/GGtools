@@ -157,6 +157,7 @@ meta.best.cis.eQTLs.chr = function (smpackvec = c("GGdata", "hmyriB36"), rhslist
     if (length(nullc)>0) cismap = cismap[-nullc]
     # genes to use are now names of cismap
     ptested = names(cismap)
+    lc = sapply(cismap, length)
     if (length(ptested) == 0) stop("filtering cismap leads to no mapped probes")
     cat("filter...")
     bestcis = geneApply(1:length(ptested), function(pr) {
@@ -171,7 +172,8 @@ meta.best.cis.eQTLs.chr = function (smpackvec = c("GGdata", "hmyriB36"), rhslist
     bestsnp = sapply(bestcis, names)
     names(bestcis) = ptested
     cat("done.\n")
-    ans = data.frame(chr=gchr, probe = ptested, snpid = bestsnp, score = as.numeric(bestcis),
+    ans = data.frame(chr=gchr, probe = ptested, snpid = bestsnp, 
+        score = as.numeric(bestcis), nsnp = lc,
 	stringsAsFactors=FALSE)
     scoredf = ans[order(ans$score, decreasing=TRUE),]
     fullans = RangedData(seqnames=gchr, ranges=cismapObj@generanges[scoredf$probe])
@@ -179,6 +181,7 @@ meta.best.cis.eQTLs.chr = function (smpackvec = c("GGdata", "hmyriB36"), rhslist
     fullans$snpid = scoredf$snpid
     fullans$snploc = start(cismapObj@snplocs[scoredf$snpid])
     fullans$radiusUsed = rep(radius, nrow(fullans))
+    fullans$nsnp = scoredf$nsnp
     unlink(folderstem, recursive=TRUE)
     fullans
 }
