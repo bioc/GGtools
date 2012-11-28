@@ -124,7 +124,7 @@ unified.col.summary = function(smpackvec, smchr, usemax=FALSE) {
    ans = data.frame(MAF=apply(outmafs,1,max,na.rm=TRUE))
    }
  else {
-   fullmat = do.call( rbind, smats )
+   fullmat = do.call( BiocGenerics::rbind, smats )
    summs = col.summary( fullmat )
    ans = data.frame(MAF=summs[oksn, "MAF"])
    }
