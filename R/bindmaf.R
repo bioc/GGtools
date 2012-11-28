@@ -115,6 +115,8 @@ unified.col.summary = function(smpackvec, smchr, usemax=FALSE) {
  oksn = colnames(smats[[1]])
  for (i in 2:npacks)
   oksn = intersect(oksn, colnames(smats[[i]]))
+ for (i in 1:npacks)
+  smats[[i]]  = smats[[i]][,oksn]
  if (usemax) {
    summs = lapply(smats, col.summary)
    outmafs = matrix(NA, nr=length(oksn), nc=npacks)
