@@ -12,7 +12,7 @@ create a structure that enumerates SNP in the vicinity of ('cis' to) genes
 \usage{
 getCisMap(radius = 50000, gchr = "20", 
   schr = "ch20", geneannopk = "illuminaHumanv1.db", 
-  snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427", 
+  snpannopk = snplocsDefault(),
   as.GRangesList = FALSE, excludeRadius=NULL)
 }
 %- maybe also 'usage' for other objects documented here.

@@ -17,7 +17,7 @@ transScores(smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsco", geneAppl
   radius = 2e+06, renameChrs = NULL, probesToKeep = NULL, batchsize = 200, 
   genegran = 50, shortfac = 10, wrapperEndo = NULL, 
   geneannopk = "illuminaHumanv1.db", 
-  snpannopk = "SNPlocs.Hsapiens.dbSNP.20111119", gchrpref = "",
+  snpannopk = snplocsDefault(), gchrpref = "",
                  schrpref = "ch", exFilter=function(x)x)
 
 meta.transScores (smpackvec = c("GGdata", "hmyriB36"),
@@ -25,7 +25,7 @@ meta.transScores (smpackvec = c("GGdata", "hmyriB36"),
     geneApply = lapply, chrnames = as.character(21:22),
     radius = 2e+06, renameChrs=NULL,
     probesToKeep=NULL, batchsize=200, genegran=50, shortfac=10, wrapperEndo=NULL,
-    geneannopk = "illuminaHumanv1.db", snpannopk = "SNPlocs.Hsapiens.dbSNP.20111119",
+    geneannopk = "illuminaHumanv1.db", snpannopk = snplocsDefault(),
     gchrpref = "", schrpref="ch",
     exFilterList= list(function(x)x, function(x)x),
     SMFilterList = list(function(x)x, function(x)x))

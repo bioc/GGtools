@@ -67,7 +67,7 @@ s20 = getSS("GGtools", "20")
 t1 = gwSnpTests(genesym("CPNE1")~male, s20)
 topSnps(t1)
 \dontrun{
-plot(t1, "SNPlocs.Hsapiens.dbSNP.20100427")
+plot(t1, snplocsDefault())
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

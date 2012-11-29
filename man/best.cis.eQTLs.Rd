@@ -33,7 +33,7 @@ best.cis.eQTLs(smpack = "GGdata", rhs = ~1,
   chrnames = as.character(1:22), 
   smchrpref = "", gchrpref = "", schrpref = "ch", 
   geneApply = lapply, geneannopk = "illuminaHumanv1.db", 
-  snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427", 
+  snpannopk = snplocsDefault(),
   smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97), nperm = 2,
   useME=FALSE, excludeRadius=NULL, exFilter=function(x)x, keepMapCache=FALSE,
   getDFFITS=FALSE)
@@ -44,7 +44,7 @@ All.cis.eQTLs(maxfdr = 0.05, inbestcis = NULL, smpack = "GGdata",
     chrnames = as.character(1:22), 
     smchrpref = "", gchrpref = "", schrpref = "ch", 
     geneApply = lapply, geneannopk = "illuminaHumanv1.db", 
-    snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427", 
+    snpannopk = snplocsDefault(),
     smFilter4cis = function(x) nsFilter(MAFfilter(clipPCs(x, 
         1:10), lower = 0.05), var.cutoff = 0.85), 
     smFilter4all = function(x) MAFfilter(clipPCs(x, 
@@ -55,7 +55,7 @@ meta.best.cis.eQTLs(smpackvec = c("GGdata", "hmyriB36"), rhslist = list(~1,
     ~1), folderstem = "cisScratch", radius = 50000, shortfac = 100, 
     chrnames = as.character(1:22), smchrpref = "", gchrpref = "", 
     schrpref = "ch", geneApply = lapply, geneannopk = "illuminaHumanv1.db", 
-    snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427", SMFilterList = list( 
+    snpannopk = snplocsDefault(), SMFilterList = list( 
    function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97), 
    function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97) ),
     exFilterList = list(function(x)x, function(x)x),
@@ -66,7 +66,7 @@ meta.All.cis.eQTLs(minchisq, smpackvec = c("GGdata", "hmyriB36"),
   radius = 50000, shortfac=100, chrnames = as.character(1:22), smchrpref = "",
   gchrpref = "", schrpref = "ch", geneApply = lapply,
   geneannopk = "illuminaHumanv1.db",
-  snpannopk = "SNPlocs.Hsapiens.dbSNP.20100427",
+  snpannopk = snplocsDefault(),
   SMFilterList = list(function(x) nsFilter(MAFfilter(x,
                  lower = 0.05), var.cutoff = 0.97), function(x)
                  nsFilter(MAFfilter(x, lower = 0.05), var.cutoff =
@@ -143,7 +143,8 @@ character string, name of annotation package that annotates probe identifiers
 }
   \item{snpannopk}{
 character string, name of SNPlocs.Hsapiens.dbSNP.* package for
-obtaining 
+obtaining; global function snplocsDefault() can be used to get
+a nominally current package name 
 }
   \item{smFilter}{
 function accepting and returning an \code{\link[GGBase]{smlSet-class}}

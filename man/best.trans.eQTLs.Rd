@@ -94,6 +94,7 @@ VJ Carey <stvjc@channing.harvard.edu>
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
+\dontrun{
 if (.Platform$OS.type != "windows") {  # ff overwrites failing 5.IX.12
   nsFilter2 = function(sms, var.cutoff=.5) {
    alliq = apply(exprs(sms),1,IQR)
@@ -104,12 +105,13 @@ if (.Platform$OS.type != "windows") {  # ff overwrites failing 5.IX.12
   tfile = tempfile()
   tfold = dir.create(tfile)
   t1 = best.trans.eQTLs( "GGdata", ~1, as.character(20:22), "22",
-          geneannopk="illuminaHumanv1.db", snpannopk= "SNPlocs.Hsapiens.dbSNP.20111119",
+          geneannopk="illuminaHumanv1.db", snpannopk= snplocsDefault(),
           smFilter=thefilt, snploadprefix="", snplocprefix="ch", targdirpref=tfile)
   tt1 = transTab(t1)
   tt1o = tt1[ order(tt1[,"sumchisq"], decreasing=TRUE), ][1:10,]
   tt1o
   }
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
