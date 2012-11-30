@@ -5,7 +5,7 @@
 %
 
 %\VignetteIndexEntry{GGtools 2012: efficient tools for eQTL discovery}
-%\VignetteDepends{GGdata, SNPlocs.Hsapiens.dbSNP.20111119}
+%\VignetteDepends{GGdata, SNPlocs.Hsapiens.dbSNP.20120608}
 %\VignetteKeywords{genetics of gene expression}
 %\VignettePackage{GGtools}
 
@@ -284,7 +284,7 @@ coordinates.
 
 <<dopl,echo=FALSE,results=hide>>=
 pdf(file="t1.pdf")
-plot(t1, "SNPlocs.Hsapiens.dbSNP.20111119")
+plot(t1, snplocsDefault())
 dev.off()
 pdf(file="t1evg.pdf")
 plot_EvG(genesym("CPNE1"), rsid("rs17093026"), g20)
@@ -292,7 +292,7 @@ dev.off()
 @
 
 <<dol,eval=FALSE>>=
-plot(t1, "SNPlocs.Hsapiens.dbSNP.20111119")
+plot(t1, snplocsDefault())
 plot_EvG(genesym("CPNE1"), rsid("rs17093026"), g20)
 @
 
@@ -304,7 +304,7 @@ plot_EvG(genesym("CPNE1"), rsid("rs17093026"), g20)
 Code like the following can be used to display
 scores ($-\log_{10} p$) on the genome browser, here with hg19 locations.
 <<doloc,eval=FALSE>>=
-library(SNPlocs.Hsapiens.dbSNP.20111119)
+library(snplocsDefault(), character.only=TRUE)
 S20 = getSNPlocs("ch20", as.GRanges=TRUE)
 GR20 = makeGRanges(t1, S20)
 library(rtracklayer)
@@ -413,7 +413,7 @@ fn = probeId(featureNames(g20))
 exTx = function(x) MAFfilter( x[fn, ], lower=0.05)
 b1 = best.cis.eQTLs("GGdata", ~male,  radius=1e6,
    folderstem="db2", nperm=2, geneApply=mclapply,
-   smFilter= exTx, chrnames="20", snpannopk="SNPlocs.Hsapiens.dbSNP.20111119")
+   smFilter= exTx, chrnames="20", snpannopk=snplocsDefault())
 <<lkc>>=
 b1
 @
@@ -463,7 +463,7 @@ g20f = exTx(g20)
 <<lkc2,cache=TRUE>>=
 b2 = best.cis.eQTLs("GGdata", ~male,  radius=1e6,
    folderstem="db2", nperm=2, geneApply=mclapply,
-   smFilter= exTx, chrnames="20", snpannopk="SNPlocs.Hsapiens.dbSNP.20111119")
+   smFilter= exTx, chrnames="20", snpannopk=snplocsDefault())
 b2
 @
 
