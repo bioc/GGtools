@@ -139,10 +139,10 @@ setMethod("plot", c("gwSnpScreenResult", "character"),  # y bound to location pa
    kill = which(is.na(allpv))
    if (length(kill)>0) allpv = allpv[ -kill ]
    rsn = names(allpv)
-   SNY = do.call(":::", list(y, "SEQNAMES"))
+   SNY = names(getSNPcount()) # new API -- shld suffice do.call(":::", list(y, "SEQNAMES"))
    if (!(x@chrnum %in% SNY))  x@chrnum = as.character(paste("chr", x@chrnum, sep=""))
    if (!(x@chrnum %in% SNY))  x@chrnum = as.character(gsub("chr", "ch", x@chrnum))
-   if (!(x@chrnum %in% SNY))  stop("attempts to harmonize @chrnum of cwSnpScreenResult object with SEQNAMES of y failed")
+   if (!(x@chrnum %in% SNY))  stop("attempts to harmonize @chrnum of cwSnpScreenResult object with names(getSNPcount()) of snplocsDefault() failed")
 #   loc = snpLocs.Hsapiens(rsn, x@chrnum, y) # may not match all
 
  require(y, character.only=TRUE)
