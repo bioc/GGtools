@@ -139,6 +139,7 @@ setMethod("plot", c("gwSnpScreenResult", "character"),  # y bound to location pa
    kill = which(is.na(allpv))
    if (length(kill)>0) allpv = allpv[ -kill ]
    rsn = names(allpv)
+   require(y, character.only=TRUE, quietly=TRUE)
    SNY = names(getSNPcount()) # new API -- shld suffice do.call(":::", list(y, "SEQNAMES"))
    if (!(x@chrnum %in% SNY))  x@chrnum = as.character(paste("chr", x@chrnum, sep=""))
    if (!(x@chrnum %in% SNY))  x@chrnum = as.character(gsub("chr", "ch", x@chrnum))
