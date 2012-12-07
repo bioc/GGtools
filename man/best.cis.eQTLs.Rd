@@ -139,7 +139,9 @@ package identified in \code{snpannopack} parameter below
 an lapply like function, defaults to \code{lapply}
 }
   \item{geneannopk}{
-character string, name of annotation package that annotates probe identifiers
+character string, name of a *.db annotation package that annotates probe identifiers; or
+see \code{\link{getCisMap}} for additional possibilities concerning FDb.* complex token
+values for newer annotation formats
 }
   \item{snpannopk}{
 character string, name of SNPlocs.Hsapiens.dbSNP.* package for

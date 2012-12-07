@@ -31,7 +31,12 @@ the token to be used to acquire locations for SNP on a specified
 chromosome, using \code{getSNPlocs}
 }
   \item{geneannopk}{
-character string naming a Bioconductor .db expression chip annotation package
+character string naming a Bioconductor .db expression chip annotation package;
+or a complex string with first part naming a Bioconductor FDb.* annotation
+package, colon separator, and a second string naming the getter hook that
+when called returns a GRanges with names corresponding to features and ranges
+corresponding to feature extents.  For example "FDb.InfiniumMethylation.hg19:get27k"
+is valid.  Note that in this case, gchr must have prefix "chr".
 }
   \item{snpannopk}{
 character string naming a Bioconductor SNPlocs.* SNP metadata package

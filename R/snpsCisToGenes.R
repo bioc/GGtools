@@ -80,19 +80,38 @@ getCisMap = function( radius=50000, gchr="20",
 #
 # acquires cis map for one chromosome
 #
+#
+# updated 6 Dec 2012: parse geneannopk for FDb in which case we assume
+# token has form pkgname:getter
+#
+  isFDb = FALSE
+  if (length(grep("^FDb", geneannopk)) == 1) {
+    isFDb = TRUE
+    toks = strsplit(geneannopk, ":")[[1]]
+    geneannopk = toks[1]
+    getter = toks[2]
+    }
   if (!is.null(excludeRadius) & as.GRangesList) stop("must set as.GRangesList to FALSE when excludeRadius is non-null")
   if (!is.null(excludeRadius) && excludeRadius >= radius) stop("excludeRadius must be < radius")
   require(geneannopk, character.only=TRUE, quietly=TRUE)
   require(snpannopk, character.only=TRUE, quietly=TRUE)
-  gpref = gsub(".db", "", geneannopk)
-  gcenv = AnnotationDbi::get(paste(gpref, "CHR", sep=""))
-  ponc = AnnotationDbi::get(gchr, revmap(gcenv))
-  glocenv = AnnotationDbi::get(paste(gpref, "CHRLOC", sep=""))
-  glocendenv = AnnotationDbi::get(paste(gpref, "CHRLOCEND", sep=""))
-  gstart = AnnotationDbi::mget(ponc, glocenv, ifnotfound=NA)
-  gstart = abs(sapply(gstart, "[", 1))
-  gend = AnnotationDbi::mget(ponc, glocendenv, ifnotfound=NA)
-  gend = abs(sapply(gend, "[", 1))
+  if (!isFDb) {
+    gpref = gsub(".db", "", geneannopk)
+    gcenv = AnnotationDbi::get(paste(gpref, "CHR", sep=""))
+    ponc = AnnotationDbi::get(gchr, revmap(gcenv))
+    glocenv = AnnotationDbi::get(paste(gpref, "CHRLOC", sep=""))
+    glocendenv = AnnotationDbi::get(paste(gpref, "CHRLOCEND", sep=""))
+    gstart = AnnotationDbi::mget(ponc, glocenv, ifnotfound=NA)
+    gstart = abs(sapply(gstart, "[", 1))
+    gend = AnnotationDbi::mget(ponc, glocendenv, ifnotfound=NA)
+    gend = abs(sapply(gend, "[", 1))
+   } else {
+    featureRanges = get(getter)()
+    ponc = names(featureRanges[which(as.character(seqnames(featureRanges)) == gchr)])
+    fr = featureRanges[ponc]
+    gstart = abs(start(fr))
+    gend = abs(end(fr))
+   }
   bad = is.na(gend) & is.na(gstart)
   if (sum(bad)>0) {
     gstart = gstart[-which(bad)]
