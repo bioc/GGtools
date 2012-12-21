@@ -8,7 +8,10 @@ other aspects of optimized cis-eQTL association to an
 mcwBestCis instance
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+bind metadata concerning SNP allele frequency and
+other aspects of optimized cis-eQTL association to an
+mcwBestCis instance, to allow conditional FDR computation
+
 }
 \usage{
 richNull(..., MAFlb = 0.01, npc = 10, radius = 250000, nperm = 1, 
