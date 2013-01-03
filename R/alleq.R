@@ -16,7 +16,7 @@ All.cis.eQTLs = function (maxfdr = 0.05, inbestcis = NULL, smpack = "GGdata",
   lower = 0.05), var.cutoff = 0.85), 
   smFilter4all = function(x) MAFfilter(clipPCs(x, 1:10),
   lower = 0.05),
-  nperm = 2, excludeRadius=NULL, exFilter=function(x)x, ssGen=GGBase::getSS) {
+  nperm = 2, excludeRadius=NULL, exFilter=function(x)x, SSgen=GGBase::getSS) {
  theCall = match.call()
  exdate = date()
 cat("PHASE 1: determining cis threshold...\n")
