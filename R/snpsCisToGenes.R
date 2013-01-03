@@ -119,6 +119,7 @@ getCisMap = function( radius=50000, gchr="20",
       fr = geneannopk(gchr)
       gstart = abs(start(fr))
       gend = abs(end(fr))
+      ponc = names(fr)
       } else stop("can't interpret geneannopk")
   bad = is.na(gend) & is.na(gstart)
   if (sum(bad)>0) {
