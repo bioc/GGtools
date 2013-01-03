@@ -2,13 +2,13 @@ best.trans.eQTLs = function(smpack, rhs, genechrnum, snpchrnum,
 	K = 20, targdirpref="tsco", batchsize=200, radius=2e6,
         genequeryprefix="", snploadprefix="chr", snplocprefix="chr", geneannopk,
 	snpannopk, exFilter=function(x)x, smFilter=function(x)x,
-	geneApply=lapply) {
+	geneApply=lapply, SSgen=GGBase::getSS) {
    transScores( smpack=smpack, snpchr=paste( snploadprefix, snpchrnum, sep=""), 
 		rhs=rhs, K=K, 
 		targdirpref=targdirpref, chrnames=genechrnum,
 		gchrpref=genequeryprefix, schrpref=snplocprefix,
 		radius=radius, shortfac=10, wrapperEndo=smFilter,
-		geneannopk=geneannopk, snpannopk=snpannopk )
+		geneannopk=geneannopk, snpannopk=snpannopk, SSgen=SSgen )
 }
 		
 #meta.best.trans.eQTLs = function(smpackvec, rhslist, genechrnum, snpchrnum,

@@ -16,7 +16,7 @@ All.cis.eQTLs = function (maxfdr = 0.05, inbestcis = NULL, smpack = "GGdata",
   lower = 0.05), var.cutoff = 0.85), 
   smFilter4all = function(x) MAFfilter(clipPCs(x, 1:10),
   lower = 0.05),
-  nperm = 2, excludeRadius=NULL, exFilter=function(x)x) {
+  nperm = 2, excludeRadius=NULL, exFilter=function(x)x, ssGen=GGBase::getSS) {
  theCall = match.call()
  exdate = date()
 cat("PHASE 1: determining cis threshold...\n")
@@ -26,7 +26,7 @@ cat("PHASE 1: determining cis threshold...\n")
     radius=radius, shortfac=shortfac, chrnames=chrnames, smchrpref=smchrpref,
     gchrpref = gchrpref, schrpref = schrpref, geneApply=geneApply,
     geneannopk = geneannopk, snpannopk = snpannopk,
-    smFilter=smFilter4cis, nperm=nperm, exFilter=exFilter)
+    smFilter=smFilter4cis, nperm=nperm, exFilter=exFilter, ssGen=ssGen)
     }
  else btmp = inbestcis
  kp = probesWeqtl(btmp, maxfdr=maxfdr)
@@ -49,9 +49,9 @@ cat("PHASE 2: extracting associations passing cis threshold...\n")
 #
 # reduce set of probes
 #
-     cat("getSS/filter the probes ...")
+     cat("SSgen/filter the probes ...")
      try(unlink(folderstem, recursive=TRUE))
-     curss = smFilter4all(getSS(smpack, smchr, exFilter=exFilter))
+     curss = smFilter4all(SSgen(smpack, smchr, exFilter=exFilter))
      curss = curss[ probeId( intersect( featureNames(curss), cokp ) ), ]
 #
 #

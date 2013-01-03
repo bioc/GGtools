@@ -6,7 +6,7 @@ meta.transScores = function (smpackvec = c("GGdata", "hmyriB36"),
     geneannopk = "illuminaHumanv1.db", snpannopk = snplocsDefault(),
     gchrpref = "", schrpref="ch", 
     exFilterList= list(function(x)x, function(x)x),
-    SMFilterList = list(function(x)x, function(x)x))
+    SMFilterList = list(function(x)x, function(x)x), SSgen=GGBase::getSS)
 {
 
 #
@@ -32,7 +32,7 @@ meta.transScores = function (smpackvec = c("GGdata", "hmyriB36"),
 #
 
     cat("get data...")
-    smsList = lapply(1:length(smpackvec), function(x) getSS(
+    smsList = lapply(1:length(smpackvec), function(x) SSgen(
                 smpackvec[x], snpchr, exFilter=exFilterList[[x]]))
     cat("run smFilter...")   # run earlier than in eqtlTests
     for (i in 1:length(smsList))

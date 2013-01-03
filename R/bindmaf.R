@@ -1,5 +1,5 @@
 
- bindmaf = function(smpack="GGdata", smchr="20", obj) {
+ bindmaf = function(smpack="GGdata", smchr="20", obj, SSgen=GGBase::getSS) {
   rad = values(obj@scoregr)$radiusUsed[1]
   fr = fullreport(obj)
   fr = fr[ which(as.character(seqnames(fr)) == smchr) ]
@@ -8,7 +8,7 @@
   togetv = values(fr)
   toget = togetv$snpid
   togetloc = togetv$snploc
-  smls = getSS(smpack, smchr)
+  smls = SSgen(smpack, smchr)
   probeanno = annotation(smls)
   require(probeanno, character.only=TRUE)
   glocenv = get(paste(gsub(".db", "", probeanno), "CHRLOC", sep=""))
@@ -16,7 +16,7 @@
   summ = col.summary(smList(smls)[[smchr]])
   rn = rownames(summ)
 #  ok = toget[ toget %in% rn ] # intersect(toget, rn) -- retain shared SNP
-  if (!all(toget %in% rn)) stop("some SNP not available in getSS result ... shouldn't happen")
+  if (!all(toget %in% rn)) stop("some SNP not available in SSgen result ... shouldn't happen")
 #  names(fr) = toget
 #  fr = fr[ok]  #  now we have the right set of probe ids
   if (!all.equal(names(fr), values(fr)$probeid)) stop("probeides went out of sync")
@@ -56,7 +56,7 @@ richNull = function(..., MAFlb=.01, npc=10, radius=250000,
  
 
  meta.bindmaf = function(smpackvec=c("GGdata", "hmyriB36"), 
-     smchr="20", obj, usemaxMAF=FALSE) {
+     smchr="20", obj, usemaxMAF=FALSE, SSgen=GGBase::getSS) {
   rad = values(obj@scoregr)$radiusUsed[1]
   fr = fullreport(obj)
   fr = fr[ which(as.character(seqnames(fr)) == smchr) ]
@@ -66,7 +66,7 @@ richNull = function(..., MAFlb=.01, npc=10, radius=250000,
   toget = togetv$snpid  # these need not be unique.  two genes can 
            # share one best snp
   togetloc = togetv$snploc
-  smls = getSS(smpackvec[1], smchr)
+  smls = SSgen(smpackvec[1], smchr)
   probeanno = annotation(smls)
   require(probeanno, character.only=TRUE)
   glocenv = get(paste(gsub(".db", "", probeanno), "CHRLOC", sep=""))
@@ -80,7 +80,7 @@ richNull = function(..., MAFlb=.01, npc=10, radius=250000,
 #
 #
 #  ok = toget[ toget %in% rn ] # intersect(toget, rn) -- retain shared SNP
-  if (!all(toget %in% rn)) stop("some SNP not available in getSS result ... shouldn't happen")
+  if (!all(toget %in% rn)) stop("some SNP not available in SSgen result ... shouldn't happen")
   mafs = summ[match(toget, rn),"MAF"]
 #  names(fr) = toget
 #  fr = fr[ok]  #  now we have the right set of probe ids
@@ -105,12 +105,13 @@ richNull = function(..., MAFlb=.01, npc=10, radius=250000,
   fr
  }
 
-unified.col.summary = function(smpackvec, smchr, usemax=FALSE) {
+unified.col.summary = function(smpackvec, smchr, usemax=FALSE,
+   SSgen=GGBase::getSS) {
 ##
 ## usemax = TRUE -> take max MAF over all populations
 ## otherwise compute the MAF for the combined samples
 ##
- smats = lapply(smpackvec, function(x) smList(getSS(x, smchr))[[1]])
+ smats = lapply(smpackvec, function(x) smList(SSgen(x, smchr))[[1]])
  npacks = length(smpackvec)
  oksn = colnames(smats[[1]])
  for (i in 2:npacks)

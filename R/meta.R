@@ -100,14 +100,15 @@ meta.best.cis.eQTLs.chr = function (smpackvec = c("GGdata", "hmyriB36"), rhslist
     SMFilterList = list( 
   function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97),
   function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97)), 
-   exFilterList = list(function(x)x, function(x)x), doPerm=FALSE, excludeRadius=NULL
+   exFilterList = list(function(x)x, 
+    function(x)x), doPerm=FALSE, excludeRadius=NULL, SSgen=GGBase::getSS
 )
 {
 #
 #
     unlink(folderstem, recursive=TRUE)
     cat("get data...")
-    smsList = lapply(1:length(smpackvec), function(x) getSS(
+    smsList = lapply(1:length(smpackvec), function(x) SSgen(
                 smpackvec[x], smchr, exFilter=exFilterList[[x]]))
     cat("run smFilter...")   # run earlier than in eqtlTests
     for (i in 1:length(smsList))

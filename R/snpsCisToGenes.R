@@ -93,9 +93,13 @@ getCisMap = function( radius=50000, gchr="20",
     }
   if (!is.null(excludeRadius) & as.GRangesList) stop("must set as.GRangesList to FALSE when excludeRadius is non-null")
   if (!is.null(excludeRadius) && excludeRadius >= radius) stop("excludeRadius must be < radius")
-  require(geneannopk, character.only=TRUE, quietly=TRUE)
+  if (!is.null(geneannopk)) require(geneannopk, character.only=TRUE, quietly=TRUE)
   require(snpannopk, character.only=TRUE, quietly=TRUE)
-  if (!isFDb) {
+#
+# 3 jan 2013 -- allow the smpack to provide its own "gene" location
+# ranges via featureRanges( gchr ) -- use a function defined in the smpack
+#
+  if (!isFDb & !is.function(geneannopk)) {
     gpref = gsub(".db", "", geneannopk)
     gcenv = AnnotationDbi::get(paste(gpref, "CHR", sep=""))
     ponc = AnnotationDbi::get(gchr, revmap(gcenv))
@@ -105,13 +109,17 @@ getCisMap = function( radius=50000, gchr="20",
     gstart = abs(sapply(gstart, "[", 1))
     gend = AnnotationDbi::mget(ponc, glocendenv, ifnotfound=NA)
     gend = abs(sapply(gend, "[", 1))
-   } else {
+   } else if (isFDb) {
     featureRanges = get(getter)()
     ponc = names(featureRanges[which(as.character(seqnames(featureRanges)) == gchr)])
     fr = featureRanges[ponc]
     gstart = abs(start(fr))
     gend = abs(end(fr))
-   }
+   } else if (is.function(geneannopk)) {
+      fr = geneannopk(gchr)
+      gstart = abs(start(fr))
+      gend = abs(end(fr))
+      } else stop("can't interpret geneannopk")
   bad = is.na(gend) & is.na(gstart)
   if (sum(bad)>0) {
     gstart = gstart[-which(bad)]
@@ -165,13 +173,13 @@ best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScr
     geneApply = lapply, geneannopk = "illuminaHumanv1.db", snpannopk = snplocsDefault(),
     smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05),
         var.cutoff = 0.97), useME=FALSE, excludeRadius=NULL, exFilter=function(x)x, mapCache=new.env(),
-	getDFFITS=FALSE)
+	getDFFITS=FALSE, SSgen=GGBase::getSS)
 {
 #
 #
     unlink(folderstem, recursive=TRUE)
     cat("get data...")
-    sms = getSS(smpack, smchr, exFilter=exFilter)
+    sms = SSgen(smpack, smchr, exFilter=exFilter)
     cat("build map...")
 #
 # annotation-based list of SNP within radius of coding region
