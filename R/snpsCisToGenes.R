@@ -85,7 +85,7 @@ getCisMap = function( radius=50000, gchr="20",
 # token has form pkgname:getter
 #
   isFDb = FALSE
-  if (length(grep("^FDb", geneannopk)) == 1) {
+  if (is.character(geneannopk) && length(grep("^FDb", geneannopk)) == 1) {
     isFDb = TRUE
     toks = strsplit(geneannopk, ":")[[1]]
     geneannopk = toks[1]
@@ -93,7 +93,7 @@ getCisMap = function( radius=50000, gchr="20",
     }
   if (!is.null(excludeRadius) & as.GRangesList) stop("must set as.GRangesList to FALSE when excludeRadius is non-null")
   if (!is.null(excludeRadius) && excludeRadius >= radius) stop("excludeRadius must be < radius")
-  if (!is.null(geneannopk)) require(geneannopk, character.only=TRUE, quietly=TRUE)
+  if (!is.null(geneannopk) & !is.function(geneannopk)) require(geneannopk, character.only=TRUE, quietly=TRUE)
   require(snpannopk, character.only=TRUE, quietly=TRUE)
 #
 # 3 jan 2013 -- allow the smpack to provide its own "gene" location
@@ -197,7 +197,7 @@ best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScr
 ## use of gchr here for annotation package
 ##
 #    cat("restrict probes...")
-#    fsms = restrictProbesToChrom(smFilter(sms), gchr)
+#    if (!is.function(geneannopk)) fsms = restrictProbesToChrom(smFilter(sms), gchr)
 ### at this point you have cismap which has all relevant probe names
 ### for chromosome
     cat("run smFilter...")
@@ -277,7 +277,7 @@ best.cis.eQTLs.mchr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisSc
     smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05),
         var.cutoff = 0.97), useME=FALSE, 
     excludeRadius=NULL, exFilter=function(x)x, mapCache= new.env(),
-    getDFFITS=FALSE) {
+    getDFFITS=FALSE, SSgen=GGBase::getSS) {
        ans = lapply( chrnames, function(ch) {
             smchr = paste(smchrpref, ch, sep="")
             gchr = paste(gchrpref, ch, sep="")
@@ -288,7 +288,7 @@ best.cis.eQTLs.mchr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisSc
              geneApply = geneApply, geneannopk = geneannopk, 
              snpannopk = snpannopk, smFilter=smFilter, exFilter=exFilter,
 	     useME=useME, excludeRadius=excludeRadius, mapCache=mapCache,
-		getDFFITS=getDFFITS)
+		getDFFITS=getDFFITS, SSgen=SSgen)
             })
     ans = as(do.call(c, ans), "GRanges")  # RangedData just need c for combination; then mix spaces
     ans[order(elementMetadata(ans)$score, decreasing=TRUE),]
@@ -303,7 +303,7 @@ best.cis.eQTLs = function(smpack = "GGdata",
       snpannopk = snplocsDefault(),
     smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05),
         var.cutoff=.97), nperm=2, useME=FALSE, excludeRadius=NULL, exFilter=function(x)x,
-	keepMapCache=FALSE, getDFFITS=FALSE) {
+	keepMapCache=FALSE, getDFFITS=FALSE, SSgen=GGBase::getSS) {
     theCall = match.call()
     mapCache = new.env()
     obs = best.cis.eQTLs.mchr( smpack = smpack,
@@ -312,7 +312,7 @@ best.cis.eQTLs = function(smpack = "GGdata",
 	  gchrpref=gchrpref, schrpref=schrpref, geneApply=geneApply,
           geneannopk = geneannopk, snpannopk=snpannopk, smFilter = smFilter, useME=useME, 
 		excludeRadius=excludeRadius, exFilter=exFilter, 
-		mapCache=mapCache, getDFFITS=getDFFITS)
+		mapCache=mapCache, getDFFITS=getDFFITS, SSgen=SSgen)
     permans = list()
  alls = rep(as.numeric(NA), length(obs))  # initialize in case nperm == 0
   if (nperm > 0) {
@@ -323,7 +323,8 @@ best.cis.eQTLs = function(smpack = "GGdata",
 	  gchrpref=gchrpref, schrpref=schrpref, geneApply=geneApply,
           geneannopk = geneannopk, snpannopk=snpannopk, 
           smFilter = function(x) permEx(smFilter(x)), useME=useME, 
-          excludeRadius=excludeRadius, exFilter=exFilter, getDFFITS=getDFFITS)
+          excludeRadius=excludeRadius, exFilter=exFilter, getDFFITS=getDFFITS,
+           SSgen=SSgen)
       }
       alls = unlist(lapply(permans, function(x)elementMetadata(x)$score))
       fdrs = sapply(elementMetadata(obs)$score, function(x) (sum(alls>=x)/nperm)/sum(elementMetadata(obs)$score>=x))
