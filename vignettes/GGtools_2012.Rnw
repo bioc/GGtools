@@ -464,10 +464,12 @@ g20f = exTx(g20)
 @
 
 <<lkc2,cache=TRUE>>=
+if (.Platform$OS.type != "windows") {
 b2 = best.cis.eQTLs("GGdata", ~male,  radius=1e6,
    folderstem="db2", nperm=2, geneApply=mclapply,
    smFilter= exTx, chrnames="20", snpannopk="SNPlocs.Hsapiens.dbSNP.20111119")
 b2
+}
 @
 
 An improvement in sensitivity is seen after this adjustment.  The
@@ -480,7 +482,9 @@ All probes identified as significant
 (at FDR $\leq 0.001$) before the PCA adjustment
 are identified as such after it:
 <<chkp>>=
+if (.Platform$OS.type != "windows") {
 setdiff(goodProbes(b2), goodProbes(b1))
+}
 @
 
 The effects of the adjustment for
@@ -489,6 +493,7 @@ adjusted analysis can be visualized:
 
 \setkeys{Gin}{width=.95\textwidth}
 <<domopic,fig=TRUE>>=
+if (.Platform$OS.type != "windows") {
 newp = setdiff(goodProbes(b2), goodProbes(b1))
 np = length(newp)
 bestSnp = function(pn, esm) elementMetadata(esm@scoregr[pn])$snpid
@@ -497,7 +502,9 @@ plot_EvG(probeId(newp[1]), rsid(bestSnp(newp[1], b2)), g20, main="raw")
 plot_EvG(probeId(newp[1]), rsid(bestSnp(newp[1], b2)), g20f, main="PC-adjusted")
 plot_EvG(probeId(newp[np]), rsid(bestSnp(newp[np], b2)), g20, main="raw")
 plot_EvG(probeId(newp[np]), rsid(bestSnp(newp[np], b2)), g20f, main="PC-adjusted")
+}
 @
+
 
 
 \clearpage
