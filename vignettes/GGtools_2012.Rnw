@@ -497,13 +497,14 @@ if (.Platform$OS.type != "windows") {
 newp = setdiff(goodProbes(b2), goodProbes(b1))
 np = length(newp)
 bestSnp = function(pn, esm) elementMetadata(esm@scoregr[pn])$snpid
+}
+@
 <<killed,eval=FALSE>>=
 par(mfrow=c(2,2))
 plot_EvG(probeId(newp[1]), rsid(bestSnp(newp[1], b2)), g20, main="raw")
 plot_EvG(probeId(newp[1]), rsid(bestSnp(newp[1], b2)), g20f, main="PC-adjusted")
 plot_EvG(probeId(newp[np]), rsid(bestSnp(newp[np], b2)), g20, main="raw")
 plot_EvG(probeId(newp[np]), rsid(bestSnp(newp[np], b2)), g20f, main="PC-adjusted")
-}
 @
 
 \includegraphics{GGtools_2012-domopic}
