@@ -26,7 +26,7 @@ cat("PHASE 1: determining cis threshold...\n")
     radius=radius, shortfac=shortfac, chrnames=chrnames, smchrpref=smchrpref,
     gchrpref = gchrpref, schrpref = schrpref, geneApply=geneApply,
     geneannopk = geneannopk, snpannopk = snpannopk,
-    smFilter=smFilter4cis, nperm=nperm, exFilter=exFilter, ssGen=ssGen)
+    smFilter=smFilter4cis, nperm=nperm, exFilter=exFilter, SSgen = SSgen )
     }
  else btmp = inbestcis
  kp = probesWeqtl(btmp, maxfdr=maxfdr)
