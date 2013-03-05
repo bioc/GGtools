@@ -38,14 +38,13 @@ All.cis =
      pifdr = function(obs, ps, applier=lapply) {
         nperm=length(ps)/length(obs)
         unlist(applier(obs, function(x) 
-           (sum(abs(ps)>abs(x))/nperm)/sum(abs(obs)>abs(x))))
+           (sum(abs(ps)>abs(x))/nperm)/sum(abs(obs)>abs(x)))) }
      obssc = obs$score
      permsc = unlist(lapply(perms, function(x)x$score))
      obs$fdr = pifdr(obssc, permsc)
+     obs = obs[order(obs$fdr, -obs$score)]
      new("mcwAllCis", obs=obs, perms=perms, theCall=thecall)
 }
-
-  }
 
 All.cis.mchr = 
   function(smpack, rhs=~1, folderstem="cisScratch",
@@ -82,7 +81,7 @@ All.cis.chr =
     unlink(folderstem, recursive=TRUE)
     cat("get data...")
     if (length(chrname)>1) stop("chrname must be length 1")
-    smchr = chrname[1]
+    smchr = paste0(smchrpref, chrname[1])
     sms = SSgen(smpack, smchr, exFilter=exFilter)
     cat("build map...")
 #
