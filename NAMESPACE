@@ -42,15 +42,15 @@ exportMethods("gwSnpTests", "show", "topFeats", "plot", transTab)
 
 exportClasses("eqtlTestsManager", "eqtlEstimatesManager", "mcwBestCis",
    "gwSnpScreenResult", transManager, allSigCis, sensiCisInput,
-   sensiCisOutput)
+   sensiCisOutput, mcwAllCis)
 
 export(gwSnpTests, topSnps, eqtlTests, topFeats, getCisMap, pData, plot,
 	best.cis.eQTLs, chromsUsed, fullreport, 
 	eqtlEstimates, probesManaged, snpsManaged,
 	topScores, topGenes, locusNames, geneNames, geneIndcol, nthScores,
-	vcf2sm, All.cis.eQTLs, fdr, transScores, getBest, getAll, 
+	vcf2sm, fdr, transScores, getBest, getAll, 
 	getCall, transTab, meqtlTests, meta.best.cis.eQTLs, meta.All.cis.eQTLs,
 	meta.transScores, annotation, sensanal, snplocsDefault, bindmaf,
 	richNull, meta.bindmaf, meta.richNull)
 
-export(best.trans.eQTLs)
+export(best.trans.eQTLs, chrFilter, All.cis)

@@ -88,3 +88,9 @@ if (doFDR) {
             mcw2@smFilter), nperm = nperm)
 }
 
+setClass("mcwAllCis", representation(obs="GRanges", perms="list",
+    theCall="call"))
+setMethod("show", "mcwAllCis", function(object) {
+ cat("mcwAllCis instance.\n")
+ show(object@obs)
+})
