@@ -38,7 +38,7 @@ All.cis =
      pifdr = function(obs, ps, applier=lapply) {
         nperm=length(ps)/length(obs)
         unlist(applier(obs, function(x) 
-           (sum(abs(ps)>abs(x))/nperm)/sum(abs(obs)>abs(x)))) }
+           (sum(abs(ps)>=abs(x))/nperm)/sum(abs(obs)>=abs(x)))) }
      obssc = obs$score
      permsc = unlist(lapply(perms, function(x)x$score))
      obs$fdr = pifdr(obssc, permsc)
