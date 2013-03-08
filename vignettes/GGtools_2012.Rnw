@@ -426,7 +426,7 @@ enumerate all SNP with association scores exceeding some threshold.
 All.cis.eQTLs can be used for this.
 
 <<lkall>>=
-args(All.cis.eQTLs)
+args(GGtools:::All.cis.eQTLs)
 @  
 
 The computation can be done \textit{de novo} on the basis of an \texttt{smpack}
@@ -434,13 +434,17 @@ argument, or can be regarded as a followup on a completed \texttt{best.cis.eQTLs
 call.
 
 <<doall1>>=
-b1.all = All.cis.eQTLs( maxfdr = 0.05, inbestcis = b1, smpack="GGdata", rhs=~1, 
+b1.all = GGtools:::All.cis.eQTLs( maxfdr = 0.05, inbestcis = b1, smpack="GGdata", rhs=~1, 
  chrnames = "20",
  smFilter4all = function(x) MAFfilter(x, lower=0.05))
 @
 
 Here a second SNP is identified for the one gene exhibiting an eQTL
 at FDR $<= 0.05$.
+
+Nota bene.  Many users have attempted to work with All.cis.eQTLs with maxfdr set to 1
+in order to obtain all cis tests.  This is not the intended use.  eQTLtests or a new function called
+All.cis can be used for exhaustive testing tasks.
 
       
 \subsection{Removal of empirically identified expression heterogeneity}

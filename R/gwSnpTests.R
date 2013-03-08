@@ -152,7 +152,7 @@ setMethod("plot", c("gwSnpScreenResult", "character"),  # y bound to location pa
  locs = ldf$loc
  names(locs) = paste("rs", as.character(ldf$RefSNP_id), sep="")
  chk = intersect(rsn, names(locs))
- if (length(chk) != length(rsid)) warning(paste("some SNP in rsid were not found in location db", y))
+ if (length(chk) != length(rsid)) message(paste("NOTE: some SNP in rsid were not found in location db", y))
  if (length(chk) < 1) stop("no locations found for tested SNP")
  loc = locs[ chk ]
 
