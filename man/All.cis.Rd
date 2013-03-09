@@ -25,7 +25,7 @@ All.cis(smpack, rhs = ~1, nperm = 2,
 package name for externalized smlSet instance
 }
   \item{rhs}{
-direct covariate formula for \code{\link[snpMatrix]{snp.rhs.stats}} -- when
+direct covariate formula for \code{\link[snpStats]{snp.rhs.stats}} -- when
 using permutation-based FDR it is preferable to work with residuals
 }
   \item{nperm}{

@@ -35,8 +35,8 @@ best.cis.eQTLs(smpack = "GGdata", rhs = ~1,
   geneApply = lapply, geneannopk = "illuminaHumanv1.db", 
   snpannopk = snplocsDefault(),
   smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.97), nperm = 2,
-  useME=FALSE, excludeRadius=NULL, exFilter=function(x)x, keepMapCache=FALSE,
-  getDFFITS=FALSE)
+  useME=FALSE, excludeRadius=NULL, exFilter=function(x)x, 
+  keepMapCache=FALSE, getDFFITS=FALSE, SSgen = GGBase::getSS)
 
 All.cis.eQTLs(maxfdr = 0.05, inbestcis = NULL, smpack = "GGdata", 
     rhs = ~1, folderstem = "cisScratch", radius = 50000, 
@@ -49,7 +49,8 @@ All.cis.eQTLs(maxfdr = 0.05, inbestcis = NULL, smpack = "GGdata",
         1:10), lower = 0.05), var.cutoff = 0.85), 
     smFilter4all = function(x) MAFfilter(clipPCs(x, 
         1:10), lower = 0.05), 
-    nperm = 2, excludeRadius=NULL, exFilter=function(x)x)
+    nperm = 2, excludeRadius=NULL, exFilter=function(x)x,
+    SSgen = GGBase::getSS)
 
 meta.best.cis.eQTLs(smpackvec = c("GGdata", "hmyriB36"), rhslist = list(~1, 
     ~1), folderstem = "cisScratch", radius = 50000, shortfac = 100, 
@@ -200,6 +201,11 @@ a list of functions in correspondence with the elements of
  \item{getDFFITS}{logical; a component storing max DFFITS value for
 each gene will be retained if this argument TRUE}
  \item{\dots}{not used}
+ \item{SSgen}{function to be used to create smlSet instance
+for testing -- in general, GGBase::getSS has been used to pull
+the ExpressionSet and SnpMatrix data from a named package, but
+in some cases a specialize task is needed to create the desired
+smlSet.  Whatever is passed to SSgen must return an smlSet instance.}
 }
 \details{
 \code{geneApply} can be set to \code{parallel::mclapply}, for example,

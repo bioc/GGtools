@@ -10,9 +10,9 @@ bind testing metadata to a best.cis.eQTLs result
 
 }
 \usage{
-bindmaf(smpack = "GGdata", smchr = "20", obj)
+bindmaf(smpack = "GGdata", smchr = "20", obj, SSgen=GGBase::getSS)
 meta.bindmaf (smpackvec=c("GGdata", "hmyriB36"),
-     smchr="20", obj, usemaxMAF=FALSE) 
+     smchr="20", obj, usemaxMAF=FALSE, SSgen=GGBase::getSS) 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -35,6 +35,11 @@ populations, otherwise compute the MAF for the combined genotypes across
 populations represented by the various smlSet instances generated with
 the \code{smpackvec} spec.
   }
+ \item{SSgen}{function to be used to create smlSet instance
+for testing -- in general, GGBase::getSS has been used to pull
+the ExpressionSet and SnpMatrix data from a named package, but
+in some cases a specialize task is needed to create the desired
+smlSet.  Whatever is passed to SSgen must return an smlSet instance.}
 }
 \details{
 computes the MAF of most highly associated SNP per gene, and distance between

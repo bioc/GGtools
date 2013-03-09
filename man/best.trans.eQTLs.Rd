@@ -11,7 +11,8 @@ collect strongest trans SNP-gene associations in a buffer of size K genes per SN
 best.trans.eQTLs(smpack, rhs, genechrnum, snpchrnum, K = 20, 
    targdirpref = "tsco", batchsize = 200, radius = 2e+06, genequeryprefix = "", 
    snploadprefix = "chr", snplocprefix = "chr", geneannopk, snpannopk, 
-   exFilter = function(x) x, smFilter = function(x) x, geneApply = lapply)
+   exFilter = function(x) x, smFilter = function(x) x, 
+   geneApply = lapply, SSgen = GGBase::getSS)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -71,6 +72,11 @@ function returning an smlSet instance, operating on the full smlSet
   \item{geneApply}{
 lapply-like function, typically mclapply or the like
 }
+ \item{SSgen}{function to be used to create smlSet instance
+for testing -- in general, GGBase::getSS has been used to pull
+the ExpressionSet and SnpMatrix data from a named package, but
+in some cases a specialize task is needed to create the desired
+smlSet.  Whatever is passed to SSgen must return an smlSet instance.}
 }
 %\details{
 %%  ~~ If necessary, more details than the description above ~~

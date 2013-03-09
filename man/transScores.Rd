@@ -18,7 +18,8 @@ transScores(smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsco", geneAppl
   genegran = 50, shortfac = 10, wrapperEndo = NULL, 
   geneannopk = "illuminaHumanv1.db", 
   snpannopk = snplocsDefault(), gchrpref = "",
-                 schrpref = "ch", exFilter=function(x)x)
+                 schrpref = "ch", exFilter=function(x)x,
+   SSgen=GGbase::getSS)
 
 meta.transScores (smpackvec = c("GGdata", "hmyriB36"),
     snpchr = "22", rhsList=list(~1, ~1), K = 20, targdirpref = "mtsco",
@@ -28,7 +29,8 @@ meta.transScores (smpackvec = c("GGdata", "hmyriB36"),
     geneannopk = "illuminaHumanv1.db", snpannopk = snplocsDefault(),
     gchrpref = "", schrpref="ch",
     exFilterList= list(function(x)x, function(x)x),
-    SMFilterList = list(function(x)x, function(x)x))
+    SMFilterList = list(function(x)x, function(x)x),
+    SSgen = GGBase::getSS)
 
 }
 %- maybe also 'usage' for other objects documented here.
@@ -116,6 +118,11 @@ retrieved smlSet, to reduce probe sets in use, for example}
 each of the elements of smpackvec}
     \item{SMFilterList}{list of functions servicing as wrapperEndos
 for each of the elements of smpackvec}
+ \item{SSgen}{function to be used to create smlSet instance
+for testing -- in general, GGBase::getSS has been used to pull
+the ExpressionSet and SnpMatrix data from a named package, but
+in some cases a specialize task is needed to create the desired
+smlSet.  Whatever is passed to SSgen must return an smlSet instance.}
 }
 %\details{
 %%  ~~ If necessary, more details than the description above ~~
