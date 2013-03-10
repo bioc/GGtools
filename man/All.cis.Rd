@@ -1,5 +1,8 @@
 \name{All.cis}
 \alias{All.cis}
+\alias{chrFilter}
+\alias{mcwAllCis-class}
+\alias{show,mcwAllCis-method}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 function that computes score tests for all SNP cis to genes, with
@@ -25,7 +28,7 @@ All.cis(smpack, rhs = ~1, nperm = 2,
 package name for externalized smlSet instance
 }
   \item{rhs}{
-direct covariate formula for \code{\link[snpStats]{snp.rhs.stats}} -- when
+direct covariate formula for \code{\link[snpStats]{snp.rhs.tests}} -- when
 using permutation-based FDR it is preferable to work with residuals
 }
   \item{nperm}{
@@ -103,9 +106,10 @@ GRanges instance
 %\author{
 %%%  ~~who you are~~
 %}
-%\note{
-%%%  ~~further notes~~
-%}
+\note{
+class mcwAllCis is experimental for dealing with All.cis output.
+chrFilter is experimental filter for smlSet instances.
+}
 %
 %%% ~Make other sections like Warning with \section{Warning }{....} ~
 %

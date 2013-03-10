@@ -19,7 +19,7 @@ transScores(smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsco", geneAppl
   geneannopk = "illuminaHumanv1.db", 
   snpannopk = snplocsDefault(), gchrpref = "",
                  schrpref = "ch", exFilter=function(x)x,
-   SSgen=GGbase::getSS)
+   SSgen=GGBase::getSS)
 
 meta.transScores (smpackvec = c("GGdata", "hmyriB36"),
     snpchr = "22", rhsList=list(~1, ~1), K = 20, targdirpref = "mtsco",
