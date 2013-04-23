@@ -20,7 +20,7 @@ All.cis(smpack, rhs = ~1, nperm = 2,
   geneApply = lapply, geneannopk = "illuminaHumanv1.db", 
   snpannopk = snplocsDefault(), 
   smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.9),  exFilter = function(x) x, keepMapCache = FALSE, 
-  SSgen = GGBase::getSS, excludeRadius = NULL, ...)
+  SSgen = GGBase::getSS, excludeRadius = NULL, estimates=FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -83,6 +83,9 @@ package
   \item{excludeRadius}{
 for binning test procedure
 }
+  \item{estimates}{logical determining whether per-gene, per-SNP additive
+effect and s.e. estimates will be computed and included in
+output GRanges}
   \item{\dots}{
 passed to eqtlTests
 }
