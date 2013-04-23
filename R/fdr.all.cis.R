@@ -17,14 +17,15 @@ All.cis =
    snpannopk = snplocsDefault(), smFilter = function(x)
       nsFilter(MAFfilter(x, lower=.05), var.cutoff=.9), 
    exFilter=function(x)x, keepMapCache=FALSE, SSgen=GGBase::getSS,
-   excludeRadius=NULL, ...) {
+   excludeRadius=NULL, estimates=FALSE, ...) {
      thecall = match.call()
      obs = All.cis.mchr( smpack=smpack, rhs=rhs,
       folderstem=folderstem, radius=radius, shortfac=shortfac,
       chrnames=chrnames, smchrpref=smchrpref, gchrpref=gchrpref,
 	schrpref=schrpref, geneApply=geneApply, geneannopk=geneannopk,
 	snpannopk=snpannopk, smFilter=smFilter, 
-	exFilter=exFilter, keepMapCache=keepMapCache, SSgen=SSgen, ...) 
+	exFilter=exFilter, keepMapCache=keepMapCache, SSgen=SSgen,
+        estimates=estimates, ...) 
 #
 # in following, smFilter is wrapped over permEx
 #
@@ -33,7 +34,7 @@ All.cis =
         chrnames=chrnames, smchrpref=smchrpref, gchrpref=gchrpref,
 	schrpref=schrpref, geneApply=geneApply, geneannopk=geneannopk,
 	snpannopk=snpannopk, smFilter=function(x)smFilter(permEx(x)), 
-	exFilter=exFilter, keepMapCache=keepMapCache, SSgen=SSgen, ...) )
+	exFilter=exFilter, keepMapCache=keepMapCache, SSgen=SSgen, estimates=estimates, ...) )
 #     list(obs=obs, perms=perms)
      pifdr = function(obs, ps, applier=lapply) {
         nperm=length(ps)/length(obs)
@@ -54,7 +55,7 @@ All.cis.mchr =
    snpannopk = snplocsDefault(), smFilter = function(x)
       nsFilter(MAFfilter(x, lower=.05), var.cutoff=.9), 
    exFilter=function(x)x, keepMapCache=FALSE, SSgen=GGBase::getSS,
-   excludeRadius=NULL, ...) {
+   excludeRadius=NULL, estimates=FALSE, ...) {
   #
   ans = lapply( chrnames, function(ch) {
     All.cis.chr( smpack=smpack, rhs=rhs,
@@ -62,7 +63,7 @@ All.cis.mchr =
       chrname=ch, smchrpref=smchrpref, gchrpref=gchrpref,
 	schrpref=schrpref, geneApply=geneApply, geneannopk=geneannopk,
 	snpannopk=snpannopk, smFilter=smFilter, 
-	exFilter=exFilter, keepMapCache=keepMapCache, SSgen=SSgen, ...) } )
+	exFilter=exFilter, keepMapCache=keepMapCache, SSgen=SSgen, estimates=estimates, ...) } )
   do.call(c, ans)
 }
    
@@ -75,7 +76,7 @@ All.cis.chr =
    snpannopk = snplocsDefault(), smFilter = function(x)
       nsFilter(MAFfilter(x, lower=.05), var.cutoff=.9), 
    exFilter=function(x)x, keepMapCache=FALSE, SSgen=GGBase::getSS,
-   excludeRadius=NULL, ...) {
+   excludeRadius=NULL, estimates=FALSE, ...) {
 #
 #
     unlink(folderstem, recursive=TRUE)
@@ -132,6 +133,27 @@ All.cis.chr =
     gr$snp = sn
     gr$snplocs = start(cismapObj@snplocs[sn])
     gr$score = as.numeric(unlist(activeScores))
+
+    if (estimates) {
+       emgr = eqtlEstimates(fsms, rhs, targdir = folderstem,
+           runname = "cisEsts", geneApply = geneApply, shortfac=shortfac, ...)
+       edim = dim(emgr@fffile)
+       olddim = dim(mgr@fffile)
+       if (!all.equal(olddim, edim[1:2])) stop("estimates manager dimension disagrees with test manager dim")
+       activeEsts = geneApply(pl, function(x)
+         emgr@fffile[ intersect(sm, cismap[[x]]), x, 1 ]/emgr@shortfac)
+       activeSEs = geneApply(pl, function(x)
+         emgr@fffile[ intersect(sm, cismap[[x]]), x, 2 ]/emgr@shortfac)
+       names(activeEsts) = names(activeSEs) = pl
+#       ntestpg = sapply(activeEsts,length)
+#       gr = cismapObj@generanges[pl]
+#       gr = rep(gr, ntestpg)
+#       sn = unlist(lapply(activeScores,rownames))
+#       gr$snp = sn
+#       gr$snplocs = start(cismapObj@snplocs[sn])
+       gr$ests = as.numeric(unlist(activeEsts))
+       gr$se = as.numeric(unlist(activeSEs))
+    }
     #list(mgr=mgr, cismapObj = cismapObj, activeScores=activeScores)
     gr
 }
