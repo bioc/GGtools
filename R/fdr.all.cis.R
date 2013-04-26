@@ -138,7 +138,7 @@ All.cis.chr =
        emgr = eqtlEstimates(fsms, rhs, targdir = folderstem,
            runname = "cisEsts", geneApply = geneApply, shortfac=shortfac, ...)
        on.exit(close(emgr@fffile))
-       if (!is(open(emgr@fffile))) {
+       if (!is.open(emgr@fffile)) {
 	   open(emgr@fffile)
        }
        edim = dim(emgr@fffile)
