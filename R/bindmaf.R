@@ -148,11 +148,7 @@ meta.richNull = function(..., MAFlb=.01, npc=10, radius=250000,
 }
 
 
-bindmafAll = function (smpack = "GGdata", smchr = "20", obj, SSgen = GGBase::getSS, 
-    rad) 
-{
-    if (!is(obj, "mcwAllCis")) stop("function for mcwAllCis only.")
-    fr = obj@obs
+bindmaf.simple = function(smpack, smchr, fr, SSgen=GGBase::getSS, rad) {
     fr = fr[which(as.character(seqnames(fr)) == smchr)]
     pro = names(fr)
     values(fr)$probeid = pro

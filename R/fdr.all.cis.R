@@ -44,6 +44,9 @@ All.cis =
      permsc = unlist(lapply(perms, function(x)x$score))
      obs$fdr = pifdr(obssc, permsc)
      obs = obs[order(obs$fdr, -obs$score)]
+     smchr = paste0(smchrpref, chrnames)
+     obs = bindmaf.simple( smpack, smchr, obs, SSgen, radius )
+#bindmaf.simple = function(smpack, smchr, fr, SSgen=GGBase::getSS, rad)
      new("mcwAllCis", obs=obs, perms=perms, theCall=thecall)
 }
 

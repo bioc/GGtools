@@ -1,6 +1,6 @@
 \name{bindmaf}
 \alias{bindmaf}
-\alias{bindmafAll}
+%\alias{bindmafAll}
 \alias{meta.bindmaf}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -47,7 +47,7 @@ computes the MAF of most highly associated SNP per gene, and distance between
 that SNP and the transcription limits of the gene, assigning 0 for this if the
 SNP lies within the transcription limits
 
-\code{bindmafAll} is tailored for All.cis application output
+%\code{bindmafAll} is tailored for All.cis application output
 }
 \value{
 a GRanges instance
