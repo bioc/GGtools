@@ -137,6 +137,10 @@ All.cis.chr =
     if (estimates) {
        emgr = eqtlEstimates(fsms, rhs, targdir = folderstem,
            runname = "cisEsts", geneApply = geneApply, shortfac=shortfac, ...)
+       on.exit(close(emgr@fffile))
+       if (!is(open(emgr@fffile))) {
+	   open(emgr@fffile)
+       }
        edim = dim(emgr@fffile)
        olddim = dim(mgr@fffile)
        if (!all.equal(olddim, edim[1:2])) stop("estimates manager dimension disagrees with test manager dim")
@@ -155,6 +159,7 @@ All.cis.chr =
        gr$se = as.numeric(unlist(activeSEs))
     }
     #list(mgr=mgr, cismapObj = cismapObj, activeScores=activeScores)
+    unlink(folderstem, recursive=TRUE)
     gr
 }
      

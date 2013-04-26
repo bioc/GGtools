@@ -146,3 +146,48 @@ meta.richNull = function(..., MAFlb=.01, npc=10, radius=250000,
             smchr=inargs$chrnames, 
             obj=meta.best.cis.eQTLs( ..., SMFilterList=bigfiltList, nperm=0, radius=radius )))
 }
+
+
+bindmafAll = function (smpack = "GGdata", smchr = "20", obj, SSgen = GGBase::getSS, 
+    rad) 
+{
+    if (!is(obj, "mcwAllCis")) stop("function for mcwAllCis only.")
+    fr = obj@obs
+    fr = fr[which(as.character(seqnames(fr)) == smchr)]
+    pro = names(fr)
+    values(fr)$probeid = pro
+    togetv = values(fr)
+    toget = togetv$snp
+    togetloc = togetv$snplocs
+    smls = SSgen(smpack, smchr)
+    probeanno = annotation(smls)
+    require(probeanno, character.only = TRUE)
+    glocenv = get(paste(gsub(".db", "", probeanno), "CHRLOC", 
+        sep = ""))
+    glocendenv = get(paste(gsub(".db", "", probeanno), "CHRLOCEND", 
+        sep = ""))
+    summ = col.summary(smList(smls)[[smchr]])
+    rn = rownames(summ)
+    if (!all(toget %in% rn)) 
+        stop("some SNP not available in SSgen result ... shouldn't happen")
+    if (!all.equal(names(fr), values(fr)$probeid)) 
+        stop("probeides went out of sync")
+    mafs = summ[match(toget, rn), "MAF"]
+    okpr = values(fr)$probeid
+    gstarts = sapply(mget(okpr, glocenv), "[", 1)
+    gends = sapply(mget(okpr, glocendenv), "[", 1)
+    strand = ifelse(gstarts < 0, "-", "+")
+    if (any(is.na(strand))) {
+        warning("strand unknown for some gene, setting to +")
+        strand[which(is.na(strand))] = "+"
+    }
+    strand(fr) = strand
+    values(fr)$MAF = mafs
+    gmids = abs(gstarts) + 0.5 * (abs(gends) - abs(gstarts))
+    dist.mid = fr$snplocs - gmids
+    if (any(strand == "-")) 
+        dist.mid[which(strand == "-")] = -dist.mid[which(strand == 
+            "-")]
+    values(fr)$dist.mid = dist.mid
+    fr
+}
