@@ -24,7 +24,7 @@ be integer multiple of \code{length(obs)}
 }
   \item{npts}{number of points spanning the range
 of \code{obs} to be used for a lossy grid-based computation;
-only used of \code{length(obs)>npts}.
+only used of \code{length(obs)>npts}.}
   \item{applier}{
 function that iterates the computation
 %%     ~~Describe \code{applier} here~~
