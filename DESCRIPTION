@@ -1,6 +1,6 @@
 Package: GGtools
 Title: software and data for analyses in genetics of gene expression
-Version: 4.9.3
+Version: 4.9.4
 Author: VJ Carey <stvjc@channing.harvard.edu>
 Description: software and data for analyses in genetics of gene expression
 	and/or DNA methylation
@@ -20,4 +20,4 @@ Collate: AllClasses.R AllGenerics.R eqtlTests.R
 	relocate.R topSnps.R snplocsDefault.R
 	transutils.R vcfutils.R eqtlEstimates.R alleq.R meta.R eqME.R
 	meta.all.R best.trans.eQTLs.R meta.transScores.R summInfra.R bindmaf.R
-	fdr.all.cis.R
+	fdr.all.cis.R pifdr.R

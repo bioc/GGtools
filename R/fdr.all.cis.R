@@ -36,10 +36,6 @@ All.cis =
 	snpannopk=snpannopk, smFilter=function(x)smFilter(permEx(x)), 
 	exFilter=exFilter, keepMapCache=keepMapCache, SSgen=SSgen, estimates=estimates, ...) )
 #     list(obs=obs, perms=perms)
-     pifdr = function(obs, ps, applier=lapply) {
-        nperm=length(ps)/length(obs)
-        unlist(applier(obs, function(x) 
-           (sum(abs(ps)>=abs(x))/nperm)/sum(abs(obs)>=abs(x)))) }
      obssc = obs$score
      permsc = unlist(lapply(perms, function(x)x$score))
      obs$fdr = pifdr(obssc, permsc)

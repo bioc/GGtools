@@ -9,7 +9,7 @@ utility for computing plug-in FDR
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-pifdr(obs, ps, applier = lapply)
+pifdr( obs, perms, npts=1999, applier=sapply)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -17,16 +17,26 @@ pifdr(obs, ps, applier = lapply)
 observed association scores
 %%     ~~Describe \code{obs} here~~
 }
-  \item{ps}{
-vector of association scores under permutation
+  \item{perms}{
+vector of association scores under permutation; length should
+be integer multiple of \code{length(obs)}
 %%     ~~Describe \code{ps} here~~
 }
+  \item{npts}{number of points spanning the range
+of \code{obs} to be used for a lossy grid-based computation;
+only used of \code{length(obs)>npts}.
   \item{applier}{
 function that iterates the computation
 %%     ~~Describe \code{applier} here~~
 }
 }
 \details{
+As currently implemented the algorithm is quadratic in \code{length(obs)}.
+While it is possible to get a unique FDR value for every element of \code{obs},
+an approximate approach yields practically identical precision and by default this
+will be used for \code{obs} with length 2000 or more.  In this case,
+\code{\link{approx}} is used with \code{rule=2} to interpolate from the
+grid-based FDR estimates back to the data values.
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{

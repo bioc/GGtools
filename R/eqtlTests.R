@@ -1,14 +1,3 @@
-     pifdr = function(obs, ps, applier=lapply) {
-#
-# plug-in FDR -- observed score vector and permuted score vector are inputs
-#
-        rem = length(ps) %% length(obs)
-        if (!(rem==0)) warning("permutation vector length not evenly divisible by observed vector length")
-        nperm=length(ps)/length(obs)
-        unlist(applier(obs, function(x)
-           (sum(abs(ps)>=abs(x))/nperm)/sum(abs(obs)>=abs(x)))) 
-}
-
 
 # eqtlTests is being revised to reduce scope creep.  the purpose
 # of eqtlTests is to concisely generate all SNP-gene association
