@@ -189,9 +189,9 @@ All.cis2 =
      obssc = obs$score
      permsc = unlist(lapply(perms, function(x)x$score))
      obs$fdr = pifdr(obssc, permsc)
-     obs = obs[order(obs$fdr, -obs$score)]
-     smchr = paste0(smchrpref, chrnames)
-     obs = bindmaf.simple( smpack, smchr, obs, SSgen, radius )
+#     obs = obs[order(obs$fdr, -obs$score)]
+     smchr = paste0(smchrpref(config), chrnames(config))
+     obs = bindmaf.simple( smpack(config), smchr, obs, SSgen(config), radius(config) )
      new("mcwAllCis", obs=obs, perms=perms, theCall=thecall)
 }
 
