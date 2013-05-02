@@ -162,3 +162,36 @@ All.cis.chr =
     gr
 }
      
+
+All.cis2 =
+  function(config=new("CisConfig"), ...) {
+#
+# eventually will replace All.cis
+#
+     thecall = match.call()
+     obs = All.cis.mchr( smpack=smpack(config), rhs=rhs(config),
+      folderstem=folderStem(config), radius=radius(config), shortfac=shortfac(config),
+      chrnames=chrnames(config), smchrpref=smchrpref(config), gchrpref=gchrpref(config),
+        schrpref=schrpref(config), geneApply=geneApply(config), geneannopk=geneannopk(config),
+        snpannopk=snpannopk(config), smFilter=smFilter(config),
+        exFilter=exFilter(config), keepMapCache=keepMapCache(config), SSgen=SSgen(config),
+        estimates=estimates(config), ...)
+#
+# in following, smFilter is wrapped over permEx
+#
+     perms = lapply(1:nperm(config), function(x) All.cis.mchr( smpack=smpack(config), rhs=rhs(config),
+        folderstem=folderStem(config), radius=radius(config), shortfac=shortfac(config),
+        chrnames=chrnames(config), smchrpref=smchrpref(config), gchrpref=gchrpref(config),
+        schrpref=schrpref(config), geneApply=geneApply(config), geneannopk=geneannopk(config),
+        snpannopk=snpannopk(config), smFilter=function(x)smFilter(config)(permEx(x)),
+        exFilter=exFilter(config), keepMapCache=keepMapCache(config), SSgen=SSgen(config), 
+        estimates=estimates(config), ...) )
+     obssc = obs$score
+     permsc = unlist(lapply(perms, function(x)x$score))
+     obs$fdr = pifdr(obssc, permsc)
+     obs = obs[order(obs$fdr, -obs$score)]
+     smchr = paste0(smchrpref, chrnames)
+     obs = bindmaf.simple( smpack, smchr, obs, SSgen, radius )
+     new("mcwAllCis", obs=obs, perms=perms, theCall=thecall)
+}
+
