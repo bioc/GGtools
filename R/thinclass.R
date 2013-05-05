@@ -22,3 +22,59 @@ convertCis = function(mcw, MAFlb, radius) {
  if (length(metadata(mcw@obs))>0) metadata(ans) = c(metadata(ans), metadata(mcw))
  new("cisRun", ans)
 }
+
+
+hns = function (packnames, chrtag = "chr_22",
+   MAFlb, inradius) 
+{
+#
+# harmonize and sum, for metaanalytic applications with cisRun instances
+#
+    require(GGtools)
+    for (i in packnames) require(i, character.only = TRUE)
+    objs = lapply(packnames, function(x) get(load(dir(patt = chrtag, 
+        system.file("rdas", package = x), full = TRUE))))
+    objs = lapply(objs, function(x) {
+         if (is(x, "mcwAllCis")) x = convertCis(x, MAFlb=MAFlb, radius=inradius)
+         x
+         })
+    cl = sapply(objs, function(x) is(x, "cisRun"))
+    if (!(all(cl))) stop("some inputs not inheriting from cisRun")
+    keys = lapply(objs, function(x) paste(names(x), x$snp, 
+        sep = ":"))
+    okkeys = keys[[1]]
+    for (i in 2:length(keys)) okkeys = intersect(okkeys, keys[[i]])
+    keepinds = lapply(keys, function(x) match(okkeys,x))
+    for (i in 1:length(objs)) objs[[i]] = objs[[i]][keepinds[[i]]]
+    newkeys = lapply(objs, function(x) paste(names(x), x$snp, 
+        sep = ":"))
+    basekeys = newkeys[[1]]
+    for (i in 2:length(keys)) {
+        if (!(all.equal(newkeys[[i]], basekeys))) stop("keys not matching afte rfilter")
+    }
+    ans = objs[[1]]
+    permcols = grep("^permScore_", names(values(ans)), value=TRUE)
+    if (!isTRUE(length(permcols) > 1)) stop("permScore_ entries not found")
+    nperms = length(permcols)
+    anssco = ans$score
+    # refrain from computing on GRanges but pull the numeric elements
+    ansps = vector("list", nperms)
+    pnames = vector("character", nperms)
+    for (j in 1:nperms) {
+        pnames[j] = paste0("permScore_", j)
+        ansps[[j]] = values(ans)[[pnames[j]]]
+        }
+    stopifnot(all(pnames %in% names(values(ans))))
+    for (i in 2:length(objs)) {
+         anssco = anssco + objs[[i]]$score
+         for (j in 1:nperms) {
+           ansps[[j]] = ansps[[j]] + values(objs[[i]])[[pnames[j]]]
+         }
+    }
+   ans$score = anssco
+   for (j in 1:nperms)
+        values(ans)[[pnames[j]]] = ansps[[j]]
+   ans
+}
+         
+         
