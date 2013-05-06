@@ -9,24 +9,44 @@ cisFilter = function (rng, low.maf = 0, hi.maf = 0.51, low.dist = 0, hi.dist = 5
         distTx(rng$dist.mid) >= low.dist & distTx(rng$dist.mid) < hi.dist)]
 }
 
-bestInStratum = function(m, stratumGetter = names,
-  scoreGetter = function(x) values(x)$score, computeBest = max,
-  scorerName = function(x) values(x)$snp,
-  permind=NULL) {
-  tmp = m
-  if (is.null(permind)) rng = tmp@obs
-  else rng = tmp@perms[[permind]]
-  sco = scoreGetter(rng)
-  scorerids = scorerName(rng)
-  strat = stratumGetter(rng)
-  scoresByStrat = split(sco,strat)
-  idsByStrat = split(scorerids,strat)
-  bestinds = sapply(scoresByStrat, which.max)
-  bestscores = sapply(1:length(bestinds), function(x) scoresByStrat[[x]][bestinds[x]])
-  scorers = sapply(1:length(bestinds), function(x) idsByStrat[[x]][bestinds[x]])
-  names(bestscores)=names(scoresByStrat)
-  list(scores=bestscores, scorerids=as.character(scorers))
+bestInStratum = function (m, stratumGetter = names, scoreGetter = function(x) values(x)$score,
+    computeBest = max, scorerName = function(x) values(x)$snp,
+    permind = NULL)
+{
+    rng = m
+    if (is.null(permind))
+        sco = scoreGetter(rng)
+    else sco = values(rng)[[paste0("permScore_", permind)]]
+    scorerids = scorerName(rng)
+    strat = stratumGetter(rng)
+    scoresByStrat = split(sco, strat)
+    idsByStrat = split(scorerids, strat)
+    bestinds = sapply(scoresByStrat, which.max)
+    bestscores = sapply(1:length(bestinds), function(x) scoresByStrat[[x]][bestinds[x]])
+    scorers = sapply(1:length(bestinds), function(x) idsByStrat[[x]][bestinds[x]])
+    names(bestscores) = names(scoresByStrat)
+    list(scores = bestscores, scorerids = as.character(scorers))
 }
+
+
+#bestInStratum = function(m, stratumGetter = names,
+#  scoreGetter = function(x) values(x)$score, computeBest = max,
+#  scorerName = function(x) values(x)$snp,
+#  permind=NULL) {
+#  tmp = m
+#  if (is.null(permind)) rng = tmp@obs
+#  else rng = tmp@perms[[permind]]
+#  sco = scoreGetter(rng)
+#  scorerids = scorerName(rng)
+#  strat = stratumGetter(rng)
+#  scoresByStrat = split(sco,strat)
+#  idsByStrat = split(scorerids,strat)
+#  bestinds = sapply(scoresByStrat, which.max)
+#  bestscores = sapply(1:length(bestinds), function(x) scoresByStrat[[x]][bestinds[x]])
+#  scorers = sapply(1:length(bestinds), function(x) idsByStrat[[x]][bestinds[x]])
+#  names(bestscores)=names(scoresByStrat)
+#  list(scores=bestscores, scorerids=as.character(scorers))
+#}
   
 getFDR = function( files = dir(patt="^pop.*rda$"), filter = cisFilter, 
  reducer = bestInStratum, 
