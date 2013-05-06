@@ -1,20 +1,12 @@
 
 
-cisFilter = function (m, low.maf = 0, hi.maf = 0.51, low.dist = 0, hi.dist = 5000) 
+cisFilter = function (rng, low.maf = 0, hi.maf = 0.51, low.dist = 0, hi.dist = 5000, distTx=abs) 
 {
-    tmp = m
-    rng = tmp@obs
-    rng = rng[inds <- which(rng$MAF >= low.maf & rng$MAF < hi.maf & 
-        abs(rng$dist.mid) >= low.dist & abs(rng$dist.mid) < hi.dist)]
-    obsk = paste(names(rng), rng$snp, sep = ":")
-    filtperm = function(x) {
-        xk = paste(names(x), x$snp, sep = ":")
-        x[match(obsk, xk)]
-    }
-    pl = lapply(tmp@perms, filtperm)
-    tmp@perms = pl
-    tmp@obs = rng
-    tmp
+#
+# was initially for mcwAllCis, now can just use cisRun
+#
+    rng[ which(rng$MAF >= low.maf & rng$MAF < hi.maf & 
+        distTx(rng$dist.mid) >= low.dist & distTx(rng$dist.mid) < hi.dist)]
 }
 
 bestInStratum = function(m, stratumGetter = names,
