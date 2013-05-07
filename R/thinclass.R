@@ -25,12 +25,15 @@ convertCis = function(mcw, MAFlb, radius) {
 
 
 hns = function (packnames, chrtag = "chr_22",
-   MAFlb, inradius) 
+   MAFlb, inradius, MAFwts = rep(.5,length(packnames)) )
 {
 #
 # harmonize and sum, for metaanalytic applications with cisRun instances
+# the score is simply summed, the MAF is recomputed as a weighted sum, the default
+#  assumes equal sample sizes per package/population
 #
     require(GGtools)
+    if (abs(sum(MAFwts) - 1) > .Machine$double.eps ) stop("MAFwts must sum to 1")
     for (i in packnames) require(i, character.only = TRUE)
     objs = lapply(packnames, function(x) get(load(dir(patt = chrtag, 
         system.file("rdas", package = x), full = TRUE))))
@@ -50,13 +53,14 @@ hns = function (packnames, chrtag = "chr_22",
         sep = ":"))
     basekeys = newkeys[[1]]
     for (i in 2:length(keys)) {
-        if (!(all.equal(newkeys[[i]], basekeys))) stop("keys not matching afte rfilter")
+        if (!(all.equal(newkeys[[i]], basekeys))) stop("keys not matching after filter")
     }
     ans = objs[[1]]
     permcols = grep("^permScore_", names(values(ans)), value=TRUE)
     if (!isTRUE(length(permcols) > 1)) stop("permScore_ entries not found")
     nperms = length(permcols)
     anssco = ans$score
+    ansmaf = MAFwts[1]*ans$MAF
     # refrain from computing on GRanges but pull the numeric elements
     ansps = vector("list", nperms)
     pnames = vector("character", nperms)
@@ -67,11 +71,13 @@ hns = function (packnames, chrtag = "chr_22",
     stopifnot(all(pnames %in% names(values(ans))))
     for (i in 2:length(objs)) {
          anssco = anssco + objs[[i]]$score
+         ansmaf = ansmaf + MAFwts[i]*objs[[i]]$MAF
          for (j in 1:nperms) {
            ansps[[j]] = ansps[[j]] + values(objs[[i]])[[pnames[j]]]
          }
     }
    ans$score = anssco
+   ans$MAF = ansmaf
    for (j in 1:nperms)
         values(ans)[[pnames[j]]] = ansps[[j]]
    ans
