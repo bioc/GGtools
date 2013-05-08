@@ -56,6 +56,35 @@ radius and MAF.
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
+\dontrun{
+#
+# contents of fns are two chromsomes of cis runs for CEU
+#
+  fns = dir(system.file("rdas", package="GGtools"), full=TRUE)
+  cc = collectBest(fns, mafs=c(.01, .05), hidists=c(10000, 50000))
+  sapply(cc, sapply, function(x) sum(x$fdr <= 0.01))
+#
+# this tells us which to keep
+#
+  kp = cc[["0.05"]][["50000"]]
+  kp = kp[kp$fdr <= 0.01,]
+#
+# the hits are in the table above; the following function
+# retrieves the initial scores giving rise to the filtered
+# hits
+#
+  pullHits = function(fns, atts) {
+    tmp = lapply(fns, function(x) get(load(x)))
+    kl = lapply(tmp, function(x) paste(names(x), x$snp, sep=":"))
+    attk = paste(atts$genes, atts$bestsnp, sep=":")
+    tmp = lapply(1:length(tmp), function(x) tmp[[x]][ match( attk, kl[[x]], nomatch=0 ) ])
+    curans = do.call(c, lapply(tmp, as, "GRanges"))
+    neword = match( attk, paste(names(curans), curans$snp, sep=":"))
+    newfdr = atts$fdr[neword]
+    curans$fdr = newfdr
+    curans
+    }
+  pullHits( fns, kp )
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
