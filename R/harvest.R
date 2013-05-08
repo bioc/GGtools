@@ -56,3 +56,21 @@ for (i in 1:nmaf) {
    }
  tmp
 }
+
+  pullHits = function(fns, atts) {
+#
+# keep at the level of filenames for cisRun instances, and atts
+# is the collectBest data frame with optimal selections, filtered to
+# desired FDR
+#
+    tmp = lapply(fns, function(x) get(load(x)))
+    kl = lapply(tmp, function(x) paste(names(x), x$snp, sep=":"))
+    attk = paste(atts$genes, atts$bestsnp, sep=":")
+    tmp = lapply(1:length(tmp), function(x) tmp[[x]][ match( attk, kl[[x]], nomatch=0 ) ])
+    curans = do.call(c, lapply(tmp, as, "GRanges"))
+    neword = match( attk, paste(names(curans), curans$snp, sep=":"))
+    newfdr = atts$fdr[neword]
+    curans$fdr = newfdr
+    curans
+    }
+
