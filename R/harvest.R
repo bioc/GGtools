@@ -32,9 +32,10 @@ cis.FDR.filter.best = function( fn,
   ans
 }
 
-collectBest = function( fns, targetname="colls", 
+collectBest = function( fns, targetname="harvest", 
    mafs = c(.01, .02, .025, .03333, .05, .075, .1),
-   hidists = c(10000, 25000, 50000, 75000, 100000, 250000)) {
+   hidists = c(10000, 25000, 50000, 75000, 100000, 250000),
+   interimSaves=FALSE) {
 nmaf = length(mafs)
 ndist = length(hidists)
 outli = vector("list", nmaf*ndist) 
@@ -47,8 +48,11 @@ for (i in 1:nmaf) {
   names(tmp[[i]]) = as.character(hidists)
   for (j in 1:ndist) {
      tmp[[i]][[j]] = cis.FDR.filter.best( fns, hi.dist=hidists[j], low.maf=mafs[i] )
-     assign(targetname, tmp)
-     save(list=targetname, file=paste0(targetname, ".rda"))  # interim
+     if (interimSaves) {
+       assign(targetname, tmp)
+       save(list=targetname, file=paste0(targetname, ".rda"))  # interim
+       }
      }
    }
+ tmp
 }
