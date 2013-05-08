@@ -85,6 +85,7 @@ radius and MAF.
     curans
     }
   pullHits( fns, kp )
+  }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
