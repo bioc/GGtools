@@ -1,4 +1,4 @@
-cis.FDR.filter.best = function( fn = paste0("comb", 1:22, ".rda"),
+cis.FDR.filter.best = function( fn, 
     hi.dist = 50000, low.dist = -Inf, hi.maf = .51, low.maf = 0.05,
     fdrOnly = FALSE, applier=lapply ) {
 #
@@ -13,6 +13,7 @@ cis.FDR.filter.best = function( fn = paste0("comb", 1:22, ".rda"),
   else objs = lapply(gsub(".rda", "" , fn), get)
   cf = function(x) cisFilter(x, hi.dist = hi.dist, low.dist=low.dist,
         hi.maf=hi.maf, low.maf=low.maf )
+  chrtags = sapply(objs, function(x) as.character(seqnames(x)[1]))
   bs = lapply(objs, function(x) {cat("."); bestInStratum(cf(x))})
   bss = lapply(bs, "[[", 1)
   library(parallel)
@@ -26,7 +27,7 @@ cis.FDR.filter.best = function( fn = paste0("comb", 1:22, ".rda"),
      return(pp)
      } 
   alls = unlist(lapply(bs, "[[", 2))
-  allchr = rep(paste0("chr", 1:22), ng)
+  allchr = rep(chrtags, ng)
   ans = data.frame(genes=allg, bestsnp=alls, chr=allchr, fdr=pp)
   ans
 }
