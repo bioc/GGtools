@@ -52,7 +52,7 @@ export(gwSnpTests, topSnps, eqtlTests, topFeats, getCisMap, pData, plot,
 	getCall, transTab, meqtlTests, meta.best.cis.eQTLs, meta.All.cis.eQTLs,
 	meta.transScores, annotation, sensanal, snplocsDefault, bindmaf,
 	richNull, meta.bindmaf, meta.richNull, pifdr, bestInStratum,
- 	cisFilter, getFDR, All.cis2, convertCis, hns)
+ 	cisFilter, getFDR, All.cis2, convertCis, hns, collectBest)
 
 export(best.trans.eQTLs, chrFilter, All.cis)
 
