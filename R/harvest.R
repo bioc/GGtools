@@ -71,6 +71,9 @@ for (i in 1:nmaf) {
     neword = match( attk, paste(names(curans), curans$snp, sep=":"))
     newfdr = atts$fdr[neword]
     curans$fdr = newfdr
+    curans$genestart = start(curans)
+    curans$geneend = end(curans)
+    ranges(curans) = IRanges(curans$snplocs,width=1)
     curans
     }
 
