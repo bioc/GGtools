@@ -2,6 +2,9 @@ cis.FDR.filter.best = function( fn,
     hi.dist = 50000, low.dist = -Inf, hi.maf = .51, low.maf = 0.05,
     fdrOnly = FALSE, applier=lapply ) {
 #
+# file-oriented to avoid large internal images
+# assumes files are serialized cisRun instances
+#
 # chromsome-specific (or other partition) inclusive runs are filtered
 # and post-filter FDR is computed
 #
@@ -11,24 +14,26 @@ cis.FDR.filter.best = function( fn,
 #
   if (!exists(gsub(".rda", "", fn[1]))) objs = lapply(fn, function(x) get(load(x, .GlobalEnv)))
   else objs = lapply(gsub(".rda", "" , fn), get)
+  nperm = length(grep("permScore", names(values(objs[[1]]))))
   cf = function(x) cisFilter(x, hi.dist = hi.dist, low.dist=low.dist,
         hi.maf=hi.maf, low.maf=low.maf )
   chrtags = sapply(objs, function(x) as.character(seqnames(x)[1]))
   bs = lapply(objs, function(x) {cat("."); bestInStratum(cf(x))})
-  bss = lapply(bs, "[[", 1)
+  bss = lapply(bs, "[[", "scores")
   library(parallel)
-  ps = applier(1:3, function(x) lapply(objs, function(z) {cat("."); bestInStratum(cf(z), permind=x)}))
-  pss = lapply(ps, function(x) lapply(x, function(z) z[[1]]))
-  pp = pifdr(unlist(bss), unlist(pss))
+  ps = applier(1:nperm, function(x) lapply(objs, function(z) {cat("."); bestInStratum(cf(z), permind=x)}))
+  pss = lapply(ps, function(x) lapply(x, function(z) z[["scores"]]))
+  rawscores = unlist(bss)
+  pp = pifdr(rawscores, unlist(pss))
   ng = sapply(bs,function(x)length(x[[1]]))
   allg = unlist(lapply(bs, function(x) names(x[[1]])))
   if (fdrOnly) {
      names(pp) = allg
      return(pp)
      } 
-  alls = unlist(lapply(bs, "[[", 2))
+  alls = unlist(lapply(bs, "[[", "scorerids"))  # snpids
   allchr = rep(chrtags, ng)
-  ans = data.frame(genes=allg, bestsnp=alls, chr=allchr, fdr=pp)
+  ans = data.frame(genes=allg, bestsnp=alls, chr=allchr, fdr=pp, scores=rawscores)
   ans
 }
 
