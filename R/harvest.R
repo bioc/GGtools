@@ -73,7 +73,9 @@ for (i in 1:nmaf) {
     attk = paste(atts$genes, atts$bestsnp, sep=":")
     tmp = lapply(1:length(tmp), function(x) tmp[[x]][ match( attk, kl[[x]], nomatch=0 ) ])
     curans = do.call(c, lapply(tmp, as, "GRanges"))
-    neword = match( attk, paste(names(curans), curans$snp, sep=":"), nomatch=0)
+#    neword = match( attk, paste(names(curans), curans$snp, sep=":"), nomatch=0)
+#   while above seems to work, it appears to be wrong in general
+    neword = match( paste(names(curans), curans$snp, sep=":"), attk, nomatch=0) # obtain reordering for atts
     newfdr = atts$fdr[neword]
     curans$fdr = newfdr
     curans$genestart = start(curans)
