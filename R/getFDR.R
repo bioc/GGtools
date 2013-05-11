@@ -1,10 +1,10 @@
 
 
-cisFilter = function (rng, low.maf = 0, hi.maf = 0.51, low.dist = 0, hi.dist = 5000 ) {
+cisFilter = function (rng, low.maf = 0, hi.maf = 0.51, low.dist = -Inf, hi.dist = 5000 ) {
 #
 # was initially for mcwAllCis, now can just use cisRun
 #
-    if (low.dist != 0) stop("low.dist not implemented yet")
+    if (low.dist != -Inf) stop("low.dist not implemented yet")
     if (!is(rng, "cisRun")) stop("only works for cisRun instance")
     snplocs = rng$snplocs
  # cisRun includes information on radius, and the "range" consists of
