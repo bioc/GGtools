@@ -1,12 +1,20 @@
 
 
-cisFilter = function (rng, low.maf = 0, hi.maf = 0.51, low.dist = 0, hi.dist = 5000, distTx=abs) 
-{
+cisFilter = function (rng, low.maf = 0, hi.maf = 0.51, low.dist = 0, hi.dist = 5000 ) {
 #
 # was initially for mcwAllCis, now can just use cisRun
 #
+    if (low.dist != 0) stop("low.dist not implemented yet")
+    if (!is(rng, "cisRun")) stop("only works for cisRun instance")
+    snplocs = rng$snplocs
+ # cisRun includes information on radius, and the "range" consists of
+ # the inflated radius used for searching
+    genestarts = start(rng)+metadata(rng)$radius # shrink back
+    geneends = end(rng)-metadata(rng)$radius
+    insideCurrentRadius = (snplocs>=(genestarts-hi.dist) &
+                           snplocs <= (geneends+hi.dist))
     rng[ which(rng$MAF >= low.maf & rng$MAF < hi.maf & 
-        distTx(rng$dist.mid) >= low.dist & distTx(rng$dist.mid) < hi.dist)]
+        insideCurrentRadius) ]
 }
 
 bestInStratum = function (m, stratumGetter = names, scoreGetter = function(x) values(x)$score,
