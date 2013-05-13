@@ -52,7 +52,9 @@ export(gwSnpTests, topSnps, eqtlTests, topFeats, getCisMap, pData, plot,
 	getCall, transTab, meqtlTests, meta.best.cis.eQTLs, meta.All.cis.eQTLs,
 	meta.transScores, annotation, sensanal, snplocsDefault, bindmaf,
 	richNull, meta.bindmaf, meta.richNull, pifdr, bestInStratum,
- 	cisFilter, getFDR, All.cis2, convertCis, hns, collectBest, pullHits)
+ 	cisFilter, getFDR, All.cis, convertCis, hns, collectBest, pullHits,
+        collectFiltered, cis.FDR.filter.SNPcentric, cis.FDR.filter.best,
+        All.cis.legacy)
 
 export(best.trans.eQTLs, chrFilter, All.cis)
 

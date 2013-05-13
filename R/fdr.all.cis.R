@@ -9,7 +9,7 @@ chrFilter = function(x, chr="22") {
    x[ probeId(intersect(featureNames(x), onc)), ]
 }
 
-All.cis = 
+All.cis.legacy = 
   function(smpack, rhs=~1, nperm=2, folderstem="cisScratch",
    radius = 50000, shortfac=100, chrnames="22",
    smchrpref="", gchrpref="", schrpref="ch",
@@ -48,7 +48,7 @@ All.cis =
 
 All.cis.mchr = 
   function(smpack, rhs=~1, folderstem="cisScratch",
-   radius = 50000, shortfac=100, chrnames="22",
+   radius = 50000, MAFlb=0, shortfac=100, chrnames="22",
    smchrpref="", gchrpref="", schrpref="ch",
    geneApply=lapply, geneannopk = "illuminaHumanv1.db",
    snpannopk = snplocsDefault(), smFilter = function(x)
@@ -58,7 +58,7 @@ All.cis.mchr =
   #
   ans = lapply( chrnames, function(ch) {
     All.cis.chr( smpack=smpack, rhs=rhs,
-      folderstem=folderstem, radius=radius, shortfac=shortfac,
+      folderstem=folderstem, radius=radius, MAFlb=MAFlb, shortfac=shortfac,
       chrname=ch, smchrpref=smchrpref, gchrpref=gchrpref,
 	schrpref=schrpref, geneApply=geneApply, geneannopk=geneannopk,
 	snpannopk=snpannopk, smFilter=smFilter, 
@@ -69,7 +69,7 @@ All.cis.mchr =
 
 All.cis.chr = 
   function(smpack, rhs=~1, folderstem="cisScratch",
-   radius = 50000, shortfac=100, chrname="22",
+   radius = 50000, MAFlb=MAFlb, shortfac=100, chrname="22",
    smchrpref="", gchrpref="", schrpref="ch",
    geneApply=lapply, geneannopk = "illuminaHumanv1.db",
    snpannopk = snplocsDefault(), smFilter = function(x)
@@ -106,7 +106,8 @@ All.cis.chr =
 ### at this point you have cismap which has all relevant probe names
 ### for chromosome
     cat("run smFilter...")
-    sms = smFilter(sms)
+    if (MAFlb>0) sms = smFilter(sms) # MAFlb is automatic if > 0 to aid in reflectance
+    else sms = MAFfilter(smFilter(sms), lower=MAFlb) #
     allfn = featureNames(sms)
     okp = intersect(allfn, names(cismap))
     if (length(okp) < 1)
@@ -163,14 +164,15 @@ All.cis.chr =
 }
      
 
-All.cis2 =
+All.cis =
   function(config=new("CisConfig"), ...) {
 #
 # eventually will replace All.cis
 #
      thecall = match.call()
      obs = All.cis.mchr( smpack=smpack(config), rhs=rhs(config),
-      folderstem=folderStem(config), radius=radius(config), shortfac=shortfac(config),
+      folderstem=folderStem(config), radius=radius(config), 
+      MAFlb=MAFlb(config), shortfac=shortfac(config),
       chrnames=chrnames(config), smchrpref=smchrpref(config), gchrpref=gchrpref(config),
         schrpref=schrpref(config), geneApply=geneApply(config), geneannopk=geneannopk(config),
         snpannopk=snpannopk(config), smFilter=smFilter(config),
@@ -180,7 +182,8 @@ All.cis2 =
 # in following, smFilter is wrapped over permEx
 #
      perms = lapply(1:nperm(config), function(x) All.cis.mchr( smpack=smpack(config), rhs=rhs(config),
-        folderstem=folderStem(config), radius=radius(config), shortfac=shortfac(config),
+        folderstem=folderStem(config), radius=radius(config), MAFlb=MAFlb(config),
+        shortfac=shortfac(config),
         chrnames=chrnames(config), smchrpref=smchrpref(config), gchrpref=gchrpref(config),
         schrpref=schrpref(config), geneApply=geneApply(config), geneannopk=geneannopk(config),
         snpannopk=snpannopk(config), smFilter=function(x)smFilter(config)(permEx(x)),
@@ -192,6 +195,7 @@ All.cis2 =
 #     obs = obs[order(obs$fdr, -obs$score)]
      smchr = paste0(smchrpref(config), chrnames(config))
      obs = bindmaf.simple( smpack(config), smchr, obs, SSgen(config), radius(config) )
-     new("mcwAllCis", obs=obs, perms=perms, theCall=thecall)
+     tmp = new("mcwAllCis", obs=obs, perms=perms, theCall=thecall)
+     convertCis(tmp, MAFlb=MAFlb(config), radius=radius(config))
 }
 
