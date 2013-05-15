@@ -113,7 +113,7 @@ cis.FDR.filter.SNPcentric = function( fn,
   bss = lapply(bs, "[[", "scores")
   library(parallel)
   pss = applier(1:nperm, function(x) lapply(objs, function(z) {
-         values(z)[[paste0("permScore_", x)]]}))
+         values(cf(z))[[paste0("permScore_", x)]]}))
   rawscores = unlist(bss)
   pp = pifdr(rawscores, unlist(pss))
   ng = sapply(bs,function(x)length(x[["scores"]]))
