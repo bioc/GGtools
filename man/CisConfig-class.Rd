@@ -39,7 +39,8 @@
 
 \title{Class \code{"CisConfig"}}
 \description{
-Object specifying configuration of cis-eQTL search
+Object specifying configuration of cis-eQTL search, to be used
+with All.cis
 }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("CisConfig")}.

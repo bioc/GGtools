@@ -59,7 +59,7 @@ export(gwSnpTests, topSnps, eqtlTests, topFeats, getCisMap, pData, plot,
 export(best.trans.eQTLs, chrFilter, All.cis)
 
 
-export("chrnames", "chrnames<-", "debugMethod", "estimates", "estimates<-", 
+export("chrnames", "chrnames<-", "estimates", "estimates<-", 
 "excludeRadius", "excludeRadius<-", "exFilter", "exFilter<-", 
 "folderStem", "folderStem<-", "gchrpref", "gchrpref<-", "geneannopk", 
 "geneannopk<-", "geneApply", "geneApply<-", "keepMapCache", "keepMapCache<-", 
@@ -69,3 +69,12 @@ export("chrnames", "chrnames<-", "debugMethod", "estimates", "estimates<-",
 "smFilter", "smFilter<-", "smpack", "smpack<-", "snpannopk", 
 "snpannopk<-", "SSgen", "SSgen<-")
 
+exportMethods("chrnames", "chrnames<-", "estimates", "estimates<-", 
+"excludeRadius", "excludeRadius<-", "exFilter", "exFilter<-", 
+"folderStem", "folderStem<-", "gchrpref", "gchrpref<-", "geneannopk", 
+"geneannopk<-", "geneApply", "geneApply<-", "keepMapCache", "keepMapCache<-", 
+"MAFlb", "MAFlb<-", "nperm", "nperm<-", "radius", 
+"radius<-", "rhs", "rhs<-", "schrpref", "schrpref<-", 
+"shortfac", "shortfac<-", "smchrpref", "smchrpref<-", 
+"smFilter", "smFilter<-", "smpack", "smpack<-", "snpannopk", 
+"snpannopk<-", "SSgen", "SSgen<-")

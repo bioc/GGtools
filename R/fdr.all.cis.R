@@ -106,7 +106,7 @@ All.cis.chr =
 ### at this point you have cismap which has all relevant probe names
 ### for chromosome
     cat("run smFilter...")
-    if (MAFlb>0) sms = smFilter(sms) # MAFlb is automatic if > 0 to aid in reflectance
+    if (MAFlb <= 0) sms = smFilter(sms) # MAFlb is automatic if > 0 to aid in reflectance
     else sms = MAFfilter(smFilter(sms), lower=MAFlb) #
     allfn = featureNames(sms)
     okp = intersect(allfn, names(cismap))
