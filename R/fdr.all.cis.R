@@ -194,6 +194,10 @@ All.cis =
      obs$fdr = pifdr(obssc, permsc)
 #     obs = obs[order(obs$fdr, -obs$score)]
      smchr = paste0(smchrpref(config), chrnames(config))
+     if (seqlevels(obs) != smchr) {
+         seqlevels(obs) = smchr
+         warning("updated seqlevels(obs) to match smchr")
+         }
      obs = bindmaf.simple( smpack(config), smchr, obs, SSgen(config), radius(config) )
      tmp = new("mcwAllCis", obs=obs, perms=perms, theCall=thecall)
      convertCis(tmp, MAFlb=MAFlb(config), radius=radius(config))
