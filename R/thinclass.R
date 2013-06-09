@@ -5,7 +5,7 @@ setValidity("cisRun", function(object) {
   TRUE
 })
 
-convertCis = function(mcw, MAFlb, radius) {
+convertCis = function(mcw, MAFlb, radius, confobj=NULL) {
  if (missing(MAFlb)) stop("need MAFlb")
  if (missing(radius)) stop("need radius")
  nperm = length(mcw@perms)
@@ -20,7 +20,7 @@ convertCis = function(mcw, MAFlb, radius) {
      }
  metadata(ans) = list( MAFlb=MAFlb, radius=radius, call=mcw@theCall, nperm=nperm,
    config = metadata(mcw@obs)$configObj )
- if (length(metadata(mcw@obs))>0) metadata(ans) = c(metadata(ans), metadata(mcw))
+ if (length(metadata(mcw@obs))>0) metadata(ans) = c(metadata(ans), metadata(mcw@obs), confobj)
  new("cisRun", ans)
 }
 
