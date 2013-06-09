@@ -18,7 +18,8 @@ convertCis = function(mcw, MAFlb, radius) {
      if (any(is.na(reord))) stop("permk and ansk don't match")
      values(ans)[[pnames[i]]] = mcw@perms[[i]]$score[reord]
      }
- metadata(ans) = list( MAFlb=MAFlb, radius=radius, call=mcw@theCall, nperm=nperm )
+ metadata(ans) = list( MAFlb=MAFlb, radius=radius, call=mcw@theCall, nperm=nperm,
+   config = obs@metadata$configObj )
  if (length(metadata(mcw@obs))>0) metadata(ans) = c(metadata(ans), metadata(mcw))
  new("cisRun", ans)
 }

@@ -199,6 +199,7 @@ All.cis =
          warning("updated seqlevels(obs) to match smchr")
          }
      obs = bindmaf.simple( smpack(config), smchr, obs, SSgen(config), radius(config) )
+     metadata(obs)$configObj = config
      tmp = new("mcwAllCis", obs=obs, perms=perms, theCall=thecall)
      convertCis(tmp, MAFlb=MAFlb(config), radius=radius(config))
 }
