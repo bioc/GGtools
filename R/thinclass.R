@@ -19,7 +19,7 @@ convertCis = function(mcw, MAFlb, radius) {
      values(ans)[[pnames[i]]] = mcw@perms[[i]]$score[reord]
      }
  metadata(ans) = list( MAFlb=MAFlb, radius=radius, call=mcw@theCall, nperm=nperm,
-   config = obs@metadata$configObj )
+   config = metadata(mcw@obs)$configObj )
  if (length(metadata(mcw@obs))>0) metadata(ans) = c(metadata(ans), metadata(mcw))
  new("cisRun", ans)
 }
