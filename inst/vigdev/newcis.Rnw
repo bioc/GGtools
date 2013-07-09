@@ -83,8 +83,10 @@ ini
 The FDR reported are for the specific search (here
 one chromosome).  Various tools for combining multiple
 searches are used to get FDRs for more comprehensive searches.
-<<dosearch>>=
-options(mc.cores=2)
+<<getpa>>=
+library(parallel)
+options(mc.cores=max(c(detectCores()-3,1)))
+<<dosearch,cache=TRUE>>=
 system.time(t21 <- All.cis(ini))
 t21
 @
@@ -93,7 +95,7 @@ associated scores achieved under permutation of expression
 against genotype.
 
 We can update to a different chromosome:
-<<dos2>>=
+<<dos2,cache=TRUE>>=
 chrnames(ini) = "20"
 system.time(t20 <- All.cis(ini))
 @
@@ -162,8 +164,7 @@ The stages are:
 <<lko,eval=FALSE>>=
 onepopConfig = function(chrn="22", nperm=3L, MAF=.05, 
     npc=10, radius=50000, exclRadius=NULL) {
-   if (!is.null(npc)) bf = basicFilter = function(ww) MAFfilter(clipPCs(ww, 1:npc), lower=MAF)[, which(ww$isFounde
-r==1)]
+   if (!is.null(npc)) bf = basicFilter = function(ww) MAFfilter(clipPCs(ww, 1:npc), lower=MAF)[, which(ww$isFounder==1)]
    else bf = basicFilter = function(ww) MAFfilter(ww, lower=MAF)[, which(
     ww$isFounder==1)]
 
@@ -229,6 +230,7 @@ At conclusion, 22 .rda files will be present for harvesting using
 the collectFiltered function.
 
 
+\end{itemize}
 
 
 
