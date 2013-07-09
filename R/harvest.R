@@ -2,6 +2,9 @@ cis.FDR.filter.best = function( fn,
     hi.dist = 50000, low.dist = -Inf, hi.maf = .51, low.maf = 0.05,
     fdrOnly = FALSE, applier=lapply ) {
 #
+# best per gene
+#
+#
 # file-oriented to avoid large internal images
 # assumes files are serialized cisRun instances
 #
@@ -41,6 +44,9 @@ collectBest = function( fns, targetname="harvest",
    mafs = c(.01, .02, .025, .03333, .05, .075, .1),
    hidists = c(10000, 25000, 50000, 75000, 100000, 250000),
    interimSaves=FALSE) {
+#
+# best per gene
+#
 nmaf = length(mafs)
 ndist = length(hidists)
 outli = vector("list", nmaf*ndist) 

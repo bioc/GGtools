@@ -1,0 +1,235 @@
+
+%
+% NOTE -- ONLY EDIT THE .Rnw FILE!!!  The .tex file is
+% likely to be overwritten.
+%
+
+%\VignetteIndexEntry{}
+%\VignetteDepends{}
+%\VignetteKeywords{}
+%\VignettePackage{}
+
+\documentclass[12pt]{article}
+
+\usepackage{amsmath,pstricks}
+\usepackage[authoryear,round]{natbib}
+\usepackage{hyperref}
+
+
+\textwidth=6.2in
+\textheight=8.5in
+%\parskip=.3cm
+\oddsidemargin=.1in
+\evensidemargin=.1in
+\headheight=-.3in
+
+\newcommand{\scscst}{\scriptscriptstyle}
+\newcommand{\scst}{\scriptstyle}
+
+
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textit{#1}}}
+\newcommand{\Rmethod}[1]{{\texttt{#1}}}
+\newcommand{\Rfunarg}[1]{{\texttt{#1}}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+
+\textwidth=6.2in
+
+\bibliographystyle{plainnat} 
+ 
+\begin{document}
+%\setkeys{Gin}{width=0.55\textwidth}
+
+\title{New infrastructure for cis-eQTL searches}
+\author{VJ Carey}
+\maketitle
+
+\section{Introduction}
+
+We want to support improved control of
+cis-eQTL searches and better reflectance of cis-eQTL search
+outputs.  The basic idea is that we can, in most modern
+computing facilities, retain fairly substantial archives
+resulting from comprehensive searches; previous versions
+of GGtools emphasized gene-centric analysis which could then
+be extended to higher levels of resolution in a targeted manner.
+We can do a single comprehensive search and then filter to understand
+sensitivity of FDR measures to aspects of upstream filtering. 
+
+\section{Configuring a search}
+
+<<doopt,echo=FALSE>>=
+options("showHeadLines"=3)
+options("showTailLines"=1)
+<<doconf,keep.source=TRUE>>=
+suppressPackageStartupMessages(library(GGtools))
+ini = new("CisConfig")
+ini
+MAFlb(ini) = .02
+radius(ini) = 75000L
+smFilter(ini) = function(x) nsFilter(x, var.cutoff=.98)
+smpack(ini) = "GGtools"
+chrnames(ini) = "21"
+library(parallel)  # to define mclapply
+geneApply(ini) = mclapply
+ini
+@
+
+\section{Executing a search}
+
+\subsection{Computing and serializing scored GRanges}
+
+The FDR reported are for the specific search (here
+one chromosome).  Various tools for combining multiple
+searches are used to get FDRs for more comprehensive searches.
+<<dosearch>>=
+options(mc.cores=2)
+system.time(t21 <- All.cis(ini))
+t21
+@
+Note that the observed score is retained along with all
+associated scores achieved under permutation of expression
+against genotype.
+
+We can update to a different chromosome:
+<<dos2>>=
+chrnames(ini) = "20"
+system.time(t20 <- All.cis(ini))
+@
+
+For realistic and comprehensive
+filtering settings (radius 250000 or greater,
+MAF bound .005, the results of All.cis can be quite
+large, so most downstream utilities assume the results
+are serialized to disk.
+
+<<dosa>>=
+td = tempdir()
+save(t20, file=paste0(td, "/t20.rda"))
+save(t21, file=paste0(td, "/t21.rda"))
+@
+
+\subsection{Amalgamation of chromosome-specific results, recomputation
+of FDR}
+
+We will use a collection method that focuses on sensitivity
+analysis, generating FDRs for different tuning parameters
+within the scope of the search.
+<<docomb, keep.source=TRUE>>=
+fns = dir(td, full=TRUE, patt="^t2.*rda$")
+cf = collectFiltered(fns, mafs=c(.02,.03,.1), hidists=c(0,10000,75000))
+class(cf)
+names(cf)  # MAFs are primary organization, distances secondary
+names(cf[[1]])
+sapply(cf, sapply, function(x) sum(x$fdr <= 0.05))  # best per gene
+of = order(cf[[3]][[1]]$fdr)
+cf[[3]][[1]][of,][1:4,]  # shows best hits
+@
+
+<<fup,fig=FALSE,cache=TRUE>>=
+g20 = getSS("GGtools", "20")
+<<dofupfig,fig=TRUE>>=
+plot_EvG(probeId("GI_4502372-S"), rsid("rs290449"), g20)
+@
+
+\texttt{collectFiltered} has a default \texttt{filterFun} which
+isolates the best scoring SNP per gene.  A SNP-centric FDR can
+also be computed.
+
+<<fup2,cache=TRUE>>=
+cf2 = collectFiltered(fns, mafs=c(.02,.03,.1), hidists=c(0,10000,75000),
+  filterFun=cis.FDR.filter.SNPcentric)
+sapply(cf2, sapply, function(x) sum(x$fdr<=0.01))
+@
+
+\subsection{Retrieving FDRs with the optimal choice of tuning parameters}
+
+The pullHits function will combine the recomputed FDR with a specific
+tuning setting with the original GRanges.
+<<getph>>=
+ph = pullHits(fns, cf[[2]][[2]])
+ph
+@
+
+\section{Full search on channing machinery}
+
+The stages are:
+\begin{itemize}
+\item create the smlSet-based package via externalize
+\item set up the chromosome-specific run as a function
+
+<<lko,eval=FALSE>>=
+onepopConfig = function(chrn="22", nperm=3L, MAF=.05, 
+    npc=10, radius=50000, exclRadius=NULL) {
+   if (!is.null(npc)) bf = basicFilter = function(ww) MAFfilter(clipPCs(ww, 1:npc), lower=MAF)[, which(ww$isFounde
+r==1)]
+   else bf = basicFilter = function(ww) MAFfilter(ww, lower=MAF)[, which(
+    ww$isFounder==1)]
+
+   ssm(library(GGtools))
+   iniconf = new("CisConfig")
+   smpack(iniconf) = "GGdata"
+   rhs(iniconf) = ~1
+   folderStem(iniconf) = paste0("cisScratch_", chrn)
+   chrnames(iniconf) = as.character(chrn)
+   geneannopk(iniconf) = "illuminaHumanv1.db"
+   snpannopk(iniconf) = snplocsDefault()
+   smchrpref(iniconf) = ""
+   geneApply(iniconf) = mclapply
+   exFilter(iniconf) = function(x)x
+   smFilter(iniconf) = bf
+   nperm(iniconf) = as.integer(nperm)
+   radius(iniconf) = radius
+   estimates(iniconf) = TRUE
+   MAFlb(iniconf) = MAF
+
+   library(parallel)
+   options(mc.cores=3)
+   options(error=recover)
+   set.seed(1234)
+   tmp = All.cis( iniconf )
+   metadata(tmp)$config = iniconf
+   obn = paste("pop2_", "np_", nperm, "_maf_", MAF, "_chr_", chrn,
+    "_npc_", npc, "_rad_", radius, "_exc_", exclRadius, sep="")
+   fn = paste(obn, file=".rda", sep="")
+   assign(obn, tmp)
+   save(list=obn, file=fn)
+}
+@
+
+\item Create a script that invokes the function
+
+\begin{verbatim}
+#!/bin/bash
+RCMD=/udd/stvjc/bin/R3
+CHR=$1
+MAF=$2
+NPERM=$3
+NPC=$4
+RAD=$5
+EXCL=$6
+LANG=C
+echo "source('onepopConfig.R'); \
+    onepopConfig(chrn=${CHR}, MAF=${MAF}, nperm=${NPERM}, \
+        npc=${NPC}, radius=${RAD}, exclRadius=${EXCL})" | ${RCMD} \
+       --no-save >& lk${CHR}_${MAF}_${NPERM}_${RAD}_${EXCL}.txt
+\end{verbatim}
+
+\item Use the scheduler implicitly (or somehow)
+
+\begin{verbatim}
+#!/bin/bash
+for i in {1..20};
+ do qsub -cwd -l lx6,large ./doOne.sh $i .005 3L 18 250000L NULL; echo $i;
+done;
+\end{verbatim}
+
+At conclusion, 22 .rda files will be present for harvesting using
+the collectFiltered function.
+
+
+
+
+
+\end{document}
