@@ -100,6 +100,9 @@ cis.FDR.filter.SNPcentric = function( fn,
 # chromsome-specific (or other partition) inclusive runs are filtered
 # and post-filter FDR is computed
 #
+# note -- many SNPs are cis to multiple genes.  we will
+# use the strongest association score to score the SNP
+#
   require(GGtools)
 #
 # caching
@@ -112,14 +115,37 @@ cis.FDR.filter.SNPcentric = function( fn,
   chrtags = sapply(objs, function(x) as.character(seqnames(x)[1]))
   bs = lapply(objs, function(x) {
      x = cf(x)
-     tmp = x$score
-     names(tmp) = x$probeid
-     list(scores=tmp, scorerids=x$snp)
+     scores = x$score
+     names(scores) = x$probeid
+     snpids = x$snp
+     reo = order(x$snp, x$score)
+     scores=scores[reo]
+     probes = x$probeid[reo]
+     snpids = snpids[reo]
+     scores = sapply(split(scores, snpids), "[", 1)
+     probepersnp = sapply(split(probes, snpids), "[", 1)
+     snpids = sapply(split(snpids, snpids), "[", 1)
+     names(scores) = probepersnp
+#
+# july 9 2013 -- need to eliminate many gene to snp scores
+# optimize over genes for each snp
+#
+     list(scores=scores, scorerids=snpids)
      })
   bss = lapply(bs, "[[", "scores")
   library(parallel)
-  pss = applier(1:nperm, function(x) lapply(objs, function(z) {
-         values(cf(z))[[paste0("permScore_", x)]]}))
+#  pss = applier(1:nperm, function(x) lapply(objs, function(z) {
+#         values(cf(z))[[paste0("permScore_", x)]]}))
+#
+# here we need to optimize the multiple scores per snp as above
+#
+  pss = applier(1:nperm, function(x) 
+     lapply(objs, function(z) {
+         curcf = cf(z)
+         curperm = values(curcf)[[paste0("permScore_", x)]]
+         cursnp = values(curcf)[["snp"]]
+         sapply(split(curperm,cursnp), max)
+     }))
   rawscores = unlist(bss)
   pp = pifdr(rawscores, unlist(pss))
   ng = sapply(bs,function(x)length(x[["scores"]]))
