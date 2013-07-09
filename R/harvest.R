@@ -163,7 +163,7 @@ cis.FDR.filter.SNPcentric = function( fn,
 collectFiltered = function( fns, targetname="harvest", 
    mafs = c(.01, .02, .025, .03333, .05, .075, .1),
    hidists = c(10000, 25000, 50000, 75000, 100000, 250000),
-   filterFun = cis.FDR.filter.best,
+   filterFun = cis.FDR.filter.best, filtApplier=lapply,
    interimSaves=FALSE) {
 nmaf = length(mafs)
 ndist = length(hidists)
@@ -176,7 +176,8 @@ for (i in 1:nmaf) {
   tmp[[i]] = vector("list", ndist)
   names(tmp[[i]]) = as.character(hidists)
   for (j in 1:ndist) {
-     tmp[[i]][[j]] = filterFun( fns, hi.dist=hidists[j], low.maf=mafs[i] )
+     tmp[[i]][[j]] = filterFun( fns, hi.dist=hidists[j], low.maf=mafs[i],
+         applier=filtApplier )
      if (interimSaves) {
        assign(targetname, tmp)
        save(list=targetname, file=paste0(targetname, ".rda"))  # interim
