@@ -67,7 +67,7 @@ export("chrnames", "chrnames<-", "estimates", "estimates<-",
 "radius<-", "rhs", "rhs<-", "schrpref", "schrpref<-", 
 "shortfac", "shortfac<-", "smchrpref", "smchrpref<-", 
 "smFilter", "smFilter<-", "smpack", "smpack<-", "snpannopk", 
-"snpannopk<-", "SSgen", "SSgen<-")
+"snpannopk<-", "SSgen", "SSgen<-", "scoredist")
 
 exportMethods("chrnames", "chrnames<-", "estimates", "estimates<-", 
 "excludeRadius", "excludeRadius<-", "exFilter", "exFilter<-", 
