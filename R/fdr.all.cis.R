@@ -188,7 +188,7 @@ All.cis =
         schrpref=schrpref(config), geneApply=geneApply(config), geneannopk=geneannopk(config),
         snpannopk=snpannopk(config), smFilter=function(x)smFilter(config)(permEx(x)),
         exFilter=exFilter(config), keepMapCache=keepMapCache(config), SSgen=SSgen(config), 
-        estimates=estimates(config), ...) )
+        estimates=FALSE, ...) )
      obssc = obs$score
      permsc = unlist(lapply(perms, function(x)x$score))
      obs$fdr = pifdr(obssc, permsc)

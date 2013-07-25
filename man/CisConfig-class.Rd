@@ -36,6 +36,63 @@
 \alias{snpannopk<-,CisConfig,character-method}
 \alias{SSgen,CisConfig-method}
 \alias{SSgen<-,CisConfig,function-method}
+\alias{chrnames}
+\alias{chrnames<-}
+\alias{estimates}
+\alias{estimates<-}
+\alias{excludeRadius}
+\alias{excludeRadius<-}
+\alias{exFilter}
+\alias{exFilter<-}
+\alias{gchrpref}
+\alias{gchrpref<-}
+\alias{geneannopk}
+\alias{geneannopk<-}
+\alias{geneApply}
+\alias{geneApply<-}
+\alias{initialize}
+\alias{keepMapCache}
+\alias{keepMapCache<-}
+\alias{radius}
+\alias{radius<-}
+\alias{rhs}
+\alias{rhs<-}
+\alias{schrpref}
+\alias{schrpref<-}
+\alias{shortfac}
+\alias{shortfac<-}
+\alias{show}
+\alias{smchrpref}
+\alias{smchrpref<-}
+\alias{smFilter}
+\alias{smFilter<-}
+\alias{snpannopk}
+\alias{snpannopk<-}
+\alias{SSgen}
+\alias{SSgen<-}
+
+\alias{MAFlb,CisConfig-method}
+\alias{MAFlb<-,CisConfig,numeric-method}
+\alias{excludeRadius<-,CisConfig,integerOrNULL-method}
+\alias{folderStem,CisConfig-method}
+\alias{folderStem<-,CisConfig,character-method}
+\alias{nperm,CisConfig-method}
+\alias{nperm<-,CisConfig,integer-method}
+\alias{rhs<-,CisConfig,formula-method}
+\alias{smpack,CisConfig-method}
+\alias{smpack<-,CisConfig,character-method}
+
+\alias{MAFlb}
+\alias{MAFlb<-}
+\alias{excludeRadius<-}
+\alias{folderStem}
+\alias{folderStem<-}
+\alias{nperm}
+\alias{nperm<-}
+\alias{rhs<-}
+\alias{smpack}
+\alias{smpack<-}
+
 
 \title{Class \code{"CisConfig"}}
 \description{
@@ -48,6 +105,8 @@ Use replacement methods to update the fields.
 }
 \section{Slots}{
   \describe{
+    \item{\code{smpack}:}{character string identifying package
+holding the expression and genotype data; see \code{\link[GGBase]{getSS}}}
     \item{\code{rhs}:}{Object of class \code{"formula"} right hand
 side for calls to \code{\link[snpStats]{snp.rhs.tests}} }
     \item{\code{nperm}:}{Object of class \code{"integer"} 
@@ -97,6 +156,9 @@ which will determine what interval about the gene is excluded for
 cis testing; 0 should exclude all within-gene SNP, but needs
 testing  }
     \item{\code{estimates}:}{Object of class \code{"logical"} if TRUE,
+estimates and standard errors (expanded and reduced in storage
+as a short int, using \code{shortfac}) are generated and retained }
+    \item{\code{MAFlb}:}{Object of class \code{"logical"} if TRUE,
 estimates and standard errors (expanded and reduced in storage
 as a short int, using \code{shortfac}) are generated and retained }
   }

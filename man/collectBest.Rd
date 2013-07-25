@@ -1,5 +1,8 @@
 \name{collectBest}
 \alias{collectBest}
+\alias{collectFiltered}
+\alias{cis.FDR.filter.best}
+\alias{cis.FDR.filter.SNPcentric}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 given a collection of All.cis outputs (cisRun instances)
@@ -11,9 +14,16 @@ compute FDRs for various filterings
 }
 \usage{
 collectBest(fns, 
- targetname = "colls", 
+ targetname = "harvest", 
  mafs = c(0.01, 0.02, 0.025, 0.03333, 0.05, 0.075, 0.1), 
- hidists = c(10000, 25000, 50000, 75000, 1e+05, 250000))
+ hidists = c(10000, 25000, 50000, 75000, 1e+05, 250000), interimSaves=FALSE)
+
+collectFiltered( fns, targetname="harvest",
+   mafs = c(.01, .02, .025, .03333, .05, .075, .1),
+   hidists = c(10000, 25000, 50000, 75000, 100000, 250000),
+   filterFun = cis.FDR.filter.best, filtApplier=lapply,
+   interimSaves=FALSE) 
+
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -29,6 +39,9 @@ lower bounds on MAF for filtering
   \item{hidists}{
 upper bounds on cis radius for filtering
 }
+  \item{filterFun}{function like GGtools:::cis.FDR.filter.best}
+  \item{filtApplier}{function like lapply}
+  \item{interimSaves}{logical, if TRUE save list at each maf/dist transition}
 }
 \details{
 \code{\link{pifdr}} is repeatedly used to generate

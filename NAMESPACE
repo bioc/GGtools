@@ -51,10 +51,9 @@ export(gwSnpTests, topSnps, eqtlTests, topFeats, getCisMap, pData, plot,
 	vcf2sm, fdr, transScores, getBest, getAll, 
 	getCall, transTab, meqtlTests, meta.best.cis.eQTLs, meta.All.cis.eQTLs,
 	meta.transScores, annotation, sensanal, snplocsDefault, bindmaf,
-	richNull, meta.bindmaf, meta.richNull, pifdr, bestInStratum,
- 	cisFilter, getFDR, All.cis, convertCis, hns, collectBest, pullHits,
-        collectFiltered, cis.FDR.filter.SNPcentric, cis.FDR.filter.best,
-        All.cis.legacy)
+	richNull, meta.bindmaf, meta.richNull, pifdr, 
+ 	All.cis, collectBest, 
+        collectFiltered, cis.FDR.filter.SNPcentric, cis.FDR.filter.best)
 
 export(best.trans.eQTLs, chrFilter, All.cis)
 
@@ -67,7 +66,7 @@ export("chrnames", "chrnames<-", "estimates", "estimates<-",
 "radius<-", "rhs", "rhs<-", "schrpref", "schrpref<-", 
 "shortfac", "shortfac<-", "smchrpref", "smchrpref<-", 
 "smFilter", "smFilter<-", "smpack", "smpack<-", "snpannopk", 
-"snpannopk<-", "SSgen", "SSgen<-", "scoredist")
+"snpannopk<-", "SSgen", "SSgen<-")
 
 exportMethods("chrnames", "chrnames<-", "estimates", "estimates<-", 
 "excludeRadius", "excludeRadius<-", "exFilter", "exFilter<-", 

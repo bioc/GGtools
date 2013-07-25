@@ -13,79 +13,13 @@ function that computes score tests for all SNP cis to genes, with
 flexible filtering
 }
 \usage{
-All.cis(smpack, rhs = ~1, nperm = 2, 
-  folderstem = "cisScratch", radius = 50000, 
-  shortfac = 100, chrnames = "22", smchrpref = "", 
-  gchrpref = "", schrpref = "ch", 
-  geneApply = lapply, geneannopk = "illuminaHumanv1.db", 
-  snpannopk = snplocsDefault(), 
-  smFilter = function(x) nsFilter(MAFfilter(x, lower = 0.05), var.cutoff = 0.9),  exFilter = function(x) x, keepMapCache = FALSE, 
-  SSgen = GGBase::getSS, excludeRadius = NULL, estimates=FALSE, ...)
+All.cis( config = new("CisConfig"), ... )
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{smpack}{
-package name for externalized smlSet instance
+  \item{config}{
+instance of class \code{\link{CisConfig-class}}
 }
-  \item{rhs}{
-direct covariate formula for \code{\link[snpStats]{snp.rhs.tests}} -- when
-using permutation-based FDR it is preferable to work with residuals
-}
-  \item{nperm}{
-number of permutations of expression against genotype for plug-in FDR
-computation
-}
-  \item{folderstem}{
-tag to identify a folder for temporary computations
-}
-  \item{radius}{
-number of bases up and downstream of gene location to search for SNP
-}
-  \item{shortfac}{
-factor for scaling short integers to represent association score
-}
-  \item{chrnames}{
-chromosome names to be analyzed
-}
-  \item{smchrpref}{
-prefix to be applied to chrnames elements to select from smpack
-}
-  \item{gchrpref}{
-prefix to be applied to chrnames elements to select gene addresses
-}
-  \item{schrpref}{
-prefix to be applied to chrnames elements for SNPlocs query resolution
-}
-  \item{geneApply}{
-function (like lapply) for iterating over genes, typically will use
-mclapply
-}
-  \item{geneannopk}{
-name of package to be used to resolve probe names to gene annotation
-}
-  \item{snpannopk}{
-name of package to be used to resolve SNP identifiers to addresses
-}
-  \item{smFilter}{
-a function that will operate on smlSet instances before testing
-}
-  \item{exFilter}{
-a function that operates on ExpressionSet component of smlSet early on
-%%     ~~Describe \code{exFilter} here~~
-}
-  \item{keepMapCache}{
-facility for speeding up the mapping of cis SNP
-}
-  \item{SSgen}{
-special function that can be used to create an smlSet from a nonstandard
-package
-}
-  \item{excludeRadius}{
-for binning test procedure
-}
-  \item{estimates}{logical determining whether per-gene, per-SNP additive
-effect and s.e. estimates will be computed and included in
-output GRanges}
   \item{\dots}{
 passed to eqtlTests
 }
@@ -96,7 +30,7 @@ in a GRanges instance, with range names given by probes; metadata supplied
 SNP location, name, and score
 }
 \value{
-GRanges instance
+instance of \code{\link{cisRun-class}}
 %%  ~Describe the value returned
 %%  If it is a LIST, use
 %%  \item{comp1 }{Description of 'comp1'}
@@ -109,10 +43,8 @@ GRanges instance
 %\author{
 %%%  ~~who you are~~
 %}
-\note{
-class mcwAllCis is experimental for dealing with All.cis output.
-chrFilter is experimental filter for smlSet instances.
-}
+%\note{
+%}
 %
 %%% ~Make other sections like Warning with \section{Warning }{....} ~
 %
@@ -121,7 +53,16 @@ chrFilter is experimental filter for smlSet instances.
 %}
 \examples{
 \dontrun{
-  f1 = All.cis("GGdata", chrnames=c("21", "22"))
+  cc = new("CisConfig")
+  chrnames(cc) = "21"
+  lkp = try(library(parallel))
+  if (!inherits(lkp, "try-error")) {
+     nc = min(10, detectCores())
+     options(mc.cores=nc)
+     geneApply(cc) = mclapply
+     }
+  estimates(cc) = FALSE
+  unix.time(f1 <- All.cis( cc ))
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
