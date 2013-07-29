@@ -1,3 +1,4 @@
+
 cis.FDR.filter.best = function( fn, 
     hi.dist = 50000, low.dist = -Inf, hi.maf = .51, low.maf = 0.05,
     fdrOnly = FALSE, applier=lapply ) {
@@ -118,7 +119,7 @@ cis.FDR.filter.SNPcentric = function( fn,
      scores = x$score
      names(scores) = x$probeid
      snpids = x$snp
-     reo = order(x$snp, x$score)
+     reo = order(x$snp, x$score, decreasing=TRUE) # added decreasing 7/29/13
      scores=scores[reo]
      probes = x$probeid[reo]
      snpids = snpids[reo]
