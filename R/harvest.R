@@ -187,3 +187,55 @@ for (i in 1:nmaf) {
    }
  tmp
 }
+
+cis.FDR.filter.SNPcentric.complete = function( fn, 
+    hi.dist = 50000, low.dist = -Inf, hi.maf = .51, low.maf = 0.05,
+    fdrOnly = FALSE, applier=lapply ) {
+#
+# file-oriented to avoid large internal images
+# assumes files are serialized cisRun instances
+#
+# chromsome-specific (or other partition) inclusive runs are filtered
+# and post-filter FDR is computed
+#
+# note -- many SNPs are cis to multiple genes.  we will
+# keep all scores
+#
+  require(GGtools)
+#
+# caching
+#
+  if (!exists(gsub(".rda", "", fn[1]))) objs = lapply(fn, function(x) get(load(x, .GlobalEnv)))
+  else objs = lapply(gsub(".rda", "" , fn), get)
+  nperm = length(grep("permScore", names(values(objs[[1]]))))
+  cf = function(x) cisFilter(x, hi.dist = hi.dist, low.dist=low.dist,
+        hi.maf=hi.maf, low.maf=low.maf )
+  chrtags = sapply(objs, function(x) as.character(seqnames(x)[1]))
+  bs = lapply(objs, function(x) {
+     x = cf(x)
+     scores = x$score
+     names(scores) = x$probeid
+     snpids = x$snp
+     list(scores=scores, scorerids=snpids, probeids=x$probeid)
+  })
+  library(parallel)
+  pss = applier(1:nperm, function(x) 
+     lapply(objs, function(z) {
+         curcf = cf(z)
+         curperm = values(curcf)[[paste0("permScore_", x)]]
+     }))
+  bss = lapply(bs, "[[", "scores")
+  ngs = lapply(bs, "[[", "probeids")
+  alls = unlist(lapply(bs, "[[", "scorerids"))  # snpids
+  rawscores = unlist(bss)
+  pp = pifdr(rawscores, unlist(pss))
+  ng = sapply(bs,function(x)length(x[["scores"]]))
+  allchr = rep(chrtags, ng)
+#  allg = unlist(lapply(bs, function(x) names(x[["scores"]])))
+  if (fdrOnly) {
+     names(pp) = unlist(ngs)
+     return(pp)
+     } 
+  data.frame(genes=unlist(ngs), snps=alls, chr=allchr, fdr=pp,
+     scores=rawscores)
+}
