@@ -3,6 +3,7 @@
 \alias{collectFiltered}
 \alias{cis.FDR.filter.best}
 \alias{cis.FDR.filter.SNPcentric}
+\alias{cis.FDR.filter.SNPcentric.complete}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 given a collection of All.cis outputs (cisRun instances)
@@ -98,7 +99,21 @@ radius and MAF.
     curans
     }
   pullHits( fns, kp )
-  }
+#
+#
+#
+#   after executing code in example for All.cis (protected by dontrun)
+#   and running save(f1, file="f1.rda"), the following will work
+# genewise max score
+    cf1 = collectFiltered("f1.rda", mafs=.02, hidists=25000, targetname="gwise")
+# SNPwise scores, all
+    cf2 = collectFiltered("f1.rda", mafs=.02, hidists=25000, targetname="swise",
+         filterFun = cis.FDR.filter.SNPcentric.complete )
+# SNPwise scores, best per SNP when SNP is cis to multiple genes
+    cf3 = collectFiltered("f1.rda", mafs=.02, hidists=25000, targetname="swise2",
+         filterFun = cis.FDR.filter.SNPcentric )
+  }  # end dontrun
+
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
