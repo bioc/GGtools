@@ -470,7 +470,7 @@ to live within a limited memory footprint.
 therad = 1e6
 if (.Platform$OS.type == "windows") {
    therad = 5e4
-   exTx = function(x) MAFfilter( clipPCs(x,1:10)[fn[1:50], ], lower=0.05)
+   exTx = function(x) MAFfilter( clipPCs(x,1:10)[probeId(fn[1:50]), ], lower=0.05)
    g20f = exTx(g20)
    }
 b2 = best.cis.eQTLs("GGdata", ~male,  radius=therad,
