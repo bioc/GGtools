@@ -474,7 +474,7 @@ if (.Platform$OS.type == "windows") {
    g20f = exTx(g20)
    }
 b2 = best.cis.eQTLs("GGdata", ~male,  radius=therad,
-   folderstem="db2", nperm=2, geneApply=mclapply,
+   folderstem="db3", nperm=2, geneApply=mclapply,
    smFilter= exTx, chrnames="20", snpannopk=snplocsDefault())
 b2
 @
