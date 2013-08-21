@@ -470,13 +470,18 @@ to live within a limited memory footprint.
 therad = 1e6
 if (.Platform$OS.type == "windows") {
    therad = 5e4
-   exTx = function(x) MAFfilter( clipPCs(x,1:10)[probeId(fn[1:50]), ], lower=0.05)
+   exTx = function(x) MAFfilter( clipPCs(x,1:10)[probeId(fn[1:20]), ], lower=0.05)
    g20f = exTx(g20)
-   }
+ }
+@
+At the moment this does not succeed in windows systems.
+<<lkb22>>=
+if (.Platform$OS.type != "windows") {
 b2 = best.cis.eQTLs("GGdata", ~male,  radius=therad,
    folderstem="db3", nperm=2, geneApply=mclapply,
    smFilter= exTx, chrnames="20", snpannopk=snplocsDefault())
 b2
+}
 @
 
 An improvement in sensitivity is seen after this adjustment.  The
@@ -498,6 +503,7 @@ adjusted analysis can be visualized:
 
 \setkeys{Gin}{width=.95\textwidth}
 <<domopic,fig=TRUE>>=
+if (.Platform$OS.type != "windows") {
 newp = setdiff(goodProbes(b2), goodProbes(b1))
 np = length(newp)
 bestSnp = function(pn, esm) elementMetadata(esm@scoregr[pn])$snpid
@@ -506,6 +512,10 @@ plot_EvG(probeId(newp[1]), rsid(bestSnp(newp[1], b2)), g20, main="raw")
 plot_EvG(probeId(newp[1]), rsid(bestSnp(newp[1], b2)), g20f, main="PC-adjusted")
 plot_EvG(probeId(newp[np]), rsid(bestSnp(newp[np], b2)), g20, main="raw")
 plot_EvG(probeId(newp[np]), rsid(bestSnp(newp[np], b2)), g20f, main="PC-adjusted")
+}
+if (.Platform$OS.type == "windows") {
+plot(0,0,main="these computations unavailable on windows system")
+}
 @
 
 
