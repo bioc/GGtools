@@ -14,7 +14,6 @@ setClass("CisConfig", representation(
   nperm = "integer",
   folderStem = "character",
   radius = "integer",
-  MAFlb = "numeric",
   shortfac = "integer",
   chrnames = "character",
   smchrpref = "character",
@@ -44,7 +43,6 @@ setMethod("initialize", "CisConfig", function(.Object) {
  .Object@nperm = 2L
  .Object@folderStem = "cisScratch"
   .Object@radius = 50000L
-  .Object@MAFlb = .025
   .Object@shortfac = 100L
   .Object@chrnames = "22"
   .Object@smchrpref = ""
@@ -86,10 +84,6 @@ setGeneric("radius", function(x) standardGeneric("radius"))
 setMethod("radius", "CisConfig", function(x) x@radius)
 setGeneric("radius<-", function(object, value) standardGeneric("radius<-"))
 setMethod("radius<-", c("CisConfig", "integer"), function(object, value) {object@radius <- value; object})
-setGeneric("MAFlb", function(object, value) standardGeneric("MAFlb"))
-setMethod("MAFlb", c("CisConfig"), function(object) {object@MAFlb})
-setGeneric("MAFlb<-", function(object, value) standardGeneric("MAFlb<-"))
-setMethod("MAFlb<-", c("CisConfig", "numeric"), function(object, value) {object@MAFlb <- value; object})
 setGeneric("shortfac", function(x) standardGeneric("shortfac"))
 setMethod("shortfac", "CisConfig", function(x) x@shortfac)
 setGeneric("shortfac<-", function(object, value) standardGeneric("shortfac<-"))

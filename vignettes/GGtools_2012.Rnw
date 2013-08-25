@@ -100,7 +100,7 @@ for chromosome 20 as follows:
 <<loadm>>=
 suppressPackageStartupMessages(library(GGtools))
 library(parallel)
-<<getd,cache=TRUE>>=
+<<getd,cache=FALSE>>=
 g20 = getSS("GGdata", "20")
 @
 <<lkc>>=
@@ -269,7 +269,7 @@ a gene symbol is used to pick out an expression element,
 and adjustment for gender is commodated in an additive genetic model
 for effects of B allele copy number on expression of CPNE1.
 One degree of freedom chi-squared tests are computed.
-<<dot,cache=TRUE>>=
+<<dot,cache=FALSE>>=
 t1 = gwSnpTests(genesym("CPNE1")~male, g20, chrnum("20"))
 t1
 topSnps(t1)
@@ -340,7 +340,7 @@ with MAF $<$ 0.05 are removed, and
 then all SNP-gene association tests are executed.
 
 <<prep,echo=FALSE,results=hide>>=
-<<do20,cache=TRUE,keep.source=TRUE>>=
+<<do20,cache=FALSE,keep.source=TRUE>>=
 g20 = GGtools:::restrictProbesToChrom(g20, "20")
 mads = apply(exprs(g20),1,mad)
 oo = order(mads, decreasing=TRUE)
@@ -358,7 +358,7 @@ obtained in the \Sexpr{length(nrow(e1@fffile)*ncol(e1@fffile))}
 tests computed, in an \texttt{ff} archive.  Use \texttt{topFeats}
 to manually harvest this.
 
-<<gettop,cache=TRUE>>=
+<<gettop,cache=FALSE>>=
 pm1 = colnames(e1@fffile)
 tops = sapply(pm1, function(x) topFeats(probeId(x), mgr=e1, n=1)) 
 top6 = sort(tops, decreasing=TRUE)[1:6]
@@ -407,7 +407,7 @@ association scores; these are used to enumerate false significance claims
 at various magnitudes of the distribution of association scores.  The plug-in
 procedure for estimating FDR XXX cite Hastie Tibs Friedman is used.
 
-<<doc,cache=TRUE,keep.source=TRUE>>=
+<<doc,cache=FALSE,keep.source=TRUE>>=
 if (file.exists("db2")) unlink("db2", recursive=TRUE)
 fn = probeId(featureNames(g20))
 exTx = function(x) MAFfilter( x[fn, ], lower=0.05)
@@ -457,7 +457,7 @@ of principal components of variation.  To maximize information
 on possible batch effects, the entire expression matrix is restored and
 decomposed for principal component removal.
 
-<<domo,cache=TRUE, keep.source=TRUE>>=
+<<domo,cache=FALSE, keep.source=TRUE>>=
 if (file.exists("db2")) unlink("db2", recursive=TRUE)
 g20 = getSS("GGdata", "20")
 exTx = function(x) MAFfilter( clipPCs(x,1:10)[fn, ], lower=0.05)
@@ -466,7 +466,7 @@ g20f = exTx(g20)
 
 For windows system we use a smaller radius and fewer genes
 to live within a limited memory footprint.
-<<lkc2,cache=TRUE>>=
+<<lkc2,cache=FALSE>>=
 therad = 1e6
 if (.Platform$OS.type == "windows") {
    therad = 5e4

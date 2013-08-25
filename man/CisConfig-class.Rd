@@ -71,8 +71,6 @@
 \alias{SSgen}
 \alias{SSgen<-}
 
-\alias{MAFlb,CisConfig-method}
-\alias{MAFlb<-,CisConfig,numeric-method}
 \alias{excludeRadius<-,CisConfig,integerOrNULL-method}
 \alias{folderStem,CisConfig-method}
 \alias{folderStem<-,CisConfig,character-method}
@@ -82,8 +80,6 @@
 \alias{smpack,CisConfig-method}
 \alias{smpack<-,CisConfig,character-method}
 
-\alias{MAFlb}
-\alias{MAFlb<-}
 \alias{excludeRadius<-}
 \alias{folderStem}
 \alias{folderStem<-}
@@ -156,9 +152,6 @@ which will determine what interval about the gene is excluded for
 cis testing; 0 should exclude all within-gene SNP, but needs
 testing  }
     \item{\code{estimates}:}{Object of class \code{"logical"} if TRUE,
-estimates and standard errors (expanded and reduced in storage
-as a short int, using \code{shortfac}) are generated and retained }
-    \item{\code{MAFlb}:}{Object of class \code{"logical"} if TRUE,
 estimates and standard errors (expanded and reduced in storage
 as a short int, using \code{shortfac}) are generated and retained }
   }
