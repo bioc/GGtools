@@ -1,12 +1,11 @@
 setClass("cisRun", contains="GRanges")
 setValidity("cisRun", function(object) {
-  if (!all(c("MAFlb", "radius", "call", "nperm") %in% names(metadata(object))))
-     return("metadata list must include elements MAFlb, radius, and call")
+  if (!all(c("radius", "call", "nperm") %in% names(metadata(object))))
+     return("metadata list must include elements radius, and call")
   TRUE
 })
 
-convertCis = function(mcw, MAFlb, radius, confobj=NULL) {
- if (missing(MAFlb)) stop("need MAFlb")
+convertCis = function(mcw, radius, confobj=NULL) {
  if (missing(radius)) stop("need radius")
  nperm = length(mcw@perms)
  pnames = paste0("permScore_", 1:nperm)
@@ -18,7 +17,7 @@ convertCis = function(mcw, MAFlb, radius, confobj=NULL) {
      if (any(is.na(reord))) stop("permk and ansk don't match")
      values(ans)[[pnames[i]]] = mcw@perms[[i]]$score[reord]
      }
- metadata(ans) = list( MAFlb=MAFlb, radius=radius, call=mcw@theCall, nperm=nperm,
+ metadata(ans) = list( radius=radius, call=mcw@theCall, nperm=nperm,
    config = metadata(mcw@obs)$configObj )
  if (length(metadata(mcw@obs))>0) metadata(ans) = c(metadata(ans), metadata(mcw@obs), confobj)
  new("cisRun", ans)

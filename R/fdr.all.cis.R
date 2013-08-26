@@ -172,7 +172,7 @@ All.cis =
      thecall = match.call()
      obs = All.cis.mchr( smpack=smpack(config), rhs=rhs(config),
       folderstem=folderStem(config), radius=radius(config), 
-      MAFlb=MAFlb(config), shortfac=shortfac(config),
+      shortfac=shortfac(config),
       chrnames=chrnames(config), smchrpref=smchrpref(config), gchrpref=gchrpref(config),
         schrpref=schrpref(config), geneApply=geneApply(config), geneannopk=geneannopk(config),
         snpannopk=snpannopk(config), smFilter=smFilter(config),
@@ -182,7 +182,7 @@ All.cis =
 # in following, smFilter is wrapped over permEx
 #
      perms = lapply(1:nperm(config), function(x) All.cis.mchr( smpack=smpack(config), rhs=rhs(config),
-        folderstem=folderStem(config), radius=radius(config), MAFlb=MAFlb(config),
+        folderstem=folderStem(config), radius=radius(config), 
         shortfac=shortfac(config),
         chrnames=chrnames(config), smchrpref=smchrpref(config), gchrpref=gchrpref(config),
         schrpref=schrpref(config), geneApply=geneApply(config), geneannopk=geneannopk(config),
@@ -201,6 +201,6 @@ All.cis =
      obs = bindmaf.simple( smpack(config), smchr, obs, SSgen(config), radius(config) )
      metadata(obs)$configObj = config
      tmp = new("mcwAllCis", obs=obs, perms=perms, theCall=thecall)
-     convertCis(tmp, MAFlb=MAFlb(config), radius=radius(config), config)
+     convertCis(tmp, radius=radius(config), config)
 }
 
