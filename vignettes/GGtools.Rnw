@@ -445,7 +445,7 @@ ini
 radius(ini) = 75000L
 smFilter(ini) = function(x) nsFilter(x, var.cutoff=.98)
 smpack(ini) = "GGtools"
-chrnames(ini) = "21"
+chrnames(ini) = "20"
 library(parallel)  # to define mclapply
 geneApply(ini) = mclapply
 ini
@@ -460,17 +460,17 @@ one chromosome).  Various tools for combining multiple
 searches are used to get FDRs for more comprehensive searches.
 <<dosearch>>=
 options(mc.cores=min(1, detectCores()-1))
-system.time(t21 <- All.cis(ini))
-t21
+system.time(t20 <- All.cis(ini))
+t20
 @
 Note that the observed score is retained along with all
 associated scores achieved under permutation of expression
 against genotype.
 
 We can update to a different chromosome:
-<<dos2>>=
-chrnames(ini) = "20"
-system.time(t20 <- All.cis(ini))
+<<dos2,eval=FALSE>>=
+chrnames(ini) = "21"
+system.time(t21 <- All.cis(ini))
 @
 
 For realistic and comprehensive
@@ -482,7 +482,7 @@ are serialized to disk.
 <<dosa>>=
 td = tempdir()
 save(t20, file=paste0(td, "/t20.rda"))
-save(t21, file=paste0(td, "/t21.rda"))
+#save(t21, file=paste0(td, "/t21.rda"))
 @
 
 \subsubsection{Amalgamation of chromosome-specific results, recomputation
@@ -608,7 +608,7 @@ of principal components of variation.  To maximize information
 on possible batch effects, the entire expression matrix is restored and
 decomposed for principal component removal.
 
-<<domo,cache=FALSE, keep.source=TRUE>>=
+<<domo,cache=FALSE, keep.source=TRUE,eval=FALSE>>=
 if (file.exists("db2")) unlink("db2", recursive=TRUE)
 g20 = getSS("GGdata", "20")
 exTx = function(x) MAFfilter( clipPCs(x,1:10)[fn, ], lower=0.05)
@@ -625,7 +625,7 @@ b2
 An improvement in sensitivity can be seen after this adjustment.  The
 probes with FDR at 0.001 or lower are identified by the helper
 function
-<<ggg>>=
+<<ggg,eval=FALSE>>=
 goodProbes = function(x) names(x@scoregr[elementMetadata(x@scoregr)$fdr<0.001])
 @
 All probes identified as significant
