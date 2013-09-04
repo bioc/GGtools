@@ -1,1 +1,0 @@
-The Rnw for lab2010.pdf is in inst/extras
