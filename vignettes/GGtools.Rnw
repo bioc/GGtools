@@ -414,7 +414,9 @@ exTx = function(x) MAFfilter( x[fn, ], lower=0.05)
 b1 = best.cis.eQTLs("GGdata", ~male,  radius=1e6,
    folderstem="db2", nperm=2, geneApply=mclapply,
    smFilter= exTx, chrnames="20", snpannopk=snplocsDefault())
-<<lkc,eval=FALSE>>=
+<<lkc,eval=TRUE,echo=FALSE>>=
+data(b1)
+<<lkb1>>=
 b1
 @
 
@@ -459,7 +461,7 @@ The FDR reported are for the specific search (here
 one chromosome).  Various tools for combining multiple
 searches are used to get FDRs for more comprehensive searches.
 <<dosearch>>=
-options(mc.cores=min(1, detectCores()-1))
+options(mc.cores=max(1, detectCores()-3))
 system.time(t20 <- All.cis(ini))
 t20
 @
@@ -502,7 +504,7 @@ of = order(cf[[3]][[1]]$fdr)
 cf[[3]][[1]][of,][1:4,]  # shows best hits
 @
 
-<<fup,fig=FALSE,cache=TRUE>>=
+<<fup,fig=FALSE,cache=FALSE>>=
 g20 = getSS("GGtools", "20")
 <<dofupfig,fig=TRUE>>=
 plot_EvG(probeId("GI_4502372-S"), rsid("rs290449"), g20)
@@ -512,8 +514,8 @@ plot_EvG(probeId("GI_4502372-S"), rsid("rs290449"), g20)
 isolates the best scoring SNP per gene.  A SNP-centric FDR can
 also be computed.
 
-<<fup2,cache=TRUE>>=
-cf2 = collectFiltered(fns, mafs=c(.02,.03,.1), hidists=c(0,10000,75000),
+<<fup2,cache=FALSE>>=
+cf2 = collectFiltered(fns, mafs=c(.02,.05,.1), hidists=c(10000,75000),
   filterFun=cis.FDR.filter.SNPcentric)
 sapply(cf2, sapply, function(x) sum(x$fdr<=0.01))
 @
@@ -608,7 +610,7 @@ of principal components of variation.  To maximize information
 on possible batch effects, the entire expression matrix is restored and
 decomposed for principal component removal.
 
-<<domo,cache=FALSE, keep.source=TRUE,eval=FALSE>>=
+<<domo,cache=FALSE, keep.source=TRUE,eval=TRUE>>=
 if (file.exists("db2")) unlink("db2", recursive=TRUE)
 g20 = getSS("GGdata", "20")
 exTx = function(x) MAFfilter( clipPCs(x,1:10)[fn, ], lower=0.05)
@@ -616,23 +618,32 @@ g20f = exTx(g20)
 @
 
 <<runWithClip,eval=FALSE>>=
-b2 = best.cis.eQTLs("GGdata", ~male,  radius=therad,
+b2 = best.cis.eQTLs("GGdata", ~male,  radius=50000,
    folderstem="db3", nperm=2, geneApply=mclapply,
    smFilter= exTx, chrnames="20", snpannopk=snplocsDefault())
+<<getb2,eval=TRUE,echo=FALSE>>=
+data(b2)
+<<lkb2>>=
 b2
 @
 
 An improvement in sensitivity can be seen after this adjustment.  The
-probes with FDR at 0.001 or lower are identified by the helper
+probes with FDR at 0.13 (used for demonstration purposes with this
+drastically reduced data) or lower are identified by the helper
 function
-<<ggg,eval=FALSE>>=
-goodProbes = function(x) names(x@scoregr[elementMetadata(x@scoregr)$fdr<0.001])
+<<ggg,eval=TRUE>>=
+goodProbes = function(x) names(x@scoregr[elementMetadata(x@scoregr)$fdr<0.13])
 @
 All probes identified as significant
-(at FDR $\leq 0.001$) before the PCA adjustment
+(at FDR $\leq 0.13$) before the PCA adjustment
 are identified as such after it:
-<<chkp,eval=FALSE>>=
+<<chkp,eval=TRUE>>=
 setdiff(goodProbes(b2), goodProbes(b1))
+@
+
+The adjustment can lead to loss of significance for some probes.
+<<lkback>>=
+setdiff(goodProbes(b1), goodProbes(b2))
 @
 
 The effects of the adjustment for

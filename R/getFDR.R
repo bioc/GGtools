@@ -9,7 +9,7 @@ cisFilter = function (rng, low.maf = 0, hi.maf = 0.51, low.dist = -Inf, hi.dist 
     snplocs = rng$snplocs
  # cisRun includes information on radius, and the "range" consists of
  # the inflated radius used for searching
-    currad = radius(metadata(rng)$configObj) # shrink back
+    currad = radius(metadata(rng)$config) # shrink back
     genestarts = start(rng)+currad
     geneends = end(rng)-currad
     insideCurrentRadius = (snplocs>=(genestarts-hi.dist) &
