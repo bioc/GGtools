@@ -1,3 +1,7 @@
+CHANGES IN VERSION 4.10
+----------------------
+    o  Sharply revised vignette
+
 CHANGES IN VERSION 4.9
 ----------------------
     o  All.cis accepts a CisConfig instance to define parameters of a 
