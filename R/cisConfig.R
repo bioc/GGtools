@@ -40,7 +40,7 @@ setMethod("show", "CisConfig", function(object) {
 setMethod("initialize", "CisConfig", function(.Object) {
  .Object@smpack = "GGdata"
  .Object@rhs = ~1
- .Object@nperm = 2L
+ .Object@nperm = 3L
  .Object@folderStem = "cisScratch"
   .Object@radius = 50000L
   .Object@shortfac = 100L
