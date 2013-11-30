@@ -1,19 +1,42 @@
 
-citHeader("To cite package 'GGtools' in publications use:")
-     
-     ## R >= 2.8.0 passes package metadata to citation().
-     if(!exists("meta") || is.null(meta)) meta <- packageDescription("nlme")
-     year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date)
-     vers <- paste("R package version", meta$Version)
-     
-     citEntry(entry="Manual",
-              title = "GGtools: Genetics of Gene Expression with Bioconductor",
-              author = personList(as.person("Vincent J. Carey")),
-              year = year,
-              note = vers,
-     
-              textVersion =
-              paste("Vincent J. Carey (",
-                    year,
-                    "). GGtools: Genetics of Gene Expression with Bioconductor. ",
-                    vers, ".", sep=""))
+citEntry(entry="Article", 
+author = "Vincent J Carey and Adam R Davis and Michael F Lawrence and Robert Gentleman and Benjamin A Raby", 
+journal = "Bioinformatics",
+title = "Data structures and algorithms for analysis of genetics of gene expression with Bioconductor: GGtools 3.x",
+number = "11",
+pages = "1447--8",
+volume = "25",
+year = "2009",
+month = "Jun",
+language = "eng",
+doi = "10.1093/bioinformatics/btp169",
+pii = "btp169",
+pmid = "19349284",
+URL = "http://bioinformatics.oxfordjournals.org/content/25/11/1447.long",
+uri = "papers://C760FBA3-C68E-4E3E-8645-15A5D6D0F91F/Paper/p429",
+  textVersion = paste(
+"Carey VJ, Davis AR, Lawrence MF et al. (2009)",
+"Data structures and algorithms for analysis of",
+"genetics of gene expression with Bioconductor: GGtools 3.x",
+"Bioinformatics 25(11)1447-8.")
+)
+
+#
+#citHeader("To cite package 'GGtools' in publications use:")
+#     
+#     ## R >= 2.8.0 passes package metadata to citation().
+#     if(!exists("meta") || is.null(meta)) meta <- packageDescription("nlme")
+#     year <- sub(".*(2[[:digit:]]"3})-.*", "\\1", meta$Date)
+#     vers <- paste("R package version", meta$Version)
+#     
+#     citEntry(entry="Manual",
+#              title = "GGtools: Genetics of Gene Expression with Bioconductor",
+#              author = personList(as.person("Vincent J. Carey")),
+#              year = year,
+#              note = vers,
+#     
+#              textVersion =
+#              paste("Vincent J. Carey (",
+#                    year,
+#                    "). GGtools: Genetics of Gene Expression with Bioconductor. ",
+#                    vers, ".", sep=""))

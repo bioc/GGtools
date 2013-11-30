@@ -204,3 +204,9 @@ All.cis =
      convertCis(tmp, radius=radius(config), config)
 }
 
+# new design
+# use tileGenome to define a segmentation of genes and variants
+# filter expression and variants into tiles
+# run eqtlTests
+# determine cis sets in tile
+# filter test run
