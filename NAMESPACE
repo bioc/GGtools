@@ -67,7 +67,7 @@ export("chrnames", "chrnames<-", "estimates", "estimates<-",
 "shortfac", "shortfac<-", "smchrpref", "smchrpref<-", 
 "smFilter", "smFilter<-", "smpack", "smpack<-", "snpannopk", 
 "snpannopk<-", "SSgen", "SSgen<-",
-"cis.FDR.filter.SNPcentric.complete")
+"cis.FDR.filter.SNPcentric.complete", "binqq", "qqhex")
 
 exportMethods("chrnames", "chrnames<-", "estimates", "estimates<-", 
 "excludeRadius", "excludeRadius<-", "exFilter", "exFilter<-", 
@@ -78,3 +78,6 @@ exportMethods("chrnames", "chrnames<-", "estimates", "estimates<-",
 "shortfac", "shortfac<-", "smchrpref", "smchrpref<-", 
 "smFilter", "smFilter<-", "smpack", "smpack<-", "snpannopk", 
 "snpannopk<-", "SSgen", "SSgen<-")
+
+importFrom(hexbin, hexbin)
+importClassFrom(hexbin, hexbin)

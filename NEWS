@@ -1,3 +1,7 @@
+CHANGES IN VERSION 4.11
+----------------------
+    o  Added hmm878, chromatin map of GM12878 for assessment of chromatin state enrichments
+
 CHANGES IN VERSION 4.10
 ----------------------
     o  Sharply revised vignette
