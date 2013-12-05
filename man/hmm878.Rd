@@ -2,10 +2,10 @@
 \alias{hmm878}
 \docType{data}
 \title{
-%%   ~~ data name/kind ... ~~
+labeled GRanges with ChromHMM chromatin states for GM12878
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of the dataset. ~~
+labeled GRanges with ChromHMM chromatin states for GM12878
 }
 \usage{data(hmm878)}
 \format{
