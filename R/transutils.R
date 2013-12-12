@@ -78,8 +78,8 @@ topKfeats = function(mgr, K, fn="inds1.ff", batchsize=200,
       ginds = cbind(ind1[i1:i2,,drop=FALSE], ind2[i1:i2,,drop=FALSE])
       rowwiseExtract = function(x,y) t(sapply(1:nrow(x), function(row) x[row,][y[row,]]))
       chind = t(apply(scos, 1, function(x)order(x,decreasing=TRUE)[1:K]))
-      sco1[i1:i2,,drop=FALSE] = rowwiseExtract( scos, chind )
-      ind1[i1:i2,,drop=FALSE] = rowwiseExtract( ginds, chind )
+      sco1[i1:i2,] = rowwiseExtract( scos, chind )
+      ind1[i1:i2,] = rowwiseExtract( ginds, chind )
       }
    invisible(NULL)
 }
@@ -243,8 +243,8 @@ updateKfeats = function( sco1, sco2, ind1, ind2, batchsize=200 ) {
       ginds = cbind(rind1[i1:i2,,drop=FALSE], rind2[i1:i2,,drop=FALSE])
       rowwiseExtract = function(x,y) t(sapply(1:nrow(x), function(row) x[row,][y[row,]]))
       chind = t(apply(scos, 1, function(x)order(x,decreasing=TRUE)[1:K]))
-      sco1[i1:i2,,drop=FALSE] = rowwiseExtract( scos, chind )
-      ind1[i1:i2,,drop=FALSE] = rowwiseExtract( ginds, chind )
+      sco1[i1:i2,] = rowwiseExtract( scos, chind )
+      ind1[i1:i2,] = rowwiseExtract( ginds, chind )
       }
    rm(rsco1)
    rm(rsco2)
