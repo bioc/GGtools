@@ -58,7 +58,7 @@ topKfeats = function(mgr, K, fn="inds1.ff", batchsize=200,
                                         order(x,decreasing=TRUE)[1:K]]
      else stop("feat not recognized")
      tmp = ffrowapply(
-       t(apply(intests[i1:i2,],1,op)),
+       t(apply(intests[i1:i2,,drop=FALSE],1,op)),
        X=intests, RETURN=TRUE, RETCOL=K,
        BATCHSIZE=batchsize, VMODE="integer")
      ff(tmp, filename=fn, dim=c(nrow(intests),K), overwrite=TRUE,
@@ -74,12 +74,12 @@ topKfeats = function(mgr, K, fn="inds1.ff", batchsize=200,
    for (i in 1:length(snchunk)) {
       i1 = snchunk[[i]][1]
       i2 = snchunk[[i]][2]
-      scos = cbind(sco1[i1:i2,], sco2[i1:i2,])
-      ginds = cbind(ind1[i1:i2,], ind2[i1:i2,])
+      scos = cbind(sco1[i1:i2,,drop=FALSE], sco2[i1:i2,,drop=FALSE])
+      ginds = cbind(ind1[i1:i2,,drop=FALSE], ind2[i1:i2,,drop=FALSE])
       rowwiseExtract = function(x,y) t(sapply(1:nrow(x), function(row) x[row,][y[row,]]))
       chind = t(apply(scos, 1, function(x)order(x,decreasing=TRUE)[1:K]))
-      sco1[i1:i2,] = rowwiseExtract( scos, chind )
-      ind1[i1:i2,] = rowwiseExtract( ginds, chind )
+      sco1[i1:i2,,drop=FALSE] = rowwiseExtract( scos, chind )
+      ind1[i1:i2,,drop=FALSE] = rowwiseExtract( ginds, chind )
       }
    invisible(NULL)
 }
@@ -239,12 +239,12 @@ updateKfeats = function( sco1, sco2, ind1, ind2, batchsize=200 ) {
    for (i in 1:length(snchunk)) {
       i1 = snchunk[[i]][1]
       i2 = snchunk[[i]][2]
-      scos = cbind(rsco1[i1:i2,], rsco2[i1:i2,])
-      ginds = cbind(rind1[i1:i2,], rind2[i1:i2,])
+      scos = cbind(rsco1[i1:i2,,drop=FALSE], rsco2[i1:i2,,drop=FALSE])
+      ginds = cbind(rind1[i1:i2,,drop=FALSE], rind2[i1:i2,,drop=FALSE])
       rowwiseExtract = function(x,y) t(sapply(1:nrow(x), function(row) x[row,][y[row,]]))
       chind = t(apply(scos, 1, function(x)order(x,decreasing=TRUE)[1:K]))
-      sco1[i1:i2,] = rowwiseExtract( scos, chind )
-      ind1[i1:i2,] = rowwiseExtract( ginds, chind )
+      sco1[i1:i2,,drop=FALSE] = rowwiseExtract( scos, chind )
+      ind1[i1:i2,,drop=FALSE] = rowwiseExtract( ginds, chind )
       }
    rm(rsco1)
    rm(rsco2)
