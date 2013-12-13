@@ -125,8 +125,10 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
     geneRanges = NULL, snpRanges = NULL, radius = 2e+06, renameChrs=NULL, 
     probesToKeep=NULL, batchsize=200, genegran=50, shortfac=10, wrapperEndo=NULL,
     geneannopk = "illuminaHumanv1.db", snpannopk = snplocsDefault(),
-    gchrpref = "", schrpref="ch", exFilter=function(x)x, SSgen=GGBase::getSS)
+    gchrpref = "", schrpref="ch", exFilter=function(x)x, 
+    smFilter=function(x)x, SSgen=GGBase::getSS)
 {
+  stopifnot(length(snpchr)==1)
 
 #getCisMap = function( radius=50000, gchr="20",
 #  schr="ch20", geneannopk="illuminaHumanv1.db",
@@ -155,6 +157,7 @@ transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsc
 #
     sms = SSgen(smpack, snpchr, renameChrs=renameChrs, probesToKeep=probesToKeep, 
        wrapperEndo=wrapperEndo, exFilter=exFilter)
+    sms = smFilter(sms)
     if (!is.null(renameChrs)) snpchr=renameChrs
     guniv = featureNames(sms)   # universe of probes
     smanno = gsub(".db", "", annotation(sms))
