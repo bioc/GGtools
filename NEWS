@@ -1,6 +1,9 @@
 CHANGES IN VERSION 4.11
 ----------------------
     o  Added hmm878, chromatin map of GM12878 for assessment of chromatin state enrichments
+    o  Added gffprocess(), of use when All.cis is used to generate
+chunk-specific gff3: gffprocess uses external sort/grep/tabix to
+unify the chunks into a single tabix-indexed gff3
 
 CHANGES IN VERSION 4.10
 ----------------------
