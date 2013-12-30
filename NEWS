@@ -4,6 +4,9 @@ CHANGES IN VERSION 4.11
     o  Added gffprocess(), of use when All.cis is used to generate
 chunk-specific gff3: gffprocess uses external sort/grep/tabix to
 unify the chunks into a single tabix-indexed gff3
+    o pifdr() has been changed to avoid approximation on a grid and to
+      compute binning of permuted scores more rapidly using hist();
+      old behavior recoverable with legacy=TRUE
 
 CHANGES IN VERSION 4.10
 ----------------------

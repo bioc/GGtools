@@ -17,7 +17,7 @@
            (sum(abs(ps)>=abs(x))/nperm)/sum(abs(obs)>=abs(x))))
 }
 
-pifdr = function(obs, perms, npts=1999, applier=sapply) {
+pifdr.old = function(obs, perms, npts=1999, applier=sapply) {
 #
 # compute plug-in FDR or an approximation to a grid
 #   if # observed scores < npts use direct computation
@@ -39,3 +39,24 @@ pifdr = function(obs, perms, npts=1999, applier=sapply) {
   approx(checkpoints, gridFDR, obs, rule=2L)$y
 }
   
+pifdr = function(obs,perms,legacy=FALSE,...) {
+#
+# y binned into intervals using hist
+# for computing plug-in FDR
+#
+ if (legacy) return( pifdr(obs, perms, ...) )
+ stopifnot((length(perms)%%length(obs)) == 0)
+ y = perms
+ x = obs
+ fac = length(y)/length(x)
+ h = hist(y, breaks=c(-Inf,x,Inf), plot=FALSE)
+ oy = fac*length(x)-(cumsum(h$counts))  # cum. count up ordered binning of y from top
+ rx = rank(x)
+ brx = h$breaks[-c(1,length(x)+2)]
+ ncalls = length(x):1
+ fdr = oy[-length(oy)]/(fac*ncalls)
+ # following can be used to verify current approach to handling bins
+ #cbind(x=x, brx=brx, obrx=brx[rx], oy=oy[-length(oy)][rx], fdr=fdr[rx], ncalls=ncalls[rx])
+ fdr[rx]
+}
+
