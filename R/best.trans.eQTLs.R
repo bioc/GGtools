@@ -38,7 +38,6 @@ best.trans.eQTLs = function(smpack, rhs, genechrnum, snpchrnum,
 #    if (length(chrnames) < 2) 
 #        stop("must have length(chrnames) >= 2")
 #    theCall = match.call()
-#    require(GGtools)
 ##
 ## get an image of the expression+genotype data for SNP on specific chromosome snpchr
 ##

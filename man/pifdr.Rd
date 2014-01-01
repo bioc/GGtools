@@ -7,7 +7,7 @@ utility for computing plug-in FDR
 utility for computing plug-in FDR
 }
 \usage{
-pifdr( obs, perms, legacy=FALSE ) 
+pifdr( obs, perms, legacy=FALSE, ... ) 
 }
 \arguments{
   \item{obs}{
@@ -17,6 +17,10 @@ observed association scores
 vector of association scores under permutation; length should
 be integer multiple of \code{length(obs)}
  }
+\item{legacy}{logical, if TRUE, use the approximate version of
+pifdr() available before 12/30/2013, with additional arguments if
+desired}
+\item{\dots}{extra arguments passed if legacy is TRUE}
 }
 \details{
 Revised 12/30/13 to employ hist() to rapidly bin the
@@ -61,9 +65,9 @@ Learning ch 18.7
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-\seealso{
+%\seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
-}
+%}
 \examples{
 set.seed(1234)
 op = par(no.readonly=TRUE)

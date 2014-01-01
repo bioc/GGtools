@@ -18,7 +18,7 @@ for very large samples
 }
 \usage{
 qqhex(sco, p1, p2, p3, fdr, nxbins = 20, thrs = c(0, 0.001, 0.005, 0.01, 0.05))
-binqq(qqob, ylim = c(0, 76), xlim = c(0, 30), ...)
+binqq(qqob, ylim = c(0, 76), xlim = c(0, 30), end45=5, ...)
 }
 \arguments{
   \item{sco}{

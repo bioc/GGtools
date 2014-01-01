@@ -44,7 +44,7 @@ cat("PHASE 2: extracting associations passing cis threshold...\n")
     smchr = paste(smchrpref, chrnames[i], sep="")
     cismapObj = getCisMap(radius = radius, gchr = gchr, schr = schr,
         geneannopk = geneannopk, snpannopk = snpannopk)
-    cismap = GGtools:::namelist(cismapObj)
+    cismap = namelist(cismapObj)
     cokp = intersect(kp, names(cismap))  # mapped probes w/ cis snp on this chr
 #
 # reduce set of probes

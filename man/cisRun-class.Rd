@@ -33,9 +33,9 @@ Class \code{"\linkS4class{Annotated}"}, by class "GRanges", distance 4.
 \section{Methods}{
 No methods defined with class "cisRun" in the signature.
 }
-\references{
+%\references{
 %%  ~~put references to the literature/web site here~~
-}
+%}
 \author{
 VJ Carey <stvjc@channing.harvard.edu>
 }
@@ -46,10 +46,10 @@ instance
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-\seealso{
+%\seealso{
 %%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
 %%  ~~or \code{\linkS4class{CLASSNAME}} for links to other classes ~~~
-}
+%}
 \examples{
 showClass("cisRun")
 }

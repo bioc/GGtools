@@ -120,7 +120,7 @@ unified.col.summary = function(smpackvec, smchr, usemax=FALSE,
   smats[[i]]  = smats[[i]][,oksn]
  if (usemax) {
    summs = lapply(smats, col.summary)
-   outmafs = matrix(NA, nr=length(oksn), nc=npacks)
+   outmafs = matrix(NA, nrow=length(oksn), ncol=npacks)
    for (ind in 1:npacks)  outmafs[,ind] = summs[[ind]][oksn,"MAF"]
    ans = data.frame(MAF=apply(outmafs,1,max,na.rm=TRUE))
    }

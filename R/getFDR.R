@@ -57,7 +57,7 @@ bestInStratum = function (m, stratumGetter = names, scoreGetter = function(x) va
 #  list(scores=bestscores, scorerids=as.character(scorers))
 #}
   
-getFDR = function( files = dir(patt="^pop.*rda$"), filter = cisFilter, 
+getFDR = function( files = dir(pattern="^pop.*rda$"), filter = cisFilter, 
  reducer = bestInStratum, 
  stratumGetter = names, scoreGetter = function(x) values(x)$score, 
  computeBest = max, ...) {

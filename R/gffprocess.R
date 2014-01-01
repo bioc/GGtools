@@ -7,7 +7,7 @@ gffprocess = function(basename="fullyri100k", n_in=44, headpatt="_1A", tmpForSor
 # we assume that -T argument to sort is followed by a folder path to be used for temporary files
 # more modern sort utilities allow --temporary-directory= 
 #
- allgff = dir(patt="gff3$")
+ allgff = dir(pattern="gff3$")
  stopifnot(length(allgff)==n_in)
  topind = grep(headpatt, allgff)
  stopifnot(length(topind)==1)
@@ -52,7 +52,6 @@ cgff2dt = function(gff3, tiling ) {
 # c) builds a revised gff3 with gw
 #
   require(foreach)
-  require(Rsamtools)
   stopifnot(is(tiling, "GRanges"))
   basen = gsub(".gff3.gz", "", gff3)
   th = headerTabix(gff3)

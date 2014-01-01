@@ -1,3 +1,9 @@
+import(methods)
+import(utils)
+import(GGBase)
+import(data.table)
+
+importFrom(Rsamtools, "headerTabix", "isOpen", "close.TabixFile", "open.TabixFile")
 
 importFrom(stats, IQR)
 

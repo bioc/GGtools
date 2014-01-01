@@ -279,8 +279,8 @@ bindSnpRanges2mgr = function (mgr, snpRanges, badstart=0L, badend=1e9L) # longer
     fullsr = GRanges(seqnames = sn, fullsr)
     names(fullsr) = snpsInMgr
     matup = match(names(fullsr), names(snpRanges), nomatch = 0)
-    IRanges:::end(fullsr[which(matup > 0)]) = IRanges:::end(snpRanges[matup[matup>0]])
-    IRanges:::start(fullsr[which(matup > 0)]) = IRanges:::start(snpRanges[matup[matup>0]])
+    IRanges::end(fullsr[which(matup > 0)]) = IRanges::end(snpRanges[matup[matup>0]])
+    IRanges::start(fullsr[which(matup > 0)]) = IRanges::start(snpRanges[matup[matup>0]])
     fullsr
 }
 
@@ -296,8 +296,8 @@ bindGeneRanges2mgr = function (mgr, geneRanges, badstart=-6, badend=-5)
     fullgr = GRanges(seqnames = sn, fullgr)
     names(fullgr) = genesInMgr
     matup = match(names(fullgr), names(geneRanges), nomatch = 0)
-    IRanges:::end(fullgr[which(matup > 0)]) = IRanges:::end(geneRanges[matup[matup>0]])
-    IRanges:::start(fullgr[which(matup > 0)]) = IRanges:::start(geneRanges[matup[matup>0]])
+    IRanges::end(fullgr[which(matup > 0)]) = IRanges::end(geneRanges[matup[matup>0]])
+    IRanges::start(fullgr[which(matup > 0)]) = IRanges::start(geneRanges[matup[matup>0]])
     fullgr
 }
 
@@ -424,7 +424,6 @@ mtransScores = function (smpackvec, snpchr = "chr1", rhslist, K = 20, targdirpre
     if (length(chrnames) < 2) 
         stop("must have length(chrnames) >= 2")
     theCall = match.call()
-    require(GGtools)
 #
 # get an image of the expression+genotype data for SNP on specific chromosome snpchr
 #

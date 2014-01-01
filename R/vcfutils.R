@@ -51,8 +51,8 @@
 #         if (length(grep("^#CHROM", tmp))>0) break
 #         }
 #     sampids = sampleIDs(meta, ndrop=nmetacol)
-#     Rsamtools:::close.TabixFile(tbxfi)
-#     Rsamtools:::open.TabixFile(tbxfi)
+#     Rsamtools::close.TabixFile(tbxfi)
+#     Rsamtools::open.TabixFile(tbxfi)
 #     chunk = scanTabix(tbxfi, param=gr)  # list of vectors of strings, one list elem per range in gr
 #     out = list()
 #     trk = 0
@@ -67,7 +67,7 @@
 #     for (i in 1:nsnp) mat[,i] = out[[i]]$calls
 #     rownames(mat) = sampids
 #     colnames(mat) = rsid
-#     Rsamtools:::close.TabixFile(tbxfi)
+#     Rsamtools::close.TabixFile(tbxfi)
 #     new("SnpMatrix", mat)
 #})
 #
@@ -112,7 +112,7 @@
 #    }
 #    rsid = sapply(out, "[[", "id")
 #    nsnp = length(out)
-#    mat = matrix(as.raw(0), nr = length(sampids), ncol = nsnp)
+#    mat = matrix(as.raw(0), nrow = length(sampids), ncol = nsnp)
 #    for (i in 1:nsnp) mat[, i] = out[[i]]$calls
 #    rownames(mat) = sampids
 #    colnames(mat) = rsid
@@ -170,8 +170,8 @@ setMethod("vcf2sm", c("TabixFile", "GRanges", "integer"),
    function( tbxfi, ..., gr, nmetacol=9) {
      # get metadata, terminated by ^#CHROM
      # get fresh connection
-     if (Rsamtools:::isOpen(tbxfi)) Rsamtools:::close.TabixFile(tbxfi)
-     Rsamtools:::open.TabixFile(tbxfi)
+     if (isOpen(tbxfi)) close.TabixFile(tbxfi)
+     open.TabixFile(tbxfi)
      head = scanVcfHeader(tbxfi)  # you are positioned at data
      sampids = head@samples # head[[1]][["Sample"]] # some reflectance
      chunk = scanTabix(tbxfi, param=gr)  # list of vectors of strings, one list elem per range in gr
@@ -190,7 +190,7 @@ setMethod("vcf2sm", c("TabixFile", "GRanges", "integer"),
      for (i in 1:nsnp) mat[,i] = out[[i]]$calls
      rownames(mat) = sampids
      colnames(mat) = rsid
-     Rsamtools:::close.TabixFile(tbxfi)
+     close.TabixFile(tbxfi)
      new("SnpMatrix", mat)
 })
 

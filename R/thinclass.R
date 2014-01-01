@@ -31,12 +31,11 @@ hns = function (packnames, chrtag = "chr_22",
 # the score is simply summed, the MAF is recomputed using MAFupdate, typical
 #  approach is to take the minimum MAF among populations
 #
-    require(GGtools)
     for (i in packnames) require(i, character.only = TRUE)
-    objs = lapply(packnames, function(x) get(load(dir(patt = chrtag, 
-        system.file("rdas", package = x), full = TRUE))))
+    objs = lapply(packnames, function(x) get(load(dir(pattern = chrtag, 
+        system.file("rdas", package = x), full.names = TRUE))))
     objs = lapply(objs, function(x) {
-         if (is(x, "mcwAllCis")) x = convertCis(x, MAFlb=MAFlb, radius=inradius)
+         if (is(x, "mcwAllCis")) x = convertCis(x, radius=inradius)
          x
          })
     cl = sapply(objs, function(x) is(x, "cisRun"))

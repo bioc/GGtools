@@ -46,9 +46,6 @@ setMethod("sensanal", c("sensiCisInput", "numeric"), function(object, fdrbound=0
 #
 # infrastructure acquisition
 #
- require(GGtools)
- require(IRanges)
- require(GenomicRanges)
  require(probeannopk, quietly=TRUE, character.only=TRUE)
 #
 # data frame converter from mcwBestCis

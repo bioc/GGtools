@@ -345,7 +345,7 @@ setMethod("fullreport", c("mcwBestCis", "missing"), function(x, type, ...) {
 })
 setMethod("fullreport", c("mcwBestCis", "character"), function(x, type, ...) {
   if (type == "data.frame") {
-   tmp = IRanges:::as.data.frame(x@scoregr)
+   tmp = IRanges::as.data.frame(x@scoregr)
    probeid = rownames(tmp)
    return(data.frame(probeid=probeid, tmp, stringsAsFactors=FALSE))
   } else stop(paste("type", type, "not supported."))

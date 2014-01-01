@@ -19,6 +19,7 @@ transScores(smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsco", geneAppl
   geneannopk = "illuminaHumanv1.db", 
   snpannopk = snplocsDefault(), gchrpref = "",
                  schrpref = "ch", exFilter=function(x)x,
+   smFilter=function(x)x,
    SSgen=GGBase::getSS)
 
 meta.transScores (smpackvec = c("GGdata", "hmyriB36"),
@@ -114,6 +115,8 @@ character string naming a Bioconductor SNPlocs.* SNP metadata package
 }
   \item{exFilter}{function to transform ExpressionSet component of
 retrieved smlSet, to reduce probe sets in use, for example}
+  \item{smFilter}{function to transform smlSet instance before use; filter can
+affect genotypes in smList(x)[[1]], for example}
     \item{exFilterList}{list of functions serving as exFilters for
 each of the elements of smpackvec}
     \item{SMFilterList}{list of functions servicing as wrapperEndos
