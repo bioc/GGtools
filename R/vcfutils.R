@@ -88,7 +88,7 @@
 #  }
 # rsid = sapply(out, "[[", "id")
 # nsnp = length(out)
-# mat = matrix(as.raw(0), nr=length(sampids), ncol=nsnp)
+# mat = matrix(as.raw(0), nrow=length(sampids), ncol=nsnp)
 # for (i in 1:nsnp) mat[,i] = out[[i]]$calls
 # rownames(mat) = sampids
 # colnames(mat) = rsid
@@ -186,7 +186,7 @@ setMethod("vcf2sm", c("TabixFile", "GRanges", "integer"),
      if (length(out) == 0) return(NULL)
      rsid = sapply(out, "[[", "id")
      nsnp = length(out)
-     mat = matrix(as.raw(0), nr=length(sampids), ncol=nsnp)
+     mat = matrix(as.raw(0), nrow=length(sampids), ncol=nsnp)
      for (i in 1:nsnp) mat[,i] = out[[i]]$calls
      rownames(mat) = sampids
      colnames(mat) = rsid
