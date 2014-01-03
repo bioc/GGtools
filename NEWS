@@ -7,6 +7,7 @@ unify the chunks into a single tabix-indexed gff3
     o pifdr() has been changed to avoid approximation on a grid and to
       compute binning of permuted scores more rapidly using hist();
       old behavior recoverable with legacy=TRUE
+    o ciseqByCluster() uses nested concurrency to perform cis searches
 
 CHANGES IN VERSION 4.10
 ----------------------
