@@ -33,8 +33,8 @@ ciseqByCluster = function( cl, pack = "yri1kgv",
   if (!file.exists(targetfolder)) try(system(paste0("mkdir ", targetfolder)))
   if (!file.exists(targetfolder)) stop(paste0("cannot  create ", targetfolder))
   library(parallel)
-  firstHalf <<- function(x) x[1:floor(length(x))/2]
-  secondHalf <<- function(x) x[-(1:floor(length(x))/2)]
+  firstHalf <<- function(x) x[1:floor(length(x)/2)]
+  secondHalf <<- function(x) x[-(1:floor(length(x)/2))]
   setupSplit = function(nodeset=1:numNodes) {
      clusterApply(cl, nodeset, function(w) {
       library(parallel)  # get resources
