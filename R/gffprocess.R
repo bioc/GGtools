@@ -42,7 +42,7 @@ gffprocess = function(basename="fullyri100k", n_in=44, headpatt="_1A", tmpForSor
 simpleTiling = function(ntile) {
  require(Homo.sapiens)
  hsi = seqinfo(Homo.sapiens)[paste0("chr", 1:22),]
- GenomicRanges::unlist(tileGenome(hsi, ntile=100))
+ GenomicRanges::unlist(tileGenome(hsi, ntile=ntile))
  }
 
 cgff2dt = function(gff3, tiling ) {
