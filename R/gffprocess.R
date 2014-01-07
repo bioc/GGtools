@@ -45,7 +45,7 @@ simpleTiling = function(ntile) {
  GenomicRanges::unlist(tileGenome(hsi, ntile=ntile))
  }
 
-cgff2dt = function(gff3, tiling ) {
+cgff2dt = function(gff3, tiling, addHitTest=TRUE, addcc878=TRUE ) {
 #
 # this program takes a genome-wide gff3 assembled by gffprocess after ciseqByCluster
 # and a) assembles a data.table instance with the same content, b) computes the genome-wide FDR,
@@ -58,7 +58,7 @@ cgff2dt = function(gff3, tiling ) {
   orderedChr = th$seqnames
   lgr = foreach(i=1:length(tiling)) %dopar% {
     gc()
-    cat(i)
+    if (options()$gg.verbose) cat(i)
     lk = try(import.gff3( gff3, which=tiling[i] ))
     if (inherits(lk, "try-error")) lk = NULL
     if (!is.null(lk)) lk = as.data.table(as.data.frame(lk))
@@ -78,9 +78,29 @@ cgff2dt = function(gff3, tiling ) {
   for (i in 1:nperm)
     ans[[ pnames[i] ]] = as.numeric( ans[[ pnames[i] ]] )
   ans$mindist = as.numeric(ans$mindist)  # 
-print(date())
+if (options()$gg.verbose) print(date())
+
+if (addcc878) {
+ data(hmm878)
+ eqr = GRanges(ans$seqnames, IRanges(ans$snploc, width=1))
+ fo = findOverlaps(eqr, hmm878)
+ nlev = length(unique(hmm878$name))
+ chromcat878 = factor(rep("none", nrow(ans)), levels=c(unique(hmm878$name), "none"))
+ chromcat878[ queryHits(fo) ] = factor(hmm878$name[subjectHits(fo)])
+ ans$chromcat878 = chromcat878
+}
+
+if (addHitTest) {
+ if (require(gwascat)) {
+   data(gwastagger)
+   meqgr = GRanges(ans$seqnames, IRanges(ans$snploc, width=1))
+   isgwashit = 1*(overlapsAny(meqgr, gwastagger) | ans$snp %in% gwastagger$tagid) # allow match by loc or name
+   ans$isgwashit = isgwashit
+   }
+}
+
   ans$fdr = pifdr(ans$score, c(ans$permScore_1, ans$permScore_2, ans$permScore_3))
-print(date())
+if (options()$gg.verbose) print(date())
   obn = paste0(basen, "_dt")
   assign(obn, ans)
   save(list=obn, file=paste0(obn, ".rda"))
