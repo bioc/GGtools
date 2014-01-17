@@ -2,7 +2,7 @@
 ciseqByCluster = function( cl, pack = "yri1kgv",
       outprefix = "yrirun",
       finaltag = "partyri100k",
-      chromsToRun = 1:22,  # if length is C will use 2C nodes 
+      chromsToRun = 1:22,  # if length is C will spawn 3C jobs throuch clusterApplyLB 
       targetfolder = "/freshdata/YRI_3",
       radius = 100000L,
       nperm = 3L,
@@ -35,6 +35,9 @@ ciseqByCluster = function( cl, pack = "yri1kgv",
   library(parallel)
   firstHalf <<- function(x) x[1:floor(length(x)/2)]
   secondHalf <<- function(x) x[-(1:floor(length(x)/2))]
+  firstThird <<- function(x) x[1:floor(length(x)/3)]
+  lastThird <<- function(x) x[-(1:(floor(2*length(x)/3)))]
+  midThird <<- function(x) x[(floor(length(x)/3)+1):(floor(2*length(x)/3))]
   setupSplit = function(nodeset=1:numNodes) {
      clusterApply(cl, nodeset, function(w) {
       library(parallel)  # get resources
@@ -128,16 +131,21 @@ ciseqByCluster = function( cl, pack = "yri1kgv",
   clusterExport(cl, "runOneSplit")
   clusterExport(cl, "firstHalf")
   clusterExport(cl, "secondHalf")
+  clusterExport(cl, "firstThird")
+  clusterExport(cl, "lastThird")
+  clusterExport(cl, "midThird")
  
-  njobs = 2*length(chromsToRun)
-  chrtags = as.character(rep(chromsToRun, each=2))
+ 
+  njobs = 3*length(chromsToRun)
+  chrtags = as.character(rep(chromsToRun, each=3))
   
   reqlist = vector("list", njobs)
   j <- 1
   for (i in 1:length(chromsToRun)) {
-   reqlist[[j]] = list( chr=chrtags[j], tag="A", splitter=firstHalf )  # need to distinguish splitter elements
-   reqlist[[j+1]] = list( chr=chrtags[j+1], tag="B", splitter=secondHalf )  # therefore loop is complex
-   j <- j+2
+   reqlist[[j]] = list( chr=chrtags[j], tag="A", splitter=firstThird )  # need to distinguish splitter elements
+   reqlist[[j+1]] = list( chr=chrtags[j+1], tag="B", splitter=midThird )  # therefore loop is complex
+   reqlist[[j+2]] = list( chr=chrtags[j+1], tag="C", splitter=lastThird )  # therefore loop is complex
+   j <- j+3
   }
   reqlist <<- reqlist
   
