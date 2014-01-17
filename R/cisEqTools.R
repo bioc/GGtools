@@ -148,7 +148,7 @@ on.exit(setwd(curd))
 setwd(targetfolder)
 gffprocess(finaltag, n_in=njobs, headpatt=paste0("_", chrtags[1], "A"), tmpForSort=tmpForSort)
 myti = simpleTiling(numtiles)
-pmti = myti[seqnames(myti) %in% paste0("chr", chromsToRun)]
+pmti = myti[as(seqnames(myti),"character") %in% paste0("chr", chromsToRun)]
 require(foreach)
 cgff2dt(paste0(finaltag, ".gff3.gz"), pmti)
 
