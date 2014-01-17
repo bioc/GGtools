@@ -58,7 +58,7 @@ cgff2dt = function(gff3, tiling, addHitTest=TRUE, addcc878=TRUE ) {
   orderedChr = th$seqnames
   lgr = foreach(i=1:length(tiling)) %dopar% {
     gc()
-    if (options()$gg.verbose) cat(i)
+    if (isTRUE(options()$gg.verbose)) cat(i)
     lk = try(import.gff3( gff3, which=tiling[i] ))
     if (inherits(lk, "try-error")) lk = NULL
     if (!is.null(lk)) lk = as.data.table(as.data.frame(lk))
@@ -78,7 +78,7 @@ cgff2dt = function(gff3, tiling, addHitTest=TRUE, addcc878=TRUE ) {
   for (i in 1:nperm)
     ans[[ pnames[i] ]] = as.numeric( ans[[ pnames[i] ]] )
   ans$mindist = as.numeric(ans$mindist)  # 
-if (options()$gg.verbose) print(date())
+if (isTRUE(options()$gg.verbose)) print(date())
 
 if (addcc878) {
  data(hmm878)
@@ -100,7 +100,7 @@ if (addHitTest) {
 }
 
   ans$fdr = pifdr(ans$score, c(ans$permScore_1, ans$permScore_2, ans$permScore_3))
-if (options()$gg.verbose) print(date())
+if (isTRUE(options()$gg.verbose)) print(date())
   obn = paste0(basen, "_dt")
   assign(obn, ans)
   save(list=obn, file=paste0(obn, ".rda"))
