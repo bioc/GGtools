@@ -17,6 +17,8 @@ importFrom(ff, ff, as.ram, ffrowapply, filename, is.open)
 
 importFrom(bit, chunk)
 
+importFrom(Gviz, DataTrack, plotTracks, GeneRegionTrack, GenomeAxisTrack)
+
 importFrom(AnnotationDbi, get, mget, revmap, mappedkeys)
 
 importMethodsFrom(IRanges, aggregate)
@@ -31,7 +33,7 @@ importFrom(Biobase, featureNames, annotation, pData)
 importMethodsFrom(GenomicRanges, seqnames)
 importFrom(GenomicRanges, GRanges)
 
-importFrom(Rsamtools, TabixFile)
+importFrom(Rsamtools, TabixFile, path)
 
 importMethodsFrom(Rsamtools, scanTabix)
 
@@ -75,7 +77,7 @@ export("chrnames", "chrnames<-", "estimates", "estimates<-",
 "smFilter", "smFilter<-", "smpack", "smpack<-", "snpannopk", 
 "snpannopk<-", "SSgen", "SSgen<-",
 "cis.FDR.filter.SNPcentric.complete", "binqq", "qqhex",
- "gffprocess", "simpleTiling", "cgff2dt", "ciseqByCluster")
+ "gffprocess", "simpleTiling", "cgff2dt", "ciseqByCluster", "scoresCis")
 
 exportMethods("chrnames", "chrnames<-", "estimates", "estimates<-", 
 "excludeRadius", "excludeRadius<-", "exFilter", "exFilter<-", 
