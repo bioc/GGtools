@@ -1,3 +1,21 @@
+getNodeNames = function(CLUSTSIZE) {
+#
+# generate default starcluster nodenames up to 999 nodes
+#
+ tags = as.character(1:(CLUSTSIZE-1))
+ tagl = nchar(tags)
+ mtagl = max(tagl)
+ stopifnot(mtagl<4)
+ allt = rep("node", length(tags))
+ allt[tagl==1] = paste0(allt[tagl==1], "00", tags[tagl==1])
+ if (any(tagl == 2))
+ allt[tagl==2] = paste0(allt[tagl==2], "0", tags[tagl==2])
+ if (any(tagl == 3))
+ allt[tagl==3] = paste0(allt[tagl==3],  tags[tagl==3])
+ allt = c("master", allt)
+ allt
+}
+
 
 ciseqByCluster = function( cl, pack = "yri1kgv",
       outprefix = "yrirun",
@@ -14,7 +32,7 @@ ciseqByCluster = function( cl, pack = "yri1kgv",
       smchrpref = "chr",
       tmpForSort = "/tmp",
       numtiles = 200,
-      postProcCores=12) {
+      postProcCores=12, reqlist=NULL) {
 #
 # this program will split all chromsomes in roughly equal halves (by probe) and
 # compute All.cis for all probes ... snps may recur in the different halves
@@ -139,13 +157,15 @@ ciseqByCluster = function( cl, pack = "yri1kgv",
   njobs = 3*length(chromsToRun)
   chrtags = as.character(rep(chromsToRun, each=3))
   
-  reqlist = vector("list", njobs)
-  j <- 1
-  for (i in 1:length(chromsToRun)) {
-   reqlist[[j]] = list( chr=chrtags[j], tag="A", splitter=firstThird )  # need to distinguish splitter elements
-   reqlist[[j+1]] = list( chr=chrtags[j+1], tag="B", splitter=midThird )  # therefore loop is complex
-   reqlist[[j+2]] = list( chr=chrtags[j+1], tag="C", splitter=lastThird )  # therefore loop is complex
-   j <- j+3
+  if (is.null(reqlist)) {
+   reqlist = vector("list", njobs)
+   j <- 1
+   for (i in 1:length(chromsToRun)) {
+    reqlist[[j]] = list( chr=chrtags[j], tag="A", splitter=firstThird )  # need to distinguish splitter elements
+    reqlist[[j+1]] = list( chr=chrtags[j+1], tag="B", splitter=midThird )  # therefore loop is complex
+    reqlist[[j+2]] = list( chr=chrtags[j+1], tag="C", splitter=lastThird )  # therefore loop is complex
+    j <- j+3
+   }
   }
   reqlist <<- reqlist
   
