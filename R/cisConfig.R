@@ -136,3 +136,46 @@ setGeneric("estimates", function(x) standardGeneric("estimates"))
 setMethod("estimates", "CisConfig", function(x) x@estimates)
 setGeneric("estimates<-", function(object, value) standardGeneric("estimates<-"))
 setMethod("estimates<-", c("CisConfig", "logical"), function(object, value) {object@estimates <- value; object})
+
+
+setClass("TransConfig", contains="CisConfig",
+ representation(snpchr="character", gbufsize="integer",
+  batchsize="integer"))
+
+setGeneric("snpchr", function(x) standardGeneric("snpchr"))
+setGeneric("snpchr<-", function(object,value) standardGeneric("snpchr<-"))
+setMethod("snpchr", "TransConfig", function(x) x@snpchr)
+setMethod("snpchr<-", c("TransConfig", "character"), function(object,value) {object@snpchr <- value; object})
+
+setGeneric("gbufsize", function(x) standardGeneric("gbufsize"))
+setGeneric("gbufsize<-", function(object,value) standardGeneric("gbufsize<-"))
+setMethod("gbufsize", "TransConfig", function(x) x@gbufsize)
+setMethod("gbufsize<-", c("TransConfig", "integer"), 
+   function(object, value) {object@gbufsize <- value; object})
+
+setGeneric("batchsize", function(x) standardGeneric("batchsize"))
+setGeneric("batchsize<-", function(object,value) standardGeneric("batchsize<-"))
+setMethod("batchsize", "TransConfig", function(x) x@batchsize)
+setMethod("batchsize<-", c("TransConfig", "integer"), 
+   function(object, value) {object@batchsize <- value; object})
+
+setMethod("initialize", "TransConfig", function(.Object) {
+ .Object = callNextMethod()
+ .Object@radius = 100000L
+ .Object@chrnames = as.character(1:22)
+ .Object@gbufsize = 20L
+ .Object@batchsize = 200L
+ .Object
+})
+
+setMethod("show", "TransConfig", function (object) 
+{
+    cat("TransConfig instance.  Key parameters:\n")
+    cat("smpack = ", smpack(object), "; snpchr = ", snpchr(object), "; chrnames = ", selectSome(chrnames(object)), 
+        "\n")
+    cat("nperm = ", nperm(object), "; radius = ", radius(object), 
+        "\n====\n")
+    cat("Configure using \n")
+    print(paste0(slotNames(new("TransConfig")), "<-"))
+})
+

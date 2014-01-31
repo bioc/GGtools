@@ -120,7 +120,7 @@ cisZero = function(mgr, snpRanges, geneRanges, radius) {
         }
     }
 
-transScores = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsco", 
+transScores.legacy = function (smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsco", 
     geneApply = lapply, chrnames = paste("chr", as.character(1:22), sep=""), 
     geneRanges = NULL, snpRanges = NULL, radius = 2e+06, renameChrs=NULL, 
     probesToKeep=NULL, batchsize=200, genegran=50, shortfac=10, wrapperEndo=NULL,
@@ -493,3 +493,114 @@ mtransScores = function (smpackvec, snpchr = "chr1", rhslist, K = 20, targdirpre
         snpnames = rownames(inimgr@fffile), call = theCall, date=date(), shortfac=shortfac)
     new("transManager", base=baseout)
 }
+
+transScores = function ( tconfig ) {
+#    smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsco", 
+#    geneApply = lapply, chrnames = paste("chr", as.character(1:22), sep=""), 
+#    geneRanges = NULL, snpRanges = NULL, radius = 2e+06, renameChrs=NULL, 
+#    probesToKeep=NULL, batchsize=200, shortfac=10, wrapperEndo=NULL,
+#    geneannopk = "illuminaHumanv1.db", snpannopk = snplocsDefault(),
+#    gchrpref = "", schrpref="ch", exFilter=function(x)x, 
+#    smFilter=function(x)x, SSgen=GGBase::getSS)
+#
+  snpchr = snpchr(tconfig)
+  stopifnot(length(snpchr)==1)
+  smpack = smpack(tconfig)
+  rhs = rhs(tconfig)
+  K = gbufsize(tconfig)
+  targdirpref = folderStem(tconfig)
+  geneApply = geneApply(tconfig)
+  chrnames = chrnames(tconfig)
+  renameChrs = paste0(smchrpref(tconfig), chrnames)
+  radius = radius(tconfig)
+  geneRanges = snpRanges = NULL
+  batchsize = batchsize(tconfig)
+  shortfac = shortfac(tconfig)
+  probesToKeep = wrapperEndo = NULL
+  geneannopk = geneannopk(tconfig)
+  snpannopk = snpannopk(tconfig)
+  gchrpref = gchrpref(tconfig)
+  schrpref = schrpref(tconfig)
+  exFilter = exFilter(tconfig)
+  smFilter = smFilter(tconfig)
+  SSgen = SSgen(tconfig)
+  
+    theCall = match.call()
+#
+# get an image of the expression+genotype data for SNP on specific chromosome snpchr
+#
+    sms = SSgen(smpack, snpchr, renameChrs=snpchr, probesToKeep=probesToKeep, 
+       wrapperEndo=wrapperEndo, exFilter=exFilter)
+    sms = smFilter(sms)
+#    if (!is.null(renameChrs)) snpchr=renameChrs
+    guniv = featureNames(sms)   # universe of probes
+    smanno = gsub(".db", "", annotation(sms))
+    require(paste(smanno, ".db", sep = ""), character.only = TRUE)
+    clcnames = gsub("chr", "", chrnames)  # typical chrom nomenclature of bioconductor
+# NOOP if no prefix to begin with
+    pnameList = mget(clcnames, revmap(get(paste(smanno, "CHR", 
+        sep = ""))))
+ # be sure to use only genes that are on arrays in sms
+    pnameList = lapply(pnameList, function(x) intersect(x, guniv))
+    names(pnameList) = chrnames  # now the universe of probes is split into chromsomes
+    todrop = which(sapply(pnameList, length)==0)
+    if (length(todrop)>0) pnameList = pnameList[-todrop]
+    genemap = lapply(pnameList, function(x) match(x, guniv))  # numerical indices for probes
+    nchr_genes = length(names(pnameList))
+    targdir = paste(targdirpref, snpchr, sep="")
+#
+# start with first element of chrnames vector
+#
+    inimgr = eqtlTests(sms[probeId(pnameList[[chrnames[1]]]),   # start the sifting through transcriptome
+        ], rhs, targdir = targdir, runname = paste("tsc_", chrnames[1],  # testing on genes in chrom 1
+        sep = ""), geneApply = geneApply, shortfac=shortfac)
+    if (gsub("chr", "", snpchr) == gsub("chr", "", chrnames[1])) {
+        mapobj = getCisMap( radius = radius, gchr = paste(gchrpref, chrnames[1], sep=""),
+                  schr = paste(schrpref, gsub("chr", "", snpchr), sep=""), geneannopk=geneannopk, snpannopk = snpannopk )
+        cisZero(inimgr, mapobj@snplocs, mapobj@generanges, radius=0)   # if SNP are on chrom 1, exclude cis
+                             # the gene ranges supplied are already augmented by radius
+    }
+    topKinds = topKfeats(inimgr, K = K, fn = paste(targdir, "/",  # sort and save
+        snpchr, "_tsinds1_1.ff", sep = ""), feat = "geneind", 
+        ginds = genemap[[1]], batchsize=batchsize)
+    topKscores = topKfeats(inimgr, K = K, fn = paste(targdir, 
+        "/", snpchr, "_tssco1_1.ff", sep = ""), feat = "score", 
+        ginds = genemap[[1]], batchsize=batchsize)
+    kpsnpnames = rownames(inimgr@fffile)
+    unlink(filename(inimgr@fffile))
+    if (nchr_genes > 1) for (j in 2:nchr_genes) {    # continue sifting through transcriptome
+        cat(j)
+        gc()
+        nxtmgr = eqtlTests(sms[probeId(pnameList[[chrnames[j]]]), 
+            ], rhs, targdir = targdir, runname = paste("tsctmp", 
+            j, sep = ""), geneApply = geneApply, 
+            shortfac=shortfac)
+        if (gsub("chr", "", snpchr) == gsub("chr", "", chrnames[j])) {
+            mapobj = getCisMap( radius = radius, gchr = paste(gchrpref, chrnames[j], sep=""),
+                  schr = paste(schrpref, gsub("chr", "", snpchr), sep=""), geneannopk=geneannopk, snpannopk = snpannopk )
+#
+# huge bug below, nxtmgr was previously inimgr ... found Aug 21 2012
+#
+            cisZero(nxtmgr, mapobj@snplocs, mapobj@generanges, radius=0)   # if SNP are on chrom 1, exclude cis
+                             # the gene ranges supplied are already augmented by radius
+        }
+        nxtKinds = topKfeats(nxtmgr, K = K, fn = paste(targdir, 
+            "indscratch.ff", sep = ""), feat = "geneind", ginds = genemap[[j]], 		batchsize=batchsize)
+        nxtKscores = topKfeats(nxtmgr, K = K, fn = paste(targdir, 
+            "scoscratch.ff", sep = ""), feat = "score", ginds = genemap[[j]],
+                batchsize=batchsize)
+        updateKfeats(topKscores, nxtKscores, topKinds, nxtKinds, batchsize=batchsize)  
+        unlink(filename(nxtmgr@fffile))   # kill off scratch materials
+        unlink(paste(targdir, "indscratch.ff", sep = ""))
+        unlink(paste(targdir, "scoscratch.ff", sep = ""))
+    }
+    baseout = list(scores = topKscores, inds = topKinds, guniv = guniv, K=K, snpchr=snpchr,
+        chrnames=chrnames,
+	smsanno = annotation(sms),
+# previous to 21 aug 2012 snpnames were assigned here from rownames inimgr@fffile; these are now
+# memoed above
+        snpnames = kpsnpnames, call = theCall, date=date(), shortfac=shortfac,
+        config = tconfig)
+    new("transManager", base=baseout)
+}
+

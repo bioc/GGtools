@@ -51,7 +51,7 @@ exportMethods("gwSnpTests", "show", "topFeats", "plot", transTab)
 
 exportClasses("eqtlTestsManager", "eqtlEstimatesManager", "mcwBestCis",
    "gwSnpScreenResult", transManager, allSigCis, sensiCisInput,
-   sensiCisOutput, mcwAllCis, cisRun, CisConfig)
+   sensiCisOutput, mcwAllCis, cisRun, CisConfig, TransConfig)
 
 export(gwSnpTests, topSnps, eqtlTests, topFeats, getCisMap, pData, plot,
 	best.cis.eQTLs, chromsUsed, fullreport, 
@@ -88,6 +88,9 @@ exportMethods("chrnames", "chrnames<-", "estimates", "estimates<-",
 "shortfac", "shortfac<-", "smchrpref", "smchrpref<-", 
 "smFilter", "smFilter<-", "smpack", "smpack<-", "snpannopk", 
 "snpannopk<-", "SSgen", "SSgen<-")
+
+exportMethods("snpchr", "snpchr<-", "gbufsize", "gbufsize<-",
+ "batchsize", "batchsize<-")
 
 importFrom(hexbin, hexbin)
 importClassFrom(hexbin, hexbin)
