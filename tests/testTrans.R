@@ -45,8 +45,18 @@ csnp1 = sapply(rhst, function(x)chi.squared(x)[1])
 csnp50 = sapply(rhst, function(x)chi.squared(x)[50])
 
 
-all(abs(floor(sort(csnp1, decreasing=TRUE)[1:4]*10)/10 - tt1[1:4,2]) < .01)
-all(abs(floor(sort(csnp50, decreasing=TRUE)[1:4]*10)/10 - tt1[197:200,2]) < 0.01)
+#all(abs(floor(sort(csnp1, decreasing=TRUE)[1:4]*10)/10 - tt1[1:4,2]) < .01)
+#all(abs(floor(sort(csnp50, decreasing=TRUE)[1:4]*10)/10 - tt1[197:200,2]) < 0.01)
 
+ttdt = data.table(tt1)
+SS = sort(sapply(rhst, function(x) max(chi.squared(x), na.rm=TRUE))) 
+TT = sort(ttdt[,max(sumchisq),by="probeid"]$V1) 
+maxchk = (max(abs(SS-TT))<.01)
 
+# needs more work, tt1 is organized by snp
+#SS = sort(sapply(rhst, function(x) min(chi.squared(x), na.rm=TRUE))) 
+#TT = sort(ttdt[,min(sumchisq),by="probeid"]$V1) 
+#minchk = (max(abs(SS-TT))<.01)
+
+maxchk 
 
