@@ -12,7 +12,7 @@ a serialized data.table instance, compute genome-wide plug-in FDR,
 and update the GFF3 with this FDR
 }
 \usage{
-cgff2dt(gff3, tiling)
+cgff2dt(gff3, tiling, addHitTest = TRUE, addcc878 = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -22,6 +22,15 @@ character string naming a tabix-indexed, bgzipped output of
 }
   \item{tiling}{
 output of \code{\link{simpleTiling}}
+}
+  \item{addHitTest}{
+logical, telling whether to add a column on coincidence of
+SNP with the \code{\link[gwascat]{gwastagger}} ranges
+}
+  \item{addcc878}{
+logical, telling whether to add a column on coincidence of
+SNP with the \code{\link{hmm878}} ranges, using the inferred
+chromatin state as factor level
 }
 }
 %\details{

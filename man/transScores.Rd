@@ -12,7 +12,9 @@ obtain the top trans associations for each SNP in an smlSet
 obtain the top trans associations for each SNP in an smlSet
 }
 \usage{
-transScores(smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsco", geneApply = lapply, 
+transScores( tconfig )
+
+transScores.legacy(smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsco", geneApply = lapply, 
   chrnames = paste("chr", as.character(1:22), sep = ""), geneRanges = NULL, snpRanges = NULL, 
   radius = 2e+06, renameChrs = NULL, probesToKeep = NULL, batchsize = 200, 
   genegran = 50, shortfac = 10, wrapperEndo = NULL, 
@@ -36,6 +38,7 @@ meta.transScores (smpackvec = c("GGdata", "hmyriB36"),
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
+  \item{tconfig}{instance of \code{\link{TransConfig-class}}}
   \item{smpack}{
 name of package holding eset.rda providing 'ex' ExpressionSet when loaded, and holding
 SnpMatrix instances in inst/parts

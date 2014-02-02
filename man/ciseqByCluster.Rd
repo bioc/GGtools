@@ -8,10 +8,13 @@ end-to-end cluster-based cis-eQTL search
 end-to-end cluster-based cis-eQTL search
 }
 \usage{
-ciseqByCluster(cl, pack = "yri1kgv", outprefix = "yrirun", chromsToRun = 1:22, 
+ciseqByCluster(cl, pack = "yri1kgv", outprefix = "yrirun", 
+  finaltag = "partyri100k", chromsToRun = 1:22, 
   targetfolder = "/freshdata/YRI_3", radius = 100000L, nperm = 3L, ncoresPerNode = 8, 
   numPCtoFilter = 10, lowerMAF = 0.02, geneannopk = "lumiHumanAll.db", 
-  snpannopk = "SNPlocs.Hsapiens.dbSNP.20120608", smchrpref = "chr")
+  snpannopk = "SNPlocs.Hsapiens.dbSNP.20120608", smchrpref = "chr",
+  tmpForSort = "/tmp", numtiles = 200,
+  postProcCores = 12, reqlist = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -24,6 +27,10 @@ applied to generate \code{\link[GGBase]{smlSet-class}} instances
 }
   \item{outprefix}{
 character string used to prefix names of output GFF3 files
+}
+  \item{finaltag}{
+character string used to prefix names of final amalgamated GFF3 and
+data.table instances
 }
   \item{chromsToRun}{
 numeric tags of chromosomes to be analyzed
@@ -55,12 +62,27 @@ character string naming Bioconductor package with annotation for SNP locations
   \item{smchrpref}{
 character prefix converting chromsToRun elements to basenames of rda files  harboring SnpMatrix instances
 }
+  \item{tmpForSort}{the assembly of final resources employs unix sort,
+and substantial temporary space can be required; this parameter tells
+where the temp files will reside}
+  \item{numtiles}{number of tiles into which the genome in use
+will be sliced for parallel processing in final assembly}
+  \item{postProcCores}{
+numeric establishing number of cores to use for final assembly of
+annotated output
+}
+  \item{reqlist}{
+rescue request, see Details section
+}
 }
 \details{
 purpose is to maximize throughput of cis-eQTL testing in a two-level concurrent computing environment,
 where a cluster as defined in package parallel has nodes to which half-chromosomes 
 will be dispatched; each
 node is assumed to be multicore and genes are mapped to cores during the iteration process.
+
+the reqlist parameter consists of a list of elements (chromosome name,
+subchromosome token, and handler) to be used for completing a partial run
 }
 \value{
 a set of GFF3 files encoding all cis associations with location and various metadata
