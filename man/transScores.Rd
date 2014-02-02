@@ -1,5 +1,6 @@
 \name{transScores}
 \alias{transScores}
+\alias{transScores.legacy}
 \alias{meta.transScores}
 \alias{mtransScores}
 \alias{tr1_obs}

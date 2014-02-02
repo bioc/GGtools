@@ -6,9 +6,15 @@
 \alias{batchsize<-,TransConfig,integer-method}
 \alias{gbufsize,TransConfig-method}
 \alias{gbufsize<-,TransConfig,integer-method}
-\alias{show,TransConfig-method}
 \alias{snpchr,TransConfig-method}
 \alias{snpchr<-,TransConfig,character-method}
+\alias{batchsize}
+\alias{batchsize<-}
+\alias{gbufsize}
+\alias{gbufsize<-}
+\alias{snpchr}
+\alias{snpchr<-}
+\alias{show,TransConfig-method}
 
 \title{Class \code{"TransConfig"}}
 \description{
