@@ -1,6 +1,8 @@
 # verifies that transScores agrees with snp.rhs.tests to obtain best
 # trans scores
 
+suppressPackageStartupMessages(library(GGtools))
+
 tenOn2021 = 
 c( "GI_4557248-S",  "GI_15451784-S", "GI_4557678-S", "GI_9951914-S", "GI_21327679-S",
  "GI_7669476-I", "GI_7669478-A", "GI_4557290-I", "GI_4557294-A", "GI_41406053-S") 
