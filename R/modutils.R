@@ -41,7 +41,7 @@ tscan2df = function( tscan ) {
 
 
 ceuCon19 = function() {
- require(Rsamtools)
+# require(Rsamtools)
  fi = system.file("tabix/ceu1kgv_npc19.gff3.gz", package="piFDR2")
  TabixFile(fi)
 }
@@ -129,7 +129,7 @@ getall = function(x) x[grep("snp=|snplocs|fdr|probeid|MAF|permScore_1|permScore_
 # ests and se not guaranteed
 
 fullparse = function(x) {
-    require(GenomicRanges)
+#    require(GenomicRanges)
     if (length(x) == 0)
         return(GRanges())
     z = strsplit(x, "\t")
@@ -168,7 +168,7 @@ tscan2gr = function( tscan ) {
 
 genemodel = function(sym) {
  require(Homo.sapiens)
- require(GenomicRanges)
+# require(GenomicRanges)
  egid = select(Homo.sapiens, 
      keytype="SYMBOL",
      keys=sym, 
@@ -221,7 +221,7 @@ scoresCis = function( sym="ORMDL3", cisRun, cisannopk="lumiHumanAll.db",
  sc = txScore( as.numeric(matcher$fdr) )
  stopifnot(length(sc)==length(runnear))
  G = DataTrack(runnear, ylim=ylim, name=paste0(laxistag, sym), genome=genometag)
- values(G) = matrix(sc, nr=1)
+ values(G) = matrix(sc, nrow=1)
  ans = list(dtrack=G,
      grt=GeneRegionTrack(m, showId=TRUE), 
      gat=GenomeAxisTrack(name=seqlevels(m), showTitle=TRUE, col.title="gray"))
