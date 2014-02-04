@@ -17,10 +17,16 @@ a permutation distribution, and bin these coordinates using hexbin, useful
 for very large samples
 }
 \usage{
+binnedQQ(dt, nxbins=20,
+  ylim=c(0,76), xlim=c(0,30), end45=5, thrs=c(0,.001,.005,.01,.05), 
+  tempmar = c(6,4,4,5), ...)
 qqhex(sco, p1, p2, p3, fdr, nxbins = 20, thrs = c(0, 0.001, 0.005, 0.01, 0.05))
 binqq(qqob, ylim = c(0, 76), xlim = c(0, 30), end45=5, ...)
 }
 \arguments{
+  \item{dt}{a \code{\link[data.table]{data.table}} instance
+with association scores and scores obtained under permutation along
+with FDR, as returned by \code{\link{cgff2dt}} or \code{\link{ciseqByCluster}}}
   \item{sco}{
 numeric vector of observed statistics
 }

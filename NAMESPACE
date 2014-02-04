@@ -77,7 +77,8 @@ export("chrnames", "chrnames<-", "estimates", "estimates<-",
 "smFilter", "smFilter<-", "smpack", "smpack<-", "snpannopk", 
 "snpannopk<-", "SSgen", "SSgen<-",
 "cis.FDR.filter.SNPcentric.complete", "binqq", "qqhex",
- "gffprocess", "simpleTiling", "cgff2dt", "ciseqByCluster", "scoresCis")
+ "gffprocess", "simpleTiling", "cgff2dt", "ciseqByCluster", "scoresCis",
+ "binnedQQ")
 
 exportMethods("chrnames", "chrnames<-", "estimates", "estimates<-", 
 "excludeRadius", "excludeRadius<-", "exFilter", "exFilter<-", 
