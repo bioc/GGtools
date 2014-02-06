@@ -37,6 +37,15 @@ t1 = transScores(tconf)
 
 tt1 = transTab(t1)
 
+cleanup_transff = function(x) {
+ fn = attr(attr(x@base$scores, "physical"), "filename")
+ comps = strsplit(fn, "/")[[1]]
+ nel = length(comps)
+ unlink(comps[nel-1], recursive=TRUE)
+}
+
+cleanup_transff(t1)
+
 c22 = getSS("GGdata", "22")
 
 exl = lapply(tenOn2021, function(x) exprs(c22)[x,])

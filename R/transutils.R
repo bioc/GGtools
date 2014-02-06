@@ -367,8 +367,23 @@ setMethod("transTab", c("transManager", "character"), function(x, snps2keep, ...
  gloc = gloc[ theinds ]
  okinds = 1:length(sids)
  if (!is.null(snps2keep)) okinds = which(sids %in% snps2keep) 
- data.frame(snp=sids[okinds], sumchisq=thescos[okinds], probeid=gn[okinds] , probechr=gchr[okinds], snpchr=x$snpchr,
-    sym=gsym[okinds], entrez=gent[okinds], geneloc=gloc[okinds])
+#
+# we need to retrieve the snp locations.  in the trans setting these are only necessary
+# when the probe chromosome coincides with snp chromosome, so not always available
+# 
+ simple = data.frame(snp=sids[okinds], sumchisq=thescos[okinds], probeid=gn[okinds] , probechr=gchr[okinds], snpchr=x$snpchr,
+    sym=gsym[okinds], entrez=gent[okinds], geneloc=gloc[okinds], stringsAsFactors=FALSE)
+ require(snplocsDefault(), character.only=TRUE)
+ stag=x$snpchr[1]  
+ stopifnot(all(x$snpchr == stag))
+ sl = getSNPlocs(paste0("ch", gsub("chr", "", stag)), as.GRanges=TRUE)
+ sln = paste0("rs", sl$RefSNP_id)
+ names(sl) = sln
+ okn = intersect(simple$snp, sln)
+ simple = simple[which(simple$snp %in% okn),]
+ starts = start(sl[simple$snp])
+ simple$snploc = starts
+ data.table(simple)
 }
 
 
@@ -495,14 +510,6 @@ mtransScores = function (smpackvec, snpchr = "chr1", rhslist, K = 20, targdirpre
 }
 
 transScores = function ( tconfig ) {
-#    smpack, snpchr = "chr1", rhs, K = 20, targdirpref = "tsco", 
-#    geneApply = lapply, chrnames = paste("chr", as.character(1:22), sep=""), 
-#    geneRanges = NULL, snpRanges = NULL, radius = 2e+06, renameChrs=NULL, 
-#    probesToKeep=NULL, batchsize=200, shortfac=10, wrapperEndo=NULL,
-#    geneannopk = "illuminaHumanv1.db", snpannopk = snplocsDefault(),
-#    gchrpref = "", schrpref="ch", exFilter=function(x)x, 
-#    smFilter=function(x)x, SSgen=GGBase::getSS)
-#
   snpchr = snpchr(tconfig)
   stopifnot(length(snpchr)==1)
   smpack = smpack(tconfig)
@@ -601,6 +608,34 @@ transScores = function ( tconfig ) {
 # memoed above
         snpnames = kpsnpnames, call = theCall, date=date(), shortfac=shortfac,
         config = tconfig)
-    new("transManager", base=baseout)
+    new("transManager", base=baseout)  # note includes references to ff in baseout$scores
+}
+
+
+cleanup_transff = function(x) {
+ fn = attr(attr(x@base$scores, "physical"), "filename")
+ comps = strsplit(fn, "/")[[1]]
+ nel = length(comps)
+ unlink(comps[nel-1], recursive=TRUE)
+}
+
+
+transeqByCluster = function( cl, snpchrs=c("chr21", "chr22"), exchrs=1:22, baseconf, targname="transrun_", ... ) {
+ baseconf <<- baseconf
+ targname <<- targname
+ clusterExport(cl, "baseconf")
+ clusterExport(cl, "targname")
+ assign(cfn <- paste0(targname, "baseconf"), baseconf)
+ save(list=cfn, file=paste0(cfn, ".rda"))
+ ttabs = clusterApplyLB( cl, snpchrs, function(x) {
+    gc() 
+    snpchr(baseconf) = x # only manipulation apart from init prior to cal
+    tab <- transTab( tmp <- transScores( baseconf ) ) 
+    cleanup_transff(tmp) 
+    obn = paste0(targname, x)
+    assign(obn, tab)
+    save(list=obn, file=paste0(obn, ".rda"))  # one data table per chrom
+ } )
+ invisible(NULL)
 }
 
