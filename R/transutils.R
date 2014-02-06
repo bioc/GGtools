@@ -351,6 +351,8 @@ setMethod("transTab", c("transManager", "character"), function(x, snps2keep, ...
  gannopkname = x$smsanno
  K = x$K
  sids = rep(x$snpnames, each=K )
+ gtfs = rep(x$min.gtf, each=K )
+ mafs = rep(x$tr.maf, each=K )
  thescos = as.numeric(t(as.ram(x$sco)))/x$shortfac
  theinds = as.numeric(t(as.ram(x$inds)))
  require( gannopkname, character.only=TRUE)
@@ -371,7 +373,7 @@ setMethod("transTab", c("transManager", "character"), function(x, snps2keep, ...
 # we need to retrieve the snp locations.  in the trans setting these are only necessary
 # when the probe chromosome coincides with snp chromosome, so not always available
 # 
- simple = data.frame(snp=sids[okinds], sumchisq=thescos[okinds], probeid=gn[okinds] , probechr=gchr[okinds], snpchr=x$snpchr,
+ simple = data.frame(snp=sids[okinds], MAF=mafs, GTF=gtfs, sumchisq=thescos[okinds], probeid=gn[okinds] , probechr=gchr[okinds], snpchr=x$snpchr,
     sym=gsym[okinds], entrez=gent[okinds], geneloc=gloc[okinds], stringsAsFactors=FALSE)
  require(snplocsDefault(), character.only=TRUE)
  stag=x$snpchr[1]  
@@ -601,12 +603,21 @@ transScores = function ( tconfig ) {
         unlink(paste(targdir, "indscratch.ff", sep = ""))
         unlink(paste(targdir, "scoscratch.ff", sep = ""))
     }
+    ss.gtf = smlSummary(sms)
+    ss.maf = ss.gtf[,"MAF"]
+    names(ss.maf) = rownames(ss.gtf)
+    mingtfs = apply(ss.gtf, 1, function(z) min(z[c("P.AA", "P.AB", "P.BB")]))
+    names(mingtfs) = rownames(ss.gtf)
+    if (length(setdiff(kpsnpnames, names(mingtfs)))>0) warning("some kept snp  had no GTF")
+    min.gtf = mingtfs[kpsnpnames]
+    tr.maf = ss.maf[kpsnpnames]
+
     baseout = list(scores = topKscores, inds = topKinds, guniv = guniv, K=K, snpchr=snpchr,
         chrnames=chrnames,
 	smsanno = annotation(sms),
 # previous to 21 aug 2012 snpnames were assigned here from rownames inimgr@fffile; these are now
 # memoed above
-        snpnames = kpsnpnames, call = theCall, date=date(), shortfac=shortfac,
+        snpnames = kpsnpnames, call = theCall, date=date(), shortfac=shortfac, min.gtf=min.gtf, tr.maf=tr.maf,
         config = tconfig)
     new("transManager", base=baseout)  # note includes references to ff in baseout$scores
 }
