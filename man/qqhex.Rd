@@ -1,6 +1,7 @@
 \name{qqhex}
 \alias{qqhex}
 \alias{binqq}
+\alias{binnedQQ}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 obtain qqplot coordinates for
@@ -62,6 +63,10 @@ horizontal limits of rendering
 }
   \item{end45}{
 a segment is drawn from (0,0) to (end45,end45) to depict the line of identity
+}
+  \item{tempmar}{
+numerical vector with 4 elements serving as a temporary setting of
+the \code{mar} parameter of \code{\link[graphics]{par}}
 }
   \item{\dots}{
 not currently used
