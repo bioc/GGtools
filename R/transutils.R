@@ -373,7 +373,7 @@ setMethod("transTab", c("transManager", "character"), function(x, snps2keep, ...
 # we need to retrieve the snp locations.  in the trans setting these are only necessary
 # when the probe chromosome coincides with snp chromosome, so not always available
 # 
- simple = data.frame(snp=sids[okinds], MAF=mafs, GTF=gtfs, sumchisq=thescos[okinds], probeid=gn[okinds] , probechr=gchr[okinds], snpchr=x$snpchr,
+ simple = data.frame(snp=sids[okinds], MAF=mafs, GTF=gtfs, chisq=thescos[okinds], probeid=gn[okinds] , probechr=gchr[okinds], snpchr=x$snpchr,
     sym=gsym[okinds], entrez=gent[okinds], geneloc=gloc[okinds], stringsAsFactors=FALSE)
  require(snplocsDefault(), character.only=TRUE)
  stag=x$snpchr[1]  
@@ -631,7 +631,9 @@ cleanup_transff = function(x) {
 }
 
 
-transeqByCluster = function( cl, snpchrs=c("chr21", "chr22"), exchrs=1:22, baseconf, targname="transrun_", ... ) {
+transeqByCluster = function( cl, snpchrs=c("chr21", "chr22"), exchrs=1:22, baseconf, targname="transrun_", nperm=1, inseed=1234, ... ) {
+ RNGkind("L'Ecuyer-CMRG")
+ set.seed(inseed)
  baseconf <<- baseconf
  targname <<- targname
  clusterExport(cl, "baseconf")
@@ -643,6 +645,14 @@ transeqByCluster = function( cl, snpchrs=c("chr21", "chr22"), exchrs=1:22, basec
     snpchr(baseconf) = x # only manipulation apart from init prior to cal
     tab <- transTab( tmp <- transScores( baseconf ) ) 
     cleanup_transff(tmp) 
+    pscolist = vector("list", perm)
+    for (k in 1:nperm) {
+       smFilter(baseconf) = permEx
+       pscolist[[k]] = transTab( tmp <- transScores( baseconf ) )$chisq
+       cleanup_transff(tmp) 
+       }
+    pnames = paste0("permScore_", 1:nperm)
+    for (k in 1:nperm) tab[[pnames[k]]] = pscolist[[k]]
     obn = paste0(targname, x)
     assign(obn, tab)
     save(list=obn, file=paste0(obn, ".rda"))  # one data table per chrom
