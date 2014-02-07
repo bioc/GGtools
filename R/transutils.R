@@ -603,7 +603,7 @@ transScores = function ( tconfig ) {
         unlink(paste(targdir, "indscratch.ff", sep = ""))
         unlink(paste(targdir, "scoscratch.ff", sep = ""))
     }
-    ss.gtf = smlSummary(sms)
+    ss.gtf = GGBase:::smlSummary(sms)
     ss.maf = ss.gtf[,"MAF"]
     names(ss.maf) = rownames(ss.gtf)
     mingtfs = apply(ss.gtf, 1, function(z) min(z[c("P.AA", "P.AB", "P.BB")]))
