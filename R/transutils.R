@@ -645,7 +645,7 @@ transeqByCluster = function( cl, snpchrs=c("chr21", "chr22"), exchrs=1:22, basec
     snpchr(baseconf) = x # only manipulation apart from init prior to cal
     tab <- transTab( tmp <- transScores( baseconf ) ) 
     cleanup_transff(tmp) 
-    pscolist = vector("list", perm)
+    pscolist = vector("list", nperm)
     for (k in 1:nperm) {
        smFilter(baseconf) = permEx
        pscolist[[k]] = transTab( tmp <- transScores( baseconf ) )$chisq
