@@ -358,6 +358,7 @@ setMethod("transTab", c("transManager", "character"), function(x, snps2keep, ...
  require( gannopkname, character.only=TRUE)
  ganno = gsub(".db", "", gannopkname )
  gloc = sapply(mget(x$guniv, get(paste(ganno, "CHRLOC", sep="")), ifnotfound=NA), "[", 1)
+ glocend = sapply(mget(x$guniv, get(paste(ganno, "CHRLOCEND", sep="")), ifnotfound=NA), "[", 1)
  gchr = sapply(mget(x$guniv, get(paste(ganno, "CHR", sep="")), ifnotfound=NA), "[", 1)
  gsym = sapply(mget(x$guniv, get(paste(ganno, "SYMBOL", sep="")), ifnotfound=NA), "[", 1)
  if (gannopkname != "org.Hs.eg.db") gent = sapply(mget(x$guniv, get(paste(ganno, "ENTREZID", sep="")), ifnotfound=NA), "[", 1)
@@ -367,6 +368,7 @@ setMethod("transTab", c("transManager", "character"), function(x, snps2keep, ...
  gsym = gsym[ theinds ]
  gent = gent[ theinds ]
  gloc = gloc[ theinds ]
+ glocend = glocend[ theinds ]
  okinds = 1:length(sids)
  if (!is.null(snps2keep)) okinds = which(sids %in% snps2keep) 
 #
@@ -374,7 +376,8 @@ setMethod("transTab", c("transManager", "character"), function(x, snps2keep, ...
 # when the probe chromosome coincides with snp chromosome, so not always available
 # 
  simple = data.frame(snp=sids[okinds], MAF=mafs, GTF=gtfs, chisq=thescos[okinds], probeid=gn[okinds] , probechr=gchr[okinds], snpchr=x$snpchr,
-    sym=gsym[okinds], entrez=gent[okinds], geneloc=gloc[okinds], stringsAsFactors=FALSE)
+    sym=gsym[okinds], entrez=gent[okinds], geneloc=gloc[okinds],
+    genelocend=glocend[okinds], stringsAsFactors=FALSE)
  require(snplocsDefault(), character.only=TRUE)
  stag=x$snpchr[1]  
  stopifnot(all(x$snpchr == stag))
@@ -646,8 +649,9 @@ transeqByCluster = function( cl, snpchrs=c("chr21", "chr22"), exchrs=1:22, basec
     tab <- transTab( tmp <- transScores( baseconf ) ) 
     cleanup_transff(tmp) 
     pscolist = vector("list", nperm)
+    g = smFilter(baseconf)
     for (k in 1:nperm) {
-       smFilter(baseconf) = permEx
+       smFilter(baseconf) = function(x) g(permEx(x))  # ADD A PERMUTATION
        pscolist[[k]] = transTab( tmp <- transScores( baseconf ) )$chisq
        cleanup_transff(tmp) 
        }
