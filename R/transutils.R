@@ -664,3 +664,28 @@ transeqByCluster = function( cl, snpchrs=c("chr21", "chr22"), exchrs=1:22, basec
  invisible(NULL)
 }
 
+transeqByChrom = function( snpchr="chr22", 
+   exchrs=1:22, baseconf, targname="transrun_", nperm=1, inseed=1234, ... ) {
+ stopifnot(length(snpchr)==1)
+ RNGkind("L'Ecuyer-CMRG")
+ set.seed(inseed)
+ assign(cfn <- paste0(targname, "baseconf"), baseconf)
+ save(list=cfn, file=paste0(cfn, ".rda"))
+    gc() 
+    snpchr(baseconf) = snpchr # only manipulation apart from init prior to cal
+    tab <- transTab( tmp <- transScores( baseconf ) ) 
+    cleanup_transff(tmp) 
+    pscolist = vector("list", nperm)
+    g = smFilter(baseconf)
+    for (k in 1:nperm) {
+       smFilter(baseconf) = function(x) g(permEx(x))  # ADD A PERMUTATION
+       pscolist[[k]] = transTab( tmp <- transScores( baseconf ) )$chisq
+       cleanup_transff(tmp) 
+       }
+    pnames = paste0("permScore_", 1:nperm)
+    for (k in 1:nperm) tab[[pnames[k]]] = pscolist[[k]]
+    obn = paste0(targname, snpchr)
+    assign(obn, tab)
+    save(list=obn, file=paste0(obn, ".rda"))  # one data table per chrom
+    tab
+}
