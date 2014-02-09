@@ -5,6 +5,29 @@ setValidity("cisRun", function(object) {
   TRUE
 })
 
+setMethod("c", "cisRun",
+    function(x, ..., ignore.mcols=FALSE, recursive=FALSE)
+    {
+        if (!identical(recursive, FALSE))
+            stop("'recursive' argument not supported")
+        if (missing(x))
+            args <- unname(list(...))
+        else
+            args <- unname(list(x, ...))
+        md1 = metadata(args[[1]])
+        mdr = lapply(args[-1], metadata)
+        args = lapply(args, function(x) as(x, "GRanges"))
+        out = do.call(c, args)
+        out@metadata$call = md1$call
+        out@metadata$config = md1$config
+        out@metadata$extra =mdr
+        out = new("cisRun", out)
+        validObject(out, test=TRUE)
+        out
+    }
+)
+
+
 convertCis = function(mcw, radius, confobj=NULL) {
  if (missing(radius)) stop("need radius")
  nperm = length(mcw@perms)
