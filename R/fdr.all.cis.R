@@ -48,7 +48,7 @@ All.cis.legacy =
 
 All.cis.mchr = 
   function(smpack, rhs=~1, folderstem="cisScratch",
-   radius = 50000, MAFlb=0, shortfac=100, chrnames="22",
+   radius = 50000, MAFlb=0, shortfac=100, chrnames="22", genome="hg19",
    smchrpref="", gchrpref="", schrpref="ch",
    geneApply=lapply, geneannopk = "illuminaHumanv1.db",
    snpannopk = snplocsDefault(), smFilter = function(x)
@@ -69,7 +69,7 @@ All.cis.mchr =
 
 All.cis.chr = 
   function(smpack, rhs=~1, folderstem="cisScratch",
-   radius = 50000, MAFlb=MAFlb, shortfac=100, chrname="22",
+   radius = 50000, MAFlb=MAFlb, shortfac=100, chrname="22", genome="hg19",
    smchrpref="", gchrpref="", schrpref="ch",
    geneApply=lapply, geneannopk = "illuminaHumanv1.db",
    snpannopk = snplocsDefault(), smFilter = function(x)
@@ -160,6 +160,11 @@ All.cis.chr =
     }
     #list(mgr=mgr, cismapObj = cismapObj, activeScores=activeScores)
     unlink(folderstem, recursive=TRUE)
+    hg19si = makeSeqinfo(genome)
+    seqlevels(gr) = gsub("chr", "", seqlevels(gr))
+    seqlevels(gr) = paste0("chr", seqlevels(gr))
+    seqlevels(gr) = seqlevels(hg19si)
+    seqinfo(gr) = hg19si
     gr
 }
      
@@ -173,7 +178,8 @@ All.cis =
      obs = All.cis.mchr( smpack=smpack(config), rhs=rhs(config),
       folderstem=folderStem(config), radius=radius(config), 
       shortfac=shortfac(config),
-      chrnames=chrnames(config), smchrpref=smchrpref(config), gchrpref=gchrpref(config),
+      chrnames=chrnames(config),  genome=genome(config),
+      smchrpref=smchrpref(config), gchrpref=gchrpref(config),
         schrpref=schrpref(config), geneApply=geneApply(config), geneannopk=geneannopk(config),
         snpannopk=snpannopk(config), smFilter=smFilter(config),
         exFilter=exFilter(config), keepMapCache=keepMapCache(config), SSgen=SSgen(config),
@@ -194,10 +200,10 @@ All.cis =
      obs$fdr = pifdr(obssc, permsc)
 #     obs = obs[order(obs$fdr, -obs$score)]
      smchr = paste0(smchrpref(config), chrnames(config))
-     if (seqlevels(obs) != smchr) {
-         seqlevels(obs) = smchr
-         warning("updated seqlevels(obs) to match smchr")
-         }
+#     if (seqlevels(obs) != smchr) {
+#         seqlevels(obs) = smchr
+#         warning("updated seqlevels(obs) to match smchr")
+#         }
      obs = bindmaf.simple( smpack(config), smchr, obs, SSgen(config), radius(config) )
      metadata(obs)$configObj = config
      tmp = new("mcwAllCis", obs=obs, perms=perms, theCall=thecall)

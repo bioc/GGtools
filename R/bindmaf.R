@@ -1,5 +1,6 @@
 
  bindmaf = function(smpack="GGdata", smchr="20", obj, SSgen=GGBase::getSS) {
+#
   rad = values(obj@scoregr)$radiusUsed[1]
   fr = fullreport(obj)
   fr = fr[ which(as.character(seqnames(fr)) == smchr) ]
@@ -149,20 +150,26 @@ meta.richNull = function(..., MAFlb=.01, npc=10, radius=250000,
 
 
 bindmaf.simple = function(smpack, smchr, fr, SSgen=GGBase::getSS, rad) {
+# at this point, the object will have Homo.sapiens hg19 seqinfo
+# but smchr may use a different vocabulary
+#
+   smchr.init = smchr
+  smchr = gsub("chr", "", smchr)
+  smchr = paste0("chr", smchr)
     fr = fr[which(as.character(seqnames(fr)) == smchr)]
     pro = names(fr)
     values(fr)$probeid = pro
     togetv = values(fr)
     toget = togetv$snp
     togetloc = togetv$snplocs
-    smls = SSgen(smpack, smchr)
+    smls = SSgen(smpack, smchr.init)
     probeanno = annotation(smls)
     require(probeanno, character.only = TRUE)
     glocenv = get(paste(gsub(".db", "", probeanno), "CHRLOC", 
         sep = ""))
     glocendenv = get(paste(gsub(".db", "", probeanno), "CHRLOCEND", 
         sep = ""))
-    summ = col.summary(smList(smls)[[smchr]])
+    summ = col.summary(smList(smls)[[smchr.init]])
     rn = rownames(summ)
     if (!all(toget %in% rn)) 
         stop("some SNP not available in SSgen result ... shouldn't happen")

@@ -26,11 +26,12 @@ setClass("CisConfig", representation(
   exFilter = "function",
   keepMapCache = "logical",
   SSgen = "function",
+  genome = "character",
   excludeRadius = "integerOrNULL",
   estimates = "logical"))
 
 setMethod("show", "CisConfig", function(object) {
- cat("CisConfig instance.  Key parameters:\n")
+ cat("CisConfig instance; genome ", genome(object),".  Key parameters:\n")
  cat("smpack = ", smpack(object), "; chrnames = ", chrnames(object), "\n")
  cat("nperm = ", nperm(object), "; radius = ", radius(object), "\n====\n")
  cat("Configure using \n")
@@ -40,6 +41,7 @@ setMethod("show", "CisConfig", function(object) {
 setMethod("initialize", "CisConfig", function(.Object) {
  .Object@smpack = "GGdata"
  .Object@rhs = ~1
+ .Object@genome = "hg19"
  .Object@nperm = 3L
  .Object@folderStem = "cisScratch"
   .Object@radius = 50000L
@@ -61,6 +63,8 @@ setMethod("initialize", "CisConfig", function(.Object) {
 })
 
 setGeneric("smpack", function(x) standardGeneric("smpack"))
+setMethod("genome", "CisConfig", function(x) x@genome)
+setMethod("genome<-", "CisConfig", function(x, value) {x@genome = value; x})
 setMethod("smpack", "CisConfig", function(x) x@smpack)
 setGeneric("smpack<-", function(object, value) standardGeneric("smpack<-"))
 setMethod("smpack<-", c("CisConfig", "character"), function(object, value) {object@smpack <- value; object})

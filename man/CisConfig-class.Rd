@@ -2,6 +2,8 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{CisConfig-class}
+\alias{genome,CisConfig-method}
+\alias{genome<-,CisConfig,character-method}
 \alias{chrnames,CisConfig-method}
 \alias{chrnames<-,CisConfig,character-method}
 \alias{estimates,CisConfig-method}
@@ -70,6 +72,8 @@
 \alias{snpannopk<-}
 \alias{SSgen}
 \alias{SSgen<-}
+\alias{genome}
+\alias{genome<-}
 
 \alias{excludeRadius<-,CisConfig,integerOrNULL-method}
 \alias{folderStem,CisConfig-method}
@@ -103,6 +107,7 @@ Use replacement methods to update the fields.
   \describe{
     \item{\code{smpack}:}{character string identifying package
 holding the expression and genotype data; see \code{\link[GGBase]{getSS}}}
+    \item{\code{genome}:}{character string identifying genome build in use}
     \item{\code{rhs}:}{Object of class \code{"formula"} right hand
 side for calls to \code{\link[snpStats]{snp.rhs.tests}} }
     \item{\code{nperm}:}{Object of class \code{"integer"} 

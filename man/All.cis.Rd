@@ -55,6 +55,7 @@ instance of \code{\link{cisRun-class}}
 \dontrun{
   cc = new("CisConfig")
   chrnames(cc) = "21"
+  genome(cc) = "hg19"
   lkp = try(library(parallel))
   if (!inherits(lkp, "try-error")) {
      nc = min(10, detectCores())

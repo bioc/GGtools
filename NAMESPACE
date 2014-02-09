@@ -30,14 +30,14 @@ importMethodsFrom(IRanges, elementMetadata, as.matrix, findOverlaps, "elementMet
 
 importFrom(Biobase, featureNames, annotation, pData)
 
-importMethodsFrom(GenomicRanges, seqnames)
-importFrom(GenomicRanges, GRanges)
+importMethodsFrom(GenomicRanges, seqnames, genome)
+importFrom(GenomicRanges, GRanges, Seqinfo)
 
 importFrom(Rsamtools, TabixFile, path)
 
 importMethodsFrom(Rsamtools, scanTabix)
 
-importClassFrom(GenomicRanges, GRanges)
+importClassFrom(GenomicRanges, GRanges, Seqinfo)
 
 importClassFrom(Rsamtools, TabixFile)
 
