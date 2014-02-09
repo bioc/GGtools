@@ -88,9 +88,9 @@ exportMethods("chrnames", "chrnames<-", "estimates", "estimates<-",
 "radius<-", "rhs", "rhs<-", "schrpref", "schrpref<-", 
 "shortfac", "shortfac<-", "smchrpref", "smchrpref<-", 
 "smFilter", "smFilter<-", "smpack", "smpack<-", "snpannopk", 
-"snpannopk<-", "SSgen", "SSgen<-", "c")
+"snpannopk<-", "SSgen", "SSgen<-")
 
-export("c")
+export(concatCis)
 
 exportMethods("snpchr", "snpchr<-", "gbufsize", "gbufsize<-",
  "batchsize", "batchsize<-")
