@@ -1,6 +1,7 @@
 \name{GGtools-package}
 \alias{GGtools-package}
 \alias{GGtools}
+\alias{hg19.si.df}
 \docType{package}
 \title{
 software and data for analyses in genetics of gene expression
@@ -42,6 +43,8 @@ gwSnpTests              execute a series of tests for association
                         between genotype and expression
 strMultPop              serialization of a table from Stranger's
                         multipopulation eQTL report
+hg19.si.df		data frame representation of seqinfo for Homo.sapiens
+			at hg19 build
 }
 
  The package depends on GGBase, which includes additional
