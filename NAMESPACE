@@ -28,7 +28,7 @@ importFrom(IRanges, RangedData, IRanges)
 importMethodsFrom(IRanges, elementMetadata, as.matrix, findOverlaps, "elementMetadata<-",
 	as.data.frame, values, start, ranges)
 
-importFrom(Biobase, featureNames, annotation, pData)
+importFrom(Biobase, featureNames, annotation, pData, rowMin)
 
 importMethodsFrom(GenomicRanges, seqnames, genome, c)
 importFrom(GenomicRanges, GRanges, Seqinfo)
@@ -59,7 +59,7 @@ export(gwSnpTests, topSnps, eqtlTests, topFeats, getCisMap, pData, plot,
 	topScores, topGenes, locusNames, geneNames, geneIndcol, nthScores,
 	vcf2sm, fdr, transScores, getBest, getAll, 
 	getCall, transTab, meqtlTests, meta.best.cis.eQTLs, meta.All.cis.eQTLs,
-	meta.transScores, annotation, sensanal, snplocsDefault, bindmaf,
+	meta.transScores, annotation, sensanal, snplocsDefault, bindprops,
 	richNull, meta.bindmaf, meta.richNull, pifdr, 
  	All.cis, collectBest, 
         collectFiltered, cis.FDR.filter.SNPcentric, cis.FDR.filter.best)
@@ -93,7 +93,7 @@ exportMethods("chrnames", "chrnames<-", "estimates", "estimates<-",
 export(concatCis)
 
 exportMethods("snpchr", "snpchr<-", "gbufsize", "gbufsize<-",
- "batchsize", "batchsize<-")
+ "batchsize", "batchsize<-", "extraProps", "extraProps<-")
 
 importFrom(hexbin, hexbin)
 importClassFrom(hexbin, hexbin)

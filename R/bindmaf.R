@@ -1,5 +1,5 @@
 
- bindmaf = function(smpack="GGdata", smchr="20", obj, SSgen=GGBase::getSS) {
+ bindmaf.legacy = function(smpack="GGdata", smchr="20", obj, SSgen=GGBase::getSS) {
 #
   rad = values(obj@scoregr)$radiusUsed[1]
   fr = fullreport(obj)
@@ -35,10 +35,13 @@
 #  will measure distance of SNP to midpoint of gene coding region
 #  so that SNP within the gene have some distance too
   gmids = abs(gstarts) + .5*(abs(gends)-abs(gstarts))
+  mindist = ifelse(fr$snploc >= abs(gstarts) &
+      fr$snploc <= abs(gends), 0, pmin(fr$snploc -abs(gstarts), fr$snploc-abs(gends)))
   dist.mid = fr$snploc - gmids
   if (any(strand=="-"))   # use negative distance to denote SNP upstream (5') to midpoint of gene
     dist.mid[ which(strand == "-") ] = -dist.mid[which(strand=="-")]
   values(fr)$dist.mid = dist.mid
+  values(fr)$mindist = mindist
   fr
  }
 
@@ -149,9 +152,12 @@ meta.richNull = function(..., MAFlb=.01, npc=10, radius=250000,
 }
 
 
-bindmaf.simple = function(smpack, smchr, fr, SSgen=GGBase::getSS, rad) {
+bindmaf.simple = function(smpack, smchr, fr, SSgen=GGBase::getSS, rad, conf) {
 # at this point, the object will have Homo.sapiens hg19 seqinfo
 # but smchr may use a different vocabulary
+#
+# we also use the extraProps component of the configuration
+# object to add additional metadata
 #
    smchr.init = smchr
   smchr = gsub("chr", "", smchr)
@@ -188,9 +194,78 @@ bindmaf.simple = function(smpack, smchr, fr, SSgen=GGBase::getSS, rad) {
     values(fr)$MAF = mafs
     gmids = abs(gstarts) + 0.5 * (abs(gends) - abs(gstarts))
     dist.mid = fr$snplocs - gmids
+    mindist = ifelse(fr$snplocs >= abs(gstarts) & 
+               fr$snplocs <= abs(gends), 
+                   0, 
+                   pmin(abs(fr$snplocs-abs(gstarts)), abs(fr$snplocs-abs(gends))))
     if (any(strand == "-")) 
         dist.mid[which(strand == "-")] = -dist.mid[which(strand == 
             "-")]
     values(fr)$dist.mid = dist.mid
+    values(fr)$mindist = mindist
+    values(fr)$genestart = gstarts
+    values(fr)$geneend = gends
     fr
+}
+
+
+bindprops = function( config, fr ) {
+#   smpack, smchr, fr, SSgen=GGBase::getSS, rad, conf) {
+# at this point, the object will have Homo.sapiens hg19 seqinfo
+# but smchr may use a different vocabulary
+#
+# we also use the extraProps component of the configuration
+# object to add additional metadata
+#
+  smpack = smpack(config)
+  smchr = chrnames(config)
+  SSgen = SSgen(config)
+  rad = radius(config)
+   smchr.init = smchr
+  smchr = gsub("chr", "", smchr)
+  smchr = paste0("chr", smchr)
+    fr = fr[which(as.character(seqnames(fr)) == smchr)]
+    pro = names(fr)
+    values(fr)$probeid = pro
+    togetv = values(fr)
+    toget = togetv$snp
+    togetloc = togetv$snplocs
+    smls = SSgen(smpack, smchr.init)
+    probeanno = annotation(smls)
+    require(probeanno, character.only = TRUE)
+    glocenv = get(paste(gsub(".db", "", probeanno), "CHRLOC", 
+        sep = ""))
+    glocendenv = get(paste(gsub(".db", "", probeanno), "CHRLOCEND", 
+        sep = ""))
+    summ = col.summary(smList(smls)[[smchr.init]])
+    rn = rownames(summ)
+    if (!all(toget %in% rn)) 
+        stop("some SNP not available in SSgen result ... shouldn't happen")
+    if (!all.equal(names(fr), values(fr)$probeid)) 
+        stop("probeides went out of sync")
+    mafs = summ[match(toget, rn), "MAF"]
+    okpr = values(fr)$probeid
+    gstarts = sapply(mget(okpr, glocenv), "[", 1)
+    gends = sapply(mget(okpr, glocendenv), "[", 1)
+    strand = ifelse(gstarts < 0, "-", "+")
+    if (any(is.na(strand))) {
+        warning("strand unknown for some gene, setting to +")
+        strand[which(is.na(strand))] = "+"
+    }
+    strand(fr) = strand
+    values(fr)$MAF = mafs
+    gmids = abs(gstarts) + 0.5 * (abs(gends) - abs(gstarts))
+    dist.mid = fr$snplocs - gmids
+    mindist = ifelse(fr$snplocs >= abs(gstarts) & 
+               fr$snplocs <= abs(gends), 
+                   0, 
+                   pmin(abs(fr$snplocs-abs(gstarts)), abs(fr$snplocs-abs(gends))))
+    if (any(strand == "-")) 
+        dist.mid[which(strand == "-")] = -dist.mid[which(strand == 
+            "-")]
+    values(fr)$dist.mid = dist.mid
+    values(fr)$mindist = mindist
+    values(fr)$genestart = gstarts
+    values(fr)$geneend = gends
+    extraProps(config)(fr)
 }

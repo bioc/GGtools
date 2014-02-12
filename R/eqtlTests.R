@@ -4,7 +4,7 @@
 # tests, using ff storage and user-selected approaches to
 # concurrent computing
 
-ffSnpSummary = function(sm,fn,fac=100) {
+ffSnpSummary.legacy = function(sm,fn,fac=100) {
 #
 # this private function will use ff to store information summarizing genotype
 # data prior to use with eqtlTests.  The MAF and min GTF are stored
@@ -26,6 +26,28 @@ ffSnpSummary = function(sm,fn,fac=100) {
      overwrite=FFOVERWRITE,
      dimnames=list(colnames(sm), c("MAF", "mGTF")))
 }
+
+ffSnpSummary = function (sm, fn, fac = 100)
+{
+    dat = data.matrix(col.summary(sm)[, c("MAF", "P.AA", "P.AB", "P.BB")])
+    maf = fac * dat[, "MAF"]
+    mingtf = fac * rowMin(dat[,c("P.AA", "P.AB", "P.BB")]) # apply(dat, 1, min, na.rm = TRUE)  # avoids copies in apply
+    rm(dat)
+    FFOVERWRITE = FALSE
+    if (.Platform$OS.type == "windows")
+        FFOVERWRITE = TRUE
+    if (file.exists(fn)) {
+        warning(paste("found existing", fn, "removing..."))
+        unlink(fn, recursive = TRUE)
+        return(ff(vmode = "short", dim = c(length(maf), 2), filename = fn,
+            overwrite = FFOVERWRITE, dimnames = list(colnames(sm),
+                c("MAF", "mGTF"))))
+    }
+    ff(initdata = cbind(maf, mingtf), vmode = "short", dim = c(length(maf),
+        2), filename = fn, overwrite = FFOVERWRITE, dimnames = list(colnames(sm),
+        c("MAF", "mGTF")))
+}
+
 
 eqtlTests = function(smlSet, rhs=~1-1,
    runname="foo", targdir="foo", 

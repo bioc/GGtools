@@ -53,18 +53,45 @@ instance of \code{\link{cisRun-class}}
 %}
 \examples{
 \dontrun{
-  cc = new("CisConfig")
-  chrnames(cc) = "21"
-  genome(cc) = "hg19"
-  lkp = try(library(parallel))
-  if (!inherits(lkp, "try-error")) {
-     nc = min(10, detectCores())
-     options(mc.cores=nc)
-     geneApply(cc) = mclapply
-     }
-  estimates(cc) = FALSE
-  unix.time(f1 <- All.cis( cc ))
-}
+ 
+   cc = new("CisConfig")
+   chrnames(cc) = "21"
+   genome(cc) = "hg19"
+   lkp = try(library(parallel))
+   if (!inherits(lkp, "try-error")) {
+      nc = min(10, detectCores())
+      options(mc.cores=nc)
+      geneApply(cc) = mclapply
+      }
+   estimates(cc) = FALSE
+   set.seed(1234)
+   unix.time(f1 <- All.cis( cc ))
+ #
+ # demonstrate adding annotation on chromatin state and gwas status
+ #
+ eprops = function(ans) {
+ #
+ # only adds fields to values() of the input
+ #
+  data(hmm878)
+  ac = as.character
+  eqr = GRanges(ac(seqnames(ans)), IRanges(ans$snplocs, width=1))
+  fo = findOverlaps(eqr, hmm878)
+  chromcat878 = factor(rep("none", length(ans)), levels=c(unique(hmm878$name), "none"))
+  chromcat878[ queryHits(fo) ] = factor(hmm878$name[subjectHits(fo)])
+  ans$chromcat878 = chromcat878
+ 
+  if (require(gwascat)) {
+    data(gwastagger)
+    isgwashit = 1*(overlapsAny(eqr, gwastagger) | ans$snp %in% gwastagger$tagid) # allow match by loc or name
+    ans$isgwashit = isgwashit
+    }
+  ans
+ }
+ extraProps(cc) = eprops
+ set.seed(1234)
+ unix.time(f2 <- All.cis( cc ))
+ }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

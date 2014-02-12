@@ -28,7 +28,8 @@ setClass("CisConfig", representation(
   SSgen = "function",
   genome = "character",
   excludeRadius = "integerOrNULL",
-  estimates = "logical"))
+  estimates = "logical",
+  extraProps="function"))
 
 setMethod("show", "CisConfig", function(object) {
  cat("CisConfig instance; genome ", genome(object),".  Key parameters:\n")
@@ -59,6 +60,7 @@ setMethod("initialize", "CisConfig", function(.Object) {
   .Object@SSgen = GGBase::getSS
   .Object@excludeRadius = 0L
   .Object@estimates = TRUE
+  .Object@extraProps = force
   .Object
 })
 
@@ -140,6 +142,11 @@ setGeneric("estimates", function(x) standardGeneric("estimates"))
 setMethod("estimates", "CisConfig", function(x) x@estimates)
 setGeneric("estimates<-", function(object, value) standardGeneric("estimates<-"))
 setMethod("estimates<-", c("CisConfig", "logical"), function(object, value) {object@estimates <- value; object})
+setGeneric("extraProps", function(x) standardGeneric("extraProps"))
+setGeneric("extraProps<-", function(object,value) standardGeneric("extraProps<-"))
+setMethod("extraProps", "CisConfig", function(x) x@extraProps)
+setMethod("extraProps<-", c("CisConfig", "function"), 
+   function(object, value) {object@extraProps <- value; object})
 
 
 setClass("TransConfig", contains="CisConfig",
