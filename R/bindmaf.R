@@ -159,7 +159,7 @@ bindmaf.simple = function(smpack, smchr, fr, SSgen=GGBase::getSS, rad, conf) {
 # we also use the extraProps component of the configuration
 # object to add additional metadata
 #
-   smchr.init = smchr
+#   smchr.init = smchr
   smchr = gsub("chr", "", smchr)
   smchr = paste0("chr", smchr)
     fr = fr[which(as.character(seqnames(fr)) == smchr)]
@@ -168,14 +168,16 @@ bindmaf.simple = function(smpack, smchr, fr, SSgen=GGBase::getSS, rad, conf) {
     togetv = values(fr)
     toget = togetv$snp
     togetloc = togetv$snplocs
-    smls = SSgen(smpack, smchr.init)
+    smtoget = paste0(smchrpref(conf), chrnames(conf)[1])
+    smls = SSgen(smpack, smchr.init, smFilter=smFilter(conf),
+      exFilter=exFilter(conf))
     probeanno = annotation(smls)
     require(probeanno, character.only = TRUE)
     glocenv = get(paste(gsub(".db", "", probeanno), "CHRLOC", 
         sep = ""))
     glocendenv = get(paste(gsub(".db", "", probeanno), "CHRLOCEND", 
         sep = ""))
-    summ = col.summary(smList(smls)[[smchr.init]])
+    summ = col.summary(smList(smls)[[1]])
     rn = rownames(summ)
     if (!all(toget %in% rn)) 
         stop("some SNP not available in SSgen result ... shouldn't happen")
@@ -230,14 +232,16 @@ bindprops = function( config, fr ) {
     togetv = values(fr)
     toget = togetv$snp
     togetloc = togetv$snplocs
-    smls = SSgen(smpack, smchr.init)
+    togetsm = paste0(smchrpref(conf), chrnames(conf)[1])
+    smls = SSgen(smpack, togetsm, smFilter=smFilter(conf),
+       exFilter=exFilter(conf))
     probeanno = annotation(smls)
     require(probeanno, character.only = TRUE)
     glocenv = get(paste(gsub(".db", "", probeanno), "CHRLOC", 
         sep = ""))
     glocendenv = get(paste(gsub(".db", "", probeanno), "CHRLOCEND", 
         sep = ""))
-    summ = col.summary(smList(smls)[[smchr.init]])
+    summ = col.summary(smList(smls)[[1]])
     rn = rownames(summ)
     if (!all(toget %in% rn)) 
         stop("some SNP not available in SSgen result ... shouldn't happen")
