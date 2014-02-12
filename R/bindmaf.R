@@ -233,8 +233,7 @@ bindprops = function( config, fr ) {
     toget = togetv$snp
     togetloc = togetv$snplocs
     togetsm = paste0(smchrpref(config), chrnames(config)[1])
-    smls = SSgen(smpack, togetsm, smFilter=smFilter(config),
-       exFilter=exFilter(config))
+    smls = SSgen(smpack, togetsm, exFilter=exFilter(config))
     probeanno = annotation(smls)
     require(probeanno, character.only = TRUE)
     glocenv = get(paste(gsub(".db", "", probeanno), "CHRLOC", 
