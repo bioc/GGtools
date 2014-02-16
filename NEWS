@@ -1,5 +1,8 @@
 CHANGES IN VERSION 4.11
 ----------------------
+    o  CisConfig instances keepMapCache now defaults to TRUE
+    o  for naming symmetry we now have cisScores and transScores 
+       operating on CisConfig and TransConfig instances respectively
     o  Added transeqByCluster() for nested concurrency for trans searches
     o  Added TransConfig class to control trans searches, and modified
        transScores accordingly

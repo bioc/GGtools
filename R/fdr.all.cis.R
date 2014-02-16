@@ -169,7 +169,7 @@ All.cis.chr =
 }
      
 
-All.cis =
+cisScores =
   function(config=new("CisConfig"), ...) {
 #
 # eventually will replace All.cis
@@ -218,3 +218,5 @@ All.cis =
 # run eqtlTests
 # determine cis sets in tile
 # filter test run
+
+All.cis = cisScores

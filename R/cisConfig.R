@@ -56,7 +56,7 @@ setMethod("initialize", "CisConfig", function(.Object) {
   .Object@snpannopk = snplocsDefault()
   .Object@smFilter = function(x) nsFilter(MAFfilter(x, lower=.05), var.cutoff=.8)
   .Object@exFilter = force
-  .Object@keepMapCache = FALSE
+  .Object@keepMapCache = TRUE
   .Object@SSgen = GGBase::getSS
   .Object@excludeRadius = 0L
   .Object@estimates = TRUE

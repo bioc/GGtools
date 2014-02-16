@@ -28,7 +28,8 @@ importFrom(IRanges, RangedData, IRanges)
 importMethodsFrom(IRanges, elementMetadata, as.matrix, findOverlaps, "elementMetadata<-",
 	as.data.frame, values, start, ranges)
 
-importFrom(Biobase, featureNames, annotation, pData, rowMin)
+importFrom(Biobase, featureNames, annotation, pData, rowMin,
+    selectSome)
 
 importMethodsFrom(GenomicRanges, seqnames, genome, c)
 importFrom(GenomicRanges, GRanges, Seqinfo)
@@ -78,7 +79,7 @@ export("chrnames", "chrnames<-", "estimates", "estimates<-",
 "snpannopk<-", "SSgen", "SSgen<-",
 "cis.FDR.filter.SNPcentric.complete", "binqq", "qqhex",
  "gffprocess", "simpleTiling", "cgff2dt", "ciseqByCluster", "scoresCis",
- "binnedQQ", "transeqByCluster", "transeqByChrom")
+ "binnedQQ", "transeqByCluster", "transeqByChrom", "cisScores")
 
 exportMethods("chrnames", "chrnames<-", "estimates", "estimates<-", 
 "excludeRadius", "excludeRadius<-", "exFilter", "exFilter<-", 

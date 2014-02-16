@@ -1,4 +1,5 @@
 \name{All.cis}
+\alias{cisScores}
 \alias{All.cis}
 \alias{chrFilter}
 \alias{mcwAllCis-class}
@@ -13,6 +14,7 @@ function that computes score tests for all SNP cis to genes, with
 flexible filtering
 }
 \usage{
+cisScores( config = new("CisConfig"), ... )
 All.cis( config = new("CisConfig"), ... )
 }
 %- maybe also 'usage' for other objects documented here.
@@ -65,7 +67,7 @@ instance of \code{\link{cisRun-class}}
       }
    estimates(cc) = FALSE
    set.seed(1234)
-   unix.time(f1 <- All.cis( cc ))
+   unix.time(f1 <- cisScores( cc ))
  #
  # demonstrate adding annotation on chromatin state and gwas status
  #
@@ -90,7 +92,7 @@ instance of \code{\link{cisRun-class}}
  }
  extraProps(cc) = eprops
  set.seed(1234)
- unix.time(f2 <- All.cis( cc ))
+ unix.time(f2 <- cisScores( cc ))
  }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
