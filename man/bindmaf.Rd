@@ -21,7 +21,7 @@ meta.bindmaf (smpackvec=c("GGdata", "hmyriB36"),
 %#to generate an instance of \code{\link[GGBase]{smlSet-class}}
 %#}
   \item{smpackvec}{a vector of candidate package names (potential
-smpack arguments to \code{\link[GGBase]{getSS}}} for metaanalysis
+smpack arguments to \code{\link[GGBase]{getSS}} for metaanalysis
 across populations or tissues}
   \item{smchr}{
 the chromosome name as used in the names of the \code{smList} output for
