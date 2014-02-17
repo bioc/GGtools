@@ -39,7 +39,7 @@ enumeration of chromosomes harboring expression measures to
 be checked for trans association with SNPs
 }
   \item{baseconf}{
-an instance of \code{\link{transConfig-class}}
+an instance of \code{\link{TransConfig-class}}
 }
   \item{targname}{
 folder where scratch results are computed
@@ -57,7 +57,7 @@ not used
 }
 }
 \details{
-the \code{\link{transConfig-class}} instance determines
+the \code{\link{TransConfig-class}} instance determines
 most of the details of the testing procedure
 }
 \value{

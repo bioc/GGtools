@@ -1,5 +1,5 @@
 \name{bindmaf}
-\alias{bindmaf}
+%\alias{bindmaf}
 %\alias{bindmafAll}
 \alias{meta.bindmaf}
 %- Also NEED an '\alias' for EACH other topic documented here.
@@ -11,17 +11,17 @@ bind testing metadata to a best.cis.eQTLs result
 
 }
 \usage{
-bindmaf(smpack = "GGdata", smchr = "20", obj, SSgen=GGBase::getSS)
 meta.bindmaf (smpackvec=c("GGdata", "hmyriB36"),
      smchr="20", obj, usemaxMAF=FALSE, SSgen=GGBase::getSS) 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{smpack}{
-name of a package to which \code{\link[GGBase]{getSS}} can be applied
-to generate an instance of \code{\link[GGBase]{smlSet-class}}
-}
-  \item{smpackvec}{a vector of candidate smpack values for metaanalysis
+%#  \item{smpack}{
+%#name of a package to which \code{\link[GGBase]{getSS}} can be applied
+%#to generate an instance of \code{\link[GGBase]{smlSet-class}}
+%#}
+  \item{smpackvec}{a vector of candidate package names (potential
+smpack arguments to \code{\link[GGBase]{getSS}}} for metaanalysis
 across populations or tissues}
   \item{smchr}{
 the chromosome name as used in the names of the \code{smList} output for

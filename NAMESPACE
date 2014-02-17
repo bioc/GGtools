@@ -60,7 +60,7 @@ export(gwSnpTests, topSnps, eqtlTests, topFeats, getCisMap, pData, plot,
 	topScores, topGenes, locusNames, geneNames, geneIndcol, nthScores,
 	vcf2sm, fdr, transScores, getBest, getAll, 
 	getCall, transTab, meqtlTests, meta.best.cis.eQTLs, meta.All.cis.eQTLs,
-	meta.transScores, annotation, sensanal, snplocsDefault, bindprops,
+	meta.transScores, annotation, sensanal, snplocsDefault, 
 	richNull, meta.bindmaf, meta.richNull, pifdr, 
  	All.cis, collectBest, 
         collectFiltered, cis.FDR.filter.SNPcentric, cis.FDR.filter.best)

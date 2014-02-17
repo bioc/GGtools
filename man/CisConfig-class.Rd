@@ -74,6 +74,10 @@
 \alias{SSgen<-}
 \alias{genome}
 \alias{genome<-}
+\alias{extraProps}
+\alias{extraProps<-}
+\alias{extraProps,CisConfig-method}
+\alias{extraProps<-,CisConfig,function-method}
 
 \alias{excludeRadius<-,CisConfig,integerOrNULL-method}
 \alias{folderStem,CisConfig-method}
@@ -159,6 +163,10 @@ testing  }
     \item{\code{estimates}:}{Object of class \code{"logical"} if TRUE,
 estimates and standard errors (expanded and reduced in storage
 as a short int, using \code{shortfac}) are generated and retained }
+    \item{\code{extraProps}:}{Object of class \code{"function"} 
+this function is applied to the cisScores output
+before it is returned, to bind additional metadata
+to the ranges if desired.  Defaults to function(x)x. }
   }
 }
 \section{Methods}{
