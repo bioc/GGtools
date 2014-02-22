@@ -103,7 +103,15 @@ store = ff( initdata=0,
         filename = targff )
 
 cat("populating store...")
-store[ cbind(me$all$eqtls[,"snps.id"],  me$all$eqtls[, "gene.id" ]) ] =
+
+#Browse[1]> x[1:4,]
+#       snps         gene statistic       pvalue          FDR      beta
+#1  rs407257 GI_4504184-S -19.20425 3.183801e-33 3.078519e-25 -1.326829
+#2 rs5760176 GI_4504184-S -15.20243 2.400666e-26 1.160641e-18 -1.208819
+#3 rs4822466 GI_4504184-S -13.57040 2.730705e-23 5.824989e-16 -1.227329
+#4 rs4822450 GI_4504184-S  13.47201 4.216938e-23 5.824989e-16  1.215933
+
+store[ cbind(me$all$eqtls[,"snps"],  me$all$eqtls[, "gene" ]) ] =
    scoretx ( me$all$eqtls[, "statistic"] * shortfac )
 cat("done.\n")
 
@@ -176,7 +184,7 @@ store = ff( initdata=0,
         filename = targff )
 
 cat("populating store...")
-store[ cbind(me$all$eqtls[,"snps.id"],  me$all$eqtls[, "gene.id" ]) ] =
+store[ cbind(me$all$eqtls[,"snps"],  me$all$eqtls[, "gene" ]) ] =
    scoretx ( me$all$eqtls[, "statistic"] * shortfac )
 cat("done.\n")
 
