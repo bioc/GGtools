@@ -91,7 +91,7 @@ exportMethods("chrnames", "chrnames<-", "estimates", "estimates<-",
 "smFilter", "smFilter<-", "smpack", "smpack<-", "snpannopk", 
 "snpannopk<-", "SSgen", "SSgen<-")
 
-export(concatCis)
+export(concatCis, eqtlTests.me)
 
 exportMethods("snpchr", "snpchr<-", "gbufsize", "gbufsize<-",
  "batchsize", "batchsize<-", "extraProps", "extraProps<-")
