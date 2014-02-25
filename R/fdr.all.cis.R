@@ -48,34 +48,34 @@ All.cis.legacy =
 
 All.cis.mchr = 
   function(smpack, rhs=~1, folderstem="cisScratch",
-   radius = 50000, MAFlb=0, shortfac=100, chrnames="22", genome="hg19",
+   radius = 50000, shortfac=100, chrnames="22", genome="hg19",
    smchrpref="", gchrpref="", schrpref="ch",
    geneApply=lapply, geneannopk = "illuminaHumanv1.db",
    snpannopk = snplocsDefault(), smFilter = function(x)
       nsFilter(MAFfilter(x, lower=.05), var.cutoff=.9), 
    exFilter=function(x)x, keepMapCache=FALSE, SSgen=GGBase::getSS,
-   excludeRadius=NULL, estimates=FALSE, ...) {
+   excludeRadius=NULL, estimates=FALSE, inconfig, ...) {
   #
   ans = lapply( chrnames, function(ch) {
     All.cis.chr( smpack=smpack, rhs=rhs,
-      folderstem=folderstem, radius=radius, MAFlb=MAFlb, shortfac=shortfac,
+      folderstem=folderstem, radius=radius, shortfac=shortfac,
       chrname=ch, smchrpref=smchrpref, gchrpref=gchrpref,
 	schrpref=schrpref, geneApply=geneApply, geneannopk=geneannopk,
 	snpannopk=snpannopk, smFilter=smFilter, 
-	exFilter=exFilter, keepMapCache=keepMapCache, SSgen=SSgen, estimates=estimates, ...) } )
+	exFilter=exFilter, keepMapCache=keepMapCache, SSgen=SSgen, estimates=estimates, inconfig=inconfig, ...) } )
   do.call(c, ans)
 }
    
 
 All.cis.chr = 
   function(smpack, rhs=~1, folderstem="cisScratch",
-   radius = 50000, MAFlb=MAFlb, shortfac=100, chrname="22", genome="hg19",
+   radius = 50000, shortfac=100, chrname="22", genome="hg19",
    smchrpref="", gchrpref="", schrpref="ch",
    geneApply=lapply, geneannopk = "illuminaHumanv1.db",
    snpannopk = snplocsDefault(), smFilter = function(x)
       nsFilter(MAFfilter(x, lower=.05), var.cutoff=.9), 
    exFilter=function(x)x, keepMapCache=FALSE, SSgen=GGBase::getSS,
-   excludeRadius=NULL, estimates=FALSE, ...) {
+   excludeRadius=NULL, estimates=FALSE, inconfig, ...) {
 #
 #
     unlink(folderstem, recursive=TRUE)
@@ -106,8 +106,9 @@ All.cis.chr =
 ### at this point you have cismap which has all relevant probe names
 ### for chromosome
     cat("run smFilter...")
-    if (MAFlb <= 0) sms = smFilter(sms) # MAFlb is automatic if > 0 to aid in reflectance
-    else sms = MAFfilter(smFilter(sms), lower=MAFlb) #
+#    if (MAFlb <= 0) sms = smFilter(sms) # MAFlb is automatic if > 0 to aid in reflectance
+#    else sms = MAFfilter(smFilter(sms), lower=MAFlb) #
+    sms = smFilter(sms)
     allfn = featureNames(sms)
     okp = intersect(allfn, names(cismap))
     if (length(okp) < 1)
@@ -119,7 +120,10 @@ All.cis.chr =
 # map now agrees with probes in expression component
 #
     cat("tests...")
-    mgr = eqtlTests(fsms, rhs, targdir = folderstem,
+    if (inconfig@useME)
+    mgr = eqtlTests.me(fsms, rhs, targdir = folderstem, pvot=inconfig@MEpvot,
+        runname = "cis", geneApply = geneApply, shortfac=shortfac, ...)
+    else mgr = eqtlTests(fsms, rhs, targdir = folderstem,
         runname = "cis", geneApply = geneApply, shortfac=shortfac, ...)
     sm = snpsManaged(mgr)
     pl = probesManaged(mgr)
@@ -183,7 +187,7 @@ cisScores =
         schrpref=schrpref(config), geneApply=geneApply(config), geneannopk=geneannopk(config),
         snpannopk=snpannopk(config), smFilter=smFilter(config),
         exFilter=exFilter(config), keepMapCache=keepMapCache(config), SSgen=SSgen(config),
-        estimates=estimates(config), ...)
+        estimates=estimates(config), inconfig=config, ...)
 #
 # in following, smFilter is wrapped over permEx
 #
@@ -194,7 +198,7 @@ cisScores =
         schrpref=schrpref(config), geneApply=geneApply(config), geneannopk=geneannopk(config),
         snpannopk=snpannopk(config), smFilter=function(x)smFilter(config)(permEx(x)),
         exFilter=exFilter(config), keepMapCache=keepMapCache(config), SSgen=SSgen(config), 
-        estimates=FALSE, ...) )
+        estimates=FALSE, inconfig=config, ...) )
      obssc = obs$score
      permsc = unlist(lapply(perms, function(x)x$score))
      obs$fdr = pifdr(obssc, permsc)

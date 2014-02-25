@@ -29,7 +29,7 @@ setClass("CisConfig", representation(
   genome = "character",
   excludeRadius = "integerOrNULL",
   estimates = "logical",
-  extraProps="function"))
+  extraProps="function", useME="logical", MEpvot="numeric"))
 
 setMethod("show", "CisConfig", function(object) {
  cat("CisConfig instance; genome ", genome(object),".  Key parameters:\n")
@@ -61,6 +61,8 @@ setMethod("initialize", "CisConfig", function(.Object) {
   .Object@excludeRadius = 0L
   .Object@estimates = TRUE
   .Object@extraProps = force
+  .Object@useME = FALSE
+  .Object@MEpvot = .5
   .Object
 })
 

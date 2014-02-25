@@ -38,7 +38,8 @@ getAsSlicedData = function(sms, SNPtarget, cind=1) {
 eqtlTests.meText = function( smlSet, runname="20", targdir="cisScratch.me",
       geneApply=lapply, shortfac = 100, checkValid = TRUE, useUncertain= TRUE,
       glmfamily = "gaussian", scoretx = abs,
-      matrixEQTL.engine.control = list(output_file_name = outfile(mefob), pvOutputThreshold=1e-5,
+      matrixEQTL.engine.control = list(output_file_name = outfile(mefob), 
+         pvOutputThreshold=1e-3,
          useModel=modelLINEAR, errorCovariance=numeric(), verbose=FALSE, pvalue.hist=FALSE),
       snpSlicedData.control=.slicedDataDefaults,
       geneSlicedData.control=.slicedDataDefaults,
@@ -82,6 +83,9 @@ eqtlTests.meText = function( smlSet, runname="20", targdir="cisScratch.me",
 
 ## Run the analysis
 
+controls = list(matrix=matrixEQTL.engine.control,
+ geneSlice=geneSlicedData.control, snpSlice=snpSlicedData.control,
+ covarSlice=covarSlicedData.control)
 me = do.call(Matrix_eQTL_engine, c(list(snps, gene, cvrt), 
       matrixEQTL.engine.control) )
  
@@ -119,10 +123,10 @@ new("eqtlTestsManager", fffile=store, call=thecall, sess=sessionInfo(),
   exdate=date(), shortfac=shortfac, geneanno=smlSet@annotation, df=1 )
 }
 
-eqtlTests.me = function( smlSet, rhs=~1, runname="20", targdir="cisScratch.me",
+eqtlTests.me = function( smlSet, rhs=~1, runname="20", targdir="cisScratch.me", pvot=.5,
       geneApply=lapply, shortfac = 100, checkValid = TRUE, useUncertain= TRUE,
       glmfamily = "gaussian", scoretx = abs,
-      matrixEQTL.engine.control = list( output_file_name=tempfile(), pvOutputThreshold=1e-5,
+      matrixEQTL.engine.control = list( output_file_name="/dev/null",
          useModel=modelLINEAR, errorCovariance=numeric(), verbose=FALSE, pvalue.hist=FALSE),
       snpSlicedData.control=.slicedDataDefaults,
       geneSlicedData.control=.slicedDataDefaults,
@@ -132,6 +136,9 @@ eqtlTests.me = function( smlSet, rhs=~1, runname="20", targdir="cisScratch.me",
 # this is a very preliminary interface to MatrixEQTL testing procedure
 # for performance and inference comparisons
 #
+  require(MatrixEQTL)
+  matrixEQTL.engine.control$pvOutputThreshold = pvot
+#
   if (length(smList(smlSet)) != 1) stop("please supply smlSet with smList of length 1")
   require(MatrixEQTL)
   thecall = match.call()
@@ -140,7 +147,7 @@ eqtlTests.me = function( smlSet, rhs=~1, runname="20", targdir="cisScratch.me",
   do.call(snps$initFields, snpSlicedData.control )
   snps$CreateFromMatrix( as(t(smList(smlSet)[[1]]), "numeric" ) )
 
-  useModel = modelLINEAR; # modelANOVA or modelLINEAR
+#  useModel = modelLINEAR; # modelANOVA or modelLINEAR
 
 
 ## Load gene expression data
@@ -160,6 +167,12 @@ eqtlTests.me = function( smlSet, rhs=~1, runname="20", targdir="cisScratch.me",
 	if (inherits(dmat, "try-error")) stop("rhs could not define model.matrix from pData(smlSet) without error")
   	cvrt$CreateFromMatrix(t(dmat))
   }
+
+# retain call conditions
+
+controls = list(matrix=matrixEQTL.engine.control,
+ geneSlice=geneSlicedData.control, snpSlice=snpSlicedData.control,
+ covarSlice=covarSlicedData.control)
 
 ## Run the analysis
 
@@ -184,10 +197,15 @@ store = ff( initdata=0,
         filename = targff )
 
 cat("populating store...")
-store[ cbind(me$all$eqtls[,"snps"],  me$all$eqtls[, "gene" ]) ] =
+
+rowi = match(me$all$eqtls[,"snps"], rownames(store))
+coli = match(me$all$eqtls[, "gene"], colnames(store))
+store[ cbind(rowi,coli) ] =
    scoretx ( me$all$eqtls[, "statistic"] * shortfac )
+
 cat("done.\n")
 
 new("eqtlTestsManager", fffile=store, call=thecall, sess=sessionInfo(),
-  exdate=date(), shortfac=shortfac, geneanno=smlSet@annotation, df=1 )
+  exdate=date(), shortfac=shortfac, geneanno=smlSet@annotation, df=1,
+  summaryList = controls  )
 }

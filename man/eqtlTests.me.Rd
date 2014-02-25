@@ -11,12 +11,12 @@ to GGtools eqtlTests
 }
 \usage{
 eqtlTests.me(smlSet, rhs = ~1, runname = "20", 
-  targdir = "cisScratch.me", geneApply = lapply, 
+  targdir = "cisScratch.me", pvot = 0.5, geneApply = lapply, 
   shortfac = 100, checkValid = TRUE, useUncertain = TRUE, 
   glmfamily = "gaussian", scoretx = abs, 
   matrixEQTL.engine.control = 
-    list(output_file_name = tempfile(), 
-    pvOutputThreshold = 1e-05, useModel = modelLINEAR, 
+    list(output_file_name = "/dev/null",
+    useModel = modelLINEAR, 
     errorCovariance = numeric(), 
     verbose = FALSE, 
     pvalue.hist = FALSE), 
@@ -39,6 +39,10 @@ tag used to distinguish emitted files
 }
   \item{targdir}{
 folder where ff archives will reside
+}
+  \item{pvot}{
+setting for \code{pvOutputThreshold} in
+\code{\link[MatrixEQTL]{Matrix_eQTL_engine}}
 }
   \item{geneApply}{
 lapply-like function for iteration over genes,
@@ -102,7 +106,9 @@ intended for simple comparisons
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
-g22 = nsFilter( chrFilter( getSS("GGdata", "22"), "22" ), var.cutoff = .8 )
-m22 = eqtlTests.me(g22)
+if (require(MatrixEQTL)) {
+ g22 = nsFilter( chrFilter( getSS("GGdata", "22"), "22" ), var.cutoff = .8 )
+ m22 = eqtlTests.me(g22)
+}
 }
 \keyword{ models }
