@@ -10,7 +10,7 @@
 #1:         0 (5e+04,1e+05] (0.2,1.1] (0.1,0.25]
 #
 
-update.fdr.filt = function(tab, 
+update_fdr_filt = function(tab, 
     filt=function(x)x, by=c("pairs", "snps", "probes")[1]) {
 #
 # take a table, a filtering function, and a scope specification
@@ -22,8 +22,15 @@ update.fdr.filt = function(tab,
 #
  require(GGtools, quietly=TRUE)
  tab = filt(tab)
+ psinds = grep("permScore", colnames(tab), value=TRUE)
+ #ptab = as.data.frame(tab[,psinds,with=FALSE]) # decent
+ #pscores = as.numeric(unlist(ptab))  # slow
+ nr = nrow(tab)
+ pscores = vector("numeric", nr*length(psinds))
+ for (np in 1:length(psinds)) 
+   pscores[ (((np-1)*nr)+1):(np*nr) ] = tab[[psinds[np]]]
  if (by == "pairs") {
-   newfd = pifdr( tab$score, c(tab$permScore_1, tab$permScore_2, tab$permScore_3) )
+   newfd = pifdr( tab$score, pscores )
    }
  else {
    if (by == "snps") byvar = "snp"
@@ -73,7 +80,7 @@ eqsens_dt = function(dt, filtgen=filtgen.maf.dist,
   parmset = data.matrix(do.call(expand.grid, parmslist))
   ntune = nrow(parmset)
   ans = foreach( curp=1:ntune ) %dopar% {
-    tmp = update.fdr.filt( tab=dt, filt=filtgen( parmset[curp, ] ), by=by )
+    tmp = update_fdr_filt( tab=dt, filt=filtgen( parmset[curp, ] ), by=by )
     sapply(targfdrs, function(x)sum(tmp$fdr <= x))
     }
   hold = t(sapply(ans,force))
@@ -93,7 +100,7 @@ eqsens_dt = function(dt, filtgen=filtgen.maf.dist,
 #options(mc.cores=8)
 #
 #bag = mclapply( 1:nrow(pairs.df), function(x) {
-#  tmp = update.fdr.filt( partceu100k_dt,
+#  tmp = update_fdr_filt( partceu100k_dt,
 #       filtgen.maf.dist(allarg[x,1], allarg[x,2] ), by="probes" )
 #  ans = sapply(c(.05, .01, .005), function(x) sum(tmp$fdr <= x) )
 #  rm(tmp)
