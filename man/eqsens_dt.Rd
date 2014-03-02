@@ -81,7 +81,7 @@ leading substring
 %% ~put references to the literature/web site here ~
 %}
 \author{
-%%  ~~who you are~~
+VJ Carey <stvjc@channing.harvard.edu>
 }
 \note{
 To do: allow filtering on the number of permutations to be used
@@ -94,6 +94,11 @@ in FDR calculation.
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
+   \dontrun{
+   example(cisScores) # would generate f1
+   names(f1) = NULL
+   eqsens_dt( data.table(as(f1, "data.frame")) )
+   }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
