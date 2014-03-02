@@ -74,6 +74,7 @@
 \alias{SSgen<-}
 \alias{genome}
 \alias{genome<-}
+\alias{genome<-,CisConfig-method}
 \alias{extraProps}
 \alias{extraProps<-}
 \alias{extraProps,CisConfig-method}
