@@ -1,5 +1,7 @@
 \name{eqsens_dt}
 \alias{eqsens_dt}
+\alias{filtgen.maf.dist}
+\alias{update_fdr_filt}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -14,7 +16,7 @@ eqsens_dt(dt, filtgen = filtgen.maf.dist, by = c("pairs", "snps", "probes")[1],
 	parmslist = list(mafs = c(0.025, 0.05, 0.075, 0.1, 0.125), 
 		dists = c(1000, 5000, 10000, 25000, 50000, 1e+05)))
 filtgen.maf.dist (maf.dist, validate.tab = function(tab) all(c("mindist", 
-    "MAF") %in% colnames(tab))) 
+    "MAF") \%in\% colnames(tab))) 
 update_fdr_filt(tab, filt = function(x) x, by = c("pairs", "snps", 
     "probes")[1]) 
 }
