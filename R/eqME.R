@@ -115,7 +115,9 @@ cat("populating store...")
 #3 rs4822466 GI_4504184-S -13.57040 2.730705e-23 5.824989e-16 -1.227329
 #4 rs4822450 GI_4504184-S  13.47201 4.216938e-23 5.824989e-16  1.215933
 
-store[ cbind(me$all$eqtls[,"snps"],  me$all$eqtls[, "gene" ]) ] =
+rowi = match(me$all$eqtls[,"snps"], rownames(store))
+coli = match(me$all$eqtls[, "gene"], colnames(store))
+store[ cbind(rowi,coli) ] =
    scoretx ( me$all$eqtls[, "statistic"] * shortfac )
 cat("done.\n")
 
