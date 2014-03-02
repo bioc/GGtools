@@ -99,4 +99,4 @@ exportMethods("snpchr", "snpchr<-", "gbufsize", "gbufsize<-",
 importFrom(hexbin, hexbin)
 importClassFrom(hexbin, hexbin)
 
-export(update.fdr.filt, filtgen.maf.dist, eqsens_dt)
+export(update_fdr_filt, filtgen.maf.dist, eqsens_dt)
