@@ -192,3 +192,72 @@ setMethod("show", "TransConfig", function (object)
     print(paste0(slotNames(new("TransConfig")), "<-"))
 })
 
+ivector <- function(x, ...) {
+ i <- 1
+ it <- idiv(length(x), ...)
+
+ nextEl <- function() {
+   n <- nextElem(it)
+   ix <- seq(i, length=n)
+   i <<- i + n
+   x[ix]
+ }
+
+ obj <- list(nextElem=nextEl)
+ class(obj) <- c('ivector', 'abstractiter', 'iter')
+ obj
+}
+
+add878 = function(ans) {
+  data(hmm878)
+  ac = as.character
+  eqr = GRanges(ac(seqnames(ans)), IRanges(ans$snplocs, width=1))
+  fo = findOverlaps(eqr, hmm878)
+  chromcat878 = factor(rep("none", length(ans)), levels=c(unique(hmm878$name), "none"))
+  chromcat878[ queryHits(fo) ] = factor(hmm878$name[subjectHits(fo)])
+  ans$chromcat878 = chromcat878
+  ans
+}
+
+addgwhit = function(ans) {
+    if (require(gwascat)) {
+    data(gwastagger)
+    isgwashit = 1*(overlapsAny(eqr, gwastagger) | ans$snp %in% gwastagger$tagid) # allow match by loc or name
+    ans$isgwashit = isgwashit
+    }
+  ans
+}
+
+get_probechunks = function(smpack="yri1kgv", chrpref="chr", chunksize=250,
+   allc=21:22) {
+  sm = getSS(smpack, paste0(chrpref, "22")) # illustrative, source of probeids
+  allp = featureNames(sm)
+  ganno = annotation(sm)
+  require(ganno, character.only=TRUE)
+  cmap = select(get(ganno), keytype="PROBEID", keys=allp, columns="CHR")
+  cmap = cmap[which(cmap$CHR %in% as.character(allc)),]
+  byc = split(cmap$PROBEID, cmap$CHR)
+  alli = lapply(byc, ivector, chunkSize=chunksize) # get nice balance
+  plist = lapply(alli, as.list) # materialize
+  list(plist=plist, cnames=rep(allc, sapply(plist,length)))
+}
+
+buildConfList = function( baseconf, chunksize = 100, chromToDo=1:22 ) {
+  smpack = smpack(baseconf)
+  pchunks = get_probechunks( smpack=smpack, 
+      chrpref=smchrpref(baseconf), chunksize=chunksize,
+      allc = chromToDo )
+  nel = sum(sapply(pchunks$plist, length))
+  configList = vector("list", nel)
+  plist = unlist(pchunks$plist, recursive=FALSE)
+  clist = unlist(pchunks$cnames, recursive=FALSE)
+  for (i in 1:nel) {
+    tmp = baseconf
+    z = function() function(x) smFilter(baseconf)(x)[probeId(pl),]
+    smFilter(tmp) = z()  # must skirt lazy evaluation
+    environment(smFilter(tmp))$pl = plist[[i]]
+    chrnames(tmp) = as.character(clist[[i]])
+    configList[[i]] = tmp
+    }
+  configList
+}

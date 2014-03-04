@@ -33,7 +33,7 @@ importFrom(Biobase, featureNames, annotation, pData, rowMin,
 
 importClassFrom(GenomicRanges, GenomicRanges, GenomicRangesORmissing)
 importMethodsFrom(GenomicRanges, seqnames, genome, c, "genome<-")
-importFrom(GenomicRanges, GRanges, Seqinfo, genome, "genome<-")
+importFrom(GenomicRanges, GRanges, Seqinfo, genome, "genome<-", GRangesList)
 
 importFrom(Rsamtools, TabixFile, path)
 
@@ -100,4 +100,7 @@ exportMethods("snpchr", "snpchr<-", "gbufsize", "gbufsize<-",
 importFrom(hexbin, hexbin)
 importClassFrom(hexbin, hexbin)
 
-export(update_fdr_filt, filtgen.maf.dist, eqsens_dt, "genome<-")
+export(update_fdr_filt, filtgen.maf.dist, eqsens_dt, "genome<-",
+  buildConfList, add878, addgwhit)
+
+importFrom(iterators, nextElem, idiv)
