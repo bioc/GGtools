@@ -213,6 +213,7 @@ cisScores =
            #    SSgen(config), radius(config), config )
      metadata(obs)$configObj = config
      tmp = new("mcwAllCis", obs=obs, perms=perms, theCall=thecall)
+     try(unlink(folderStem(config), recursive=TRUE))
      convertCis(tmp, radius=radius(config), config)
 }
 
