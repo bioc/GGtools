@@ -250,13 +250,15 @@ buildConfList = function( baseconf, chunksize = 100, chromToDo=1:22 ) {
   nel = sum(sapply(pchunks$plist, length))
   configList = vector("list", nel)
   plist = unlist(pchunks$plist, recursive=FALSE)
-  clist = unlist(pchunks$cnames, recursive=FALSE)
+  clist = unlist(pchunks$cnames)
   for (i in 1:nel) {
     tmp = baseconf
     z = function() function(x) smFilter(baseconf)(x)[probeId(pl),]
     smFilter(tmp) = z()  # must skirt lazy evaluation
     environment(smFilter(tmp))$pl = plist[[i]]
-    chrnames(tmp) = as.character(clist[[i]])
+    chrnames(tmp) = as.character(clist[i])
+    folderStem(tmp) = paste0(folderStem(tmp), "_", clist[i], "_",
+        plist[[i]][1])
     configList[[i]] = tmp
     }
   configList
