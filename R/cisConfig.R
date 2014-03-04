@@ -253,7 +253,8 @@ buildConfList = function( baseconf, chunksize = 100, chromToDo=1:22 ) {
   clist = unlist(pchunks$cnames)
   for (i in 1:nel) {
     tmp = baseconf
-    z = function() function(x) smFilter(baseconf)(x)[probeId(pl),]
+    z = function() function(x) smFilter(baseconf)(x)[probeId(
+      intersect(featureNames(x),pl)),]
     smFilter(tmp) = z()  # must skirt lazy evaluation
     environment(smFilter(tmp))$pl = plist[[i]]
     chrnames(tmp) = as.character(clist[i])
