@@ -222,6 +222,7 @@ add878 = function(ans) {
 addgwhit = function(ans) {
     if (require(gwascat)) {
     data(gwastagger)
+    eqr = GRanges(ac(seqnames(ans)), IRanges(ans$snplocs, width=1))
     isgwashit = 1*(overlapsAny(eqr, gwastagger) | ans$snp %in% gwastagger$tagid) # allow match by loc or name
     ans$isgwashit = isgwashit
     }
