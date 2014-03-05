@@ -240,8 +240,7 @@ get_probechunks = function(smpack="yri1kgv", chrpref="chr", chunksize=250,
   cmap = cmap[which(cmap$CHR %in% as.character(allc)),]
   byc = split(cmap$PROBEID, cmap$CHR)
   alli = lapply(byc, ivector, chunkSize=chunksize) # get nice balance
-  plist = lapply(alli, as.list) # materialize
-  list(plist=plist, cnames=rep(allc, sapply(plist,length)))
+  lapply(alli, as.list) # materialize
 }
 
 buildConfList = function( baseconf, chunksize = 100, chromToDo=1:22 ) {
@@ -249,18 +248,18 @@ buildConfList = function( baseconf, chunksize = 100, chromToDo=1:22 ) {
   pchunks = get_probechunks( smpack=smpack, 
       chrpref=smchrpref(baseconf), chunksize=chunksize,
       allc = chromToDo )
-  nel = sum(sapply(pchunks$plist, length))
+  nel = sum(clen <- sapply(pchunks, length))
+  cnames = rep(names(pchunks), clen)
   configList = vector("list", nel)
-  plist = unlist(pchunks$plist, recursive=FALSE)
-  clist = unlist(pchunks$cnames)
+  plist = unlist(pchunks, recursive=FALSE)
   for (i in 1:nel) {
     tmp = baseconf
     z = function() function(x) smFilter(baseconf)(x)[probeId(
       intersect(featureNames(x),pl)),]
     smFilter(tmp) = z()  # must skirt lazy evaluation
     environment(smFilter(tmp))$pl = plist[[i]]
-    chrnames(tmp) = as.character(clist[i])
-    folderStem(tmp) = paste0(folderStem(tmp), "_", clist[i], "_",
+    chrnames(tmp) = as.character(cnames[i])
+    folderStem(tmp) = paste0(folderStem(tmp), "_", cnames[i], "_",
         plist[[i]][1])
     configList[[i]] = tmp
     }
