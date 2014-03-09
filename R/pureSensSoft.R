@@ -69,7 +69,7 @@ filtgen.maf.dist = function(maf.dist,
      }
   }
 
-eqsens_dt = function(dt, filtgen=filtgen.maf.dist, 
+eqsens_dt = function(dtab, filtgen=filtgen.maf.dist, 
    by=c("pairs", "snps", "probes")[1],
    targfdrs=c(.05, .01, .005), parmslist=list(
    mafs = c( .025, .05, .075, .1, .125 ),
@@ -80,7 +80,7 @@ eqsens_dt = function(dt, filtgen=filtgen.maf.dist,
   parmset = data.matrix(do.call(expand.grid, parmslist))
   ntune = nrow(parmset)
   ans = foreach( curp=1:ntune ) %dopar% {
-    tmp = update_fdr_filt( tab=dt, filt=filtgen( parmset[curp, ] ), by=by )
+    tmp = update_fdr_filt( tab=dtab, filt=filtgen( parmset[curp, ] ), by=by )
     sapply(targfdrs, function(x)sum(tmp$fdr <= x))
     }
   hold = t(sapply(ans,force))
