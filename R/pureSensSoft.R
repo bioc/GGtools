@@ -1,3 +1,17 @@
+plotsens = function( eqsout, ylab="count of eQTL at given FDR",
+   title="cis radius in bp" ) {
+ require(reshape2)
+ require(ggplot2)
+ # eqsout is output of eqsens_dt
+ mdf = melt(data.frame(eqsout), id.vars=c("mafs", "dists"))
+ vind = which(names(mdf)=="variable")
+ names(mdf)[vind] = "FDR"
+ mdf[,vind] = gsub("at_", "", mdf[,vind])
+ ggplot(data=mdf) + geom_point(aes(x=mafs,y=value, colour=FDR)) + 
+     facet_grid(~dists) + theme(axis.text.x=element_text(angle=90)) +
+     ylab(ylab) + labs(title=title)
+}
+
 
 #> fullceu100k_dtplus[1,]
 #   seqnames start   end width strand      source             type score phase
