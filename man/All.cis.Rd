@@ -1,4 +1,5 @@
 \name{All.cis}
+\alias{cisAssoc}
 \alias{cisScores}
 \alias{All.cis}
 \alias{chrFilter}
@@ -6,16 +7,24 @@
 \alias{show,mcwAllCis-method}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-function that computes score tests for all SNP cis to genes, with
-flexible filtering
+functions that compute score tests for all SNP cis to genes, with
+flexible filtering; new cisAssoc works with SummarizedExperiment
+and VCF
 }
 \description{
 function that computes score tests for all SNP cis to genes, with
-flexible filtering
+flexible filtering; new cisAssoc works with SummarizedExperiment
+and VCF
 }
 \usage{
 cisScores( config = new("CisConfig"), ... )
 All.cis( config = new("CisConfig"), ... )
+cisAssoc(summex, vcf.tf, rhs = ~1, nperm = 3, 
+   cisradius = 1000, stx = force, vtx = force, 
+   snfilt = function(x) gsub("chr", "", x), 
+   genome = "hg19", assayind = 1, lbmaf = 1e-06)
+}
+
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -25,14 +34,61 @@ instance of class \code{\link{CisConfig-class}}
   \item{\dots}{
 passed to eqtlTests
 }
+  \item{summex}{
+instance of \code{\link[GenomicRanges]{SummarizedExperiment-class}}
+}
+  \item{vcf.tf}{
+instance of \code{\link[Rsamtools]{TabixFile}}, pointing to a
+tabix-indexed VCF file
+}
+  \item{rhs}{
+headless formula instance; covariates can be identified
+in colData(summex) 
+}
+  \item{nperm}{
+number of permutations of assay against genotype to be retained,
+should be a small number, say 3, unless the feature set is very
+small
+}
+  \item{cisradius}{
+number of bp up- and down-stream  of each rowData(summex) range
+to be searched for variants in \code{vcf.tf}
+}
+  \item{stx}{
+not used, intended for future coding as a filter for assay data
+}
+  \item{vtx}{
+not used, intended for future coding as a filter for VCF data
+}
+  \item{snfilt}{
+seqnames filter to harmonize differences between chromosome names
+in summex and vcf.tf -- defaults to 'remove chr prefix'
+}
+  \item{genome}{
+conventional tag like 'hg19'
+}
+  \item{assayind}{
+numeric, take quantitations from \code{assays(summex)[[assayind]]}
+}
+  \item{lbmaf}{
+lower bound on MAF of variants to be retained
+ }
+
 }
 \details{
+cisScores (All.cis) 
 returns score statistics for assocations of all SNP cis to genes,
 in a GRanges instance, with range names given by probes; metadata supplied
 SNP location, name, and score
+
+cisAssoc targets SummarizedExperiment instances for molecular
+phenotype measures and VCF for variant data
 }
 \value{
-instance of \code{\link{cisRun-class}}
+for cisScores: instance of \code{\link{cisRun-class}}
+
+for cisAssoc: a GRanges with information on observed and
+permuted test scores per locus/feature pair
 %%  ~Describe the value returned
 %%  If it is a LIST, use
 %%  \item{comp1 }{Description of 'comp1'}
@@ -42,9 +98,9 @@ instance of \code{\link{cisRun-class}}
 %\references{
 %% ~put references to the literature/web site here ~
 %}
-%\author{
-%%%  ~~who you are~~
-%}
+\author{
+VJ Carey <stvjc@channing.harvard.edu>
+}
 %\note{
 %}
 %

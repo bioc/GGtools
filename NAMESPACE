@@ -101,6 +101,6 @@ importFrom(hexbin, hexbin)
 importClassFrom(hexbin, hexbin)
 
 export(update_fdr_filt, filtgen.maf.dist, eqsens_dt, "genome<-",
-  buildConfList, add878, addgwhit)
+  buildConfList, add878, addgwhit, cisAssoc, sampsInVCF)
 
 importFrom(iterators, nextElem, idiv)
