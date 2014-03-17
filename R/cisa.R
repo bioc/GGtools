@@ -21,7 +21,7 @@ cisAssoc = function( summex, vcf.tf, rhs=~1, nperm=3, cisradius=1000,
  usn = unique(seqnames(summex))
  if(length(usn)>1) stop("current implementation insists that length(unique(seqnames(summex)))==1 as VCF assumed chr-specific")
  sampidsInSumm = colnames(summex)
- sampidsInVCF = sampsInVCF(vcf.tf, chrToTry=snfilt(usn))
+ sampidsInVCF = sampsInVCF(vcf.tf)
  oksamp = intersect(sampidsInSumm, sampidsInVCF)
  stopifnot(length(oksamp)>0)
  summex = summex[, oksamp]
