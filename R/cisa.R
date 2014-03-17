@@ -1,10 +1,9 @@
-sampsInVCF = function(tf, chrToTry="1", poke=IRanges(1,1000)) {
+sampsInVCF = function(tf) {
 #
 # probe into VCF file to determine sample names
+#  perhaps you don't need the chr?  can determine from header?
 #
- v1 = ScanVcfParam(fixed="ALT", info=NA, geno="GT", which=GRanges("1", IRanges(1,1000)))
- pro = readVcf(tf, genome="hg19", param=v1)
- colnames(geno(pro)[[1]])
+ samples(scanVcfHeader(tf))
 }
 
 cisAssoc = function( summex, vcf.tf, rhs=~1, nperm=3, cisradius=1000, 
@@ -19,8 +18,10 @@ cisAssoc = function( summex, vcf.tf, rhs=~1, nperm=3, cisradius=1000,
  #
  # obtain sample IDs and harmonize genotypes and molec phenotype assay data
  #
+ usn = unique(seqnames(summex))
+ if(length(usn)>1) stop("current implementation insists that length(unique(seqnames(summex)))==1 as VCF assumed chr-specific")
  sampidsInSumm = colnames(summex)
- sampidsInVCF = sampsInVCF(vcf.tf)
+ sampidsInVCF = sampsInVCF(vcf.tf, chrToTry=snfilt(usn))
  oksamp = intersect(sampidsInSumm, sampidsInVCF)
  stopifnot(length(oksamp)>0)
  summex = summex[, oksamp]

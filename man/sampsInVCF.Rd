@@ -8,19 +8,13 @@ enumerate samples available in a VCF file
 enumerate samples available in a VCF file
 }
 \usage{
-sampsInVCF(tf, chrToTry = "1", poke = IRanges(1, 1000))
+sampsInVCF(tf)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{tf}{
 instance of \code{\link[Rsamtools]{TabixFile}} referring
 to a tabix-indexed VCF
-}
-  \item{chrToTry}{
-character label for chromosome
-}
-  \item{poke}{
-region to query
 }
 }
 %\details{
@@ -49,20 +43,8 @@ vector of available sample identifiers
 %\seealso{
 %%% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
-\examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function (tf, chrToTry = "1", poke = IRanges(1, 1000)) 
-{
-    v1 = ScanVcfParam(fixed = "ALT", info = NA, geno = "GT", 
-        which = GRanges("1", IRanges(1, 1000)))
-    pro = readVcf(tf, genome = "hg19", param = v1)
-    colnames(geno(pro)[[1]])
-  }
-}
+%\examples{
+%}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ models }
