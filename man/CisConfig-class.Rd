@@ -1,6 +1,7 @@
 \name{CisConfig-class}
 \Rdversion{1.1}
 \docType{class}
+\alias{buildConfList}
 \alias{CisConfig-class}
 \alias{genome,CisConfig-method}
 \alias{genome<-,CisConfig,character-method}

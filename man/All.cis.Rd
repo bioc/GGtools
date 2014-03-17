@@ -5,6 +5,8 @@
 \alias{chrFilter}
 \alias{mcwAllCis-class}
 \alias{show,mcwAllCis-method}
+\alias{add878}
+\alias{addgwhit}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 functions that compute score tests for all SNP cis to genes, with
@@ -23,8 +25,8 @@ cisAssoc(summex, vcf.tf, rhs = ~1, nperm = 3,
    cisradius = 1000, stx = force, vtx = force, 
    snfilt = function(x) gsub("chr", "", x), 
    genome = "hg19", assayind = 1, lbmaf = 1e-06)
-}
-
+addgwhit(ans)
+add878(ans)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -73,7 +75,8 @@ numeric, take quantitations from \code{assays(summex)[[assayind]]}
   \item{lbmaf}{
 lower bound on MAF of variants to be retained
  }
-
+  \item{ans}{cisRun-like entity to which additional annotation
+    will be bound by addgwhit or add878}
 }
 \details{
 cisScores (All.cis) 
@@ -83,6 +86,10 @@ SNP location, name, and score
 
 cisAssoc targets SummarizedExperiment instances for molecular
 phenotype measures and VCF for variant data
+
+\code{addgwhit} and \code{add878} will use
+GWAS hit information or ChromHMM labeling to annotation
+ranges
 }
 \value{
 for cisScores: instance of \code{\link{cisRun-class}}

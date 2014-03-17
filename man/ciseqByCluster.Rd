@@ -2,10 +2,10 @@
 \alias{ciseqByCluster}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-end-to-end cluster-based cis-eQTL search
+end-to-end cluster-based cis-eQTL search, and allied utilities
 }
 \description{
-end-to-end cluster-based cis-eQTL search
+end-to-end cluster-based cis-eQTL search, and allied utilities
 }
 \usage{
 ciseqByCluster(cl, pack = "yri1kgv", outprefix = "yrirun", 
