@@ -43,8 +43,10 @@ vector of available sample identifiers
 %\seealso{
 %%% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
-%\examples{
-%}
+\examples{
+tf = TabixFile(system.file("vcf/CEU.exon.2010_09.genotypes.vcf.gz", package="GGtools"))
+sampsInVCF(tf)
+}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ models }

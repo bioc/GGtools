@@ -29,7 +29,7 @@ importMethodsFrom(IRanges, elementMetadata, as.matrix, findOverlaps, "elementMet
 	as.data.frame, values, start, ranges)
 
 importFrom(Biobase, featureNames, annotation, pData, rowMin,
-    selectSome)
+    selectSome, samples)
 
 importClassFrom(GenomicRanges, GenomicRanges, GenomicRangesORmissing)
 importMethodsFrom(GenomicRanges, seqnames, genome, c, "genome<-")
