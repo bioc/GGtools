@@ -6,6 +6,14 @@ sampsInVCF = function(tf) {
  samples(scanVcfHeader(tf))
 }
 
+snvsOnly = function(v) {
+#
+# confine VCF instance to loci with single nucleotide REF and ALT
+#
+  v[ width(ref(v)) == 1 & width(GenomicRanges::unlist(alt(v)))==1, ]
+  }
+
+
 cisAssoc = function( summex, vcf.tf, rhs=~1, nperm=3, cisradius=1000, 
     stx=force, vtx=force, snfilt=function(x) gsub("chr", "", x),
     genome="hg19", assayind=1, lbmaf=1e-6 ) {
@@ -45,9 +53,7 @@ cisAssoc = function( summex, vcf.tf, rhs=~1, nperm=3, cisradius=1000,
  # retain only SNVs with MAF > lbmaf
  #
  rdd = rowData(vdata)
- ok = nchar(rdd$REF)== 1
- ok = ok & (sapply(lapply(rdd$ALT,force),nchar) == 1)
- vdata = vdata[which(ok),]
+ vdata = snvsOnly(vdata)
  gtdata = genotypeToSnpMatrix(vdata)
  csumm = col.summary(gtdata[[1]])
  inmafs = csumm[,"MAF"]

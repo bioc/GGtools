@@ -4,6 +4,8 @@ import(GGBase)
 import(data.table)
 
 importFrom(Rsamtools, "headerTabix", "isOpen", "close.TabixFile", "open.TabixFile")
+importFrom(Biostrings, nchar)
+importMethodsFrom(Biostrings, nchar)
 
 importFrom(stats, IQR)
 
