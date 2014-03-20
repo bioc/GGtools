@@ -38,6 +38,7 @@ importMethodsFrom(GenomicRanges, seqnames, genome, c, "genome<-")
 importFrom(GenomicRanges, GRanges, Seqinfo, genome, "genome<-", GRangesList)
 
 importFrom(Rsamtools, TabixFile, path)
+export(TabixFile)
 
 importMethodsFrom(Rsamtools, scanTabix)
 

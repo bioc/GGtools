@@ -1,5 +1,6 @@
 \name{sampsInVCF}
 \alias{sampsInVCF}
+\alias{TabixFile}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 enumerate samples available in a VCF file
@@ -34,9 +35,9 @@ vector of available sample identifiers
 %\author{
 %%%  ~~who you are~~
 %}
-%\note{
-%%%  ~~further notes~~
-%}
+\note{
+This package exports \code{\link[Rsamtools]{TabixFile}} for the sake of the example below.
+}
 %
 %%% ~Make other sections like Warning with \section{Warning }{....} ~
 %
