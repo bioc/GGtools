@@ -7,6 +7,7 @@
 \alias{show,mcwAllCis-method}
 \alias{add878}
 \alias{addgwhit}
+\alias{inflammFilter}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 functions that compute score tests for all SNP cis to genes, with
@@ -25,8 +26,9 @@ cisAssoc(summex, vcf.tf, rhs = ~1, nperm = 3,
    cisradius = 1000, stx = force, vtx = force, 
    snfilt = function(x) gsub("chr", "", x), 
    genome = "hg19", assayind = 1, lbmaf = 1e-06)
-addgwhit(ans)
+addgwhit(ans, traitFilter=force, vname="isgwashit") 
 add878(ans)
+inflammFilter(gwtagger)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -77,6 +79,11 @@ lower bound on MAF of variants to be retained
  }
   \item{ans}{cisRun-like entity to which additional annotation
     will be bound by addgwhit or add878}
+  \item{gwtagger}{GRanges like gwastagger in gwascat data elements}
+  \item{traitFilter}{function that returns a gwastagger-like GRanges, see
+\code{inflammFilter}}
+  \item{vname}{name to be used for new data.table column added by
+addgwhit}
 }
 \details{
 cisScores (All.cis) 
@@ -156,6 +163,9 @@ VJ Carey <stvjc@channing.harvard.edu>
  extraProps(cc) = eprops
  set.seed(1234)
  unix.time(f2 <- cisScores( cc ))
+#
+#
+ inflammFilter # to make more restrictive predicate for prediction
  }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

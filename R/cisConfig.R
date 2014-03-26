@@ -219,13 +219,23 @@ add878 = function(ans) {
   ans
 }
 
-addgwhit = function(ans) {
+inflammFilter = function(gwtagger) {
+  require(gwascat)
+# gwrngs in scope
+  allt = gwrngs$Disease.Trait
+  infinds = grep("rheumatoid|inflamm|crohn|lupus|multiple sclero|type 1 diabetes",
+     allt, ignore.case=TRUE)
+  gwtagger[ which(overlapsAny( gwtagger, gwrngs[infinds]) | gwtagger$baseid %in% gwrngs[infinds]$SNPs) ]
+}
+
+addgwhit = function(ans, traitFilter=force, vname="isgwashit") {
     if (require(gwascat)) {
     data(gwastagger)
     ac = as.character
     eqr = GRanges(ac(seqnames(ans)), IRanges(ans$snplocs, width=1))
-    isgwashit = 1*(overlapsAny(eqr, gwastagger) | ans$snp %in% gwastagger$tagid) # allow match by loc or name
-    ans$isgwashit = isgwashit
+    gwt = traitFilter(gwastagger)
+    isgwashit = 1*(overlapsAny(eqr, gwt) | ans$snp %in% gwt$tagid) # allow match by loc or name
+    ans[, vname, with=FALSE] = isgwashit
     }
   ans
 }
