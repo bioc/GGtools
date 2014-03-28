@@ -3,6 +3,8 @@ import(utils)
 import(GGBase)
 import(data.table)
 
+importMethodsFrom(Biostrings, nchar)
+importFrom(Biostrings, nchar)
 importFrom(Rsamtools, "headerTabix", "isOpen", "close.TabixFile", "open.TabixFile")
 importFrom(Biostrings, nchar)
 importMethodsFrom(Biostrings, nchar)
@@ -104,6 +106,6 @@ importFrom(hexbin, hexbin)
 importClassFrom(hexbin, hexbin)
 
 export(update_fdr_filt, filtgen.maf.dist, eqsens_dt, "genome<-",
-  buildConfList, add878, addgwhit, cisAssoc, sampsInVCF)
+  buildConfList, add878, addgwhit, cisAssoc, sampsInVCF, appraise, calfig)
 
 importFrom(iterators, nextElem, idiv)
