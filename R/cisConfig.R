@@ -232,11 +232,17 @@ addgwhit = function(ans, traitFilter=force, vname="isgwashit") {
     if (require(gwascat)) {
     data(gwastagger)
     ac = as.character
-    eqr = GRanges(ac(seqnames(ans)), IRanges(ans$snplocs, width=1))
+    if (is(ans, "data.table")) seqn = as.character(ans$seqnames)
+    else if (inherits(ans, "GRanges")) seqn = ac(seqnames(ans))
+    else stop("ans not data.table or GRanges derivative")
+    eqr = GRanges(seqn, IRanges(ans$snplocs, width=1))
     gwt = traitFilter(gwastagger)
     isgwashit = 1*(overlapsAny(eqr, gwt) | ans$snp %in% gwt$tagid) # allow match by loc or name
-    ans[, vname, with=FALSE] = isgwashit
+    if (is(ans, "data.table")) 
+       ans[[vname]] = isgwashit
+    else mcols(ans)[,vname] = isgwashit
     }
+  else warning("gwascat not available; returning ans unaltered")
   ans
 }
 
