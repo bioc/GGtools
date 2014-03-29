@@ -22,7 +22,7 @@ appraise = function(dtab, discretize=TRUE,
     caddcats = function(x){
      cut(x$PHRED, c(-.01, 0, 1, 2, 4, 6, 8, 10,seq(20, 35, 5), 60))
     }
-    ), validate.dt = .valdt ) {  # finish list and function arg paren
+    )) {  # finish list and function arg paren
 
 require(foreach)
 
@@ -55,8 +55,6 @@ require(foreach)
 
 .discmods = function( dtab, prefix, folder,
    discfmlas = discfmlas_in ) {
-  require(biglm)
-  require(ROCR)
   require(foreach)
   curwd = getwd()
   if (!file.exists(folder)) dir.create(folder)
@@ -128,7 +126,7 @@ NULL
 #
 # execute the appraisal
 #
-   stopifnot( validate.dt(dtab) )
+   stopifnot( .valdt(dtab) )
 
    if (discretize) {
     assign(obn1 <- paste0(prefix, "_dt"), .discretize_dt(dtab, txlist))

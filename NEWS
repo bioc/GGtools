@@ -1,5 +1,7 @@
 CHANGES IN VERSION 4.11
 ----------------------
+    o  appraise and calfig are provided to foster evaluation of
+       eQTL-based GWAS hit predictions
     o  cisAssoc has been added to obtain assay data from SummarizedExperiment
        and variants from VCF
     o  CisConfig instances keepMapCache now defaults to TRUE
