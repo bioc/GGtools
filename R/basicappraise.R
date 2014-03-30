@@ -144,7 +144,7 @@ NULL
     }
    else discBySnp = dtab
    
-   .discmods( discBySnp, prefix=prefix, folder=folder )
+   .discmods( discBySnp, prefix=prefix, folder=folder, cutts=cutts )
 }
 
 calfig = function( colist = MOREAPPR_coeflist, tabs = MOREAPPR_tabs,
