@@ -22,7 +22,9 @@ appraise = function(dtab, discretize=TRUE,
     caddcats = function(x){
      cut(x$PHRED, c(-.01, 0, 1, 2, 4, 6, 8, 10,seq(20, 35, 5), 60))
     }
-    )) {  # finish list and function arg paren
+    ),
+    cutts = c(-0.01,seq(0.015,.12,.015),.15)
+   ) {  # finish list and function arg paren
 
 require(foreach)
 
@@ -36,7 +38,7 @@ require(foreach)
    for (i in 1:length(newvar))
      dtab[[newvar[i]]] = newfacs[[i]]
    dtab
-   }
+   }  # end .discretize_dt
 
 .redu.fdr = function(dtab) {
  setkey(dtab,snp,score)  # now sorted
@@ -51,10 +53,10 @@ require(foreach)
    })
  rdtab$fdr = pifdr(sco, unlist(perms))
  rdtab
-}
+}  # end .redu.fdr
 
 .discmods = function( dtab, prefix, folder,
-   discfmlas = discfmlas_in ) {
+   discfmlas = discfmlas_in, cutts) {
   require(foreach)
   curwd = getwd()
   if (!file.exists(folder)) dir.create(folder)
@@ -99,7 +101,6 @@ for (i in 1:length(discfmlas)) {
  cat(i)
  mm = model.matrix( discfmlas[[i]], data=test )
  test[[ pns[i] ]] <-  curp <- plogis(mm %*% outs[[i]][[1]])
- cutts = c(-0.01,seq(0.015,.12,.015),.15)
  coeflist[[ pns[i] ]] = summary(biglm( isgwashit ~ cut(curp,cutts)-1, data=test ))$mat
  tabs[[ pns[i] ]] = table(cut(curp,cutts))
  }
@@ -113,7 +114,7 @@ tabobn = paste0(prefix, "_tabs")
 assign(tabobn, tabs)
 save(list=tabobn, file=paste0(tabobn, ".rda"))
 NULL
-}
+}  # end .discmods
 
 .standardNames = c("seqnames", "start", "end", "width", "strand", "snp", 
  "snplocs", 

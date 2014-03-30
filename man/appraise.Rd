@@ -28,7 +28,7 @@ appraise(dtab,
     }, 
     caddcats = function(x) {
          cut(x$PHRED, c(-0.01, 0, 1, 2, 4, 6, 8, 10, seq(20, 35, 5), 60))
-    }))
+    }), cutts=c(-0.01,seq(0.015,.12,.015),.15))
 
 calfig(colist = MOREAPPR_coeflist, tabs = MOREAPPR_tabs, ind = 10, 
     hfudgetxt = 0.0155) 
@@ -74,6 +74,7 @@ of predicted probabilities}
   \item{ind}{index or name of model to be plotted}
   \item{hfudgetxt}{distance to move rendered fractions relative
 to bin x coordinate}
+  \item{cutts}{numeric vector of thresholds for tabulation and discrete calibration}
 }
 \details{
 The appraise function wraps many tasks used to appraise eQTL
