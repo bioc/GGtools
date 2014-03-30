@@ -28,8 +28,7 @@ appraise(dtab,
     }, 
     caddcats = function(x) {
          cut(x$PHRED, c(-0.01, 0, 1, 2, 4, 6, 8, 10, seq(20, 35, 5), 60))
-    }), 
-  validate.dt = .valdt)
+    }))
 
 calfig(colist = MOREAPPR_coeflist, tabs = MOREAPPR_tabs, ind = 10, 
     hfudgetxt = 0.0155) 
