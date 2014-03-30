@@ -111,4 +111,6 @@ export(update_fdr_filt, filtgen.maf.dist, eqsens_dt, "genome<-",
 importFrom(iterators, nextElem, idiv)
 
 importFrom(ROCR, prediction, performance)
-importFrom(biglm, biglm, bigglm)
+importFrom(biglm, biglm, bigglm, bigglm.function,
+  bigglm.data.frame, bigglm.RODBC)
+
