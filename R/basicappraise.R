@@ -5,6 +5,12 @@
   allfac=isgwashit~distcats+mafcats+chromcat878+caddcats+fdrcats
 )
 
+.standardNames = c("seqnames", "start", "end", "width", "strand", "snp", 
+ "snplocs", 
+"score", "ests", "se", "fdr", "probeid", "MAF", "dist.mid", "mindist", 
+"genestart", "geneend", "isgwashit", "chromcat878", "permScore_1", 
+"permScore_2", "permScore_3", "PHRED")
+
 appraise = function(dtab, discretize=TRUE, 
    reduceToSNP=TRUE, prefix, folder=paste0(prefix, "_APPROUT"), 
    discfmlas_in=GGtools:::.discfmlas.demo, txlist = list(
@@ -23,7 +29,8 @@ appraise = function(dtab, discretize=TRUE,
      cut(x$PHRED, c(-.01, 0, 1, 2, 4, 6, 8, 10,seq(20, 35, 5), 60))
     }
     ),
-    cutts = c(-0.01,seq(0.015,.12,.015),.15)
+    cutts = c(-0.01,seq(0.015,.12,.015),.15), 
+    names2check=GGtools:::.standardNames
    ) {  # finish list and function arg paren
 
 require(foreach)
@@ -116,18 +123,17 @@ save(list=tabobn, file=paste0(tabobn, ".rda"))
 NULL
 }  # end .discmods
 
-.standardNames = c("seqnames", "start", "end", "width", "strand", "snp", 
- "snplocs", 
-"score", "ests", "se", "fdr", "probeid", "MAF", "dist.mid", "mindist", 
-"genestart", "geneend", "isgwashit", "chromcat878", "permScore_1", 
-"permScore_2", "permScore_3", "PHRED")
 
-.valdt = function(x) all(.standardNames %in% names(x))
+.valdt = function(x) all(names2check %in% names(x))
 
 #
-# execute the appraisal
+# end "subroutines"
 #
-   stopifnot( .valdt(dtab) )
+
+#
+# execute the appraisal, if wanted
+#
+   if (!is.null(names2check)) stopifnot( .valdt(dtab) )
 
    if (discretize) {
     assign(obn1 <- paste0(prefix, "_dt"), .discretize_dt(dtab, txlist))
@@ -147,7 +153,7 @@ NULL
    .discmods( discBySnp, prefix=prefix, folder=folder, cutts=cutts )
 }
 
-calfig = function( colist = MOREAPPR_coeflist, tabs = MOREAPPR_tabs,
+calfig.old = function( colist = MOREAPPR_coeflist, tabs = MOREAPPR_tabs,
    ind = 10, hfudgetxt=.0155 ) {
  midcuts = c(0.0075, 0.0225, 0.0375, 0.0525,
     0.0675, 0.0825, 0.0975, 0.1125, 0.135)
@@ -162,3 +168,51 @@ calfig = function( colist = MOREAPPR_coeflist, tabs = MOREAPPR_tabs,
  abline(0,1,lty=2,col="gray")
 }
 
+calfig = function (colist, tabs, ind = 10, 
+    hfudgetxt = 0.0155, tickend=.16, tickgap=.02, ylimin=c(-.01, .16),
+    xlimin = c(-.01, .16), fraccex=.8, fuselast=0) 
+{
+#
+# subroutine that assumes a 'cut' is used in the
+# calibration assessment, it pulls out numeric boundaries
+# of cut intervals
+#
+    getmidpts = function(coefrn) {
+        lima = gsub(".*\\(", "", coefrn)
+        limb = gsub("]", "", lima)
+        limc = strsplit(limb, ",")
+        limd = sapply(limc, as.numeric)
+        apply(limd, 2, mean)
+    }
+#
+# end subroutine
+#
+    midcuts = getmidpts(rownames(colist[[ind]]))
+    plot(0, 0, ylim = ylimin, xlim = xlimin,
+        pch = " ", xlab = "predicted", ylab = "empirical", axes = FALSE)
+    axis(1, at = seq(0, tickend, tickgap))
+    axis(2, at = seq(0, tickend, tickgap))
+    fracs = paste(nums <- round(tabs[[ind]] * colist[[ind]][, 1]), tabs[[ind]], 
+        sep = "/")
+    if (fuselast == 0) {
+    points(midcuts, colist[[ind]][, 1])
+    text(midcuts + hfudgetxt, colist[[ind]][, 1], labels = fracs, 
+        cex = fraccex)
+    }
+    else {
+         l.m = length(midcuts)
+         idrop = (l.m-fuselast+1):l.m
+         midcuts = c(midcuts[-idrop], mean(midcuts[idrop]))
+         ndrp = tabs[[ind]][idrop]
+         cdrp = colist[[ind]][idrop,1]
+         hdrp = cdrp*ndrp
+         newfrac = sum(hdrp)/sum(ndrp)
+         newfracc = paste(round(sum(hdrp),0), sum(ndrp), sep="/")
+         fracs = c(fracs[-idrop], newfracc)
+         newco = colist[[ind]][-idrop,1]
+         newco = c(newco, newfrac)
+         points(midcuts, newco)
+         text(midcuts+hfudgetxt, newco, labels=fracs, cex=fraccex)
+         }
+    abline(0, 1, lty = 2, col = "gray")
+}

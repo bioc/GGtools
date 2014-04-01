@@ -1,6 +1,5 @@
 \name{appraise}
 \alias{appraise}
-\alias{calfig}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 appraisal for eQTL prediction models
@@ -28,11 +27,8 @@ appraise(dtab,
     }, 
     caddcats = function(x) {
          cut(x$PHRED, c(-0.01, 0, 1, 2, 4, 6, 8, 10, seq(20, 35, 5), 60))
-    }), cutts=c(-0.01,seq(0.015,.12,.015),.15))
-
-calfig(colist = MOREAPPR_coeflist, tabs = MOREAPPR_tabs, ind = 10, 
-    hfudgetxt = 0.0155) 
-
+    }), cutts=c(-0.01,seq(0.015,.12,.015),.15), names2check=
+    GGtools:::.standardNames)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -65,16 +61,10 @@ named list of model formulae
 named list of functions that are used to
 bin certain quantitative features of SNP
 }
-  \item{colist}{\code{appraise} output object loaded
-from *coeflist.rda, a list of \code{summary(biglm.obj)$mat} for
-different models}
-  \item{tabs}{\code{appraise} output object loaded
-from *tabs.rda, a list of tables counting SNPs in bins
-of predicted probabilities}
-  \item{ind}{index or name of model to be plotted}
-  \item{hfudgetxt}{distance to move rendered fractions relative
-to bin x coordinate}
   \item{cutts}{numeric vector of thresholds for tabulation and discrete calibration}
+  \item{names2check}{if NULL, ignored; if a character vector, function
+will fail unless \code{all(names2check \%in\% names(dtab)}
+ }
 }
 \details{
 The appraise function wraps many tasks used to appraise eQTL
