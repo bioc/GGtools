@@ -215,6 +215,7 @@ add878 = function(ans) {
   fo = findOverlaps(eqr, hmm878)
   chromcat878 = factor(rep("none", length(ans)), levels=c(unique(hmm878$name), "none"))
   chromcat878[ queryHits(fo) ] = factor(hmm878$name[subjectHits(fo)])
+  chromcat878 = relevel(chromcat878, "12_Repressed")
   ans$chromcat878 = chromcat878
   ans
 }
