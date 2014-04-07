@@ -30,7 +30,7 @@ appraise = function(dtab, discretize=TRUE,
     }
     ),
     cutts = c(-0.01,seq(0.015,.12,.015),.15), 
-    names2check=GGtools:::.standardNames
+    names2check=GGtools:::.standardNames, maxit=30
    ) {  # finish list and function arg paren
 
 require(foreach)
@@ -63,7 +63,7 @@ require(foreach)
 }  # end .redu.fdr
 
 .discmods = function( dtab, prefix, folder,
-   discfmlas = discfmlas_in, cutts) {
+   discfmlas = discfmlas_in, cutts, inmaxit=30) {
   require(foreach)
   curwd = getwd()
   if (!file.exists(folder)) dir.create(folder)
@@ -82,12 +82,12 @@ require(foreach)
   test$fdrlt005 = 1*(test$fdr < 0.005)
 
   outs = foreach(i=1:length(discfmlas)) %dopar% {
-     tmp = bigglm( discfmlas[[i]], data=train, fam=binomial(), chunksize=50000, maxit=15 )
+     tmp = bigglm( discfmlas[[i]], data=train, fam=binomial(), chunksize=50000, maxit=inmaxit )
      tpreds = predict(tmp, newdata=test, type="response" )
      rocpreds = try(prediction( tpreds, labels=test$isgwashit ))
      AUC = NA
      if (!inherits(rocpreds, "try-error")) AUC = performance(rocpreds, "auc")
-     list(coefs=coef(tmp), auc=AUC)
+     list(coefs=coef(tmp), auc=AUC, mat=summary(tmp)$mat)
   }
   names(outs) = names(discfmlas)
   dfobn = paste0(prefix, "_discfmlas")
@@ -150,7 +150,8 @@ NULL
     }
    else discBySnp = dtab
    
-   .discmods( discBySnp, prefix=prefix, folder=folder, cutts=cutts )
+   .discmods( discBySnp, prefix=prefix, folder=folder, cutts=cutts,
+     inmaxit=maxit )
 }
 
 calfig.old = function( colist = MOREAPPR_coeflist, tabs = MOREAPPR_tabs,
