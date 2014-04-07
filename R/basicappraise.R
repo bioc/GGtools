@@ -15,18 +15,18 @@ appraise = function(dtab, discretize=TRUE,
    reduceToSNP=TRUE, prefix, folder=paste0(prefix, "_APPROUT"), 
    discfmlas_in=GGtools:::.discfmlas.demo, txlist = list(
     distcats = function(x) {
-     cut(x$mindist, c(-1, seq(0, 200001, 10000)))
+     cut(x$mindist, c(-1, seq(0, 200001, 50000)))
      },
     fdrcats = function(x) {
-     fdrfac = cut(x$fdr, c(seq(-.01,.25, .05), .3, .4, .5, 1.01))
+     fdrfac = cut(x$fdr, c(-.01, .05, .1, .25, .5, 1.01))
      relevel(fdrfac, "(0.5,1.01]")
      },
     mafcats = function(x) {
-     maffac = cut(x$MAF,c(-0.01,.05, .1, .15, .2, .25, .3, .35, .4,  .51))
+     maffac = cut(x$MAF,c(-0.01,.05, .1, .25, .51))
      relevel(maffac, "(-0.01,0.05]")
      },
     caddcats = function(x){
-     cut(x$PHRED, c(-.01, 0, 1, 2, 4, 6, 8, 10,seq(20, 35, 5), 60))
+     cut(x$PHRED, c(-.01, 5, seq(10, 30, 10 ), 60))
     }
     ),
     cutts = c(-0.01,seq(0.015,.12,.015),.15), 
