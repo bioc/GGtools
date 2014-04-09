@@ -14,21 +14,24 @@ appraise(dtab,
   prefix, 
   folder = paste0(prefix, "_APPROUT"), 
   discfmlas_in = GGtools:::.discfmlas.demo, 
-  txlist = list(
-    distcats = function(x) { cut(x$mindist, c(-1, seq(0, 200001, 10000))) }, 
+txlist = list(
+    distcats = function(x) {
+     cut(x$mindist, c(-1, seq(0, 200001, 50000)))
+     },
     fdrcats = function(x) {
-       fdrfac = cut(x$fdr, c(seq(-0.01, 0.25, 0.05), 0.3, 0.4, 0.5, 1.01))
-       relevel(fdrfac, "(0.5,1.01]")
-    }, 
+     fdrfac = cut(x$fdr, c(-.01, .05, .1, .25, .5, 1.01))
+     relevel(fdrfac, "(0.5,1.01]")
+     },
     mafcats = function(x) {
-       maffac = cut(x$MAF, c(-0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 
-       0.4, 0.51)) 
-       relevel(maffac, "(-0.01,0.05]")
-    }, 
-    caddcats = function(x) {
-         cut(x$PHRED, c(-0.01, 0, 1, 2, 4, 6, 8, 10, seq(20, 35, 5), 60))
-    }), cutts=c(-0.01,seq(0.015,.12,.015),.15), names2check=
-    GGtools:::.standardNames)
+     maffac = cut(x$MAF,c(-0.01,.05, .1, .25, .51))
+     relevel(maffac, "(-0.01,0.05]")
+     },
+    caddcats = function(x){
+     cut(x$PHRED, c(-.01, 5, seq(10, 30, 10 ), 60))
+    }
+    ),
+    cutts = c(-0.01,seq(0.015,.12,.015),.15), 
+    names2check= GGtools:::.standardNames, maxit=30)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -65,6 +68,8 @@ bin certain quantitative features of SNP
   \item{names2check}{if NULL, ignored; if a character vector, function
 will fail unless \code{all(names2check \%in\% names(dtab)}
  }
+  \item{maxit}{numeric passed to bigglm as control parameter for maximum
+number of iterations to use in modeling gwas hit probabilities}
 }
 \details{
 The appraise function wraps many tasks used to appraise eQTL
