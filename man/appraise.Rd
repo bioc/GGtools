@@ -1,5 +1,6 @@
 \name{appraise}
 \alias{appraise}
+\alias{bindgwava}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 appraisal for eQTL prediction models
@@ -32,6 +33,7 @@ txlist = list(
     ),
     cutts = c(-0.01,seq(0.015,.12,.015),.15), 
     names2check= GGtools:::.standardNames, maxit=30)
+ bindgwava( gwavadt, eqdt )
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -70,6 +72,9 @@ will fail unless \code{all(names2check \%in\% names(dtab)}
  }
   \item{maxit}{numeric passed to bigglm as control parameter for maximum
 number of iterations to use in modeling gwas hit probabilities}
+  \item{gwavadt}{data.table including the GWAVA pathogenicity scores
+ with columns 'tss', 'unmatched', 'region'}
+  \item{eqdt}{data.table from a cisRun output}
 }
 \details{
 The appraise function wraps many tasks used to appraise eQTL
@@ -83,6 +88,9 @@ the coefficients of predictive models built on training set
 (SNPs on odd chromosomes), coefficients of linear regressions
 of binary test outcomes for calibrating the model on test data,
 and ROC AUC measures.
+
+bindgwava uses simple data.table operations with match to
+add three columns to eqdt, gwava_tss, gwava_unmat, and gwava_regi
 }
 %\references{
 %% ~put references to the literature/web site here ~
