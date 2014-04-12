@@ -217,3 +217,36 @@ calfig = function (colist, tabs, ind = 10,
          }
     abline(0, 1, lty = 2, col = "gray")
 }
+
+dtToAppr = function(dt, prunevec, prefix, fmlas,
+   txlist) {
+ pruned = dt[ which(dt$snp %in% prunevec), ]
+ appraise( pruned, discretize=TRUE, reduceToSNP=TRUE, prefix=prefix,
+   discfmlas_in = fmlas, names2check=NULL, txlist=txlist )
+ appraise( dt, discretize=TRUE, reduceToSNP=TRUE, prefix=paste0(prefix, "_UNP"),
+   discfmlas_in = fmlas, names2check=NULL, txlist=txlist )
+}
+
+sensFromDT = function(dt,
+    targfdrs = c(.1, .05, .01), parmslist =
+    list(mafs=c(.025, .05, .075), dists=c(10000, 50000, 100000, 200000))) {
+  snpenum = eqsens_dt(dt,
+    by = "snps", targfdrs=targfdrs, parmslist=parmslist )
+  probenum = eqsens_dt(dt,
+    by = "probes", targfdrs=targfdrs, parmslist=parmslist )
+  list(snpenum=snpenum, probenum=probenum)
+}
+
+bindgwava = function(gwavadt, eqdt) {
+ meq = match(eqdt$snp, gwavadt$snp)
+ eqdt$gwava_tss = gwavadt$tss[meq]
+ eqdt$gwava_unmat = gwavadt$unmatched[meq]
+ eqdt$gwava_regi = gwavadt$region[meq]
+ eqdt
+} 
+
+addcadd = function(dt, binder=bindcadd) {
+ allb = foreach(x=1:22) %dopar% { binder(dt, x) }
+ do.call(rbind, allb)
+}
+
