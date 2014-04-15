@@ -70,16 +70,12 @@ require(foreach)
   setwd(folder)
   on.exit(setwd(curwd))
   intrain = 1*( dtab$seqnames %in% paste0("chr", seq(1,22,2)))
+  dtab$fdrlt10 = 1*(dtab$fdr < 0.10)
+  dtab$fdrlt05 = 1*(dtab$fdr < 0.05)
+  dtab$fdrlt01 = 1*(dtab$fdr < 0.01)
+  dtab$fdrlt005 = 1*(dtab$fdr < 0.005)
   train = dtab[which(intrain==1),]
-  train$fdrlt10 = 1*(train$fdr < 0.10)
-  train$fdrlt05 = 1*(train$fdr < 0.05)
-  train$fdrlt01 = 1*(train$fdr < 0.01)
-  train$fdrlt005 = 1*(train$fdr < 0.005)
   test = dtab[-which(intrain==1),]
-  test$fdrlt10 = 1*(test$fdr < 0.10)
-  test$fdrlt05 = 1*(test$fdr < 0.05)
-  test$fdrlt01 = 1*(test$fdr < 0.01)
-  test$fdrlt005 = 1*(test$fdr < 0.005)
 
   outs = foreach(i=1:length(discfmlas)) %dopar% {
      tmp = bigglm( discfmlas[[i]], data=train, fam=binomial(), chunksize=50000, maxit=inmaxit )
@@ -87,7 +83,9 @@ require(foreach)
      rocpreds = try(prediction( tpreds, labels=test$isgwashit ))
      AUC = NA
      if (!inherits(rocpreds, "try-error")) AUC = performance(rocpreds, "auc")
-     list(coefs=coef(tmp), auc=AUC, mat=summary(tmp)$mat)
+     infer = bigglm( discfmlas[[i]], data=dtab, fam=binomial(), chunksize=50000, maxit=inmaxit )
+     list(coefs=coef(tmp), auc=AUC, mat=summary(tmp)$mat, infcoefs=coef(infer),
+      infvcov=vcov(infer), infmat=summary(infer)$mat)
   }
   names(outs) = names(discfmlas)
   dfobn = paste0(prefix, "_discfmlas")
