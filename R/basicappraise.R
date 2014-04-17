@@ -90,10 +90,10 @@ require(foreach)
   names(outs) = names(discfmlas)
   dfobn = paste0(prefix, "_discfmlas")
   assign(dfobn, discfmlas)
-  save( list=dfobn, file=paste0(dfobn, ".rda"))
+  if (!is.null(prefix)) save( list=dfobn, file=paste0(dfobn, ".rda"))
   oobn = paste0(prefix, "_outs")
   assign(oobn, outs)
-  save( list=oobn, file=paste0(oobn, ".rda"))
+  if (!is.null(prefix)) save( list=oobn, file=paste0(oobn, ".rda"))
 
 ns = names(discfmlas)
 pns = paste0("p", ns)
@@ -111,13 +111,13 @@ for (i in 1:length(discfmlas)) {
  }
 tobn = paste0(prefix, "_test")
 assign(tobn, test)
-save(list=tobn, file=paste0(tobn, ".rda"))
+if (!is.null(prefix)) save(list=tobn, file=paste0(tobn, ".rda"))
 cobn = paste0(prefix, "_coeflist")
 assign(cobn, coeflist)
-save(list=cobn, file=paste0(cobn, ".rda"))
+if (!is.null(prefix)) save(list=cobn, file=paste0(cobn, ".rda"))
 tabobn = paste0(prefix, "_tabs")
 assign(tabobn, tabs)
-save(list=tabobn, file=paste0(tabobn, ".rda"))
+if (!is.null(prefix)) save(list=tabobn, file=paste0(tabobn, ".rda"))
 NULL
 }  # end .discmods
 
