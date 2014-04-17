@@ -8,6 +8,7 @@
 \alias{getSens,EqAppr-method}
 \alias{getUnpruned,EqAppr-method}
 \alias{show,EqAppr-method}
+\alias{show,ApprRes-method}
 
 \title{Class \code{"EqAppr"}}
 \description{
@@ -27,12 +28,43 @@ about source analysis }
 }
 \section{Methods}{
   \describe{
-    \item{calfig}{\code{signature(x = "EqAppr", ind = "character")}: ... }
-    \item{getModnames}{\code{signature(x = "EqAppr")}: ... }
-    \item{getPruned}{\code{signature(x = "EqAppr")}: ... }
-    \item{getSens}{\code{signature(x = "EqAppr")}: ... }
-    \item{getUnpruned}{\code{signature(x = "EqAppr")}: ... }
-    \item{show}{\code{signature(object = "EqAppr")}: ... }
+    \item{calfig}{\code{signature(x = "EqAppr", ind = "character")}: 
+      Additional arguments can be specified:
+       \describe{
+          \item{ind}{index or name of model to be plotted}
+          \item{hfudgetxt}{distance to move rendered fractions relative
+        to bin x coordinate}
+          \item{tickend}{
+        maximum value at which axis tick mark will be plotted
+        }
+          \item{tickgap}{
+        axis will have ticks at \code{seq(0, tickend, tickgap)}
+        }
+          \item{ylimin}{
+        ylim setting for rendering
+        }
+          \item{xlimin}{
+        xlim setting for rendering
+        }
+          \item{fraccex}{
+        cex setting for fraction rendering
+        }
+          \item{fuselast}{
+        if data are sparse in entries of high predicted probability,
+        you can fuse the nearby cells up to the end -- pick fuselast=2
+        for final 2 cells, 3 for final 3 and so on
+        }
+       }
+     }
+    \item{getModnames}{\code{signature(x = "EqAppr")}: obtain the list
+of strings used to name different appraisal models }
+    \item{getPruned}{\code{signature(x = "EqAppr")}: get the
+ApprRes instance corresponding to the LD-pruned loci }
+    \item{getUnpruned}{\code{signature(x = "EqAppr")}: get the
+ApprRes instance for all loci in use }
+    \item{getSens}{\code{signature(x = "EqAppr")}: get sensitivity
+analysis results }
+    \item{show}{\code{signature(object = "EqAppr")}: concise report }
 	 }
 }
 \references{

@@ -106,7 +106,7 @@ importFrom(hexbin, hexbin)
 importClassFrom(hexbin, hexbin)
 
 export(update_fdr_filt, filtgen.maf.dist, eqsens_dt, "genome<-",
-  buildConfList, add878, addgwhit, cisAssoc, sampsInVCF, appraise, calfig)
+  buildConfList, add878, addgwhit, cisAssoc, sampsInVCF, appraise)
 
 importFrom(iterators, nextElem, idiv)
 
@@ -114,6 +114,10 @@ importFrom(ROCR, prediction, performance)
 importFrom(biglm, biglm, bigglm, bigglm.function,
   bigglm.data.frame, bigglm.RODBC)
 
-# export(bindgwava)
-# export(dtToAppr, sensFromDT, bindgwava)
-# export addcadd
+# new appraisal workflow elements
+
+exportClass("EqAppr")
+exportMethods("getSens", "getPruned", "getUnpruned",
+   "getNrec", "getModnames", "calfig")
+export("buildEqAppr", "maxAtFDR", "optAUC")
+
