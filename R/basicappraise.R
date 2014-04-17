@@ -90,10 +90,10 @@ require(foreach)
   names(outs) = names(discfmlas)
   dfobn = paste0(prefix, "_discfmlas")
   assign(dfobn, discfmlas)
-  if (!is.null(prefix)) save( list=dfobn, file=paste0(dfobn, ".rda"))
+ # save( list=dfobn, file=paste0(dfobn, ".rda"))
   oobn = paste0(prefix, "_outs")
   assign(oobn, outs)
-  if (!is.null(prefix)) save( list=oobn, file=paste0(oobn, ".rda"))
+ # save( list=oobn, file=paste0(oobn, ".rda"))
 
 ns = names(discfmlas)
 pns = paste0("p", ns)
@@ -111,14 +111,14 @@ for (i in 1:length(discfmlas)) {
  }
 tobn = paste0(prefix, "_test")
 assign(tobn, test)
-if (!is.null(prefix)) save(list=tobn, file=paste0(tobn, ".rda"))
+#save(list=tobn, file=paste0(tobn, ".rda"))
 cobn = paste0(prefix, "_coeflist")
 assign(cobn, coeflist)
-if (!is.null(prefix)) save(list=cobn, file=paste0(cobn, ".rda"))
+#save(list=cobn, file=paste0(cobn, ".rda"))
 tabobn = paste0(prefix, "_tabs")
 assign(tabobn, tabs)
-if (!is.null(prefix)) save(list=tabobn, file=paste0(tabobn, ".rda"))
-NULL
+#save(list=tabobn, file=paste0(tabobn, ".rda"))
+list(coeflist=coeflist, tabs=tabs, outs=outs, dimdtab=dim(dtab), dimtest=dim(test), dimtrain=dim(train))
 }  # end .discmods
 
 
@@ -135,7 +135,7 @@ NULL
 
    if (discretize) {
     assign(obn1 <- paste0(prefix, "_dt"), .discretize_dt(dtab, txlist))
-    save(list=obn1, file=paste0(obn1, ".rda"))
+#    save(list=obn1, file=paste0(obn1, ".rda"))
     disctab = get(obn1)
     }
    else disctab = dtab
@@ -143,7 +143,7 @@ NULL
    if (reduceToSNP) {
     obn2 = paste0(prefix, "bySNP_dt")
     assign(obn2, .redu.fdr(disctab))
-    save(list=obn2, file=paste0(obn2, ".rda"))
+#    save(list=obn2, file=paste0(obn2, ".rda"))
     discBySnp = get(obn2)
     }
    else discBySnp = dtab
@@ -235,13 +235,13 @@ sensFromDT = function(dt,
   list(snpenum=snpenum, probenum=probenum)
 }
 
-bindgwava = function(gwavadt, eqdt) {
- meq = match(eqdt$snp, gwavadt$snp)
- eqdt$gwava_tss = gwavadt$tss[meq]
- eqdt$gwava_unmat = gwavadt$unmatched[meq]
- eqdt$gwava_regi = gwavadt$region[meq]
- eqdt
-} 
+#bindgwava = function(gwavadt, eqdt) {
+# meq = match(eqdt$snp, gwavadt$snp)
+# eqdt$gwava_tss = gwavadt$tss[meq]
+# eqdt$gwava_unmat = gwavadt$unmatched[meq]
+# eqdt$gwava_regi = gwavadt$region[meq]
+# eqdt
+#} 
 
 addcadd = function(dt, binder=bindcadd) {
  allb = foreach(x=1:22) %dopar% { binder(dt, x) }
