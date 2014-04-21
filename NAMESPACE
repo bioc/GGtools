@@ -26,6 +26,7 @@ importFrom(Gviz, DataTrack, plotTracks, GeneRegionTrack, GenomeAxisTrack)
 importFrom(AnnotationDbi, get, mget, revmap, mappedkeys)
 
 importFrom(S4Vectors, metadata)
+importClassFrom(S4Vectors, Annotated)
 
 importMethodsFrom(IRanges, aggregate)
 
@@ -53,8 +54,7 @@ importClassFrom(Rsamtools, TabixFile)
 importFrom(VariantAnnotation, scanVcfHeader)
 importFrom(rtracklayer, import.gff3)
 
-importClassFrom(IRanges, RangedData, DataTable, List, Vector, Annotated, 
-	DataTableORNULL)
+importClassFrom(IRanges, RangedData, DataTable, List, Vector, DataTableORNULL)
 
 exportMethods("gwSnpTests", "show", "topFeats", "plot", transTab)
 
