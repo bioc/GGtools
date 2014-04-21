@@ -1,6 +1,6 @@
 Package: GGtools
 Title: software and data for analyses in genetics of gene expression
-Version: 5.1.6
+Version: 5.1.7
 Author: VJ Carey <stvjc@channing.harvard.edu>
 Description: software and data for analyses in genetics of gene expression
 	and/or DNA methylation
@@ -9,8 +9,9 @@ Suggests: GGdata, illuminaHumanv1.db, SNPlocs.Hsapiens.dbSNP.20120608,
 Depends: R (>= 2.14), GGBase (>= 3.19.7), 
 	data.table
 Imports: methods, utils, stats, BiocGenerics, snpStats, ff, Rsamtools,
-	AnnotationDbi, Biobase, bit, VariantAnnotation, hexbin, rtracklayer, Gviz,
-	stats4, IRanges, GenomicRanges, iterators, Biostrings, ROCR, biglm
+	AnnotationDbi, Biobase, bit, VariantAnnotation, hexbin, rtracklayer,
+	Gviz, stats4, S4Vectors, IRanges, GenomicRanges, iterators, Biostrings,
+	ROCR, biglm
 Enhances: MatrixEQTL, Homo.sapiens, foreach, doParallel, gwascat,
 	ggplot2, reshape2
 Maintainer: VJ Carey <stvjc@channing.harvard.edu>
