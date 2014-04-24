@@ -248,3 +248,71 @@ addcadd = function(dt, binder=bindcadd) {
  do.call(rbind, allb)
 }
 
+
+
+
+waldtests = function(ob, modname="basehmmall", type="pruned",
+   mlog10p=TRUE) {
+ require(aod)
+ if (type=="pruned") sel = getPruned(ob)
+ else sel = getUnpruned(ob)
+ modstr = sel@outs[[modname]]
+ infco = modstr$infcoefs
+# tags = unique(gsub(".*)\\(", "\\1", names(infco))[-1]) # drop intercept
+ tags = unique(gsub("(.*)(878.*)|(\\(.*)", "\\1", names(infco)[-1])) # drop int
+ termvecs = lapply(tags, function(x) grep(x, names(infco)))
+ wt = lapply(termvecs, function(x) wald.test(modstr$infvcov, infco, Terms=x))
+ ans = t(sapply(sapply(wt, function(x) x$result), force))
+ rownames(ans) = tags
+ if (mlog10p) {
+    ans[,"P"] = -log10(ans[,"P"])
+    if (!all(isf <- is.finite(ans[,"P"]))) {
+          ans[ -which(isf), "P" ] = 16
+          colnames(ans)[which(colnames(ans)=="P")] = "-log10P"
+          }
+    }
+ ans
+}
+
+procnames = function(covec, dropint=TRUE, dropper=function(x) {
+   if (any(x=="none")) which(x=="none") else NA },
+   premap = c("distcats"="DIST(bp)", 
+        "mafcats"="MAF", "chrom878cat"="CHROMHMM", "caddcats"="CADD", 
+        "fdrcats"="eQTL FDR", "gwavucat"="GWAVA(u)"),
+   tags = "mafcats|distcats|chromcat878|caddcats|fdrcats|gwavucat") {
+    if (dropint) covec=covec[-1]
+    na = names(covec)
+    NC = length(covec)
+#
+# most of the model coefficients have names with cut()-generated mangling
+# we want whatever precedes the (
+#
+    prena = gsub("\\(.*", "", na)
+#
+# chromcat878 needs different handling
+#
+    chkchromcat = grep("chromcat", na)
+    if (length(chkchromcat) > 0) 
+        prena[chkchromcat] = "chrom878cat"
+    nrle = rle(prena)$lengths
+    nrle = cumsum(c(1, nrle[-length(nrle)]))
+#
+    cats = gsub(tags, "", na)
+    bcats = rep(NA, length(cats))
+    bcats[nrle] = premap[unique(prena)]
+    dr = dropper(cats)
+    if (!is.na(dr)) { 
+       bcats=bcats[-dr]
+       cats=cats[-dr]
+       }
+    cbind(bcats,cats)
+}
+
+fplot = function(obj, mname, dropper = 
+    function(x) { if (length(dr <- grep("none$", x))>0) dr else NA }, ...) {
+   ltext = procnames(co <- obj@outs[[mname]]$infcoef, dropper=dropper)
+   mat = obj@outs[[mname]]$infmat[-1,]
+   if (!is.na(dr <- dropper(names(co)[-1])))
+     mat = mat[-dr,]
+   forestplot( ltext, mat[,1], mat[,2], mat[,3], ...)
+}
