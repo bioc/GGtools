@@ -142,7 +142,7 @@ optAUC = function( ea, type="pruned" ) {
     fracs = paste(nums <- round(tabs[[ind]] * colist[[ind]][, 
         1]), tabs[[ind]], sep = "/")
     if (fuselast == 0) {
-        points(midcuts, colist[[ind]][, 1], col=ifelse(add, "black", "red"))
+        points(midcuts, colist[[ind]][, 1], col=ifelse(add, "red", "black"))
         if (!add) text(midcuts + hfudgetxt, colist[[ind]][, 1], labels = fracs, 
             cex = fraccex)
     }
