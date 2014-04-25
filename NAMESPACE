@@ -54,7 +54,8 @@ importClassFrom(Rsamtools, TabixFile)
 importFrom(VariantAnnotation, scanVcfHeader)
 importFrom(rtracklayer, import.gff3)
 
-importClassFrom(IRanges, RangedData, DataTable, List, Vector, DataTableORNULL)
+importClassFrom(IRanges, RangedData, List, Vector, DataTableORNULL)
+importClassFrom(S4Vectors, DataTable)
 
 exportMethods("gwSnpTests", "show", "topFeats", "plot", transTab)
 
