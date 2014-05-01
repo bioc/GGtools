@@ -26,13 +26,14 @@ importFrom(Gviz, DataTrack, plotTracks, GeneRegionTrack, GenomeAxisTrack)
 importFrom(AnnotationDbi, get, mget, revmap, mappedkeys)
 
 importFrom(S4Vectors, metadata)
-importClassFrom(S4Vectors, Annotated)
+importClassFrom(S4Vectors, DataTable, Annotated, DataTableORNULL, Vector)
+importMethodsFrom(S4Vectors, elementMetadata, "elementMetadata<-")
 
 importMethodsFrom(IRanges, aggregate)
 
 importFrom(IRanges, RangedData, IRanges)
 
-importMethodsFrom(IRanges, elementMetadata, as.matrix, findOverlaps, "elementMetadata<-",
+importMethodsFrom(IRanges, as.matrix, findOverlaps,
 	as.data.frame, values, start, ranges)
 
 importFrom(Biobase, featureNames, annotation, pData, rowMin,
@@ -54,8 +55,7 @@ importClassFrom(Rsamtools, TabixFile)
 importFrom(VariantAnnotation, scanVcfHeader)
 importFrom(rtracklayer, import.gff3)
 
-importClassFrom(IRanges, RangedData, List, Vector, DataTableORNULL)
-importClassFrom(S4Vectors, DataTable)
+importClassFrom(IRanges, RangedData, List)
 
 exportMethods("gwSnpTests", "show", "topFeats", "plot", transTab)
 
