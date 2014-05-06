@@ -39,16 +39,16 @@ importMethodsFrom(IRanges, as.matrix, findOverlaps,
 importFrom(Biobase, featureNames, annotation, pData, rowMin,
     selectSome, samples)
 
-importClassFrom(GenomicRanges, GenomicRanges, GenomicRangesORmissing)
-importMethodsFrom(GenomicRanges, seqnames, genome, c, "genome<-")
-importFrom(GenomicRanges, GRanges, Seqinfo, genome, "genome<-", GRangesList)
+import(GenomeInfoDb)
+
+importClassFrom(GenomicRanges, GRanges, GenomicRanges, GenomicRangesORmissing)
+importMethodsFrom(GenomicRanges, c)
+importFrom(GenomicRanges, GRanges, GRangesList)
 
 importFrom(Rsamtools, TabixFile, path)
 export(TabixFile)
 
 importMethodsFrom(Rsamtools, scanTabix)
-
-importClassFrom(GenomicRanges, GRanges, Seqinfo)
 
 importClassFrom(Rsamtools, TabixFile)
 
