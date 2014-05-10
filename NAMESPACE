@@ -123,5 +123,5 @@ importFrom(biglm, biglm, bigglm, bigglm.function,
 exportClass("EqAppr")
 exportMethods("getSens", "getPruned", "getUnpruned",
    "getNrec", "getModnames", "calfig")
-export("buildEqAppr", "maxAtFDR", "optAUC")
+export("buildEqAppr", "maxAtFDR", "optAUC", "getAUCs")
 

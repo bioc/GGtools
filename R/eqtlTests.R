@@ -54,7 +54,7 @@ eqtlTests = function(smlSet, rhs=~1-1,
    geneApply=lapply, 
    shortfac = 100, checkValid=TRUE, 
    useUncertain=TRUE, 
-   glmfamily="gaussian") {
+   glmfamily="gaussian", doFFSUMM=FALSE) {
 # record call and session information
  theCall = match.call()
  sess = sessionInfo()
@@ -78,14 +78,17 @@ eqtlTests = function(smlSet, rhs=~1-1,
 #
 # start genotype summarization -- once used geneApply but this 
 # operation may be fast enough in general to avoid this complication
+#  2014 May -- this does not need to be out-of-memory unless specifically requested
 #
- summfflist = list()
+ summfflist = list(x=NULL)
+ if (doFFSUMM) {
   # get MAF and minGTF for all SNP
  sumfn = paste(fnhead, chrNames, "_summ.ff", sep="")
  summfflist = 
      lapply( 1:length(chrNames), 
          function(i) ffSnpSummary(smList(smlSet)[[i]], sumfn[i], 
          fac=shortfac)) 
+ }
 #
 #
 #

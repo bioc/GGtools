@@ -30,7 +30,7 @@ appraise = function(dtab, discretize=TRUE,
     }
     ),
     cutts = c(-0.01,seq(0.015,.12,.015),.15), 
-    names2check=GGtools:::.standardNames, maxit=30
+    names2check=GGtools:::.standardNames, maxit=30, savePinfer=FALSE
    ) {  # finish list and function arg paren
 
 require(foreach)
@@ -84,8 +84,11 @@ require(foreach)
      AUC = NA
      if (!inherits(rocpreds, "try-error")) AUC = performance(rocpreds, "auc")
      infer = bigglm( discfmlas[[i]], data=dtab, fam=binomial(), chunksize=50000, maxit=inmaxit )
-     list(coefs=coef(tmp), auc=AUC, mat=summary(tmp)$mat, infcoefs=coef(infer),
-      infvcov=vcov(infer), infmat=summary(infer)$mat)
+     pinfer = NULL
+     if (savePinfer) pinfer = predict(infer, newdata=dtab, type="response")
+     ans = list(coefs=coef(tmp), auc=AUC, mat=summary(tmp)$mat, infcoefs=coef(infer),
+      infvcov=vcov(infer), infmat=summary(infer)$mat, pinfer=pinfer)
+    
   }
   names(outs) = names(discfmlas)
   dfobn = paste0(prefix, "_discfmlas")
@@ -98,7 +101,6 @@ require(foreach)
 ns = names(discfmlas)
 pns = paste0("p", ns)
 
-mbase = model.matrix( discfmlas$base, data=test )
 test$fdrlt10 = 1*(test$fdr < .10)
 
 tabs = coeflist = list()
