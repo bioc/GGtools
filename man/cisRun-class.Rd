@@ -14,7 +14,10 @@ Objects can be created by calls of the form \code{new("cisRun", ...)}.
 \section{Slots}{
   \describe{
     \item{\code{seqnames}:}{Object of class \code{"Rle"} ~~ }
-    \item{\code{ranges}:}{Object of class \code{"IRanges"} ~~ }
+    \item{\code{ranges}:}{Object of class \code{"IRanges"} -- will
+document the range searched for each probe/gene -- therefore
+the values returned are addresses of gene extent minus/plus
+radius at each end }
     \item{\code{strand}:}{Object of class \code{"Rle"} ~~ }
     \item{\code{elementMetadata}:}{Object of class \code{"DataFrame"} ~~ }
     \item{\code{seqinfo}:}{Object of class \code{"Seqinfo"} ~~ }
