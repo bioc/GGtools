@@ -31,7 +31,7 @@ importMethodsFrom(IRanges, aggregate)
 importFrom(IRanges, RangedData, IRanges)
 
 importMethodsFrom(IRanges, as.matrix, findOverlaps,
-	as.data.frame, values, start, ranges)
+	as.data.frame, values, start, ranges, end)
 
 importFrom(Biobase, featureNames, annotation, pData, rowMin,
     selectSome, samples)
