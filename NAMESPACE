@@ -2,6 +2,7 @@ import(methods)
 import(utils)
 import(GGBase)
 import(data.table)
+import(S4Vectors)
 
 importMethodsFrom(Biostrings, nchar)
 importFrom(Biostrings, nchar)
@@ -24,11 +25,6 @@ importFrom(bit, chunk)
 importFrom(Gviz, DataTrack, plotTracks, GeneRegionTrack, GenomeAxisTrack)
 
 importFrom(AnnotationDbi, get, mget, revmap, mappedkeys)
-
-importFrom(S4Vectors, metadata)
-
-importClassFrom(S4Vectors, DataTable, Annotated, DataTableORNULL, Vector)
-importMethodsFrom(S4Vectors, elementMetadata, "elementMetadata<-")
 
 importMethodsFrom(IRanges, aggregate)
 
@@ -56,7 +52,7 @@ importClassFrom(Rsamtools, TabixFile)
 importFrom(VariantAnnotation, scanVcfHeader)
 importFrom(rtracklayer, import.gff3)
 
-importClassFrom(IRanges, RangedData, List)
+importClassFrom(IRanges, RangedData)
 
 exportMethods("gwSnpTests", "show", "topFeats", "plot", transTab)
 
