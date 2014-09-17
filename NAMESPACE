@@ -4,6 +4,11 @@ import(GGBase)
 import(data.table)
 import(S4Vectors)
 
+importFrom(reshape2, melt)
+importFrom(ggplot2, ggplot, geom_point, aes,
+   facet_grid, theme, element_text, labs)
+importFrom(VariantAnnotation, ScanVcfParam, readVcf,
+  genotypeToSnpMatrix, ref, alt)
 importMethodsFrom(Biostrings, nchar)
 importFrom(Biostrings, nchar)
 importFrom(Rsamtools, "headerTabix", "isOpen", "close.TabixFile", "open.TabixFile")
@@ -117,7 +122,8 @@ importFrom(biglm, biglm, bigglm, bigglm.function,
 # new appraisal workflow elements
 
 exportClass("EqAppr")
-exportMethods("getSens", "getPruned", "getUnpruned",
-   "getNrec", "getModnames", "calfig")
-export("buildEqAppr", "maxAtFDR", "optAUC", "getAUCs")
+exportMethods("calfig")
+#exportMethods("getSens", "getPruned", "getUnpruned",
+#   "getNrec", "getModnames", "calfig")
+#export("buildEqAppr", "maxAtFDR", "optAUC", "getAUCs")
 

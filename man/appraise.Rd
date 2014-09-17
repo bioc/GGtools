@@ -32,8 +32,9 @@ txlist = list(
     }
     ),
     cutts = c(-0.01,seq(0.015,.12,.015),.15), 
-    names2check= GGtools:::.standardNames, maxit=30)
- bindgwava( gwavadt, eqdt )
+    names2check= GGtools:::.standardNames, maxit=30,
+     savePinfer=FALSE)
+# bindgwava( gwavadt, eqdt )
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -72,9 +73,11 @@ will fail unless \code{all(names2check \%in\% names(dtab)}
  }
   \item{maxit}{numeric passed to bigglm as control parameter for maximum
 number of iterations to use in modeling gwas hit probabilities}
-  \item{gwavadt}{data.table including the GWAVA pathogenicity scores
- with columns 'tss', 'unmatched', 'region'}
-  \item{eqdt}{data.table from a cisRun output}
+  \item{savePinfer}{logical specifying whether the
+inferred probabilities of GWAS involvement are retained}
+%  \item{gwavadt}{data.table including the GWAVA pathogenicity scores
+% with columns 'tss', 'unmatched', 'region'}
+%  \item{eqdt}{data.table from a cisRun output}
 }
 \details{
 The appraise function wraps many tasks used to appraise eQTL

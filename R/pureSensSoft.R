@@ -1,7 +1,7 @@
 plotsens = function( eqsout, ylab="count of eQTL at given FDR",
    title="cis radius in bp" ) {
- require(reshape2)
- require(ggplot2)
+# require(reshape2)
+# require(ggplot2)
  # eqsout is output of eqsens_dt
  mdf = melt(data.frame(eqsout), id.vars=c("mafs", "dists"))
  vind = which(names(mdf)=="variable")

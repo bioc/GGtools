@@ -78,12 +78,12 @@ require(foreach)
   test = dtab[-which(intrain==1),]
 
   outs = foreach(i=1:length(discfmlas)) %dopar% {
-     tmp = bigglm( discfmlas[[i]], data=train, fam=binomial(), chunksize=50000, maxit=inmaxit )
+     tmp = bigglm( discfmlas[[i]], data=train, family=binomial(), chunksize=50000, maxit=inmaxit )
      tpreds = predict(tmp, newdata=test, type="response" )
      rocpreds = try(prediction( tpreds, labels=test$isgwashit ))
      AUC = NA
      if (!inherits(rocpreds, "try-error")) AUC = performance(rocpreds, "auc")
-     infer = bigglm( discfmlas[[i]], data=dtab, fam=binomial(), chunksize=50000, maxit=inmaxit )
+     infer = bigglm( discfmlas[[i]], data=dtab, family=binomial(), chunksize=50000, maxit=inmaxit )
      pinfer = NULL
      if (savePinfer) pinfer = predict(infer, newdata=dtab, type="response")
      ans = list(coefs=coef(tmp), auc=AUC, mat=summary(tmp)$mat, infcoefs=coef(infer),
@@ -154,20 +154,6 @@ list(coeflist=coeflist, tabs=tabs, outs=outs, dimdtab=dim(dtab), dimtest=dim(tes
      inmaxit=maxit )
 }
 
-calfig.old = function( colist = MOREAPPR_coeflist, tabs = MOREAPPR_tabs,
-   ind = 10, hfudgetxt=.0155 ) {
- midcuts = c(0.0075, 0.0225, 0.0375, 0.0525,
-    0.0675, 0.0825, 0.0975, 0.1125, 0.135)
- plot(0,0, ylim=c(-.01,.16), xlim=c(-.01,.16),
-    pch=" ", xlab="predicted", ylab="empirical", axes=FALSE)
- axis(1, at=seq(0,.16,.02))
- axis(2, at=seq(0,.16,.02))
- points(midcuts, colist[[ind]][,1])
- fracs = paste(round(tabs[[ind]]*colist[[ind]][,1]), tabs[[ind]],
-  sep="/")
- text(midcuts+hfudgetxt, colist[[ind]][,1], labels=fracs, cex=.8)
- abline(0,1,lty=2,col="gray")
-}
 
 calfig = function (colist, tabs, ind = 10, 
     hfudgetxt = 0.0155, tickend=.16, tickgap=.02, ylimin=c(-.01, .16),
@@ -245,6 +231,7 @@ sensFromDT = function(dt,
 # eqdt
 #} 
 
+# idea here is that caddPack is on board
 addcadd = function(dt, binder=bindcadd) {
  allb = foreach(x=1:22) %dopar% { binder(dt, x) }
  do.call(rbind, allb)

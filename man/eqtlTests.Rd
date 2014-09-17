@@ -18,7 +18,7 @@ eqtlTests(smlSet, rhs = ~1 - 1, runname = "foo",
 	targdir = "foo", geneApply = lapply, 
 	shortfac = 100, 
 	checkValid = TRUE, useUncertain = TRUE, 
-	glmfamily = "gaussian")
+	glmfamily = "gaussian", doFFSUMM = FALSE)
 
 eqtlEstimates(smlSet, rhs = ~1 - 1, runname = "foo", 
 	targdir = "fooe", geneApply = lapply, 
@@ -58,6 +58,10 @@ genotypes will be used (as 'dosage' in GLM fitting)
 }
   \item{glmfamily}{
 family specification for \code{\link[snpStats]{snp.rhs.tests}}
+}
+  \item{doFFSUMM}{
+logical indicating whether ff archives will be retained for
+col.summary outputs for SNPs
 }
 }
 \details{

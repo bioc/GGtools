@@ -159,7 +159,7 @@ bindmaf.simple = function(smpack, smchr, fr, SSgen=GGBase::getSS, rad, conf) {
 # we also use the extraProps component of the configuration
 # object to add additional metadata
 #
-#   smchr.init = smchr
+   smchr.init = smchr  # ???
   smchr = gsub("chr", "", smchr)
   smchr = paste0("chr", smchr)
     fr = fr[which(as.character(seqnames(fr)) == smchr)]

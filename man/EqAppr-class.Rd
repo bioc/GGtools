@@ -9,6 +9,7 @@
 \alias{getUnpruned,EqAppr-method}
 \alias{show,EqAppr-method}
 \alias{show,ApprRes-method}
+\alias{calfig}
 
 \title{Class \code{"EqAppr"}}
 \description{
@@ -67,22 +68,22 @@ analysis results }
     \item{show}{\code{signature(object = "EqAppr")}: concise report }
 	 }
 }
-\references{
+%\references{
 %%  ~~put references to the literature/web site here~~
-}
-\author{
-%%  ~~who you are~~
-}
-\note{
-%%  ~~further notes~~
-}
+%}
+%\author{
+%%%  ~~who you are~~
+%}
+%\note{
+%%%  ~~further notes~~
+%}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-\seealso{
+%\seealso{
 %%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
 %%  ~~or \code{\linkS4class{CLASSNAME}} for links to other classes ~~~
-}
+%}
 \examples{
 showClass("EqAppr")
 }

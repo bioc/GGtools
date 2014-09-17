@@ -9,6 +9,7 @@ eqtlscan = function(
 #
     pname = as.character(respObj)
     infmla[[2]] = as.name(pname)  # replace the dependent variable spec in fmla
+    ex = NULL  # scotch global variable NOTE
     data(eset, package=smpack) # defines ex
     gtdat = get(load(system.file(paste("parts/", chrtag, ".rda", sep="", collapse=""),
       package=smpack)))
