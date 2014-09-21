@@ -82,6 +82,8 @@ cisAssoc = function( summex, vcf.tf, rhs=~1, nperm=3, cisradius=1000,
  #
  # loop over cis map to collect tests
  #
+ if (!exists(".Random.seed")) .xyzzy = runif(1)
+ iniSeed = .Random.seed
  suppressWarnings({
  for (i in 1:length(probes2test)) {
    ex = numdata[ probes2test[i], ]
@@ -120,6 +122,8 @@ cisAssoc = function( summex, vcf.tf, rhs=~1, nperm=3, cisradius=1000,
  varrd$snp = names(varrd)
  varrd$MAF = as.numeric(mafs[varrd$snp])
  varrd$probeid = varrd$paramRangeID
+ metadata(varrd)$sessInfo = sessionInfo()
+ metadata(varrd)$init.Random.seed = iniSeed
  names(varrd) = NULL
  varrd
 }

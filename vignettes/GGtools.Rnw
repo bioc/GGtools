@@ -495,7 +495,7 @@ analysis, generating FDRs for different tuning parameters
 within the scope of the search.
 <<docomb, keep.source=TRUE>>=
 fns = dir(td, full=TRUE, patt="^t2.*rda$")
-cf = collectFiltered(fns, mafs=c(.02,.03,.1), hidists=c(0,10000,75000))
+cf = collectFiltered(fns, mafs=c(.02,.03,.1), hidists=c(1000,10000,75000))
 class(cf)
 names(cf)  # MAFs are primary organization, distances secondary
 names(cf[[1]])
