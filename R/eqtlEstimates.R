@@ -68,8 +68,11 @@ eqtlEstimates = function(smlSet, rhs=~1-1,
       ex = exprs(smlSet)[gene,]
       fmla = formula(paste("ex", paste(as.character(rhs),collapse=""), collapse=" "))
 # VARIATION
+      oldwarnopt = options()$warn
+      options(warn=-1)
       numans.full = snp.rhs.estimates(fmla, snp.data=snpdata, data=pData(smlSet), 
           family=glmfamily , uncertain=useUncertain)
+      options(warn=oldwarnopt)
       numans = sapply(numans.full, "[[", "beta")
 # clean if failures
       if (any(badests <- sapply(numans, is.null))) {

@@ -76,6 +76,10 @@ up prior to storage, and will be scaled down prior to use.
 \code{eqtlEstimates} will use compact storage for both the
 point estimates and standard errors of association estimated
 under an additive genetic model
+
+Note: \code{\link[snpStats]{snp.rhs.estimates}} will emit a warning whenever the
+parameters are not estimable.  These warning are suppressed by 
+temporary setting of options()[['warn']] to zero.
 }
 \value{
 returns an instance of \code{eqtlTestsManager}
