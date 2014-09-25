@@ -87,10 +87,14 @@ eqsens_dt = function(dtab, filtgen=filtgen.maf.dist,
    by=c("pairs", "snps", "probes")[1],
    targfdrs=c(.05, .01, .005), parmslist=list(
    mafs = c( .025, .05, .075, .1, .125 ),
-   dists = c( 1000, 5000, 10000, 25000, 50000, 100000 ) ) ) {
+   dists = c( 1000, 5000, 10000, 25000, 50000, 100000 ) ) ,
+   renameChisq=TRUE) {
 #
 # returns counts
 #
+  if (renameChisq & ("chisq" %in% names(dtab)) {
+    setnames(dtab, "chisq", "score")
+    }
   parmset = data.matrix(do.call(expand.grid, parmslist))
   ntune = nrow(parmset)
   ans = foreach( curp=1:ntune ) %dopar% {
