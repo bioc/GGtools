@@ -68,7 +68,7 @@ update_fdr_filt = function(tab,
 # sensitivity analysis for eQTL search on MAF and distance of search
 
 filtgen.maf.dist = function(maf.dist, 
-    validate.tab=function(tab)all(c("mindist", "MAF") %in% colnames(tab))) {
+    validate.tab=function(tab)all(c("mindist", "MAF", "score") %in% colnames(tab))) {
   stopifnot(is.atomic(maf.dist))
   stopifnot(length(maf.dist)==2)
   maf = maf.dist[1]
