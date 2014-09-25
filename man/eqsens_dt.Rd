@@ -15,7 +15,8 @@ support for sensitivity analyses related to eQTL enumerations
 eqsens_dt(dtab, filtgen = filtgen.maf.dist, by = c("pairs", "snps", "probes")[1], 
 	targfdrs = c(0.05, 0.01, 0.005), 
 	parmslist = list(mafs = c(0.025, 0.05, 0.075, 0.1, 0.125), 
-		dists = c(1000, 5000, 10000, 25000, 50000, 1e+05)))
+		dists = c(1000, 5000, 10000, 25000, 50000, 1e+05)),
+                renameChisq = TRUE)
 filtgen.maf.dist (maf.dist, validate.tab = function(tab) all(c("mindist", 
     "MAF") \%in\% colnames(tab))) 
 update_fdr_filt(tab, filt = function(x) x, by = c("pairs", "snps", 
@@ -74,6 +75,10 @@ text string to be used to label Y axis on the left
   \item{title}{
 text string to label top of plot
 }
+  \item{renameChisq}{Some utilities fail to generate 'score' for
+observed association statistic, but report as 'chisq'.  If TRUE
+and such a column name is found in dtab, setnames will be run
+to rename to 'score'.}
 }
 \details{
 The objective is to generate data for tabulation or visualization
