@@ -92,7 +92,7 @@ eqsens_dt = function(dtab, filtgen=filtgen.maf.dist,
 #
 # returns counts
 #
-  if (renameChisq & ("chisq" %in% names(dtab)) {
+  if (renameChisq & ("chisq" %in% names(dtab))) {
     setnames(dtab, "chisq", "score")
     }
   parmset = data.matrix(do.call(expand.grid, parmslist))
