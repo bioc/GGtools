@@ -6,7 +6,7 @@ import(S4Vectors)
 
 importFrom(reshape2, melt)
 importFrom(ggplot2, ggplot, geom_point, aes,
-   facet_grid, theme, element_text, labs)
+   facet_grid, theme, element_text, labs, ylab)
 importFrom(VariantAnnotation, ScanVcfParam, readVcf,
   genotypeToSnpMatrix, ref, alt)
 importMethodsFrom(Biostrings, nchar)
