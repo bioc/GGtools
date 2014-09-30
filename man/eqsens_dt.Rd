@@ -18,7 +18,7 @@ eqsens_dt(dtab, filtgen = filtgen.maf.dist, by = c("pairs", "snps", "probes")[1]
 		dists = c(1000, 5000, 10000, 25000, 50000, 1e+05)),
                 renameChisq = TRUE)
 filtgen.maf.dist (maf.dist, validate.tab = function(tab) all(c("mindist", 
-    "MAF") \%in\% colnames(tab))) 
+    "MAF", "score") \%in\% colnames(tab))) 
 update_fdr_filt(tab, filt = function(x) x, by = c("pairs", "snps", 
     "probes")[1]) 
 plotsens(eqsout, ylab = "count of eQTL at given FDR", 
