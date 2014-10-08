@@ -127,3 +127,25 @@ cisAssoc = function( summex, vcf.tf, rhs=~1, nperm=3, cisradius=1000,
  names(varrd) = NULL
  varrd
 }
+
+SnpMatrixCisToSummex = function(summex) {
+    usn = unique(seqnames(summex))
+    if (length(usn) > 1) 
+        stop("current implementation insists that length(unique(seqnames(summex)))==1 as VCF assumed chr-specific")
+    sampidsInSumm = colnames(summex)
+    sampidsInVCF = sampsInVCF(vcf.tf)
+    oksamp = intersect(sampidsInSumm, sampidsInVCF)
+    stopifnot(length(oksamp) > 0)
+    summex = summex[, oksamp]
+    sn = snfilt(as.character(seqnames(summex)))
+    stopifnot(length(ctouse <- unique(sn)) == 1)
+    cisr = rowData(summex) + cisradius
+    seqlevels(cisr) = snfilt(seqlevels(cisr))
+    vp = ScanVcfParam(fixed = "ALT", info = NA, geno = "GT", 
+        samples = oksamp, which = cisr)
+    vdata = readVcf(vcf.tf, genome = genome, param = vp)
+    rdd = rowData(vdata)
+    vdata = snvsOnly(vdata)
+    genotypeToSnpMatrix(vdata)
+}
+

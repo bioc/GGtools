@@ -50,7 +50,6 @@ best.trans.eQTLs = function(smpack, rhs, genechrnum, snpchrnum,
 #    sms = smsl[[1]]
 #    guniv = featureNames(sms)   # universe of probes
 #    smanno = gsub(".db", "", annotation(sms))
-#    require(paste(smanno, ".db", sep = ""), character.only = TRUE)
 #    clcnames = gsub("chr", "", chrnames)  # typical chrom nomenclature of bioconductor
 #    pnameList = mget(clcnames, revmap(get(paste(smanno, "CHR", 
 #        sep = ""))))

@@ -22,7 +22,6 @@ cis.FDR.filter.best.old = function( fn,
   chrtags = sapply(objs, function(x) as.character(seqnames(x)[1]))
   bs = lapply(objs, function(x) {cat("."); bestInStratum(cf(x))})
   bss = lapply(bs, "[[", "scores")
-#  require(parallel)
   ps = applier(1:nperm, function(x) lapply(objs, function(z) {cat("."); bestInStratum(cf(z), permind=x)}))
   pss = lapply(ps, function(x) lapply(x, function(z) z[["scores"]]))
   rawscores = unlist(bss)
@@ -130,7 +129,6 @@ cis.FDR.filter.SNPcentric = function( fn,
      list(scores=scores, scorerids=snpids)
      })
   bss = lapply(bs, "[[", "scores")
-#  require(parallel)
 #  pss = applier(1:nperm, function(x) lapply(objs, function(z) {
 #         values(cf(z))[[paste0("permScore_", x)]]}))
 #
@@ -212,7 +210,6 @@ cis.FDR.filter.SNPcentric.complete = function( fn,
      snpids = x$snp
      list(scores=scores, scorerids=snpids, probeids=x$probeid)
   })
-#  require(parallel)
   pss = applier(1:nperm, function(x) 
      lapply(objs, function(z) {
          curcf = cf(z)
@@ -254,7 +251,6 @@ cis.FDR.filter.best = function (fn, hi.dist = 50000, low.dist = -Inf, hi.maf = 0
     })
     bss = lapply(bs, "[[", "scores")
     realmafs = lapply(objs, function(x) data.frame(snp=x$snp, probeid=x$probeid, MAF=x$MAF, stringsAsFactors=FALSE))
-#    require(parallel)
     ps = applier(1:nperm, function(x) lapply(objs, function(z) {
         cat(".")
         bestInStratum(cf(z), permind = x)

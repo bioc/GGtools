@@ -41,7 +41,6 @@ tscan2df = function( tscan ) {
 
 
 ceuCon19 = function() {
-# require(Rsamtools)
  fi = system.file("tabix/ceu1kgv_npc19.gff3.gz", package="piFDR2")
  TabixFile(fi)
 }
@@ -129,7 +128,6 @@ getall = function(x) x[grep("snp=|snplocs|fdr|probeid|MAF|permScore_1|permScore_
 # ests and se not guaranteed
 
 fullparse = function(x) {
-#    require(GenomicRanges)
     if (length(x) == 0)
         return(GRanges())
     z = strsplit(x, "\t")
@@ -168,7 +166,6 @@ tscan2gr = function( tscan ) {
 
 genemodel = function(sym) {
  require(Homo.sapiens)
-# require(GenomicRanges)
  egid = select(Homo.sapiens, 
      keytype="SYMBOL",
      keys=sym, 

@@ -1,7 +1,5 @@
 plotsens = function( eqsout, ylab="count of eQTL at given FDR",
    title="cis radius in bp" ) {
-# require(reshape2)
-# require(ggplot2)
  # eqsout is output of eqsens_dt
  mdf = melt(data.frame(eqsout), id.vars=c("mafs", "dists"))
  vind = which(names(mdf)=="variable")
@@ -34,7 +32,6 @@ update_fdr_filt = function(tab,
 # 'probes' implies we look at all snps cis to the probe and use
 #   strongest association as score for the probe
 #
- require(GGtools, quietly=TRUE)
  tab = filt(tab)
  psinds = grep("permScore", colnames(tab), value=TRUE)
  #ptab = as.data.frame(tab[,psinds,with=FALSE]) # decent
