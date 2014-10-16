@@ -102,7 +102,8 @@ exportMethods("chrnames", "chrnames<-", "estimates", "estimates<-",
 "smFilter", "smFilter<-", "smpack", "smpack<-", "snpannopk", 
 "snpannopk<-", "SSgen", "SSgen<-")
 
-export(concatCis, eqtlTests.me, plotsens, inflammFilter)
+export(concatCis, eqtlTests.me, plotsens, inflammFilter,
+   SnpMatrixCisToSummex)
 
 exportMethods("snpchr", "snpchr<-", "gbufsize", "gbufsize<-",
  "batchsize", "batchsize<-", "extraProps", "extraProps<-")
