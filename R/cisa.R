@@ -139,8 +139,8 @@ SnpMatrixCisToSummex = function(summex, vcf.tf,
     stopifnot(length(oksamp) > 0)
     summex = summex[, oksamp]
 #    sn = snfilt(as.character(seqnames(summex)))
-    stopifnot(length(ctouse <- unique(sn)) == 1)
-    cisr = rowData(summex) + cisradius
+#    stopifnot(length(ctouse <- unique(sn)) == 1)
+    cisr = rowData(summex) + radius
 #    seqlevels(cisr) = snfilt(seqlevels(cisr))
     vp = ScanVcfParam(fixed = "ALT", info = NA, geno = "GT", 
         samples = oksamp, which = cisr)
