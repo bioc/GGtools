@@ -150,3 +150,14 @@ SnpMatrixCisToSummex = function(summex, vcf.tf,
     genotypeToSnpMatrix(vdata)
 }
 
+eqBox = function( gene, snp, se, tf, ...) {
+  stopifnot(gene %in% rownames(se))
+  LL = SnpMatrixCisToSummex(se[gene,], tf)[[1]]
+  stopifnot(snp %in% colnames(LL))
+  okids = intersect(colnames(se), rownames(LL))
+  stopifnot(length(okids)>0)
+  ex = assay(se[ gene, okids])
+  gt = as(LL[okids, snp], "character")
+  boxplot(split(ex,gt), xlab=snp, ylab=gene, ...)
+}
+
