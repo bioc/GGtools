@@ -59,7 +59,7 @@ cisAssoc = function( summex, vcf.tf, rhs=~1, nperm=3, cisradius=1000,
  if (dropUnivHet) {
     message("checking for universal heterozygous loci for exclusion (as dropUnivHet == TRUE) ...")
     gtchar = as(gtdata[[1]],"character")  # could be slow
-    uhetinds = which(apply(gtchar,2, function(x) all(x=="A/B")))
+    uhetinds = which(apply(gtchar,2, function(x) all(x %in% c("A/B", "NA"))))
     if ((nu <- length(uhetinds))>0) 
       warning(paste0("found ", nu, " universally heterozygous loci."))
     message("done checking.")
