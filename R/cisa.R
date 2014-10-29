@@ -16,7 +16,7 @@ snvsOnly = function(v) {
 
 cisAssoc = function( summex, vcf.tf, rhs=~1, nperm=3, cisradius=1000, 
     stx=force, vtx=force, snfilt=function(x) gsub("chr", "", x),
-    genome="hg19", assayind=1, lbmaf=1e-6 ) {
+    genome="hg19", assayind=1, lbmaf=1e-6, dropUnivHet=TRUE ) {
  #
  # take all features from SummarizedExperiment
  # harmonize samples between summex and vcf.tf (TabixFile)
@@ -55,9 +55,18 @@ cisAssoc = function( summex, vcf.tf, rhs=~1, nperm=3, cisradius=1000,
  rdd = rowData(vdata)
  vdata = snvsOnly(vdata)
  gtdata = genotypeToSnpMatrix(vdata)
+ uhetinds = NULL
+ if (dropUnivHet) {
+    message("checking for universal heterozygous loci for exclusion (as dropUnivHet == TRUE) ...")
+    gtchar = as(gtdata[[1]],"character")  # could be slow
+    uhetinds = which(apply(gtchar,2, function(x) all(x=="A/B")))
+    if ((nu <- length(uhetinds))>0) 
+      warning(paste0("found ", nu, " universally heterozygous loci."))
+    message("done checking.")
+    }
  csumm = col.summary(gtdata[[1]])
  inmafs = csumm[,"MAF"]
- bad = which(inmafs<lbmaf)
+ bad = union(which(inmafs<lbmaf), uhetinds)
  if (length(bad)>0) {
    vdata = vdata[-bad,]
    gtdata = genotypeToSnpMatrix(vdata)

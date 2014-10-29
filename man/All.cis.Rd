@@ -1,5 +1,5 @@
 \name{All.cis}
-\alias{cisAssoc}
+%\alias{cisAssoc}
 \alias{cisScores}
 \alias{All.cis}
 \alias{chrFilter}
@@ -11,21 +11,15 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 functions that compute score tests for all SNP cis to genes, with
-flexible filtering; new cisAssoc works with SummarizedExperiment
-and VCF
+flexible filtering
 }
 \description{
 function that computes score tests for all SNP cis to genes, with
-flexible filtering; new cisAssoc works with SummarizedExperiment
-and VCF
+flexible filtering
 }
 \usage{
 cisScores( config = new("CisConfig"), ... )
 All.cis( config = new("CisConfig"), ... )
-cisAssoc(summex, vcf.tf, rhs = ~1, nperm = 3, 
-   cisradius = 1000, stx = force, vtx = force, 
-   snfilt = function(x) gsub("chr", "", x), 
-   genome = "hg19", assayind = 1, lbmaf = 1e-06)
 addgwhit(ans, traitFilter=force, vname="isgwashit") 
 add878(ans)
 inflammFilter(gwtagger)

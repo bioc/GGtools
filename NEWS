@@ -1,3 +1,7 @@
+CHANGES IN VERSION 5.3
+    o  new VCF extract for demonstrating cisAssoc VCF-SummarizedExperiment
+       analysis
+
 CHANGES IN VERSION 4.11
 ----------------------
     o  appraise and calfig are provided to foster evaluation of
