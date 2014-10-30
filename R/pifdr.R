@@ -39,7 +39,7 @@ pifdr.old = function(obs, perms, npts=1999, applier=sapply) {
   approx(checkpoints, gridFDR, obs, rule=2L)$y
 }
   
-pifdr = function(obs,perms,legacy=FALSE,...) {
+pifdr = function(obs,perms,legacy=FALSE,trimToUnit=TRUE,...) {
 #
 # y binned into intervals using hist
 # for computing plug-in FDR
@@ -57,6 +57,8 @@ pifdr = function(obs,perms,legacy=FALSE,...) {
  fdr = oy[-length(oy)]/(fac*ncalls)
  # following can be used to verify current approach to handling bins
  #cbind(x=x, brx=brx, obrx=brx[rx], oy=oy[-length(oy)][rx], fdr=fdr[rx], ncalls=ncalls[rx])
- fdr[rx]
+ ans = fdr[rx]
+ if (trimToUnit) ans = pmin(1, ans)
+ ans
 }
 

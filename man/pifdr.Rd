@@ -7,7 +7,7 @@ utility for computing plug-in FDR
 utility for computing plug-in FDR
 }
 \usage{
-pifdr( obs, perms, legacy=FALSE, ... ) 
+pifdr( obs, perms, legacy=FALSE, trimToUnit = TRUE, ... ) 
 }
 \arguments{
   \item{obs}{
@@ -20,6 +20,9 @@ be integer multiple of \code{length(obs)}
 \item{legacy}{logical, if TRUE, use the approximate version of
 pifdr() available before 12/30/2013, with additional arguments if
 desired}
+\item{trimToUnit}{logical, if TRUE, values greater than 1 are
+replaced by 1.  Such values can occur, for example, with relatively
+small sample sizes.}
 \item{\dots}{extra arguments passed if legacy is TRUE}
 }
 \details{
