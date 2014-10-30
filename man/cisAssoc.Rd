@@ -1,5 +1,6 @@
 \name{cisAssoc}
 \alias{cisAssoc}
+\alias{lgeu}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 test for variant-expression associations in cis, using VCF
@@ -12,7 +13,9 @@ and SummarizedExperiment representations
 cisAssoc(summex, vcf.tf, rhs = ~1, 
    nperm = 3, cisradius = 50000, 
    genome = "hg19", assayind = 1, lbmaf = 1e-06,
-   dropUnivHets = TRUE)
+   dropUnivHet = TRUE)
+
+data(lgeu) # obtains an example SummarizedExperiment
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -44,7 +47,7 @@ index of \code{assays(summex)} to use for expression data retrieval
   \item{lbmaf}{
 lower bound on MAF of SNP to use
 }
-  \item{dropUnivHets}{
+  \item{dropUnivHet}{
 logical, if TRUE, will check for columns of SnpMatrix instance
 that possess no values other than "NA" and "A/B".
 See \url{http://www.biostars.org/p/117155/#117270}

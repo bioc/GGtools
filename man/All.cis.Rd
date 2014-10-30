@@ -32,45 +32,45 @@ instance of class \code{\link{CisConfig-class}}
   \item{\dots}{
 passed to eqtlTests
 }
-  \item{summex}{
-instance of \code{\link[GenomicRanges]{SummarizedExperiment-class}}
-}
-  \item{vcf.tf}{
-instance of \code{\link[Rsamtools]{TabixFile}}, pointing to a
-tabix-indexed VCF file
-}
-  \item{rhs}{
-headless formula instance; covariates can be identified
-in colData(summex) 
-}
-  \item{nperm}{
-number of permutations of assay against genotype to be retained,
-should be a small number, say 3, unless the feature set is very
-small
-}
-  \item{cisradius}{
-number of bp up- and down-stream  of each rowData(summex) range
-to be searched for variants in \code{vcf.tf}
-}
-  \item{stx}{
-not used, intended for future coding as a filter for assay data
-}
-  \item{vtx}{
-not used, intended for future coding as a filter for VCF data
-}
-  \item{snfilt}{
-seqnames filter to harmonize differences between chromosome names
-in summex and vcf.tf -- defaults to 'remove chr prefix'
-}
-  \item{genome}{
-conventional tag like 'hg19'
-}
-  \item{assayind}{
-numeric, take quantitations from \code{assays(summex)[[assayind]]}
-}
-  \item{lbmaf}{
-lower bound on MAF of variants to be retained
- }
+%  \item{summex}{
+%instance of \code{\link[GenomicRanges]{SummarizedExperiment-class}}
+%}
+%  \item{vcf.tf}{
+%instance of \code{\link[Rsamtools]{TabixFile}}, pointing to a
+%tabix-indexed VCF file
+%}
+%  \item{rhs}{
+%headless formula instance; covariates can be identified
+%in colData(summex) 
+%}
+%  \item{nperm}{
+%number of permutations of assay against genotype to be retained,
+%should be a small number, say 3, unless the feature set is very
+%small
+%}
+%  \item{cisradius}{
+%number of bp up- and down-stream  of each rowData(summex) range
+%to be searched for variants in \code{vcf.tf}
+%}
+%  \item{stx}{
+%not used, intended for future coding as a filter for assay data
+%}
+%  \item{vtx}{
+%not used, intended for future coding as a filter for VCF data
+%}
+%  \item{snfilt}{
+%seqnames filter to harmonize differences between chromosome names
+%in summex and vcf.tf -- defaults to 'remove chr prefix'
+%}
+%  \item{genome}{
+%conventional tag like 'hg19'
+%}
+%  \item{assayind}{
+%numeric, take quantitations from \code{assays(summex)[[assayind]]}
+%}
+%  \item{lbmaf}{
+%lower bound on MAF of variants to be retained
+% }
   \item{ans}{cisRun-like entity to which additional annotation
     will be bound by addgwhit or add878}
   \item{gwtagger}{GRanges like gwastagger in gwascat data elements}
