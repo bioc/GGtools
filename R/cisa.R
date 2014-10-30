@@ -35,13 +35,13 @@ cisAssoc = function( summex, vcf.tf, rhs=~1, nperm=3, cisradius=50000,
  #
  # harmonize annotation for seqnames -- could use style methods here
  #
- sn = snfilt(as.character(seqnames(summex)))
+ sn = force(as.character(seqnames(summex)))
  stopifnot(length(ctouse <- unique(sn))==1)
  #
  # generate cis search space for assay probes
  #
  cisr = rowData(summex)+cisradius
- seqlevels(cisr) = snfilt(seqlevels(cisr)) # must use VCF-oriented seqlevels
+ seqlevels(cisr) = force(seqlevels(cisr)) # must use VCF-oriented seqlevels
  #
  # first pass at genotype data retrieval
  #
