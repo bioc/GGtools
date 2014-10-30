@@ -72,9 +72,9 @@ seqlevelsStyle for summex and vcf.tf content must agree
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-\seealso{
+%\seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
-}
+%}
 \examples{
  data(lgeu) # small excerpt from GEUVADIS FPKM
  tf20 = TabixFile(system.file("vcf/c20exch.vcf.gz", package="GGtools"))
@@ -84,7 +84,6 @@ seqlevelsStyle for summex and vcf.tf content must agree
  summary(litc$chisq)
  litc$pifdr = pifdr(litc$chisq, c(litc$permScore_1, litc$permScore_2))
  litc[which(litc$pifdr < .01)]
-}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

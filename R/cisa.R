@@ -14,8 +14,7 @@ snvsOnly = function(v) {
   }
 
 
-cisAssoc = function( summex, vcf.tf, rhs=~1, nperm=3, cisradius=1000, 
-    stx=force, vtx=force, snfilt=function(x) gsub("chr", "", x),
+cisAssoc = function( summex, vcf.tf, rhs=~1, nperm=3, cisradius=50000, 
     genome="hg19", assayind=1, lbmaf=1e-6, dropUnivHet=TRUE ) {
  #
  # take all features from SummarizedExperiment
