@@ -76,14 +76,15 @@ seqlevelsStyle for summex and vcf.tf content must agree
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-data(lgeu) # small excerpt from GEUVADIS FPKM
-tf20 = TabixFile(system.file("vcf/c20exch.vcf.gz", package="GGtools"))
-scanVcfHeader(tf20)
-lgeue = clipPCs(lgeu[,which(lgeu$popcode=="YRI")], 1:2)
-litc = cisAssoc(lgeue, tf20, nperm=2, lbmaf=.05, cisradius=50000)
-summary(litc$chisq)
-litc$pifdr = pifdr(litc$chisq, c(litc$permScore_1, litc$permScore_2))
-litc[which(litc$pifdr < .01)]
+ data(lgeu) # small excerpt from GEUVADIS FPKM
+ tf20 = TabixFile(system.file("vcf/c20exch.vcf.gz", package="GGtools"))
+ if (require(VariantAnnotation)) scanVcfHeader(tf20)
+ lgeue = clipPCs(lgeu[,which(lgeu$popcode=="YRI")], 1:2)
+ litc = cisAssoc(lgeue, tf20, nperm=2, lbmaf=.05, cisradius=50000)
+ summary(litc$chisq)
+ litc$pifdr = pifdr(litc$chisq, c(litc$permScore_1, litc$permScore_2))
+ litc[which(litc$pifdr < .01)]
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
