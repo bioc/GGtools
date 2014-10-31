@@ -158,14 +158,26 @@ SnpMatrixCisToSummex = function(summex, vcf.tf,
     genotypeToSnpMatrix(vdata)
 }
 
-eqBox = function( gene, snp, se, tf, ...) {
+eqBox = function( gene, snp, se, tf, radius=1e6, genome="hg19", ...) {
   stopifnot(gene %in% rownames(se))
-  LL = SnpMatrixCisToSummex(se[gene,], tf)[[1]]
+  LL = SnpMatrixCisToSummex(se[gene,], tf, radius=radius, genome=genome)[[1]]
   stopifnot(snp %in% colnames(LL))
   okids = intersect(colnames(se), rownames(LL))
   stopifnot(length(okids)>0)
   ex = assay(se[ gene, okids])
   gt = as(LL[okids, snp], "character")
   boxplot(split(ex,gt), xlab=snp, ylab=gene, ...)
+}
+
+eqDesc = function (gene, snp, se, tf, radius=1e6, genome="hg19", ...) 
+{
+    stopifnot(gene %in% rownames(se))
+    LL = SnpMatrixCisToSummex(se[gene, ], tf, radius=radius)[[1]]
+    stopifnot(snp %in% colnames(LL))
+    okids = intersect(colnames(se), rownames(LL))
+    stopifnot(length(okids) > 0)
+    ex = assay(se[gene, okids])
+    gt = as(LL[okids, snp], "character")
+    sapply(split(ex, gt), length)
 }
 

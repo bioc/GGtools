@@ -75,7 +75,7 @@ export(gwSnpTests, topSnps, eqtlTests, topFeats, getCisMap, pData, plot,
 	richNull, meta.bindmaf, meta.richNull, pifdr, 
  	All.cis, collectBest, 
         collectFiltered, cis.FDR.filter.SNPcentric, cis.FDR.filter.best,
-	eqBox)
+	eqBox, eqDesc)
 
 export(best.trans.eQTLs, chrFilter, All.cis)
 
