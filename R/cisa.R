@@ -1,3 +1,4 @@
+
 sampsInVCF = function(tf) {
 #
 # probe into VCF file to determine sample names
@@ -129,10 +130,19 @@ cisAssoc = function( summex, vcf.tf, rhs=~1, nperm=3, cisradius=50000,
    }
  varrd$snp = names(varrd)
  varrd$MAF = as.numeric(mafs[varrd$snp])
- varrd$probeid = varrd$paramRangeID
+ varrd$probeid = as.character(varrd$paramRangeID)
  metadata(varrd)$sessInfo = sessionInfo()
  metadata(varrd)$init.Random.seed = iniSeed
  names(varrd) = NULL
+ 
+ snpl = start(varrd)
+ gstart = abs(start(summex[varrd$probeid,]))
+ gend = abs(end(summex[varrd$probeid,]))
+
+ dists = pmin(abs(snpl-gstart), abs(snpl-gend))
+ dists[ which((snpl >= gstart) & (snpl <= gend))] = 0
+ varrd$mindist = dists
+
  varrd
 }
 
