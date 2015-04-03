@@ -49,7 +49,7 @@ passed to eqtlTests
 %small
 %}
 %  \item{cisradius}{
-%number of bp up- and down-stream  of each rowData(summex) range
+%number of bp up- and down-stream  of each rowRanges(summex) range
 %to be searched for variants in \code{vcf.tf}
 %}
 %  \item{stx}{
