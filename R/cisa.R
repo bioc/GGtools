@@ -41,7 +41,7 @@ cisAssoc = function( summex, vcf.tf, rhs=~1, nperm=3, cisradius=50000,
  #
  # generate cis search space for assay probes
  #
- cisr = rowData(summex)+cisradius
+ cisr = rowRanges(summex)+cisradius
  seqlevels(cisr) = force(seqlevels(cisr)) # must use VCF-oriented seqlevels
  #
  # first pass at genotype data retrieval
@@ -52,7 +52,7 @@ cisAssoc = function( summex, vcf.tf, rhs=~1, nperm=3, cisradius=50000,
  #
  # retain only SNVs with MAF > lbmaf
  #
- rdd = rowData(vdata)
+ rdd = rowRanges(vdata)
  vdata = snvsOnly(vdata)
  gtdata = genotypeToSnpMatrix(vdata)
  uhetinds = NULL
@@ -71,7 +71,7 @@ cisAssoc = function( summex, vcf.tf, rhs=~1, nperm=3, cisradius=50000,
    vdata = vdata[-bad,]
    gtdata = genotypeToSnpMatrix(vdata)
    }
- varrd = rowData(vdata)  # would like to use this as the backbone of test result report
+ varrd = rowRanges(vdata)  # would like to use this as the backbone of test result report
  #
  # use a list mapping probes to SNVs in cis to organize the testing
  #
@@ -158,12 +158,12 @@ SnpMatrixCisToSummex = function(summex, vcf.tf,
     summex = summex[, oksamp]
 #    sn = snfilt(as.character(seqnames(summex)))
 #    stopifnot(length(ctouse <- unique(sn)) == 1)
-    cisr = rowData(summex) + radius
+    cisr = rowRanges(summex) + radius
 #    seqlevels(cisr) = snfilt(seqlevels(cisr))
     vp = ScanVcfParam(fixed = "ALT", info = NA, geno = "GT", 
         samples = oksamp, which = cisr)
     vdata = readVcf(vcf.tf, genome = genome, param = vp)
-    rdd = rowData(vdata)
+    rdd = rowRanges(vdata)
     vdata = snvsOnly(vdata)
     genotypeToSnpMatrix(vdata)
 }

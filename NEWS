@@ -1,6 +1,8 @@
 CHANGES IN VERSION 5.3
     o  new VCF extract for demonstrating cisAssoc VCF-SummarizedExperiment
        analysis
+    o  GGtools kept for legacy/migration purposes only; use gQTLBase and gQTLstats
+       instead
 
 CHANGES IN VERSION 4.11
 ----------------------
