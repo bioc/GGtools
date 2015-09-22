@@ -16,7 +16,7 @@ snvsOnly = function(v) {
 
 
 cisAssoc = function( summex, vcf.tf, rhs=~1, nperm=3, cisradius=50000, 
-    genome="hg19", assayind=1, lbmaf=1e-6, dropUnivHet=TRUE ) {
+    genome="hg19", assayind=1, lbmaf=1e-6, dropUnivHet=TRUE, doEsts=FALSE ) {
  #
  # take all features from SummarizedExperiment
  # harmonize samples between summex and vcf.tf (TabixFile)
@@ -85,6 +85,7 @@ cisAssoc = function( summex, vcf.tf, rhs=~1, nperm=3, cisradius=50000,
  #
  infmla = as.formula(paste("ex", paste(as.character(rhs), collapse="")))
  tsts = vector("list", length(probes2test) )
+ if (doEsts) ests = vector("list", length(probes2test) )
  summs = col.summary(gtdata$genotypes)
  mafs = summs[,"MAF"]
  names(mafs) = rownames(summs)
@@ -99,6 +100,11 @@ cisAssoc = function( summex, vcf.tf, rhs=~1, nperm=3, cisradius=50000,
    tsts[[i]] = snp.rhs.tests( formula=infmla, 
            snp.data=gtdata$genotypes[, snpbyprobe[[ probes2test[i] ]] ], family="gaussian",
            data=data.frame(ex=ex, as(colData(summex), "data.frame") ), uncertain=TRUE )
+   if (doEsts) {
+          ests[[i]] = snp.rhs.estimates( formula=infmla, 
+           snp.data=gtdata$genotypes[, snpbyprobe[[ probes2test[i] ]] ], family="gaussian",
+           data=data.frame(ex=ex, as(colData(summex), "data.frame") ), uncertain=TRUE )
+                }
    }
   })
  #
@@ -118,12 +124,19 @@ cisAssoc = function( summex, vcf.tf, rhs=~1, nperm=3, cisradius=50000,
     })
    }
  names(tsts) = probes2test
+ if (doEsts) names(ests) = probes2test
  #
  # bind test results to varrd GRanges instance -- note that ALT may be either
  # CharacterList or DNAStringSetList and this may need attention on collection
  #
  chisqs = unlist(lapply(tsts, chi.squared))
  varrd$chisq = chisqs
+ if (doEsts) {
+     varrd$beta = 
+       unlist(lapply(ests, function(x) sapply(x@.Data, function(x) x$beta)))
+     varrd$se.beta = 
+       unlist(lapply(ests, function(x) sapply(x@.Data, function(x) sqrt(x$Var.beta))))
+     }
  pnames = paste0("permScore_", 1:nperm)
  for (i in 1:nperm) {
    mcols(varrd)[ ,pnames[i] ] = unlist(lapply(perms[[i]], chi.squared))

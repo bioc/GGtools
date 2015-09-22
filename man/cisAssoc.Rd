@@ -13,7 +13,7 @@ and SummarizedExperiment representations
 cisAssoc(summex, vcf.tf, rhs = ~1, 
    nperm = 3, cisradius = 50000, 
    genome = "hg19", assayind = 1, lbmaf = 1e-06,
-   dropUnivHet = TRUE)
+   dropUnivHet = TRUE, doEsts=FALSE)
 
 data(lgeu) # obtains an example SummarizedExperiment
 }
@@ -52,6 +52,9 @@ logical, if TRUE, will check for columns of SnpMatrix instance
 that possess no values other than "NA" and "A/B".
 See \url{http://www.biostars.org/p/117155/#117270}
 }
+  \item{doEsts}{
+logical, if TRUE, will run \code{\link[snpStats]{snp.rhs.estimates}} and
+report beta and standard error}
 }
 \details{
 \code{\link[snpStats]{snp.rhs.tests}} is the 
@@ -83,7 +86,9 @@ seqlevelsStyle for summex and vcf.tf content must agree
  tf20 = TabixFile(system.file("vcf/c20exch.vcf.gz", package="GGtools"))
  if (require(VariantAnnotation)) scanVcfHeader(tf20)
  lgeue = clipPCs(lgeu[,which(lgeu$popcode=="CEU")], 1:2)
+ set.seed(4321)
  litc = cisAssoc(lgeue, tf20, nperm=2, lbmaf=.05, cisradius=50000)
+ litc2 = cisAssoc(lgeue, tf20, nperm=2, lbmaf=.05, cisradius=50000, doEsts=TRUE)
  summary(litc$chisq)
  litc$pifdr = pifdr(litc$chisq, c(litc$permScore_1, litc$permScore_2))
  litc[which(litc$pifdr < .01)]
