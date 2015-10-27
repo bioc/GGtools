@@ -127,7 +127,11 @@ getCisMap = function( radius=50000, gchr="20",
     gend = gend[-which(bad)]
     ponc = ponc[-which(bad)]
     }
-  slocgr = getSNPlocs(schr, as.GRanges=TRUE)
+#  slocgr = getSNPlocs(schr, as.GRanges=TRUE)
+  slpack = snpannopk
+  require(slpack, character.only=TRUE)
+  slobj = get(slpack)
+  slocgr = snplocs(slobj, schr, as.GRanges=TRUE)
   if (is.null(names(slocgr))) 
      sids = paste("rs", values(slocgr)$RefSNP_id, sep="")
   else sids = names(slocgr)
