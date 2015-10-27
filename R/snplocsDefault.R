@@ -1,3 +1,3 @@
 snplocsDefault = function() {
- "SNPlocs.Hsapiens.dbSNP.20120608"
+ "SNPlocs.Hsapiens.dbSNP144.GRCh37"
 }

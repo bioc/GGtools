@@ -28,7 +28,7 @@ ciseqByCluster = function( cl, pack = "yri1kgv",
       numPCtoFilter = 10,  # filtering actions can be made more generic, 1/1/2014
       lowerMAF = .02,
       geneannopk = "lumiHumanAll.db",
-      snpannopk = "SNPlocs.Hsapiens.dbSNP.20120608",
+      snpannopk = "SNPlocs.Hsapiens.dbSNP144.GRCh37",
       smchrpref = "chr",
       tmpForSort = "/tmp",
       numtiles = 200,

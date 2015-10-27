@@ -31,7 +31,7 @@ importFrom(Gviz, DataTrack, plotTracks, GeneRegionTrack, GenomeAxisTrack)
 
 importFrom(AnnotationDbi, get, mget, revmap, mappedkeys)
 
-importMethodsFrom(IRanges, aggregate)
+importMethodsFrom(S4Vectors, aggregate)
 
 importFrom(IRanges, RangedData, IRanges)
 

@@ -4,7 +4,7 @@
 %
 
 %\VignetteIndexEntry{GGtools: software for eQTL identification}
-%\VignetteDepends{GGdata, SNPlocs.Hsapiens.dbSNP.20120608}
+%\VignetteDepends{GGdata, SNPlocs.Hsapiens.dbSNP144.GRCh37}
 %\VignetteKeywords{genetics of gene expression}
 %\VignettePackage{GGtools}
 
@@ -304,7 +304,8 @@ Code like the following can be used to display
 scores ($-\log_{10} p$) on the genome browser, here with hg19 locations.
 <<doloc,eval=FALSE>>=
 library(snplocsDefault(), character.only=TRUE)
-S20 = getSNPlocs("ch20", as.GRanges=TRUE)
+sl = get(snplocsDefault())
+S20 = snplocs(sl, "ch20", as.GRanges=TRUE)
 GR20 = makeGRanges(t1, S20)
 library(rtracklayer)
 export(GR20, "~/cpne1new.wig")

@@ -28,7 +28,7 @@ specified chromosome, using
 }
   \item{schr}{
 the token to be used to acquire locations for SNP on a specified
-chromosome, using \code{getSNPlocs}
+chromosome, using \code{\link[BSgenome]{snplocs}}
 }
   \item{geneannopk}{
 character string naming a Bioconductor .db expression chip annotation package;

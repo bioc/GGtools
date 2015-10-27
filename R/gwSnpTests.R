@@ -140,14 +140,18 @@ setMethod("plot", c("gwSnpScreenResult", "character"),  # y bound to location pa
    if (length(kill)>0) allpv = allpv[ -kill ]
    rsn = names(allpv)
    require(y, character.only=TRUE, quietly=TRUE)
-   SNY = names(getSNPcount()) # new API -- shld suffice do.call(":::", list(y, "SEQNAMES"))
+   slpack = get(y)
+#   SNY = names(getSNPcount()) # new API -- shld suffice do.call(":::", list(y, "SEQNAMES"))
+   SNY = names(snpcount(slpack)) # new from BSgenome 10/27/15
    if (!(x@chrnum %in% SNY))  x@chrnum = as.character(paste("chr", x@chrnum, sep=""))
    if (!(x@chrnum %in% SNY))  x@chrnum = as.character(gsub("chr", "ch", x@chrnum))
    if (!(x@chrnum %in% SNY))  stop("attempts to harmonize @chrnum of cwSnpScreenResult object with names(getSNPcount()) of snplocsDefault() failed")
 #   loc = snpLocs.Hsapiens(rsn, x@chrnum, y) # may not match all
 
  require(y, character.only=TRUE)
- ldf = getSNPlocs(x@chrnum)
+ slpack = get(y)
+# ldf = getSNPlocs(x@chrnum)
+ ldf  = snplocs(slpack, x@chrnum)
  if (nrow(ldf) == 0) stop("chrtok must be wrong")
  locs = ldf$loc
  names(locs) = paste("rs", as.character(ldf$RefSNP_id), sep="")

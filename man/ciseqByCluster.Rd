@@ -12,7 +12,7 @@ ciseqByCluster(cl, pack = "yri1kgv", outprefix = "yrirun",
   finaltag = "partyri100k", chromsToRun = 1:22, 
   targetfolder = "/freshdata/YRI_3", radius = 100000L, nperm = 3L, ncoresPerNode = 8, 
   numPCtoFilter = 10, lowerMAF = 0.02, geneannopk = "lumiHumanAll.db", 
-  snpannopk = "SNPlocs.Hsapiens.dbSNP.20120608", smchrpref = "chr",
+  snpannopk = "SNPlocs.Hsapiens.dbSNP144.GRCh37", smchrpref = "chr",
   tmpForSort = "/tmp", numtiles = 200,
   postProcCores = 12, reqlist = NULL)
 }

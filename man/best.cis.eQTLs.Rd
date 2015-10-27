@@ -133,7 +133,7 @@ transformation function
 }
   \item{schrpref}{
 prefix to convert \code{chrnames} into appropriate tokens for
-use with \code{getSNPlocs} for the SNP location information
+use with \code{\link[BSgenome]{snplocs}} for the SNP location information
 package identified in \code{snpannopack} parameter below
 }
   \item{geneApply}{

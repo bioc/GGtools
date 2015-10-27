@@ -61,7 +61,8 @@ query resolution on SNP location
 package to be used for CHRLOC and CHRLOCEND queries for genes
 }
   \item{snpannopk}{
-package to be used to resolve getSNPlocs calls
+package to be used to resolve 
+\code{\link[BSgenome]{snplocs}} calls
 }
   \item{exFilter}{
 function returning an smlSet instance, operating on expression component prior to smFilter application and eQTL testing
