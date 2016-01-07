@@ -1,8 +1,9 @@
 import(methods)
 import(utils)
+import(BiocGenerics)
+import(S4Vectors)
 import(GGBase)
 importFrom(data.table, data.table)
-import(S4Vectors)
 
 importFrom(reshape2, melt)
 importFrom(ggplot2, ggplot, geom_point, aes,
@@ -18,8 +19,6 @@ importMethodsFrom(Biostrings, nchar)
 importFrom(stats, IQR)
 
 importFrom(stats4, plot)
-
-importFrom(BiocGenerics, NROW)
 
 importFrom(snpStats, snp.rhs.tests, p.value, col.summary, snp.rhs.estimates)
 

@@ -8,7 +8,7 @@ setValidity("cisRun", function(object) {
 concatCis = function(crl) {
     md = lapply(crl, metadata)
     crl = lapply(crl, as, "GRanges")
-    crl = GenomicRanges::unlist(GRangesList(crl), use.names=FALSE)
+    crl = unlist(GRangesList(crl), use.names=FALSE)
     permcols = grep("permScore", names(values(crl)))
     permscores = unlist(as.data.frame(values(crl)[,permcols]))
     crl$fdr = GGtools::pifdr(crl$score, permscores)
@@ -29,7 +29,7 @@ concatCis = function(crl) {
 #        md1 = metadata(args[[1]])
 #        mdr = lapply(args[-1], metadata)
 #        args = lapply(args, function(x) as(x, "GRanges"))
-#        out = GenomicRanges::unlist(GRangesList(args), use.names=FALSE)
+#        out = unlist(GRangesList(args), use.names=FALSE)
 #        out@metadata$call = md1$call
 #        out@metadata$config = md1$config
 #        out@metadata$extra =mdr

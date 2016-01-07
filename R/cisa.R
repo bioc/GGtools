@@ -11,7 +11,7 @@ snvsOnly = function(v) {
 #
 # confine VCF instance to loci with single nucleotide REF and ALT
 #
-  v[ width(ref(v)) == 1 & width(GenomicRanges::unlist(alt(v)))==1, ]
+  v[ width(ref(v)) == 1 & width(unlist(alt(v)))==1, ]
   }
 
 
