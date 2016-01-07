@@ -20,7 +20,7 @@ data(lgeu) # obtains an example SummarizedExperiment
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{summex}{
-instance of \code{\link[GenomicRanges]{SummarizedExperiment-class}}
+instance of \code{\link[SummarizedExperiment]{SummarizedExperiment-class}}
 }
   \item{vcf.tf}{
 instance of \code{\link[Rsamtools]{TabixFile}}, referring to a
