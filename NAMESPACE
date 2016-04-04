@@ -16,8 +16,6 @@ importFrom(Rsamtools, "headerTabix", "isOpen", "close.TabixFile", "open.TabixFil
 importFrom(Biostrings, nchar)
 importMethodsFrom(Biostrings, nchar)
 
-importFrom(stats, IQR)
-
 importFrom(stats4, plot)
 
 importFrom(snpStats, snp.rhs.tests, p.value, col.summary, snp.rhs.estimates)

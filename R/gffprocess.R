@@ -51,7 +51,7 @@ cgff2dt = function(gff3, tiling, addHitTest=TRUE, addcc878=TRUE ) {
 # and a) assembles a data.table instance with the same content, b) computes the genome-wide FDR,
 # c) builds a revised gff3 with gw
 #
-  require(foreach)
+  requireNamespace("foreach")
   stopifnot(is(tiling, "GRanges"))
   basen = gsub(".gff3.gz", "", gff3)
   th = headerTabix(gff3)
@@ -91,7 +91,7 @@ if (addcc878) {
 }
 
 if (addHitTest) {
- if (require(gwascat)) {
+ if (requireNamespace("gwascat")) {
    data(gwastagger)
    meqgr = GRanges(ans$seqnames, IRanges(ans$snploc, width=1))
    isgwashit = 1*(overlapsAny(meqgr, gwastagger) | ans$snp %in% gwastagger$tagid) # allow match by loc or name

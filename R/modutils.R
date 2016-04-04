@@ -30,7 +30,7 @@ sgf.unsafe = function (x)
 
 
 tscan2df = function( tscan ) {
- require(foreach)
+ requireNamespace("foreach")
  #library(doParallel)
  #registerDoParallel(cores=ncores)
  lk = foreach(i=1:length(tscan)) %dopar% sgf(tscan[[i]])
@@ -156,7 +156,7 @@ fullparse = function(x) {
 }
 
 tscan2gr = function( tscan ) {
- require(foreach)
+ requireNamespace("foreach")
  #library(doParallel)
  #registerDoParallel(cores=ncores)
  lk = foreach(i=1:length(tscan), .combine=c) %dopar% fullparse(tscan[[i]])

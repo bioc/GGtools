@@ -46,11 +46,10 @@ ciseqByCluster = function( cl, pack = "yri1kgv",
 #
   stopifnot(inherits(cl, "cluster")) # can be any sort of cluster instance from parallel package
   numNodes = length(cl)  # assumes is.list(cl) is true ...
-  chkNcores = unlist(clusterApply(cl, 1:numNodes, function(x) {library(parallel);  detectCores()}))
+  chkNcores = unlist(clusterApply(cl, 1:numNodes, function(x) { detectCores()}))
   if (any(chkNcores < ncoresPerNode)) warning("some nodes have fewer than ncoresPerNode cores")
   if (!file.exists(targetfolder)) try(system(paste0("mkdir ", targetfolder)))
   if (!file.exists(targetfolder)) stop(paste0("cannot  create ", targetfolder))
-  library(parallel)
   firstHalf <<- function(x) x[1:floor(length(x)/2)]
   secondHalf <<- function(x) x[-(1:floor(length(x)/2))]
   firstThird <<- function(x) x[1:floor(length(x)/3)]
@@ -58,7 +57,7 @@ ciseqByCluster = function( cl, pack = "yri1kgv",
   midThird <<- function(x) x[(floor(length(x)/3)+1):(floor(2*length(x)/3))]
   setupSplit = function(nodeset=1:numNodes) {
      clusterApply(cl, nodeset, function(w) {
-      library(parallel)  # get resources
+        # get resources
       library(GGtools)
       library(pack, character.only=TRUE)
       library(geneannopk, character.only=TRUE)
@@ -177,7 +176,7 @@ setwd(targetfolder)
 gffprocess(finaltag, n_in=njobs, headpatt=paste0("_", chrtags[1], "A"), tmpForSort=tmpForSort)
 myti = simpleTiling(numtiles)
 pmti = myti[as(seqnames(myti),"character") %in% paste0("chr", chromsToRun)]
-require(foreach)
+requireNamespace("foreach")
 cgff2dt(paste0(finaltag, ".gff3.gz"), pmti)
 
 }

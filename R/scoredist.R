@@ -19,7 +19,6 @@ scoredist = function (fn, hi.dist = 1000, low.dist = -Inf, hi.maf = 0.51,
     cf = function(x) cisFilter(x, hi.dist = hi.dist, low.dist = low.dist, 
         hi.maf = hi.maf, low.maf = low.maf)
     chrtags = sapply(objs, function(x) as.character(seqnames(x)[1]))
-    require(parallel)
     if (!perms) return(scoresInStratum(cf(objs[[1]])))
     ps = applier(1:nperm, function(x) lapply(objs, function(z) {
         cat(".")

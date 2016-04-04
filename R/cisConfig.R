@@ -221,7 +221,7 @@ add878 = function(ans) {
 }
 
 inflammFilter = function(gwtagger) {
-  require(gwascat)
+  requireNamespace("gwascat")
 # gwrngs in scope
   allt = gwrngs$Disease.Trait
   infinds = grep("rheumatoid|inflamm|crohn|lupus|multiple sclero|type 1 diabetes",
@@ -230,7 +230,7 @@ inflammFilter = function(gwtagger) {
 }
 
 addgwhit = function(ans, traitFilter=force, vname="isgwashit") {
-    if (require(gwascat)) {
+    if (requireNamespace("gwascat")) {
     data(gwastagger)
     ac = as.character
     if (is(ans, "data.table")) seqn = as.character(ans$seqnames)

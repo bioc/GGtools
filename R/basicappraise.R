@@ -33,7 +33,7 @@ appraise = function(dtab, discretize=TRUE,
     names2check=GGtools:::.standardNames, maxit=30, savePinfer=FALSE
    ) {  # finish list and function arg paren
 
-require(foreach)
+requireNamespace("foreach")
 
 #
 # subroutines
@@ -64,7 +64,7 @@ require(foreach)
 
 .discmods = function( dtab, prefix, folder,
    discfmlas = discfmlas_in, cutts, inmaxit=30) {
-  require(foreach)
+  requireNamespace("foreach")
 #  curwd = getwd()
 #  if (!file.exists(folder)) dir.create(folder)
 #  setwd(folder)
@@ -242,7 +242,7 @@ addcadd = function(dt, binder=bindcadd) {
 
 waldtests = function(ob, modname="basehmmall", type="pruned",
    mlog10p=TRUE) {
- require(aod)
+ requireNamespace("aod")
  if (type=="pruned") sel = getPruned(ob)
  else sel = getUnpruned(ob)
  modstr = sel@outs[[modname]]

@@ -55,7 +55,7 @@ eqtlTests.meText = function( smlSet, runname="20", targdir="cisScratch.me",
 # -- the eqtlTests.me below does not use text interface but
 # directly converts matrices
 #
-  require(MatrixEQTL)
+  requireNamespace("MatrixEQTL")
   thecall = match.call()
   cat("textualizing...")
   mefob = textAndSlice( smlSet )
@@ -138,11 +138,11 @@ eqtlTests.me = function( smlSet, rhs=~1, runname="20", targdir="cisScratch.me", 
 # this is a very preliminary interface to MatrixEQTL testing procedure
 # for performance and inference comparisons
 #
-  require(MatrixEQTL)
+  requireNamespace("MatrixEQTL")
   matrixEQTL.engine.control$pvOutputThreshold = pvot
 #
   if (length(smList(smlSet)) != 1) stop("please supply smlSet with smList of length 1")
-  require(MatrixEQTL)
+  requireNamespace("MatrixEQTL")
   thecall = match.call()
 #  cat("converting SNP data...")
   snps = SlicedData$new();
