@@ -146,15 +146,13 @@ setMethod("plot", c("gwSnpScreenResult", "character"),  # y bound to location pa
    if (!(x@chrnum %in% SNY))  x@chrnum = as.character(paste("chr", x@chrnum, sep=""))
    if (!(x@chrnum %in% SNY))  x@chrnum = as.character(gsub("chr", "ch", x@chrnum))
    if (!(x@chrnum %in% SNY))  stop("attempts to harmonize @chrnum of cwSnpScreenResult object with names(getSNPcount()) of snplocsDefault() failed")
-#   loc = snpLocs.Hsapiens(rsn, x@chrnum, y) # may not match all
 
  require(y, character.only=TRUE)
  slpack = get(y)
-# ldf = getSNPlocs(x@chrnum)
- ldf  = snplocs(slpack, x@chrnum)
- if (nrow(ldf) == 0) stop("chrtok must be wrong")
- locs = ldf$loc
- names(locs) = paste("rs", as.character(ldf$RefSNP_id), sep="")
+ lpos  = snpsBySeqname(slpack, x@chrnum)
+ if (length(lpos) == 0) stop("chrtok must be wrong")
+ locs = pos(lpos)
+ names(locs) = lpos$RefSNP_id
  chk = intersect(rsn, names(locs))
  if (length(chk) != length(rsid)) message(paste("NOTE: some SNP in rsid were not found in location db", y))
  if (length(chk) < 1) stop("no locations found for tested SNP")

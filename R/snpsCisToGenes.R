@@ -127,15 +127,14 @@ getCisMap = function( radius=50000, gchr="20",
     gend = gend[-which(bad)]
     ponc = ponc[-which(bad)]
     }
-#  slocgr = getSNPlocs(schr, as.GRanges=TRUE)
   slpack = snpannopk
   require(slpack, character.only=TRUE)
   slobj = get(slpack)
-  slocgr = snplocs(slobj, schr, as.GRanges=TRUE)
-  if (is.null(names(slocgr))) 
-     sids = paste("rs", values(slocgr)$RefSNP_id, sep="")
-  else sids = names(slocgr)
-  slocs = start(slocgr)
+  okchr = sub("chr", "", schr) # now snplocs infrastructure uses NCBI chrnames
+  okchr = sub("ch", "", okchr)
+  slocgpos = snpsBySeqname(slobj, okchr)
+  sids = slocgpos$RefSNP_id
+  slocs = start(slocgpos)
   basic = snpsCisToGenes( radius, gchr, ponc, gstart, gend, sids, slocs, as.GRangesList=as.GRangesList )
   if (is.null(excludeRadius)) return(basic)
   inner = snpsCisToGenes( excludeRadius, gchr, ponc, gstart, gend, sids, slocs, as.GRangesList=as.GRangesList )
