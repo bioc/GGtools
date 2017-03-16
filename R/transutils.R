@@ -378,11 +378,14 @@ setMethod("transTab", c("transManager", "character"), function(x, snps2keep, ...
  simple = data.frame(snp=sids[okinds], MAF=mafs, GTF=gtfs, chisq=thescos[okinds], probeid=gn[okinds] , probechr=gchr[okinds], snpchr=x$snpchr,
     sym=gsym[okinds], entrez=gent[okinds], geneloc=gloc[okinds],
     genelocend=glocend[okinds], stringsAsFactors=FALSE)
- require(snplocsDefault(), character.only=TRUE)
+ sldef = snplocsDefault()
+ require(sldef, character.only=TRUE)
+ slocObj = get(sldef)
  stag=x$snpchr[1]  
  stopifnot(all(x$snpchr == stag))
- sl = getSNPlocs(paste0("ch", gsub("chr", "", stag)), as.GRanges=TRUE)
- sln = paste0("rs", sl$RefSNP_id)
+ slpos = snpsBySeqname(slocObj, stag)
+ sl = start(slpos)
+ sln = mcols(slpos)$RefSNP_id
  names(sl) = sln
  okn = intersect(simple$snp, sln)
  simple = simple[which(simple$snp %in% okn),]

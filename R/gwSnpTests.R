@@ -141,11 +141,10 @@ setMethod("plot", c("gwSnpScreenResult", "character"),  # y bound to location pa
    rsn = names(allpv)
    require(y, character.only=TRUE, quietly=TRUE)
    slpack = get(y)
-#   SNY = names(getSNPcount()) # new API -- shld suffice do.call(":::", list(y, "SEQNAMES"))
    SNY = names(snpcount(slpack)) # new from BSgenome 10/27/15
    if (!(x@chrnum %in% SNY))  x@chrnum = as.character(paste("chr", x@chrnum, sep=""))
    if (!(x@chrnum %in% SNY))  x@chrnum = as.character(gsub("chr", "ch", x@chrnum))
-   if (!(x@chrnum %in% SNY))  stop("attempts to harmonize @chrnum of cwSnpScreenResult object with names(getSNPcount()) of snplocsDefault() failed")
+   if (!(x@chrnum %in% SNY))  stop("attempts to harmonize @chrnum of cwSnpScreenResult object with names(snpcount()) of snplocsDefault() failed")
 
  require(y, character.only=TRUE)
  slpack = get(y)
