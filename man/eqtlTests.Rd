@@ -113,7 +113,7 @@ hm = hm2ceuSMS[probeId(g20),]  # reduce problem
 td = tempdir()
 curd = getwd()
 setwd(td)
-time.lapply = unix.time(e1 <- eqtlTests( hm, ~male ))
+time.lapply = system.time(e1 <- eqtlTests( hm, ~male ))
 time.lapply
 e1
 # best chisq(1) for CPNE1

@@ -131,7 +131,7 @@ VJ Carey <stvjc@channing.harvard.edu>
       }
    estimates(cc) = FALSE
    set.seed(1234)
-   unix.time(f1 <- cisScores( cc ))
+   system.time(f1 <- cisScores( cc ))
  #
  # demonstrate adding annotation on chromatin state and gwas status
  #
@@ -156,7 +156,7 @@ VJ Carey <stvjc@channing.harvard.edu>
  }
  extraProps(cc) = eprops
  set.seed(1234)
- unix.time(f2 <- cisScores( cc ))
+ system.time(f2 <- cisScores( cc ))
 #
 #
  inflammFilter # to make more restrictive predicate for prediction

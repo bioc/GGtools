@@ -14,7 +14,7 @@ suppressPackageStartupMessages(library(GGtools))
       }
    estimates(cc) = FALSE
    set.seed(1234)
-#   unix.time(f1 <- cisScores( cc ))
+#   system.time(f1 <- cisScores( cc ))
  #
  # demonstrate adding annotation on chromatin state and gwas status
  #
@@ -40,5 +40,8 @@ suppressPackageStartupMessages(library(GGtools))
  extraProps(cc) = eprops
  set.seed(1234)
  rhs(cc) = ~1-1
- unix.time(f2 <- cisScores( cc ))
+if (.Platform$OS.type != "windows") {
+ (f2 <- cisScores( cc ))
  isTRUE(sum(f2$fdr < 0.05) == 172)  # can change with annotation or location changes, check serialized results if necessary
+}
+TRUE
