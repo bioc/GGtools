@@ -1,4 +1,4 @@
-
+if (.Platform$OS.type != "windows") {
 t20 = GGtools:::getCisMap()
 
 NL = GGtools:::namelist(t20)
@@ -14,3 +14,4 @@ TARG = t20@generanges[probe1]-50000
 d = distance(TARG, t20sl)
 
 all(d <= 50000)
+} else TRUE
