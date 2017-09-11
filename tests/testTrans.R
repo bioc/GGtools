@@ -35,39 +35,41 @@ t1 = transScores(tconf)
 #    snpannopk = "SNPlocs.Hsapiens.dbSNP.20111119", gchrpref = "", 
 #    schrpref = "ch", exFilter = function(x) x) 
 
-tt1 = transTab(t1)
-
-cleanup_transff = function(x) {
- fn = attr(attr(x@base$scores, "physical"), "filename")
- comps = strsplit(fn, "/")[[1]]
- nel = length(comps)
- unlink(comps[nel-1], recursive=TRUE)
+if (.Platform$OS.type != "windows") {
+  tt1 = transTab(t1)
+  
+  cleanup_transff = function(x) {
+   fn = attr(attr(x@base$scores, "physical"), "filename")
+   comps = strsplit(fn, "/")[[1]]
+   nel = length(comps)
+   unlink(comps[nel-1], recursive=TRUE)
+  }
+  
+  cleanup_transff(t1)
+  
+  c22 = getSS("GGdata", "22")
+  
+  exl = lapply(tenOn2021, function(x) exprs(c22)[x,])
+  rhst = lapply(1:length(exl), function(g) {
+       ex = exl[[g]]
+       snp.rhs.tests(ex~1, snp.data=smList(c22)[[1]], fam="gaussian", uncertain=TRUE) })
+  csnp1 = sapply(rhst, function(x)chi.squared(x)[1])
+  csnp50 = sapply(rhst, function(x)chi.squared(x)[50])
+  
+  
+  #all(abs(floor(sort(csnp1, decreasing=TRUE)[1:4]*10)/10 - tt1[1:4,2]) < .01)
+  #all(abs(floor(sort(csnp50, decreasing=TRUE)[1:4]*10)/10 - tt1[197:200,2]) < 0.01)
+  
+  ttdt = data.table(tt1)
+  SS = sort(sapply(rhst, function(x) max(chi.squared(x), na.rm=TRUE))) 
+  TT = sort(ttdt[,max(chisq),by="probeid"]$V1) 
+  maxchk = (max(abs(SS-TT))<.01)
+  
+  # needs more work, tt1 is organized by snp
+  #SS = sort(sapply(rhst, function(x) min(chi.squared(x), na.rm=TRUE))) 
+  #TT = sort(ttdt[,min(chisq),by="probeid"]$V1) 
+  #minchk = (max(abs(SS-TT))<.01)
+  
+  maxchk 
 }
-
-cleanup_transff(t1)
-
-c22 = getSS("GGdata", "22")
-
-exl = lapply(tenOn2021, function(x) exprs(c22)[x,])
-rhst = lapply(1:length(exl), function(g) {
-     ex = exl[[g]]
-     snp.rhs.tests(ex~1, snp.data=smList(c22)[[1]], fam="gaussian", uncertain=TRUE) })
-csnp1 = sapply(rhst, function(x)chi.squared(x)[1])
-csnp50 = sapply(rhst, function(x)chi.squared(x)[50])
-
-
-#all(abs(floor(sort(csnp1, decreasing=TRUE)[1:4]*10)/10 - tt1[1:4,2]) < .01)
-#all(abs(floor(sort(csnp50, decreasing=TRUE)[1:4]*10)/10 - tt1[197:200,2]) < 0.01)
-
-ttdt = data.table(tt1)
-SS = sort(sapply(rhst, function(x) max(chi.squared(x), na.rm=TRUE))) 
-TT = sort(ttdt[,max(chisq),by="probeid"]$V1) 
-maxchk = (max(abs(SS-TT))<.01)
-
-# needs more work, tt1 is organized by snp
-#SS = sort(sapply(rhst, function(x) min(chi.squared(x), na.rm=TRUE))) 
-#TT = sort(ttdt[,min(chisq),by="probeid"]$V1) 
-#minchk = (max(abs(SS-TT))<.01)
-
-maxchk 
-
+  
