@@ -1,6 +1,7 @@
 # verifies that transScores agrees with snp.rhs.tests to obtain best
 # trans scores
 
+if (.Platform$OS.type != "windows") {
 suppressPackageStartupMessages(library(GGtools))
 
 tenOn2021 = 
@@ -71,3 +72,4 @@ maxchk = (max(abs(SS-TT))<.01)
 
 maxchk 
 
+} else TRUE
