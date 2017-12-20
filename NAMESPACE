@@ -42,7 +42,8 @@ importClassFrom(GenomicRanges, GRanges, GenomicRanges, GenomicRanges_OR_missing)
 importMethodsFrom(GenomicRanges, c)
 importFrom(GenomicRanges, GRanges, GRangesList)
 
-importFrom(Rsamtools, TabixFile, path)
+importFrom(Rsamtools, TabixFile)
+importFrom(BiocGenerics, path)
 export(TabixFile)
 
 importMethodsFrom(Rsamtools, scanTabix)
@@ -51,6 +52,12 @@ importClassFrom(Rsamtools, TabixFile)
 
 importFrom(VariantAnnotation, scanVcfHeader)
 importFrom(rtracklayer, import.gff3)
+
+importFrom("graphics", "abline", "axis", "hist", "mtext", "par",
+    "points", "segments", "smoothScatter", "text")
+importFrom("stats", "approx", "as.formula", "binomial", "coef",
+    "dffits", "formula", "ftable", "lm", "model.matrix",
+    "plogis", "predict", "qqplot", "relevel", "runif", "vcov")
 
 importClassFrom(IRanges, RangedData)
 

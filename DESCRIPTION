@@ -1,6 +1,6 @@
 Package: GGtools
 Title: software and data for analyses in genetics of gene expression
-Version: 5.15.1
+Version: 5.15.2
 Author: VJ Carey <stvjc@channing.harvard.edu>
 Description: software and data for analyses in genetics of gene expression
 	and/or DNA methylation
@@ -12,7 +12,7 @@ Imports:
     methods,
     utils,
     stats,
-    BiocGenerics,
+    BiocGenerics (>= 0.25.1),
     snpStats,
     ff,
     Rsamtools,
