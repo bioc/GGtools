@@ -39,7 +39,6 @@ importFrom(Biobase, featureNames, annotation, pData, rowMin,
 import(GenomeInfoDb)
 
 importClassFrom(GenomicRanges, GRanges, GenomicRanges, GenomicRanges_OR_missing)
-importMethodsFrom(GenomicRanges, c)
 importFrom(GenomicRanges, GRanges, GRangesList)
 
 importFrom(Rsamtools, TabixFile)
