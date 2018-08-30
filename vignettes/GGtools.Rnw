@@ -67,8 +67,9 @@ at the end of the document for full details.  Using a comparable
 version of R, you can obtain the software needed for the production
 of this document using
 \begin{verbatim}
-source("http://www.bioconductor.org/biocLite.R")
-biocLite("GGtools", dependencies=TRUE)
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+BiocManager::install("GGtools", dependencies=TRUE)
 \end{verbatim}
 
 \section{Data structures}
