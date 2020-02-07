@@ -112,7 +112,7 @@ Use replacement methods to update the fields.
 \section{Slots}{
   \describe{
     \item{\code{smpack}:}{character string identifying package
-holding the expression and genotype data; see \code{\link[GGBase]{getSS}}}
+holding the expression and genotype data; see \code{\link[GGBase:make_smlSet]{getSS}}}
     \item{\code{genome}:}{character string identifying genome build in use}
     \item{\code{rhs}:}{Object of class \code{"formula"} right hand
 side for calls to \code{\link[snpStats]{snp.rhs.tests}} }

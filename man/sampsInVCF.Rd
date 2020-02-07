@@ -14,7 +14,7 @@ sampsInVCF(tf)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{tf}{
-instance of \code{\link[Rsamtools]{TabixFile}} referring
+instance of \code{\link[Rsamtools:TabixFile-class]{TabixFile}} referring
 to a tabix-indexed VCF
 }
 }

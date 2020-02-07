@@ -30,7 +30,7 @@ t1 = transScores(tconf)
 # all tests are trans, to verify buffering approach
 #
 #        radius = 2e+06,  K=4,
-#    probesToKeep = tenOn2021, batchsize = 200, 
+#    probesToKeep = tenOnSix, batchsize = 200, 
 #    geneannopk = "illuminaHumanv1.db", 
 #    snpannopk = "SNPlocs.Hsapiens.dbSNP.20111119", gchrpref = "", 
 #    schrpref = "ch", exFilter = function(x) x) 

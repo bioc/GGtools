@@ -65,7 +65,7 @@ Maintainer: VJ Carey <stvjc@channing.harvard.edu>
 %~~ the R documentation directory ~~
 \keyword{ package }
 \seealso{
- \code{\link[GGBase]{getSS}} for acquiring containers for
+ \code{\link[GGBase:make_smlSet]{getSS}} for acquiring containers for
 integrative data on genetics of expression.
 }
 \examples{

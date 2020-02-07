@@ -39,7 +39,7 @@ scores for the top gbufsize genes are retained as the search proceeds  }
 used in processing ff-based archives for association scores }
     \item{\code{smpack}:}{Object of class \code{"character"},
 tells the name of the installed package used for retrieval
-of expression-genotype data using \code{\link[GGBase]{getSS}}  }
+of expression-genotype data using \code{\link[GGBase:make_smlSet]{getSS}}  }
     \item{\code{rhs}:}{Object of class \code{"formula"}, formula
 used in \code{\link[snpStats]{snp.rhs.tests}}; typically not used.
 If plug-in FDR is desired,

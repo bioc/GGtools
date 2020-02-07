@@ -46,7 +46,7 @@ setting for \code{pvOutputThreshold} in
 }
   \item{geneApply}{
 lapply-like function for iteration over genes,
-\code{\link[parallel]{mclapply}} is suitable when in
+\code{mclapply} is suitable when in
 multicore environments
 }
   \item{shortfac}{
@@ -81,7 +81,7 @@ list of parameters used to define \code{\link[MatrixEQTL]{SlicedData-class}} ins
 }
   \item{covariates_file_name}{
 if covariates are to be used with MatrixEQTL testing engine, they
-reside in this file.  \code{\link[GGBase]{regressOut}} can be used
+reside in this file.  \code{\link[GGBase:clipPCs]{regressOut}} can be used
 to avoid this if plug-in FDR are to be used
 }
 }

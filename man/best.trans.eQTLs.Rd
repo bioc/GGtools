@@ -18,7 +18,7 @@ best.trans.eQTLs(smpack, rhs, genechrnum, snpchrnum, K = 20,
 \arguments{
   \item{smpack}{
 character string naming a package from which \code{\link[GGBase]{smlSet-class}} instances
-can be generated using \code{\link[GGBase]{getSS}}
+can be generated using \code{\link[GGBase:make_smlSet]{getSS}}
 }
   \item{rhs}{
 passed to \code{\link[snpStats]{snp.rhs.tests}} for covariate or stratification adjustments;
@@ -38,7 +38,7 @@ the size of the buffer: scores will be recorded for the most strongly associated
 character string where buffer data will be held in ff archives
 }
   \item{batchsize}{
-passed to \code{\link[ff]{ffrowapply}} as scores are filtered from comprehensive testing to fill
+passed to \code{\link[ff:ffapply]{ffrowapply}} as scores are filtered from comprehensive testing to fill
 the buffer
 }
   \item{radius}{
@@ -62,7 +62,7 @@ package to be used for CHRLOC and CHRLOCEND queries for genes
 }
   \item{snpannopk}{
 package to be used to resolve 
-\code{\link[BSgenome]{snplocs}} calls
+\code{\link[BSgenome:SNPlocs-class]{snplocs}} calls
 }
   \item{exFilter}{
 function returning an smlSet instance, operating on expression component prior to smFilter application and eQTL testing

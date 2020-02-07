@@ -92,7 +92,7 @@ getCall(x)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{smpack}{
-character string naming a package to which \code{\link[GGBase]{getSS}}
+character string naming a package to which \code{\link[GGBase:make_smlSet]{getSS}}
 can be applied to extract \code{\link[GGBase]{smlSet-class}} instances
 }
   \item{smpackvec}{vector of character strings naming packages
@@ -133,7 +133,7 @@ transformation function
 }
   \item{schrpref}{
 prefix to convert \code{chrnames} into appropriate tokens for
-use with \code{\link[BSgenome]{snplocs}} for the SNP location information
+use with \code{\link[BSgenome:SNPlocs-class]{snplocs}} for the SNP location information
 package identified in \code{snpannopack} parameter below
 }
   \item{geneApply}{

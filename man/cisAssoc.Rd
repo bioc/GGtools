@@ -23,7 +23,7 @@ data(lgeu) # obtains an example SummarizedExperiment
 instance of \code{\link[SummarizedExperiment]{SummarizedExperiment-class}}
 }
   \item{vcf.tf}{
-instance of \code{\link[Rsamtools]{TabixFile}}, referring to a
+instance of \code{\link[Rsamtools:TabixFile-class]{TabixFile}}, referring to a
 tabix-indexed, bgzipped VCF file
 }
   \item{rhs}{

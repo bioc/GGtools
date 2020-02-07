@@ -36,7 +36,7 @@ passed to eqtlTests
 %instance of \code{\link[GenomicRanges]{SummarizedExperiment-class}}
 %}
 %  \item{vcf.tf}{
-%instance of \code{\link[Rsamtools]{TabixFile}}, pointing to a
+%instance of \code{\link[Rsamtools:TabixFile-class]{TabixFile}}, pointing to a
 %tabix-indexed VCF file
 %}
 %  \item{rhs}{

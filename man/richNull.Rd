@@ -30,7 +30,7 @@ meta.richNull(..., MAFlb=.01, npc=10, radius=250000,
   \item{\dots}{
 should provide bindings for smpack and chrnames,
 which will be used to obtain gene/probe locations; see
-\code{\link[GGBase]{getSS}} for information on \code{smpack}
+\code{\link[GGBase:make_smlSet]{getSS}} for information on \code{smpack}
 settings.
 
 meta.richNull allows a vector of smpack values bound to \code{smpackvec}
