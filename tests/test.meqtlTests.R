@@ -15,3 +15,5 @@ ae = as.ram(e1@fffile)
 am = as.ram(m1@fffile)
 all.equal(as.numeric(ae)*2 ,as.numeric(am) )
 
+system("rm -rf ooo")
+system("rm -rf ooobb")
