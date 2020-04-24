@@ -36,7 +36,7 @@ vector of available sample identifiers
 %%%  ~~who you are~~
 %}
 \note{
-This package exports \code{\link[Rsamtools]{TabixFile}} for the sake of the example below.
+This package exports \code{\link{TabixFile}} for the sake of the example below.
 }
 %
 %%% ~Make other sections like Warning with \section{Warning }{....} ~

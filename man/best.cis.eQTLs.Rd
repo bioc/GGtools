@@ -193,11 +193,11 @@ if FALSE, the mapCache environment returned will be empty -- NB, this
 feature has been found to add too much volume to returned
 objects and is suspended...}
  \item{exFilter}{this function is passed to
-\code{\link[GGBase]{getSS}}; see Details}
+\code{\link{getSS}}; see Details}
  \item{exFilterList}{for metaanalytic applications,
 a list of functions in correspondence with the elements of
 \code{smpackvec} to be passed to
-\code{\link[GGBase]{getSS}}; see Details}
+\code{\link{getSS}}; see Details}
  \item{getDFFITS}{logical; a component storing max DFFITS value for
 each gene will be retained if this argument TRUE}
  \item{\dots}{not used}
