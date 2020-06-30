@@ -28,10 +28,10 @@ importFrom(Gviz, DataTrack, plotTracks, GeneRegionTrack, GenomeAxisTrack)
 
 importFrom(AnnotationDbi, get, mget, revmap, mappedkeys)
 
-importFrom(IRanges, RangedData, IRanges)
+importFrom(IRanges, IRanges)
 
 importMethodsFrom(IRanges, as.matrix, findOverlaps,
-	as.data.frame, values, start, ranges, end)
+	as.data.frame, start, ranges, end)
 
 importFrom(Biobase, featureNames, annotation, pData, rowMin,
     selectSome, samples)
@@ -58,7 +58,7 @@ importFrom("stats", "approx", "as.formula", "binomial", "coef",
     "dffits", "formula", "ftable", "lm", "model.matrix",
     "plogis", "predict", "qqplot", "relevel", "runif", "vcov")
 
-importClassFrom(IRanges, RangedData)
+importClassFrom(IRanges)
 
 exportMethods("gwSnpTests", "show", "topFeats", "plot", transTab)
 

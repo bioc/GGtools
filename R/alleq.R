@@ -81,7 +81,7 @@ cat("PHASE 2: extracting associations passing cis threshold...\n")
     tmpr = cismapObj@generanges[scoredf$probe]
     svnm = names(tmpr)
     names(tmpr) = NULL
-    fullans = RangedData(seqnames=gchr, ranges=tmpr)
+    fullans = GRanges(seqnames=gchr, ranges=tmpr)
     rownames(fullans) = make.names(svnm, unique=TRUE)
     fullans$score = scoredf$score   # we are assuming that the RangedDat construction does not alter row order!
     fullans$snpid = scoredf$snpid

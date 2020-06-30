@@ -250,7 +250,7 @@ best.cis.eQTLs.chr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisScr
     ans = data.frame(chr=gchr, probe = ptested, snpid = bestsnp, score = as.numeric(bestcis), nsnp=lc,
 	stringsAsFactors=FALSE)
     scoredf = ans[order(ans$score, decreasing=TRUE),]
-    fullans = RangedData(seqnames=gchr, ranges=cismapObj@generanges[scoredf$probe])
+    fullans = GRanges(seqnames=gchr, ranges=cismapObj@generanges[scoredf$probe])
     fullans$score = scoredf$score   # we are assuming that the RangedDat construction does not alter row order!
     fullans$snpid = scoredf$snpid
     fullans$snploc = start(cismapObj@snplocs[scoredf$snpid])
@@ -294,7 +294,7 @@ best.cis.eQTLs.mchr = function (smpack = "GGdata", rhs = ~1, folderstem = "cisSc
 	     useME=useME, excludeRadius=excludeRadius, mapCache=mapCache,
 		getDFFITS=getDFFITS, SSgen=SSgen)
             })
-    ans = as(do.call(c, ans), "GRanges")  # RangedData just need c for combination; then mix spaces
+    ans = as(do.call(c, ans), "GRanges")  # GRanges just need c for combination; then mix spaces
     ans[order(elementMetadata(ans)$score, decreasing=TRUE),]
 }
     

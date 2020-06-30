@@ -281,7 +281,7 @@ There are a few approaches to visualization of the results that are
 relevant, but complications arise in relation to choice of genomic
 coordinates.
 
-<<dopl,echo=FALSE,results=hide>>=
+<<dopl,echo=FALSE,results=hide,eval=FALSE>>=
 pdf(file="t1.pdf")
 plot(t1, snplocsDefault())
 dev.off()
@@ -290,7 +290,7 @@ plot_EvG(genesym("CPNE1"), rsid("rs17093026"), g20)
 dev.off()
 @
 
-<<dol,eval=FALSE>>=
+<<dol,eval=FALSE,eval=FALSE>>=
 plot(t1, snplocsDefault())
 plot_EvG(genesym("CPNE1"), rsid("rs17093026"), g20)
 @
@@ -461,7 +461,7 @@ ini
 The FDR reported are for the specific search (here
 one chromosome).  Various tools for combining multiple
 searches are used to get FDRs for more comprehensive searches.
-<<dosearch>>=
+<<dosearch,eval=FALSE>>=
 options(mc.cores=max(1, detectCores()-3))
 system.time(t20 <- All.cis(ini))
 t20
@@ -482,7 +482,7 @@ MAF bound .005, the results of All.cis can be quite
 large, so most downstream utilities assume the results
 are serialized to disk.
 
-<<dosa>>=
+<<dosa,eval=FALSE>>=
 td = tempdir()
 save(t20, file=paste0(td, "/t20.rda"))
 #save(t21, file=paste0(td, "/t21.rda"))
@@ -494,7 +494,7 @@ of FDR}
 We will use a collection method that focuses on sensitivity
 analysis, generating FDRs for different tuning parameters
 within the scope of the search.
-<<docomb, keep.source=TRUE>>=
+<<docomb, keep.source=TRUE,eval=FALSE>>=
 fns = dir(td, full=TRUE, patt="^t2.*rda$")
 cf = collectFiltered(fns, mafs=c(.02,.03,.1), hidists=c(1000,10000,75000))
 class(cf)
@@ -505,7 +505,7 @@ of = order(cf[[3]][[1]]$fdr)
 cf[[3]][[1]][of,][1:4,]  # shows best hits
 @
 
-<<fup,fig=FALSE,cache=FALSE>>=
+<<fup,fig=FALSE,cache=FALSE,eval=FALSE>>=
 g20 = getSS("GGtools", "20")
 <<dofupfig,fig=TRUE>>=
 plot_EvG(probeId("GI_4502372-S"), rsid("rs290449"), g20)
@@ -515,7 +515,7 @@ plot_EvG(probeId("GI_4502372-S"), rsid("rs290449"), g20)
 isolates the best scoring SNP per gene.  A SNP-centric FDR can
 also be computed.
 
-<<fup2,cache=FALSE>>=
+<<fup2,cache=FALSE,eval=FALSE>>=
 cf2 = collectFiltered(fns, mafs=c(.02,.05,.1), hidists=c(10000,75000),
   filterFun=cis.FDR.filter.SNPcentric)
 sapply(cf2, sapply, function(x) sum(x$fdr<=0.01))
@@ -611,7 +611,7 @@ of principal components of variation.  To maximize information
 on possible batch effects, the entire expression matrix is restored and
 decomposed for principal component removal.
 
-<<domo,cache=FALSE, keep.source=TRUE,eval=TRUE>>=
+<<domo,cache=FALSE, keep.source=TRUE,eval=FALSE>>=
 if (file.exists("db2")) unlink("db2", recursive=TRUE)
 g20 = getSS("GGdata", "20")
 exTx = function(x) MAFfilter( clipPCs(x,1:10)[fn, ], lower=0.05)
@@ -624,7 +624,7 @@ b2 = best.cis.eQTLs("GGdata", ~male,  radius=50000,
    smFilter= exTx, chrnames="20", snpannopk=snplocsDefault())
 <<getb2,eval=TRUE,echo=FALSE>>=
 data(b2)
-<<lkb2>>=
+<<lkb2,eval=FALSE>>=
 b2
 @
 
@@ -632,18 +632,18 @@ An improvement in sensitivity can be seen after this adjustment.  The
 probes with FDR at 0.13 (used for demonstration purposes with this
 drastically reduced data) or lower are identified by the helper
 function
-<<ggg,eval=TRUE>>=
+<<ggg,eval=FALSE>>=
 goodProbes = function(x) names(x@scoregr[elementMetadata(x@scoregr)$fdr<0.13])
 @
 All probes identified as significant
 (at FDR $\leq 0.13$) before the PCA adjustment
 are identified as such after it:
-<<chkp,eval=TRUE>>=
+<<chkp,eval=FALSE>>=
 setdiff(goodProbes(b2), goodProbes(b1))
 @
 
 The adjustment can lead to loss of significance for some probes.
-<<lkback>>=
+<<lkback,eval=FALSE>>=
 setdiff(goodProbes(b1), goodProbes(b2))
 @
 
@@ -693,7 +693,7 @@ to be removed for heterogeneity reduction?
 
 The following code illustrates construction of a minimal
 smlSet instance.
-<<domoo>>=
+<<domoo,eval=FALSE>>=
 library(Biobase)
 suppressPackageStartupMessages(library(GGtools))
 ex = matrix(0, nr=5, nc=3)
@@ -719,7 +719,7 @@ colnames(smList(sml)[[1]])
 \clearpage
 
 \section{Session information}
-<<getss,results=tex>>=
+<<getss,results=tex,eval=FALSE>>=
 toLatex(sessionInfo())
 @
 

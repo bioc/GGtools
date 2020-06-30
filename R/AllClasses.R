@@ -29,11 +29,11 @@ setClass("eqtlEstimatesManager", contains="eqtlTestsManager",
 setClass("cisMap", representation(namelist="list",
    snplocs="GRanges", generanges="GRanges", radiusUsed="numeric", excludeRadius="numeric"))
 
-setClass("cwBestCis", contains="RangedData")
+setClass("cwBestCis", contains="GRanges")
 setClass("mcwBestCis", representation(scoregr = "GRanges",
  allperm="numeric", extra="ANY", chromUsed="ANY", theCall="call", smFilter="function", nperm="numeric", globalMap="environment",
  testCount="numeric"))
-setClass("allSigCis", representation(fulllist = "RangedData", bestcis="mcwBestCis",
+setClass("allSigCis", representation(fulllist = "GRanges", bestcis="mcwBestCis",
  chromUsed="ANY", theCall="call"))
 #
 # could compute an approximate FDR for all elements of the allBestCis using the

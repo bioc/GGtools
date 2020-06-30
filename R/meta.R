@@ -177,7 +177,7 @@ meta.best.cis.eQTLs.chr = function (smpackvec = c("GGdata", "hmyriB36"), rhslist
         score = as.numeric(bestcis), nsnp = lc,
 	stringsAsFactors=FALSE)
     scoredf = ans[order(ans$score, decreasing=TRUE),]
-    fullans = RangedData(seqnames=gchr, ranges=cismapObj@generanges[scoredf$probe])
+    fullans = GRanges(seqnames=gchr, ranges=cismapObj@generanges[scoredf$probe])
     fullans$score = scoredf$score   # we are assuming that the RangedDat construction does not alter row order!
     fullans$snpid = scoredf$snpid
     fullans$snploc = start(cismapObj@snplocs[scoredf$snpid])
@@ -211,7 +211,7 @@ meta.best.cis.eQTLs.mchr = function (smpackvec = c("GGdata", "hmyriB36"), rhslis
              snpannopk = snpannopk, SMFilterList=SMFilterList,
 		exFilterList=exFilterList, doPerm=doPerm, excludeRadius=excludeRadius )
             })
-    ans = as(do.call(c, ans), "GRanges")  # RangedData just need c for combination; then mix spaces
+    ans = as(do.call(c, ans), "GRanges")  # GRanges just need c for combination; then mix spaces
     ans[order(elementMetadata(ans)$score, decreasing=TRUE),]
 }
 
